@@ -50,7 +50,7 @@ export namespace ModuleMethod {
 
     /**
      * Meteor's `module.exportDefault()` method - seems to only be used for modules that are lazy-loaded?
-     * {@link https://github.com/JorgenVatle/meteor-vite/blob/71a1ed5b84439c02f5592bef1d4cf3ae565fa879/npm-packages/meteor-vite/test/__mocks/meteor-bundle/test_ts-modules.js#L42}
+     * {@link https://github.com/Akryum/meteor-vite/blob/71a1ed5b84439c02f5592bef1d4cf3ae565fa879/npm-packages/meteor-vite/test/__mocks/meteor-bundle/test_ts-modules.js#L42}
      *
      * @example Package source
      * export default namedFunction() {
@@ -133,7 +133,7 @@ export type ModuleMethodName = typeof KnownModuleMethodNames[number];
  * This is an internal method that isn't used by package authors.
  *
  * @example start of the meteorInstall call
- *     {@link https://github.com/JorgenVatle/meteor-vite/blob/85120ec60beccca956c65880e94bce99b338f24e/npm-packages/meteor-vite/test/__mocks/meteor-bundle/rdb_svelte-meteor-data.js#L25 see mock example} var require = meteorInstall({"node_modules":{"meteor":{"rdb:svelte-meteor-data":{"index.js":function module(require,exports,module){
+ *     {@link https://github.com/Akryum/meteor-vite/blob/85120ec60beccca956c65880e94bce99b338f24e/npm-packages/meteor-vite/test/__mocks/meteor-bundle/rdb_svelte-meteor-data.js#L25 see mock example} var require = meteorInstall({"node_modules":{"meteor":{"rdb:svelte-meteor-data":{"index.js":function module(require,exports,module){
  * // ... build package code starts here
  */
 export type MeteorInstallObject = KnownObjectExpression<{

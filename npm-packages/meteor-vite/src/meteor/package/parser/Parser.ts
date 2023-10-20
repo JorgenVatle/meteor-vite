@@ -172,7 +172,7 @@ function parsePackageScope(node: Node) {
  * Parser for a build Meteor package's meteorInstall() call.
  * Traverses through all the entries in the passed object to build up a map of each file exposed by the package
  * as well as tracking exports (module.export, module.exportDefault) and re-exports (module.link).
- * {@link https://github.com/JorgenVatle/meteor-vite/blob/8b0a7a5f5f95d78661793e8b4bc7f266c1081ed9/npm-packages/meteor-vite/test/__mocks/meteor-bundle/rdb_svelte-meteor-data.js#L25 example of meteorInstall() }
+ * {@link https://github.com/Akryum/meteor-vite/blob/8b0a7a5f5f95d78661793e8b4bc7f266c1081ed9/npm-packages/meteor-vite/test/__mocks/meteor-bundle/rdb_svelte-meteor-data.js#L25 example of meteorInstall() }
  */
 class MeteorInstall {
     public readonly modules: ModuleList = {}
@@ -247,7 +247,7 @@ class MeteorInstall {
  * It essentially represents a single file and its associated exports within a given Meteor package.
  * E.g. `index.js` or `cookie-store.js`.
  *
- * {@link https://github.com/JorgenVatle/meteor-vite/blob/78a451fa311989d10cbb061bb929d8feb795ea2c/npm-packages/meteor-vite/test/__mocks/meteor-bundle/test_ts-modules.js#L20 `explicit-relative-path.ts`} would count as a module here.
+ * {@link https://github.com/Akryum/meteor-vite/blob/78a451fa311989d10cbb061bb929d8feb795ea2c/npm-packages/meteor-vite/test/__mocks/meteor-bundle/test_ts-modules.js#L20 `explicit-relative-path.ts`} would count as a module here.
  */
 class PackageModule {
     public readonly exports: ModuleExportData[] = [];

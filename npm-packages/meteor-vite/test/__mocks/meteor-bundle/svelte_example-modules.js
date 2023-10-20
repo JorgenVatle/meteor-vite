@@ -154,7 +154,7 @@ install("shell-server");
 install("static-html");
 install("zodern:types");
 install("webapp", "meteor/webapp/webapp_client.js");
-install("jorgenvatle:vite-bundler", "meteor/jorgenvatle:vite-bundler/client.ts");
+install("vite:bundler", "meteor/vite:bundler/client.ts");
 install("tmeasday:check-npm-versions", "meteor/tmeasday:check-npm-versions/check-npm-versions.ts");
 install("reactive-dict", "meteor/reactive-dict/migration.js");
 install("session", "meteor/session/session.js");
