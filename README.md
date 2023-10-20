@@ -19,7 +19,7 @@ Use [Vite](https://vitejs.dev) in your Meteor app! ⚡️
   - [x] [Vue 3](/examples/vue) 
     - [Live demo](https://vite-and-vue3.meteorapp.com/)
   - [x] [Svelte](/examples/svelte)
-  - [ ] React
+  - [x] [React](/examples/react)
 
 ## Installation
 

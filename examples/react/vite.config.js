@@ -16,15 +16,17 @@ function useMeteorBundle({
     name: 'output-gen',
     enforce: 'pre',
     resolveId(id, importer, options) {
+      if (!importer) return;
+
       const npmPackage = npmPackages.find((name) => importer.includes(`/${name}.js?`));
-      if (!npmPackage) {
-        return;
-      }
+      if (!npmPackage) return;
+
       const chunk = {
         npmPackage,
         chunkPath: id.replace(/^.\//, ''),
       };
-      detectedChunks.push(chunk)
+
+      detectedChunks.push(chunk);
       console.log({ id, importer, options, chunk });
     },
     transform(code, id) {

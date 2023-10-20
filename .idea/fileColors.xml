@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SharedFileColors">
+    <fileColor scope="Meteor-Vite (npm)" color="263c6b" />
+    <fileColor scope="Vue (example)" color="1b3e33" />
+    <fileColor scope="Svelte (example)" color="402929" />
+    <fileColor scope="Vite-Bundler (atmosphere)" color="273e08" />
+    <fileColor scope="React (example)" color="232f61" />
+  </component>
+</project>

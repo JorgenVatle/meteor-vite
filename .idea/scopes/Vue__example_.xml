@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Vue (example)" pattern="file[meteor-vite]:examples/vue//*" />
+</component>

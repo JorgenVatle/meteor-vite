@@ -1,4 +1,4 @@
-name: Example Apps
+name: 'Example Apps'
 
 on:
   push:
@@ -12,13 +12,19 @@ on:
 
 jobs:
   vue:
-    name: Vue
+    name: 'Vue'
     uses: ./.github/workflows/_reuse_.build.yml
     with:
-      name: vue
+      name: 'vue'
 
   svelte:
-    name: Svelte
+    name: 'Svelte'
     uses: ./.github/workflows/_reuse_.build.yml
     with:
-      name: svelte
+      name: 'svelte'
+
+  react:
+    name: 'React'
+    uses: ./.github/workflows/_reuse_.build.yml
+    with:
+      name: 'react'

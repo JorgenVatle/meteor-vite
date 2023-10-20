@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Svelte (example)" pattern="file[meteor-vite]:examples/svelte//*" />
+</component>

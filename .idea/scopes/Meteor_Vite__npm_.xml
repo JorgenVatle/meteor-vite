@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Meteor-Vite (npm)" pattern="file[meteor-vite]:npm-packages/meteor-vite//*||file[meteor-vite]:npm-packages/*" />
+</component>
