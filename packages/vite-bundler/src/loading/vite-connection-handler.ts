@@ -29,10 +29,10 @@ export class ViteDevScripts {
         }
         
         if ('getTextAsync' in Assets) {
-            return Assets.getTextAsync('loading/dev-server-splash.html');
+            return Assets.getTextAsync('src/loading/dev-server-splash.html');
         }
         
-        return Assets.getText('loading/dev-server-splash.html')!;
+        return Assets.getText('src/loading/dev-server-splash.html')!;
     }
     
     public injectScriptsInDOM() {

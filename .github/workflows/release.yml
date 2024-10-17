@@ -6,6 +6,7 @@ on:
       - main
       - release
       - meteor-v3
+      - v3
 
 env:
   METEOR_SESSION_FILE_PATH: /opt/meteor/.meteor_session.json
@@ -38,7 +39,7 @@ jobs:
       - name: 'Setup Meteor'
         uses: meteorengineer/setup-meteor@v1
         with:
-          meteor-release: '3.0-rc.2'
+          meteor-release: 3.0-rc.2
 
       - name: 'Install Dependencies'
         run: |
@@ -54,7 +55,6 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          version: npm run version
           publish: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

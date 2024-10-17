@@ -1,0 +1,25 @@
+{
+  "mode": "pre",
+  "tag": "next",
+  "initialVersions": {
+    "meteor-vite": "1.10.3",
+    "@meteor-vite/plugin-zodern-relay": "1.0.2",
+    "vite-bundler": "2.0.1"
+  },
+  "changesets": [
+    "cool-impalas-argue",
+    "friendly-years-type",
+    "great-dodos-smash",
+    "lemon-foxes-search",
+    "plenty-cobras-collect",
+    "polite-wombats-decide",
+    "purple-carrots-drum",
+    "sixty-birds-carry",
+    "slow-buses-invent",
+    "spicy-phones-smoke",
+    "tasty-pumas-invent",
+    "thirty-ducks-poke",
+    "tiny-tigers-divide",
+    "two-dolphins-sing"
+  ]
+}

@@ -42,7 +42,7 @@ export function getTempDir() {
 }
 
 export function getDevServerHost(): { host: string, port: number } {
-    const { portString, hostname } = process.argv.join(' ').match(/--port[\s=](?<hostname>[\d\w.]+:)(?<portString>[\d]+)/)?.groups || { portString: '3000', hostname: 'localhost' };
+    const { portString, hostname } = process.argv.join(' ').match(/--port[\s=](?<hostname>[\d\w.]+:)?(?<portString>[\d]+)/)?.groups || { portString: '3000', hostname: 'localhost' };
     const port = parseInt(portString);
     
     if (Number.isNaN(port)) {

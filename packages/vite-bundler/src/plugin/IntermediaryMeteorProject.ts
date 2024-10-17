@@ -6,7 +6,7 @@ import path from 'node:path';
 import pc from 'picocolors';
 import { MeteorViteError } from '../utility/Errors';
 import { getBuildConfig } from '../utility/Helpers';
-import Logger from '../utility/BuildLogger';
+import Logger from '../utility/Logger';
 import { createWorkerFork, cwd } from '../workers';
 
 const {
@@ -14,6 +14,7 @@ const {
     packageJson: pkg,
     tempMeteorOutDir,
     tempMeteorProject,
+    useIsopack,
 } = getBuildConfig();
 
 /**
@@ -161,10 +162,6 @@ export async function prepareViteBundle() {
     profile.complete(`Vite build completed`);
     
     const entryAsset = payload.output?.find(o => o.fileName === 'meteor-entry.js' && o.type === 'chunk')
-    
-    if (!entryAsset) {
-        throw new MeteorViteError('No meteor-entry chunk found')
-    }
     
     return { payload, entryAsset }
 }
