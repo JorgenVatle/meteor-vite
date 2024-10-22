@@ -23,6 +23,6 @@
     "@types/meteor": "^2.9.8",
     "meteor-vite": "^1.8.0",
     "typescript": "^5.3.3",
-    "vite": "^4.5.2"
+    "vite": "^4.5.5"
   }
 }
