@@ -27,6 +27,9 @@ class BuildLogger {
         this.github.annotate(message, {});
         console.error(pc.red(`⚡  ${message}`), ...args)
     }
+    public warn(message: string, ...args: LogMethodArgs) {
+        console.warn(pc.yellow(`⚡  ${message}`), ...args)
+    }
     public success(message: string, ...args: LogMethodArgs) {
         console.log(pc.green(`⚡  ${message}`), ...args)
     }

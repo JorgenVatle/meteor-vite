@@ -1,5 +1,17 @@
 # meteor-vite
 
+## 2.0.0-next.6
+
+### Patch Changes
+
+- e743310e: Use any available IPC interface for workers instead of relying on one transport strategy
+
+## 2.0.0-next.5
+
+### Patch Changes
+
+- 5e669858: Update serverEntry config option to use Vite SSR build internally
+
 ## 1.12.0
 
 ### Minor Changes
@@ -34,6 +46,22 @@
 - 4d92b722: Allow Vite dev server to run without a DDP connection.
   - Fix Meteor DDP URL parsing from Meteor runtime environment. Falls back to using `MOBILE_DDP_URL`.
   - Fix #208
+
+## 2.0.0-next.4
+
+### Patch Changes
+
+- 4d92b722: Allow Vite dev server to run without a DDP connection.
+  - Fix Meteor DDP URL parsing from Meteor runtime environment. Falls back to using `MOBILE_DDP_URL`.
+  - Fix #208
+
+## 2.0.0-next.3
+
+### Minor Changes
+
+- f2e0e9d2: - Add Vite config option for bundling the Meteor server
+  - Use DDP instead of Node IPC for managing Vite Dev server status
+  - Prefetch all Vite production assets in the background using the lowest available link priority.
 
 ## 1.11.0
 
@@ -89,6 +117,25 @@
 
   - #195
   - #179
+
+## 2.0.0-next.2
+
+### Patch Changes
+
+- 8499c6a6: Loosen peer dependency requirement for Vite to allow for use with Vite v5
+
+## 2.0.0-next.1
+
+### Patch Changes
+
+- 079d1d7c: Use Vite plugin configuration instead of build-time environment variables for setting the base path and URL for assets
+
+## 2.0.0-next.0
+
+### Major Changes
+
+- 8010d5c1: Serve Vite bundle directly as static assets in production.
+  Skipping the Meteor bundling/transpilation steps for significantly faster build and client load times. ⚡
 
 ## 1.10.4
 

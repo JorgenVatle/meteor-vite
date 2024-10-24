@@ -1,3 +1,4 @@
+import type { ChildProcess } from 'concurrently/dist/src/command';
 import { fork } from 'node:child_process';
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
@@ -103,6 +104,11 @@ export function createWorkerFork(hooks: Partial<WorkerResponseHooks>, options?: 
     }
 }
 
+export type WorkerInstance = {
+    call(method: Omit<WorkerMethod, 'replies'>): void;
+    child: ChildProcess;
+}
+
 export function isMeteorIPCMessage<
     Topic extends MeteorIPCMessage['topic']
 >(message: unknown): message is MeteorIPCMessage  {
@@ -131,7 +137,7 @@ class MeteorViteError extends Error {
     }
 }
 
-export const MIN_METEOR_VITE_NPM_VERSION = { major: 1, minor: 11, patch: 1 };
+export const MIN_METEOR_VITE_NPM_VERSION = { major: 2, minor: 0, patch: 0 };
 export const cwd = process.env.METEOR_VITE_CWD ?? guessCwd();
 export const workerPath = Path.join(cwd, 'node_modules/meteor-vite/dist/bin/worker.mjs');
 export function getProjectPackageJson(): ProjectJson {

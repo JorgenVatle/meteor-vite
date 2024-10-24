@@ -109,8 +109,15 @@ build() {
     (link) || exit 1
     (cleanOutput) || exit 1
 
+    local extraArgs=""
+
+    if [ "$DEBUG" == "1" ]; then
+      extraArgs="--debug"
+    fi
+
+
     cd "$APP_DIR" || exit 1
-    meteor build "$BUILD_TARGET" --directory "$@"
+    meteor build "$BUILD_TARGET" --directory "$@" $extraArgs
 }
 
 npmPackage() {

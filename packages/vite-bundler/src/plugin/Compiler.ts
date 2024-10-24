@@ -1,11 +1,14 @@
-import Logger from '../utility/BuildLogger';
 import Path from 'node:path';
+import { getBuildConfig } from '../utility/Helpers';
+import Logger from '../utility/Logger';
 
 /**
  * Temporary file extension to apply to all files bundled by Vite.
  * This makes it easier to filter out any files that shouldn't be processed by our Meteor compiler plugin.
  */
 export const BUNDLE_FILE_EXTENSION = '_vite-bundle.tmp'
+
+const { viteOutSrcDir } = getBuildConfig();
 
 export default class Compiler {
     protected static cleanupHandlers: CleanupHandler[] = [];
@@ -32,33 +35,19 @@ export default class Compiler {
                 },
                 basename: this._formatFilename(file.getBasename()),
                 path: this._formatFilename(file.getPathInPackage()),
+                relativePath: Path.relative(viteOutSrcDir, this._formatFilename(file.getPathInPackage())),
             }
             const sourcePath = file.getPathInPackage();
             
             Logger.debug(`[${file.getArch()}] Processing: ${fileMeta.basename}`, { fileMeta });
             
-            switch (Path.extname(fileMeta.basename)) {
-                case '.js':
-                    file.addJavaScript({
-                        path: fileMeta.path,
-                        data: file.getContentsAsString(),
-                        sourcePath,
-                    })
-                    break
-                case '.css':
-                    file.addStylesheet({
-                        path: fileMeta.path,
-                        data: file.getContentsAsString(),
-                        sourcePath,
-                    })
-                    break
-                default:
-                    file.addAsset({
-                        path: fileMeta.path,
-                        data: file.getContentsAsBuffer(),
-                        sourcePath,
-                    })
-            }
+            file.addAsset({
+                path: fileMeta.relativePath,
+                data: file.getContentsAsBuffer(),
+                sourcePath,
+                cacheable: true,
+            });
+            file.cacheable = true;
         })
     }
     

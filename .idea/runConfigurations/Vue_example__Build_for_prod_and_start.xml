@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Vue example: Build for prod and start" type="js.build_tools.npm">
+    <package-json value="$PROJECT_DIR$/package.json" />
+    <command value="run" />
+    <scripts>
+      <script value="example" />
+    </scripts>
+    <arguments value="launch vue" />
+    <node-interpreter value="project" />
+    <envs>
+      <env name="USE_METEOR_BINARIES" value="0 DEBUG=1" />
+    </envs>
+    <EXTENSION ID="com.intellij.lang.javascript.buildTools.npm.rc.StartBrowserRunConfigurationExtension">
+      <browser with-js-debugger="true" />
+    </EXTENSION>
+    <method v="2" />
+  </configuration>
+</component>

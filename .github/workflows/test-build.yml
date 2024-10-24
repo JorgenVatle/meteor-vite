@@ -7,10 +7,12 @@ on:
       - main
       - release
       - meteor-v3
+      - v3
   pull_request:
     branches:
       - main
       - release
+      - v3
 
 jobs:
   vue:

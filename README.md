@@ -454,30 +454,15 @@ The Vite integration comes with two dependencies that work together to enable co
 
 
 ## Roadmap
-- [x] Development mode
-- [x] Build
-- [x] Importing non-core Meteor packages
-- [x] Lazy meteor packages
-- [x] Reify support
-    - [x] Named exports
-    - [x] Default exports
-    - [x] Re-exports (named + wildcard)
-    - [x] Re-exports via intermediary variable
+- [x] SSR (See [Vue-SSR example app](/examples/vue-ssr))
 - [x] Meteor v3 support
     - [x] Migrate bundler from Fibers to Async/Await
     - [x] Update Meteor bundle parser to support new format introduced in v3.
 - [x] Code-splitting/Dynamic imports
 - [ ] Migrate intermediary production-build transpile step from Babel to esbuild.
-- [x] SSR (See [Vue-SSR example app](/examples/vue-ssr))
-- [x] Starter/demo templates
-    - [x] [Vue 3](/examples/vue)
-        - [Live demo](https://vue--meteor-vite.wcaserver.com/)
-    - [x] [Svelte](/examples/svelte)
-        - [Live demo](https://svelte--meteor-vite.wcaserver.com/)
-    - [x] [React](/examples/react)
-        - [Live demo](https://react--meteor-vite.wcaserver.com/)
-    - [x] [SolidJS](/examples/solid)
-        - [Live demo](https://solid--meteor-vite.wcaserver.com/)
-    - [x] [Meteor v3 + Vue](/examples/meteor-v3-vue)
-        - [Live demo](https://meteor-v3-vue--meteor-vite.wcaserver.com/)
-        - [Pre-release branch](https://github.com/JorgenVatle/meteor-vite/tree/meteor-v3)
+- [ ] Automatically detect and inject React preamble into app markup.
+- [ ] Add support for Vite v5
+- [ ] Serve Vite bundle directly from Meteor, bypassing Meteor's build process.
+  - [ ] Inject Vite module preload polyfill into the Vite client entrypoint.
+  - [ ] Server-side multi-page/multi-entrypoint support.
+  - [ ] Handle parsing bundle manifest when using the `--production` flag.
