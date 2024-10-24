@@ -1,5 +1,11 @@
 # vite-bundler
 
+## 2.2.1
+
+### Patch Changes
+
+- 32c6ee64: Use any available IPC interface for workers instead of relying on one transport strategy
+
 ## 2.2.0
 
 ### Minor Changes
