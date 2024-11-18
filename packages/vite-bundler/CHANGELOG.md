@@ -1,5 +1,11 @@
 # vite-bundler
 
+## 3.0.0-alpha.24
+
+### Patch Changes
+
+- ff6eee0f: Unref child processes running in detached mode
+
 ## 3.0.0-next.23
 
 ### Patch Changes
