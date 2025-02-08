@@ -13,6 +13,13 @@ Package.registerBuildPlugin({
     sources: [
         'dist/build-plugin.mjs',
     ],
+    npmDependencies: {
+        'jiti': '2.4.2',
+    }
+});
+
+Npm.depends({
+    'jiti': '2.4.2'
 });
 
 Package.onUse((api) => {
