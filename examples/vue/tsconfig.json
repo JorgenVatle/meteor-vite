@@ -33,7 +33,7 @@
       "meteor-vite/plugin": ["../../npm-packages/meteor-vite/src/plugin/index.ts"],
       "vite": ["../../npm-packages/meteor-vite/node_modules/vite/dist/node/index.d.ts"],
     },
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "types": ["node", "mocha"],
     "esModuleInterop": true,
