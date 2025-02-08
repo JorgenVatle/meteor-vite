@@ -71,7 +71,6 @@
     "vitest": "^2.1.6"
   },
   "peerDependencies": {
-    "jiti": "^2.4.2",
     "vite": "^6.0.0"
   }
 }
