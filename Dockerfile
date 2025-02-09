@@ -71,7 +71,7 @@ COPY --link $APP_DIR/.meteor $APP_SOURCE_FOLDER/.meteor
 RUN bash $SCRIPTS_FOLDER/meteor/atmosphere-install.sh
 
 # Build for production
-COPY $APP_DIR $APP_SOURCE_FOLDER/
+COPY --link $APP_DIR $APP_SOURCE_FOLDER/
 RUN bash $SCRIPTS_FOLDER/meteor/build.sh
 
 # Meteor Production Server
@@ -79,8 +79,8 @@ RUN bash $SCRIPTS_FOLDER/meteor/build.sh
 FROM nodejs-runtime AS production-server
 
 # Import entrypoint script and production bundle
-COPY --from=meteor-bundler $SCRIPTS_FOLDER $SCRIPTS_FOLDER/
-COPY --from=meteor-bundler $APP_BUNDLE_FOLDER $APP_BUNDLE_FOLDER/
+COPY --link --from=meteor-bundler $SCRIPTS_FOLDER $SCRIPTS_FOLDER/
+COPY --link --from=meteor-bundler $APP_BUNDLE_FOLDER $APP_BUNDLE_FOLDER/
 
 # Install production npm dependencies
 RUN bash $SCRIPTS_FOLDER/app/npm-install.sh
