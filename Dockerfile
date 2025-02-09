@@ -44,11 +44,11 @@ ENV METEOR_PACKAGES_FOLDER=$ROOT_FOLDER/packages
 ENV NPM_PACKAGES_FOLDER=$ROOT_FOLDER/npm-packages
 ENV METEOR_PACKAGE_DIRS=$METEOR_PACKAGES_FOLDER
 
-COPY ./packages $METEOR_PACKAGES_FOLDER
-COPY ./npm-packages $NPM_PACKAGES_FOLDER
-COPY ./test-packages/atmosphere/ $METEOR_PACKAGES_FOLDER/
-COPY ./package*.json $ROOT_FOLDER/
-COPY ./tsup.config.ts $ROOT_FOLDER/
+COPY --link ./packages $METEOR_PACKAGES_FOLDER
+COPY --link ./npm-packages $NPM_PACKAGES_FOLDER
+COPY --link ./test-packages/atmosphere/ $METEOR_PACKAGES_FOLDER/
+COPY --link ./package*.json $ROOT_FOLDER/
+COPY --link ./tsup.config.ts $ROOT_FOLDER/
 
 # Prepare repository root-level npm dependencies
 RUN cd $ROOT_FOLDER && meteor npm ci && meteor npm run build:packages
