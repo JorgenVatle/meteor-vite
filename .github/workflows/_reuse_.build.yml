@@ -19,7 +19,7 @@ on:
         default: ghcr.io
       meteorBaseImage:
         type: string
-        default: geoffreybooth/meteor-base
+        default: jorgenvatle/meteor-base
     outputs:
       deploymentImage:
         value: ${{ jobs.docker.outputs.deploymentImage }}
