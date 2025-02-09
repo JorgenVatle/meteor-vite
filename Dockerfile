@@ -63,12 +63,16 @@ FROM meteor-base AS meteor-bundler
 
 # Install local and external npm dependencies
 COPY $APP_DIR/package*.json $APP_SOURCE_FOLDER/
-RUN bash $SCRIPTS_FOLDER/build-app-npm-dependencies.sh
+RUN bash $SCRIPTS_FOLDER/meteor/npm-install.sh
 RUN meteor npm link meteor-vite
+
+# Install Meteor's packages; speeds up the following build step if your Meteor dependencies haven't changed since the last build
+COPY --link $APP_DIR/.meteor $APP_SOURCE_FOLDER/.meteor
+RUN bash $SCRIPTS_FOLDER/meteor/atmosphere-install.sh
 
 # Build for production
 COPY $APP_DIR $APP_SOURCE_FOLDER/
-RUN bash $SCRIPTS_FOLDER/build-meteor-bundle.sh
+RUN bash $SCRIPTS_FOLDER/meteor/build.sh
 
 # Meteor Production Server
 # This is what we ship to production.
@@ -79,7 +83,7 @@ COPY --from=meteor-bundler $SCRIPTS_FOLDER $SCRIPTS_FOLDER/
 COPY --from=meteor-bundler $APP_BUNDLE_FOLDER $APP_BUNDLE_FOLDER/
 
 # Install production npm dependencies
-RUN bash $SCRIPTS_FOLDER/build-meteor-npm-dependencies.sh
+RUN bash $SCRIPTS_FOLDER/app/npm-install.sh
 
 COPY .docker/scripts $SCRIPTS_FOLDER/custom
 
