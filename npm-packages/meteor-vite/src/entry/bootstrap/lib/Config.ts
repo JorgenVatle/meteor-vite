@@ -155,5 +155,8 @@ function parsePackageJson(): ProjectJson {
         throw new Error(`⚡ Could not resolve package.json for your project: ${projectRoot}`);
     }
     
-    return JSON.parse(FS.readFileSync(path, 'utf8'));
+    return Object.assign({
+        dependencies: {},
+        devDependencies: {}
+    }, JSON.parse(FS.readFileSync(path, 'utf8')));
 }
