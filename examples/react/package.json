@@ -24,7 +24,7 @@
       "client": "client/main.js",
       "server": "server/main.js"
     },
-    "testModule": "tests/main.js"
+    "testModule": "tests/entry-meteor.js"
   },
   "devDependencies": {
     "cross-env": "^7.0.3"
