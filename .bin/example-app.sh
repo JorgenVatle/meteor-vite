@@ -73,6 +73,11 @@ install() {
   $npm i "$@"
 }
 
+test() {
+  cd "$APP_DIR" || exit 1
+  meteor test --once --driver-package jorgenvatle:vitest
+}
+
 exec:meteor() {
   cd "$APP_DIR" || exit 1
   meteor "$@"
