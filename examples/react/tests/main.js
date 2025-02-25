@@ -1,20 +1,20 @@
-import assert from "assert";
+import { describe, expect, it } from 'vitest';
 
 describe("vitetest", function () {
   it("package.json has correct name", async function () {
     const { name } = await import("../package.json");
-    assert.strictEqual(name, "vitetest");
+    expect(name).to.equal("vitetest");
   });
 
   if (Meteor.isClient) {
     it("client is not server", function () {
-      assert.strictEqual(Meteor.isServer, false);
+      expect(Meteor.isServer).to.equal(false);
     });
   }
 
   if (Meteor.isServer) {
     it("server is not client", function () {
-      assert.strictEqual(Meteor.isClient, false);
+      expect(Meteor.isClient).to.equal(false);
     });
   }
 });
