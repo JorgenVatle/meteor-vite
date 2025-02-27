@@ -10,6 +10,10 @@ if (Meteor.isServer) {
         }
         
         try {
+            if (Meteor.isTest) {
+                await runBootstrapScript('runTests');
+                return;
+            }
             await runBootstrapScript('initializeViteDevServer');
             Logger.success('Vite should be ready to go!');
         }  catch (error) {
