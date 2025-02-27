@@ -75,7 +75,7 @@ install() {
 
 test() {
   cd "$APP_DIR" || exit 1
-  meteor test --once --driver-package jorgenvatle:vitest
+  meteor test --once --driver-package jorgenvatle:vite
 }
 
 exec:meteor() {
