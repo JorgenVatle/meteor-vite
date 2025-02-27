@@ -31,6 +31,7 @@ export default defineConfig([
             }
         },
         noExternal: ['meteor'],
+        external: ['vitest'],
         esbuildPlugins: [
             EsbuildPluginMeteorStubs,
         ]
