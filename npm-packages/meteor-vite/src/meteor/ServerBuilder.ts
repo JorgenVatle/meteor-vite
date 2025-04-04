@@ -1,7 +1,6 @@
 import FS from 'fs/promises';
 import Path from 'path';
 import { OutputChunk } from 'rollup';
-import { build } from 'tsup';
 import { build as viteBuild, resolveConfig } from 'vite';
 import { MeteorViteError } from '../error/MeteorViteError';
 import Logger from '../utilities/Logger';
@@ -36,6 +35,8 @@ export async function MeteorServerBuilder({ packageJson, watch = true }: { packa
     if (!packageJson.meteor.mainModule.server) {
         throw new MeteorViteError('You need to specify a Meteor server mainModule in your package.json file!')
     }
+    
+    const { build } = await import('tsup');
     
     const noExternal: (string | RegExp)[] = [];
     
