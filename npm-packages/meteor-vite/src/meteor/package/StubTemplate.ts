@@ -19,10 +19,10 @@ export function stubTemplate({ requestId, meteorPackage, importPath, stubValidat
     importPath?: string;
 }) {
     const { packageId } = meteorPackage;
-    const stubId = packageId.replace(/[\\\/:]/g, '_');
     const submodule = meteorPackage.getModule({ importPath });
     const serializedPackage = meteorPackage.serialize({ importPath });
     const fullImportPath = submodule?.fullImportPath || packageId;
+    const stubId = fullImportPath.replace(/[\\\/:]/g, '_');
     
     const stubValidation = stubValidationTemplate({
         packageId,
