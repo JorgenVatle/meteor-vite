@@ -25,18 +25,21 @@ if (Meteor.isServer) {
         process.stdout.write(message + '\n');
     }
     
-    LogsCollection.allow({
-        insert(userId, entry: LogEntry) {
-            const logFunction = console[entry.level];
-            
-            if (!isLogMethod(entry.level, logFunction)) {
-                console.warn('Unknown "%s" log level from client', entry.level, entry.args)
-                return false;
-            }
-            
-            printEntry(entry);
-            return true;
+    const insertHook = (userId: string | null, entry: LogEntry) => {
+        const logFunction = console[entry.level];
+        
+        if (!isLogMethod(entry.level, logFunction)) {
+            console.warn('Unknown "%s" log level from client', entry.level, entry.args)
+            return false;
         }
+        
+        printEntry(entry);
+        return true;
+    }
+    
+    LogsCollection.allow({
+        insert: insertHook,
+        insertAsync: insertHook,
     })
 }
 
@@ -49,12 +52,15 @@ export const Logger: typeof console = new Proxy(console, {
         }
         
         return (...args: any[]) => {
-            LogsCollection.insert({
+            LogsCollection.insertAsync({
                 createdAt: new Date(),
                 level,
                 args: args.map(arg => safeJson(arg)),
+            }).catch(() => {
+                // Ignore error to prevent infinite logging loop.
+                // Meteor appears to emit an error message anyway, regardless of whether the exception is handled
             });
-            value(...args);
+            value.apply(this, args);
         }
     }
 });

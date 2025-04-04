@@ -9,7 +9,7 @@
     "version": true,
     "tag": true
   },
-  "baseBranch": "meteor-v2",
+  "baseBranch": "v3",
   "updateInternalDependencies": "patch",
   "ignore": []
 }

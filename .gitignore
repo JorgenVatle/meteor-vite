@@ -5,3 +5,4 @@ output/
 examples/*/vite
 examples/*/_vite-bundle
 examples/*/.meteor/local
+dist/

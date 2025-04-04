@@ -7,11 +7,12 @@ on:
       - main
       - release
       - meteor-v3
-      - meteor-v2
+      - v3
   pull_request:
     branches:
       - main
       - release
+      - v3
 
 jobs:
   vue:
@@ -43,5 +44,9 @@ jobs:
     uses: ./.github/workflows/_reuse_.build.yml
     with:
       appBasename: 'meteor-v3-vue'
-      meteorBaseImage: 'jorgenvatle/meteor-base'
-      nodeVersion: '20-alpine'
+
+  vue-ssr:
+    name: 'Vue + SSR'
+    uses: ./.github/workflows/_reuse_.build.yml
+    with:
+      appBasename: 'vue-ssr'

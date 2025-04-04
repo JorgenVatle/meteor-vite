@@ -141,6 +141,9 @@ export class MeteorInstall {
             if (name !== 'package.json') {
                 return;
             }
+            if (this.type !== 'npm') {
+                return;
+            }
             if (!module.jsonContent) {
                 throw new ModuleExportsError(`Unable to parse package.json for ${path}!`, property);
             }
@@ -150,9 +153,9 @@ export class MeteorInstall {
                 main: '',
             }, module.jsonContent);
             
-            this.name = this.packageJson.name;
-            this.packageId = this.packageJson.name;
-            this.mainModulePath = this.packageJson.main;
+            this.name = this.name || this.packageJson.name;
+            this.packageId = this.packageId || this.packageJson.name;
+            this.mainModulePath = this.mainModulePath || this.packageJson.main;
         });
     }
     

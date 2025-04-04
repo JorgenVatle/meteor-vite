@@ -7,10 +7,10 @@ on:
         type: string
       meteorRelease:
         type: string
-        default: '2.12'
+        default: '3.0.3'
       nodeVersion:
         type: string
-        default: '14-alpine'
+        default: '20-alpine'
       push:
         type: boolean
         default: false
@@ -19,7 +19,7 @@ on:
         default: ghcr.io
       meteorBaseImage:
         type: string
-        default: geoffreybooth/meteor-base
+        default: jorgenvatle/meteor-base
     outputs:
       deploymentImage:
         value: ${{ jobs.docker.outputs.deploymentImage }}
@@ -42,8 +42,8 @@ jobs:
         with:
           meteor-release: ${{ inputs.meteorRelease }}
 
-      - name: 'Install dependencies'
-        run: meteor npm run example install ${{ inputs.appBasename }}
+      - name: 'Install and link dependencies for `examples/${{ inputs.appBasename }}`'
+        run: meteor npm run example prepare ${{ inputs.appBasename }}
 
       - name: 'Link meteor-vite package'
         run: meteor npm run link ${{ inputs.appBasename }}
@@ -98,7 +98,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build & Push
+      - name: ${{ inputs.push && 'Build & Push' || 'Build' }}
         uses: docker/build-push-action@v5
         with:
           context: .

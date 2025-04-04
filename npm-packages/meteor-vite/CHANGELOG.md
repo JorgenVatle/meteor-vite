@@ -1,5 +1,136 @@
 # meteor-vite
 
+## 2.0.0
+
+### Major Changes
+
+- 8010d5c1a: Serve Vite bundle directly as static assets in production.
+  Skipping the Meteor bundling/transpilation steps for significantly faster build and client load times. ⚡
+
+  Upgrading to `v3` shouldn't require any changes to your application. But there are some changes that could potentially impact your users.
+
+  - Most of your application assets will be served from `/vite-assets/<chunkFileName>.<css | js>`
+    - If you're using a CDN and serve your app under multiple hostnames, you might want to load those assets from one host instead of relative to the current host. This can be done by setting `assetsBaseUrl` in your `meteor-vite` plugin config.
+    - Static assets served by Meteor does not have any CORS headers. You will have to apply these on your web server or use a CloudFlare transform rule if you're using a static host for your assets.
+  - [Browser support for ESM](https://caniuse.com/?search=ESM) is required. Global support is around 97% at the time of writing.
+
+### Minor Changes
+
+- f2e0e9d2: - Add Vite config option for bundling the Meteor server
+  - Use DDP instead of Node IPC for managing Vite Dev server status
+  - Prefetch all Vite production assets in the background using the lowest available link priority.
+- 436fd5bc: Use ESBuild instead of Vite's SSR bundler for Meteor server bundle.
+
+### Patch Changes
+
+- f597f099: Fix environment passthrough to Vite
+- e743310e: Use any available IPC interface for workers instead of relying on one transport strategy
+- 5e669858: Update serverEntry config option to use Vite SSR build internally
+- 079d1d7c6: Use Vite plugin configuration instead of build-time environment variables for setting the base path and URL for assets
+- 8499c6a6: Loosen peer dependency requirement for Vite to allow for use with Vite v5
+
+## 1.12.1
+
+### Patch Changes
+
+- 32c6ee64: Use any available IPC interface for workers instead of relying on one transport strategy
+
+## 1.12.0
+
+### Minor Changes
+
+- 92ce6b41: Build `serverEntry` bundles using Vite's SSR build process instead of using an inline browser build config.
+
+  - Resolves some of the configuration necessary to get the new server builds to work correctly. Default settings should now work for most users.
+  - SSR with Meteor can now be done entirely through Vite's build system.
+  - Import aliases no longer need to be defined in a Babel config if you intend to use them in server code.
+
+  #### SSR example
+
+  - See the new [Vue + SSR](/examples/vue-ssr) example app to see it in action. Or check the [live preview](https://vue-ssr--meteor-vite.wcaserver.com)!
+
+  #### Related issues
+
+  - #195
+  - #215
+
+  Related release notes: https://github.com/JorgenVatle/meteor-vite/releases/tag/vite-bundler%402.1.2
+
+## 1.11.2
+
+### Patch Changes
+
+- 9f986bde: Add failsafe for experimental serverEntry feature.
+
+## 1.11.1
+
+### Patch Changes
+
+- 4d92b722: Allow Vite dev server to run without a DDP connection.
+  - Fix Meteor DDP URL parsing from Meteor runtime environment. Falls back to using `MOBILE_DDP_URL`.
+  - Fix #208
+
+## 1.11.0
+
+### Minor Changes
+
+- 77ab5688: Refactor IPC between Meteor and the Vite Dev Server to use DDP whenever possible.
+
+  - Updated peer dependency for Vite to allow Vite v5. Meteor v2 users still need to use Vite v4 as v5 dropped support for Node v14 - the Node.js version used by Meteor v2.
+
+  ### Build Meteor Server with Vite (experimental)
+
+  Added an option to bundle the Meteor server with Vite. Bundles all your server assets into a single module before
+  passing it onto the Meteor compiler. This should significantly reduce the load on Meteor's dependency tracker, leading
+  to much faster time-to-restart times in development.
+
+  Also comes with the added flexibility provided by Vite and its plugin ecosystem. Lets you take full control over what
+  code is imported on the server and how it's transformed.
+
+  ```ts
+  // vite.config.ts
+  export default defineConfig({
+    plugins: [
+      meteor({
+        clientEntry: "./client/main.vite.ts",
+        serverEntry: "./server/main.vite.ts", // Write your server code from this entrypoint.
+      }),
+    ],
+  });
+  ```
+
+  ```json5
+  // package.json
+  {
+    meteor: {
+      mainModule: {
+        client: "./client/main.meteor.js",
+        // Create an empty main.meteor.js file in your server directory.
+        // This will be populated with your final Vite-built server bundle.
+        server: "./server/main.meteor.js",
+      },
+    },
+  }
+  ```
+
+  ### Compatability Notes
+
+  - `jorgenvatle:vite-bundler` now requires `meteor-vite@ >= v1.11.0`.
+  - This release only affects development builds. But it now assumes your development server is accessible locally over
+    DDP. If you bind Meteor to an IP address that for some reason is not accessible to other processes, you may run into
+    issues where the Vite Dev server won't start.
+
+  ### Resolves issues
+
+  - #195
+  - #179
+
+## 1.10.4
+
+### Patch Changes
+
+- 0fbb978b: Prevent Atmosphere packages' node dependencies from affecting the parent package's name and entry module
+
 ## 1.10.3
 
 ### Patch Changes

@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "lib": [
+      "DOM",
+      "ES2019"
+    ],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "strict": true,
+    "target": "ES2019"
+  },
+  "files": [
+    "./server-main.ts",
+    "./client-main.ts"
+  ]
+}

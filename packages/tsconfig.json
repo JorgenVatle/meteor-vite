@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "es2022",
+    "typeRoots": [
+      "../../examples/vue/node_modules/@types",
+      "../../examples/vue/node_modules",
+      "../../npm-packages"
+    ],
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "preserveSymlinks": true,
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "meteor/*": [
+        "../../examples/vue/node_modules/@types/meteor/*",
+        "../../examples/vue/.meteor/local/types/packages.d.ts",
+        ".npm/plugin/vite/node_modules/@types"
+      ],
+      "meteor-vite": [
+        "../../npm-packages/meteor-vite/index.d.ts",
+      ],
+      "meteor-vite/*": [
+        "../../npm-packages/meteor-vite/src/*",
+      ],
+    },
+    "skipLibCheck": true
+  }
+}

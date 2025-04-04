@@ -15,6 +15,8 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'vue'
+      meteorBaseImage: 'jorgenvatle/meteor-base'
+      nodeVersion: '20-alpine'
 
   svelte:
     name: 'Svelte'
@@ -22,6 +24,8 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'svelte'
+      meteorBaseImage: 'jorgenvatle/meteor-base'
+      nodeVersion: '20-alpine'
 
   react:
     name: 'React'
@@ -29,6 +33,8 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'react'
+      meteorBaseImage: 'jorgenvatle/meteor-base'
+      nodeVersion: '20-alpine'
 
   solid:
     name: 'Solid'
@@ -36,6 +42,8 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'solid'
+      meteorBaseImage: 'jorgenvatle/meteor-base'
+      nodeVersion: '20-alpine'
 
   vue-meteor-v3:
     name: 'Meteor v3'
@@ -43,5 +51,14 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'meteor-v3-vue'
+      meteorBaseImage: 'jorgenvatle/meteor-base'
+      nodeVersion: '20-alpine'
+
+  vue-ssr:
+    name: 'Vue + SSR'
+    uses: ./.github/workflows/_reuse_.deploy.yml
+    secrets: inherit
+    with:
+      appBasename: 'vue-ssr'
       meteorBaseImage: 'jorgenvatle/meteor-base'
       nodeVersion: '20-alpine'

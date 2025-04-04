@@ -1,0 +1,32 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Build Example: Vue" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
+    <deployment type="dockerfile">
+      <settings>
+        <option name="imageTag" value="meteor-vite/example/vue:local" />
+        <option name="buildArgs">
+          <list>
+            <DockerEnvVarImpl>
+              <option name="name" value="NODE_VERSION" />
+              <option name="value" value="20-alpine" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="METEOR_BASE_IMAGE" />
+              <option name="value" value="jorgenvatle/meteor-base" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="METEOR_RELEASE" />
+              <option name="value" value="3.0.3" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="APP_BASENAME" />
+              <option name="value" value="vue" />
+            </DockerEnvVarImpl>
+          </list>
+        </option>
+        <option name="containerName" value="" />
+        <option name="sourceFilePath" value="Dockerfile" />
+      </settings>
+    </deployment>
+    <method v="2" />
+  </configuration>
+</component>

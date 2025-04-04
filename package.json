@@ -5,7 +5,7 @@
   "workspaces": [
     "packages/vite-bundler",
     "npm-packages/meteor-vite",
-    "npm-packages/zodern-relay"
+    "npm-packages/@meteor-vite/plugin-zodern-relay"
   ],
   "dependencies": {
     "@changesets/cli": "^2.26.2"
@@ -14,35 +14,25 @@
     "concurrently": "^8.2.2"
   },
   "scripts": {
+    "start": "npm run example start",
+    "launch": "npm run example launch",
+    "build": "npm run example build",
+    "link": "npm run example link",
+
+    "release": "npm run publish:vite-bundler && changeset publish",
+    "version": "(npm run version:vite-bundler || exit 1) && changeset version",
+
+    "example": ".bin/example-app.sh",
+
     "version:vite-bundler": "meteor node .bin/release-meteor-package.mjs version",
     "publish:vite-bundler": "meteor node .bin/release-meteor-package.mjs publish",
 
-    "example": ".bin/example-app.sh",
-    "launch": "npm run example launch",
+    "start:vue": "npm start vue",
+    "start:react": "npm start react",
+    "start:<example app>": "npm start <example app>",
 
-    "version": "(npm run version:vite-bundler || exit 1) && changeset version",
-    "release": "npm run publish:vite-bundler && changeset publish",
-
-    "install:svelte": "cd examples/svelte && meteor npm install",
-    "install:vue": "cd examples/vue && meteor npm install",
-    "install:react": "cd examples/react && meteor npm install",
-    "install:package": "cd npm-packages/meteor-vite && meteor npm install",
-
-    "build": "npm run example build",
     "build:package": "cd npm-packages/meteor-vite && meteor npm run build",
-    "build:vue": "npm run example build vue",
-    "build:react": "npm run example build react",
-    "build:svelte": "npm run example build svelte",
-
-    "link": "npm run example link",
-    "link:package": "meteor npm run link:vue && meteor npm run link:svelte",
-    "link:vue": "npm run example link vue",
-    "link:svelte": "npm run example link svelte",
-    "link:react": "npm run example link react",
-
-    "start": "npm run example start",
-    "start:vue": "npm run example start vue",
-    "start:svelte": "npm run example start svelte",
-    "start:react": "npm run example start react"
+    "install:package": "cd npm-packages/meteor-vite && meteor npm install",
+    "link:package": "meteor npm run link:vue && meteor npm run link:svelte"
   }
 }

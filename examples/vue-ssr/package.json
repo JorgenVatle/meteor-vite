@@ -1,0 +1,35 @@
+{
+  "name": "vue-ssr",
+  "private": true,
+  "scripts": {
+    "start": "meteor run",
+    "build": "meteor build ../output/vue --directory",
+    "test": "meteor test --once --driver-package meteortesting:mocha",
+    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "visualize": "meteor --production --extra-packages bundle-visualizer"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.23.5",
+    "meteor-node-stubs": "^1.2.10",
+    "vue": "^3.5.12",
+    "vue-meteor-tracker": "^3.0.0-beta.7",
+    "vue-router": "^4.4.5"
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.js",
+      "server": "server/main.js"
+    },
+    "testModule": "tests/main.js"
+  },
+  "devDependencies": {
+    "@types/meteor": "^2.9.8",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "autoprefixer": "^10.4.16",
+    "meteor-vite": "^2.0.0",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.4.14",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.9"
+  }
+}

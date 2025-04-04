@@ -30,6 +30,8 @@
         "node_modules/@types/meteor/*",
         ".meteor/local/types/packages.d.ts"
       ],
+      "meteor-vite/plugin": ["../../npm-packages/meteor-vite/src/plugin/index.ts"],
+      "vite": ["../../npm-packages/meteor-vite/node_modules/vite/dist/node/index.d.ts"],
     },
     "moduleResolution": "node",
     "resolveJsonModule": true,

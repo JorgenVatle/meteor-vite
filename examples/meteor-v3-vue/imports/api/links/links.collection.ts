@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import * as Valibot from 'valibot';
 
-export default new Mongo.Collection<LinkDocument>('links');
+export default new Mongo.Collection<LinkDocument, LinkDocument>('links');
 
 export const LinkSchema = Valibot.object({
     url: Valibot.string([Valibot.maxLength(512)]),

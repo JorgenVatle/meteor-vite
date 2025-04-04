@@ -1,6 +1,6 @@
 import Path from 'path';
 import pc from 'picocolors';
-import { Plugin, PluginOption, ResolvedConfig, UserConfig } from 'vite';
+import type { Plugin, PluginOption, ResolvedConfig, UserConfig } from 'vite';
 import PackageJSON from '../../package.json';
 import { FatalMeteorViteError } from '../error/MeteorViteError';
 import type { PartialPluginOptions, PluginOptions, PluginSettings } from '../VitePluginSettings';
@@ -28,7 +28,7 @@ import { mergeWithTypes, parseConfig } from './ParseConfig';
  *     }
  * })
  */
-export default function meteor(config: PluginOptions) {
+export default function meteor(config: PluginOptions): PluginOption {
     return meteorWorker(config);
 }
 
