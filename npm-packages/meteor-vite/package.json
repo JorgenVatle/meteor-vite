@@ -8,12 +8,8 @@
   "main": "",
   "exports": {
     "./plugin": {
-      "import": [
-        "./dist/plugin/index.mjs"
-      ],
-      "require": [
-        "./dist/plugin/index.js"
-      ]
+      "import": "./dist/plugin/index.mjs",
+      "require": "./dist/plugin/index.js"
     },
     "./client": "./dist/client/index.mjs"
   },
