@@ -16,7 +16,7 @@
     "meteor-node-stubs": "^1.2.5",
     "meteor-vite": "^3.6.1",
     "svelte": "^5.2.9",
-    "vite": "^6.2.5"
+    "vite": "^6.2.6"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^5.0.3",

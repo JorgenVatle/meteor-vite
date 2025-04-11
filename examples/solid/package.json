@@ -11,7 +11,7 @@
     "@babel/runtime": "^7.27.0",
     "meteor-node-stubs": "^1.2.1",
     "solid-js": "^1.9.5",
-    "vite": "^6.2.5"
+    "vite": "^6.2.6"
   },
   "meteor": {
     "mainModule": {
