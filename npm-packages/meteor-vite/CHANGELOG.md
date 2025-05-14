@@ -1,5 +1,11 @@
 # meteor-vite
 
+## 3.7.2
+
+### Patch Changes
+
+- 614839c: Check for custom Vite config file paths when preparing client boilerplate. Ref: #341
+
 ## 3.7.1
 
 ### Patch Changes
