@@ -157,7 +157,7 @@ export async function resolveMeteorViteConfig(
     }
 }
 
-function parsePackageJson(): ProjectJson {
+export function parsePackageJson(): ProjectJson {
     const { projectRoot } = CurrentConfig;
     const path = Path.join(projectRoot, 'package.json');
     
