@@ -145,14 +145,24 @@ else {
             }
         });
     } else {
+        const filenames: string[] = [
+            'vite.config.ts',
+            'vite.config.js',
+            'vite.config.mts',
+            'vite.config.mjs',
+        ]
+        try {
+            const json = await runBootstrapScript('parsePackageJson');
+            if (json.meteor?.vite?.configFile) {
+                filenames.push(json.meteor.vite.configFile);
+                Logger.info(`Using custom Vite config file path: ${json.meteor.vite.configFile}`);
+            }
+        } catch (error: any) {
+            Logger.error(error, `Failed to resolve package.json contents. If you're using a custom Vite config file path, either use the default one or try to see why the package.json file is unavailable.`)
+        }
+        
         Plugin.registerCompiler({
-            filenames: [
-                CurrentConfig.clientEntryModule,
-                'vite.config.ts',
-                'vite.config.js',
-                'vite.config.mts',
-                'vite.config.mjs',
-            ],
+            filenames,
             extensions: [],
         }, async () => {
             const boilerplate = await runBootstrapScript('prepareDevServerBoilerplate');
