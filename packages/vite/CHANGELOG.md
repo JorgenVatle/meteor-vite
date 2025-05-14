@@ -1,5 +1,11 @@
 # jorgenvatle:vite
 
+## 1.5.3
+
+### Patch Changes
+
+- 614839c: Check for custom Vite config file paths when preparing client boilerplate. Ref: #341
+
 ## 1.5.2
 
 ### Patch Changes
