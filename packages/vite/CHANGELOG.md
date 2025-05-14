@@ -1,5 +1,11 @@
 # jorgenvatle:vite
 
+## 1.5.2
+
+### Patch Changes
+
+- e329593: Fix dynamic boilerplate check for production and development builds
+
 ## 1.5.1
 
 ### Patch Changes
