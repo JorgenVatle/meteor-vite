@@ -9,6 +9,8 @@ export default defineConfig({
     }),
     meteor({
         clientEntry: 'client/entry-vite.ts',
+        serverEntry: 'server/entry-vite.ts',
+        enableExperimentalFeatures: true,
         stubValidation: {
           warnOnly: true,
         }
