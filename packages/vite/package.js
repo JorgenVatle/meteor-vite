@@ -1,6 +1,6 @@
 Package.describe({
     name: 'jorgenvatle:vite',
-    version: '1.5.3',
+    version: '1.5.4',
     summary: `⚡ Speeds up Meteor's build and HMR processes using Vite`,
     documentation: 'README.md'
 });
