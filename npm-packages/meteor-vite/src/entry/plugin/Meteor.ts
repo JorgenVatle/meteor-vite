@@ -91,7 +91,6 @@ export function meteorWorker(config: PartialPluginOptions): PluginOption {
                     define: {
                         __VITE_ASSETS_DIR__: JSON.stringify(pluginSettings.assetsDir),
                         __VITE_DYNAMIC_ASSET_BOILERPLATE__: JSON.stringify(pluginSettings.dynamicAssetBoilerplate),
-                        __VITE_DYNAMIC_ASSET_BASE_URL__: 'process.env.METEOR_VITE_BASE_URL'
                     },
                     optimizeDeps: {
                         entries: [pluginSettings.clientEntry]
