@@ -168,7 +168,10 @@ export class PackageModule {
                     continue;
                 }
                 
-                Logger.warn(new ModuleExportsError(`Meteor bundle had a package.json key (${key}) with an unexpected value.\nThis might be important to properly parse the module's entrypoint. Do open a new issue if you run into any issues. 🙏`, prop));
+                Logger.warnOnce(
+                    { id: `unknown-package-json-field-type:${key}` },
+                    new ModuleExportsError(`Meteor bundle had a package.json key (${key}) with an unexpected value.\nThis might be important to properly parse the module's entrypoint. Do open a new issue if you run into any issues. 🙏`, prop)
+                );
                 EmittedJsonKeyWarnings.push(key);
                 continue;
             }
@@ -178,14 +181,20 @@ export class PackageModule {
             
             for (const browserProp of prop.value.properties) {
                 if (!isObjectProperty(browserProp)) {
-                    Logger.warn(new ModuleExportsError('Meteor bundle had a package.json browser property with an unexpected value!', prop));
+                    Logger.warnOnce(
+                        { id: `unknown-package-json-browser-field-type` },
+                        new ModuleExportsError('Meteor bundle had a package.json browser property with an unexpected value!', prop)
+                    );
                     continue;
                 }
                 
                 const key = propParser.getKey(browserProp);
                 
                 if (!isBooleanLiteral(browserProp.value)) {
-                    Logger.warn(new ModuleExportsError(`Meteor bundle had a package.json browser[${key}] property with an unexpected value!`, prop));
+                    Logger.warnOnce(
+                        { id: 'unknown-package-json-browser-value' },
+                        new ModuleExportsError(`Meteor bundle had a package.json browser[${key}] property with an unexpected value!`, prop)
+                    );
                     continue;
                 }
                 
