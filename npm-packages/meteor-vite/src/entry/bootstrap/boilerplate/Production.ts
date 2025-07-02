@@ -1,4 +1,5 @@
 import { WebAppInternals } from 'meteor/webapp';
+import { URL } from 'node:url';
 import { inspect } from 'node:util';
 import Path from 'path';
 import { trimLeadingSlash } from '../../../utilities';
@@ -10,6 +11,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
     
     protected readonly logger: SimpleLogger;
     protected readonly settings: Partial<{ manifest: TransformedViteManifest, imports: ManifestImports }>;
+    protected readonly baseUrlType: 'path' | 'url' = 'path';
     
     constructor(public readonly viteManifest: TransformedViteManifest) {
         super();
@@ -19,6 +21,9 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             assetDir: this.assetDir,
             baseUrl: this.baseUrl,
         });
+        if (this.baseUrl.match(/^\w+:\/\//)) {
+            this.baseUrlType = 'url';
+        }
     }
     
     public get assetDir() {
@@ -30,6 +35,9 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
     }
     
     protected filePath(file: string) {
+        if (this.baseUrlType === 'url') {
+            return new URL(file, this.baseUrl).href;
+        }
         return Path.join(this.baseUrl, file);
     }
     
