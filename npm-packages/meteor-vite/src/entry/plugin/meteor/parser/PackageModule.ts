@@ -155,15 +155,16 @@ export class PackageModule {
                 throw new ModuleExportsError('JSON module had an unexpected property export', prop);
             }
             const key = propParser.getKey(prop);
-            if (!isStringLiteral(prop.value)) {
-                if (EmittedJsonKeyWarnings.includes(key)) {
-                    return;
-                }
-                Logger.warn(new ModuleExportsError(`Meteor bundle had a package.json key (${key}) with an unexpected value.\nThis might be important to properly parse the module's entrypoint. Do open a new issue if you run into any issues. 🙏`, prop));
-                EmittedJsonKeyWarnings.push(key);
-                return;
+            if (isStringLiteral(prop.value)) {
+                Object.assign(this.jsonContent, { [key]: prop.value.value });
+                continue;
             }
-            Object.assign(this.jsonContent, { [key]: prop.value.value });
+            if (EmittedJsonKeyWarnings.includes(key)) {
+                continue;
+            }
+            
+            Logger.warn(new ModuleExportsError(`Meteor bundle had a package.json key (${key}) with an unexpected value.\nThis might be important to properly parse the module's entrypoint. Do open a new issue if you run into any issues. 🙏`, prop));
+            EmittedJsonKeyWarnings.push(key);
         }
     }
     
