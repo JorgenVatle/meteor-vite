@@ -34,7 +34,9 @@ class CompilerPlugin {
             
             Logger.debug(`[${Colorize.arch(file.getArch())}] Processing: ${fileMeta.basename}`, Colorize.object({ fileMeta }));
             
-            this.addHtmlBoilerplate(file);
+            if (!this.config.dynamicAssetBoilerplate) {
+                this.addHtmlBoilerplate(file);
+            }
             
             if (this.config.mode !== 'production') {
                 return;
