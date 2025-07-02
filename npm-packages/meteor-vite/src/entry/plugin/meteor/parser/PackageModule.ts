@@ -154,11 +154,35 @@ export class PackageModule {
             if (!isObjectProperty(prop)) {
                 throw new ModuleExportsError('JSON module had an unexpected property export', prop);
             }
+            
             const key = propParser.getKey(prop);
+            
             if (isStringLiteral(prop.value)) {
                 Object.assign(this.jsonContent, { [key]: prop.value.value });
                 continue;
             }
+            
+            if (key === 'browser' && isObjectExpression(prop.value)) {
+                const browser: Record<string, string> = {};
+                
+                for (const browserProp of prop.value.properties) {
+                    if (!isObjectProperty(browserProp)) {
+                        Logger.warn(new ModuleExportsError('Meteor bundle had a package.json browser property with an unexpected value!', prop));
+                        continue;
+                    }
+                    
+                    if (!isStringLiteral(browserProp.value)) {
+                        Logger.warn(new ModuleExportsError('Meteor bundle had a package.json browser property with an unexpected value!', prop));
+                        continue;
+                    }
+                    
+                    Object.assign(browser, { [propParser.getKey(browserProp)]: browserProp.value.value });
+                }
+                
+                Object.assign(this.jsonContent, { browser });
+                continue;
+            }
+            
             if (EmittedJsonKeyWarnings.includes(key)) {
                 continue;
             }
