@@ -20,7 +20,7 @@ Meteor.startup(async () => {
         files,
     });
     
-    WebApp.handlers.use(boilerplate.baseUrl, (req, res, next) => {
+    WebApp.handlers.use(boilerplate.assetDir, (req, res, next) => {
         res.setHeader('Cache-Control', 'no-store');
         res.setHeader('Content-Type', 'text/plain');
         res.writeHead(404, 'Not found');
