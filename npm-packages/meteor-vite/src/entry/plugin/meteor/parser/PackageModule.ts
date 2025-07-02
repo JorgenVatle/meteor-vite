@@ -1,5 +1,6 @@
 import {
     isAssignmentExpression,
+    isBooleanLiteral,
     isCallExpression,
     isIdentifier,
     isMemberExpression,
@@ -183,7 +184,7 @@ export class PackageModule {
                 
                 const key = propParser.getKey(browserProp);
                 
-                if (!isStringLiteral(browserProp.value)) {
+                if (!isBooleanLiteral(browserProp.value)) {
                     Logger.warn(new ModuleExportsError(`Meteor bundle had a package.json browser[${key}] property with an unexpected value!`, prop));
                     continue;
                 }
