@@ -1,14 +1,22 @@
 import pc from 'picocolors';
 import { MeteorViteError } from '../error/MeteorViteError';
 
-function createLogger<Params extends DefaultParams>(formatter: (...params: Params) => DefaultParams): LoggerObject<Params> {
+function createLogger<Params extends DefaultParams>(formatter: (...params: Params) => DefaultParams): Logger<Params> {
     return {
+        _warnings: new Set(),
         info: (...params: Params) => console.log(...formatMessage(formatter(...params))),
         warn: (...params: Params) => console.warn(...formatMessage(formatter(...params))),
         error: (...params: Params) => console.error(...formatMessage(formatter(...params))),
         debug: (...params: Params) => process.env.ENABLE_DEBUG_LOGS && console.debug(
             ...formatMessage(formatter(...params)).map((field) => typeof field === 'string' ? pc.dim(field) : field)
         ),
+        warnOnce(warning: { id: string }, ...params: Params) {
+            if (this._warnings.has(warning.id)) {
+                return;
+            }
+            this._warnings.add(warning.id);
+            this.warn(...params);
+        }
     }
 }
 
@@ -44,6 +52,10 @@ export const createLabelledLogger = (label: string) => createLogger((
 });
 
 export type LabelLogger = ReturnType<typeof createLabelledLogger>
+interface Logger<Params extends DefaultParams> extends LoggerObject<Params> {
+    _warnings: Set<string>;
+    warnOnce(warning: { id: string }, ...params: DefaultParams): void;
+}
 
 export default createLogger((...params: DefaultParams) => params);
 
