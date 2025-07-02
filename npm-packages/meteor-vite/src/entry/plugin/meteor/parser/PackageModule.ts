@@ -162,33 +162,35 @@ export class PackageModule {
                 continue;
             }
             
-            if (key === 'browser' && isObjectExpression(prop.value)) {
-                const browser: Record<string, string> = {};
-                
-                for (const browserProp of prop.value.properties) {
-                    if (!isObjectProperty(browserProp)) {
-                        Logger.warn(new ModuleExportsError('Meteor bundle had a package.json browser property with an unexpected value!', prop));
-                        continue;
-                    }
-                    
-                    if (!isStringLiteral(browserProp.value)) {
-                        Logger.warn(new ModuleExportsError('Meteor bundle had a package.json browser property with an unexpected value!', prop));
-                        continue;
-                    }
-                    
-                    Object.assign(browser, { [propParser.getKey(browserProp)]: browserProp.value.value });
+            if (key !== 'browser' || !isObjectExpression(prop.value)) {
+                if (EmittedJsonKeyWarnings.includes(key)) {
+                    continue;
                 }
                 
-                Object.assign(this.jsonContent, { browser });
+                Logger.warn(new ModuleExportsError(`Meteor bundle had a package.json key (${key}) with an unexpected value.\nThis might be important to properly parse the module's entrypoint. Do open a new issue if you run into any issues. 🙏`, prop));
+                EmittedJsonKeyWarnings.push(key);
                 continue;
             }
             
-            if (EmittedJsonKeyWarnings.includes(key)) {
-                continue;
+            const browser: Record<string, string> = {};
+            Object.assign(this.jsonContent, { browser });
+            
+            for (const browserProp of prop.value.properties) {
+                if (!isObjectProperty(browserProp)) {
+                    Logger.warn(new ModuleExportsError('Meteor bundle had a package.json browser property with an unexpected value!', prop));
+                    continue;
+                }
+                
+                const key = propParser.getKey(browserProp);
+                
+                if (!isStringLiteral(browserProp.value)) {
+                    Logger.warn(new ModuleExportsError(`Meteor bundle had a package.json browser[${key}] property with an unexpected value!`, prop));
+                    continue;
+                }
+                
+                Object.assign(browser, { [key]: browserProp.value.value });
             }
             
-            Logger.warn(new ModuleExportsError(`Meteor bundle had a package.json key (${key}) with an unexpected value.\nThis might be important to properly parse the module's entrypoint. Do open a new issue if you run into any issues. 🙏`, prop));
-            EmittedJsonKeyWarnings.push(key);
         }
     }
     
