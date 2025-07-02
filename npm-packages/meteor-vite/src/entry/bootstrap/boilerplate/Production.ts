@@ -15,7 +15,10 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         super();
         this.settings = { manifest: viteManifest };
         this.logger = createSimpleLogger('HTML Boilerplate');
-        this.logger.info(`Serving Vite assets from ${this.baseUrl}`);
+        this.logger.info(`Serving Vite assets from ${this.baseUrl}`, {
+            assetDir: this.assetDir,
+            baseUrl: this.baseUrl,
+        });
     }
     
     public get assetDir() {
