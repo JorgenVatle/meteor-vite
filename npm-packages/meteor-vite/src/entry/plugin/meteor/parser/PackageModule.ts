@@ -17,10 +17,6 @@ import { ModuleExportData, propParser } from './Parser';
 import { ModuleExportsError } from './ParserError';
 import { KnownModuleMethodNames, ModuleMethod, ModuleMethodName } from './ParserTypes';
 
-// List of package.json key warnings already emitted.
-// Prevents us from emitting a warning for a key more than once.
-const EmittedJsonKeyWarnings: string[] = [];
-
 /**
  * An individual file within a built Meteor package's meteorInstall file tree.
  * It essentially represents a single file and its associated exports within a given Meteor package.
@@ -164,15 +160,10 @@ export class PackageModule {
             }
             
             if (key !== 'browser' || !isObjectExpression(prop.value)) {
-                if (EmittedJsonKeyWarnings.includes(key)) {
-                    continue;
-                }
-                
                 Logger.warnOnce(
                     { id: `unknown-package-json-field-type:${key}` },
                     new ModuleExportsError(`Meteor bundle had a package.json key (${key}) with an unexpected value.\nThis might be important to properly parse the module's entrypoint. Do open a new issue if you run into any issues. 🙏`, prop)
                 );
-                EmittedJsonKeyWarnings.push(key);
                 continue;
             }
             
