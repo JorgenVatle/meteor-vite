@@ -8,7 +8,6 @@
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
-  "type": "module",
   "dependencies": {
     "@babel/runtime": "^7.27.0",
     "@meteor-vite/test-externalization": "^1.0.0",
