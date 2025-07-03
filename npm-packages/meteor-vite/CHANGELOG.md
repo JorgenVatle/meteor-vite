@@ -1,5 +1,28 @@
 # meteor-vite
 
+## 3.8.0
+
+### Minor Changes
+
+- ce4ef77: Update Atmosphere package parser to handle nested "browser" fields in package.json exports.
+
+  - #344
+
+### Patch Changes
+
+- 6bcb86d: Use Vite assets dir as base path instead of full assets URL for Vite asset middleware.
+
+  - Fixes #346
+
+- bdb3d8e: Fix issue where Vite asset base URLs that include a protocol (e.g. https) would result in malformed asset URLs being added to the production app's main HTML file.
+
+  - #345
+  - Added one-off notice to Vite asset 404 logger with info on how to debug assets potentially not being included in the Meteor bundle.
+
+- c65bd34: Move redundant **VITE_DYNAMIC_ASSET_BASE_URL** global definition into production server entry
+
+  - Fixes #340
+
 ## 3.7.2
 
 ### Patch Changes

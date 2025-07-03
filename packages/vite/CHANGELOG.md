@@ -1,5 +1,14 @@
 # jorgenvatle:vite
 
+## 1.5.4
+
+### Patch Changes
+
+- abd55a2: Fix duplicated HTML boilerplate when dynamic boilerplate is enabled.
+
+  - #342
+  - Fixes #335
+
 ## 1.5.3
 
 ### Patch Changes
