@@ -1,7 +1,7 @@
-module.exports = {
+export default {
   plugins: [
     require('tailwindcss/nesting'),
-    require('tailwindcss')('./tailwind.config.cjs'),
+    require('tailwindcss')('./tailwind.config.mjs'),
     require('autoprefixer'),
   ],
 }
