@@ -102,7 +102,7 @@ export function createSimpleLogger(label: string): SimpleLogger {
         warn: log(console.warn, pc.yellow),
         debug: log(
             debugEnabled ? console.debug : () => {},
-            pc.dim
+            (msg) => pc.dim(pc.blue(msg))
         )
     }
 }
