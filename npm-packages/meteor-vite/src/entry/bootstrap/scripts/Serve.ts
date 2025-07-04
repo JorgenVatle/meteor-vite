@@ -10,7 +10,7 @@ export async function initializeViteDevServer() {
      * production bundle as that is likely not desired behavior and won't work
      * anyway since dev dependencies aren't available.
      */
-    if (import.meta.env.MODE !== 'development') {
+    if (import.meta?.env?.MODE !== 'development') {
         Logger.info('Prevented the Vite dev server from firing up, as you are already running a production build.');
         return;
     }
