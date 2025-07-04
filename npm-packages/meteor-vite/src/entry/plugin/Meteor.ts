@@ -51,7 +51,7 @@ export function meteorWorker(config: PartialPluginOptions): PluginOption {
             name: 'meteor-vite:config',
             enforce,
             resolveId,
-            config: (userConfig) =>  {
+            config: (userConfig, { command }) =>  {
                 const pluginSettings = mergeMeteorSettings(userConfig, {
                     _configSource: 'plugin',
                     meteorStubs: {
@@ -91,6 +91,20 @@ export function meteorWorker(config: PartialPluginOptions): PluginOption {
                     define: {
                         __VITE_ASSETS_DIR__: JSON.stringify(pluginSettings.assetsDir),
                         __VITE_DYNAMIC_ASSET_BOILERPLATE__: JSON.stringify(pluginSettings.dynamicAssetBoilerplate),
+                        
+                        /**
+                         * Used to determine whether the Meteor server is running in production with a finished
+                         * production build.
+                         *
+                         * Essentially to prevent any attempts to start the Vite dev server in production when running
+                         * in production with a NODE_ENV not set to 'production', since the dev server likely won't
+                         * have dependencies available in the first place.
+                         */
+                        __VITE_RUNTIME_ENV__: JSON.stringify(
+                            command === 'build'
+                            ? 'production'
+                            : 'development'
+                        ),
                     },
                     optimizeDeps: {
                         entries: [pluginSettings.clientEntry]
