@@ -226,6 +226,7 @@ export type StubValidationSettings = PluginSettings['stubValidation'];
  */
 export type ProjectJson = {
     name: string;
+    type?: 'module' | 'commonjs',
     dependencies: {
         'meteor-vite'?: string;
     }
