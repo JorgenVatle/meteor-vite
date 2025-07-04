@@ -2,6 +2,8 @@ import FS from 'fs';
 import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
 import { MeteorViteError } from '../../../error/MeteorViteError';
+import { Colorize } from '../../../utilities';
+import Logger from '../../../utilities/Logger';
 import { meteorWorker } from '../../plugin/Meteor';
 import { type ProjectJson, type ResolvedMeteorViteConfig } from '../../plugin/Settings';
 import { clientMainModule, serverMainModule } from '../scripts/Setup';
@@ -19,6 +21,15 @@ export async function resolveMeteorViteConfig(
     const { projectRoot, outDir } = CurrentConfig;
     const packageJson = parsePackageJson();
     process.chdir(projectRoot);
+    
+    if (FS.existsSync(Path.join(projectRoot, '.meteorignore'))) {
+        Logger.warnOnce({ id: '.meteorignore' }, [
+            `Detected ${Colorize.fileType('.meteorignore')} file. Make sure that the paths within won't `,
+            `match any files within ${Colorize.filepath('./_vite-bundle')} as this could lead to certain assets not `,
+            `being available in production. Anything outside of this directory you're free to ignore, you can even `,
+            `ignore source files as long as they are imported by your Vite entry module.`
+        ]);
+    }
     
     /**
      * Only available within the context of the compiler plugin.
