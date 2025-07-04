@@ -52,7 +52,7 @@ export default new class Instance {
                         `available in production.`,
                         '\n\n',
                         `Anything outside of this directory you're free to ignore, you can even ignore source`,
-                        `files as long as they are imported by your Vite entry module.\n\n`,
+                        `files as long as they are imported by your Vite entry module.`,
                     ],
                 ),
             );
@@ -76,7 +76,7 @@ export default new class Instance {
                     '\n\n ',
                     'The best workaround for using package.json "module" types is to symlink your',
                     `.meteor/local directory outside of your project root\n`,
-                    `(e.g. ${Colorize.command('ln -s /tmp/.meteor-local/my-app .meteor/local')})\n\n`
+                    `(e.g. ${Colorize.command('ln -s /tmp/.meteor-local/my-app .meteor/local')})`
                 ]
             ))
         }

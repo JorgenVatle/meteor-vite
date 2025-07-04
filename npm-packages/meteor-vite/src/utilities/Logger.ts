@@ -15,9 +15,26 @@ function createLogger<Params extends DefaultParams>(formatter: (...params: Param
             if (this._warnings.has(warning.id)) {
                 return;
             }
+            const suppressionNotice = pc.dim([
+                `You can suppress this warning by setting`,
+                `SUPPRESS_VITE_WARNINGS=${pc.green(`'some-warning,${pc.yellow(warning.id)},another-warning,etc'`)} in`,
+                `your environment.`
+            ].join(' '));
+            
             this._warnings.add(warning.id);
-            this.warn(...params);
-            console.info(pc.dim(`You can suppress this warning by setting SUPPRESS_VITE_WARNINGS=${pc.green(`'some-warning,${pc.yellow(warning.id)},another-warning,etc'`)} in your environment.`))
+            
+            console.log('\n');
+            
+            const lines = [
+                params,
+                [
+                    '\n\n   ',
+                    suppressionNotice,
+                    '\n\n'
+                ].join(''),
+            ].flat() as Params;
+            
+            this.warn(...lines);
         }
     }
 }
