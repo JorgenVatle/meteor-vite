@@ -1,7 +1,9 @@
-import pc from 'picocolors';
-import { inspect } from 'node:util';
+import { createSimpleLogger } from 'meteor-vite/utilities';
 import fs from 'node:fs';
 import { performance } from 'node:perf_hooks';
+import { inspect } from 'node:util';
+
+const log = createSimpleLogger('vite-bundler');
 
 class Logger {
     protected debugEnabled = false;
@@ -20,23 +22,20 @@ class Logger {
     }
     
     public info(message: string, ...args: LogMethodArgs) {
-        console.info(pc.blue(`⚡  ${message}`), ...args)
+        log.info(message, ...args);
     }
     public error(message: string, ...args: LogMethodArgs) {
         this.github.annotate(message, {});
-        console.error(pc.red(`⚡  ${message}`), ...args)
+        log.error(message, ...args);
     }
     public warn(message: string, ...args: LogMethodArgs) {
-        console.warn(pc.yellow(`⚡  ${message}`), ...args)
+        log.warn(message, ...args);
     }
     public success(message: string, ...args: LogMethodArgs) {
-        console.log(pc.green(`⚡  ${message}`), ...args)
+        log.success(message, ...args);
     }
     public debug(message: string, ...args: LogMethodArgs) {
-        if (!this.debugEnabled) {
-            return;
-        }
-        console.debug(pc.dim(pc.blue(`⚡  ${message}`)), ...args)
+        log.debug(message, ...args)
     }
     
     public startProfiler() {
