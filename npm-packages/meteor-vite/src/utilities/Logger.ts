@@ -15,11 +15,12 @@ function createLogger<Params extends DefaultParams>(formatter: (...params: Param
             if (this._warnings.has(warning.id)) {
                 return;
             }
+            const leftPad = ' '.repeat(3);
+            const SUPPRESS_VITE_WARNINGS = pc.bold('SUPPRESS_VITE_WARNINGS');
             const suppressionNotice = pc.dim([
-                `You can suppress this warning by setting`,
-                `SUPPRESS_VITE_WARNINGS=${pc.green(`'some-warning,${pc.yellow(warning.id)},another-warning,etc'`)} in`,
-                `your environment.`
-            ].join(' '));
+                `Add ${SUPPRESS_VITE_WARNINGS} to your environment to suppress this warning.`,
+                `Example: ${SUPPRESS_VITE_WARNINGS}=${pc.green(`'some-warning,${pc.yellow(warning.id)},another-warning,etc'`)}`,
+            ].join(`\n${leftPad}`));
             
             this._warnings.add(warning.id);
             
@@ -28,7 +29,8 @@ function createLogger<Params extends DefaultParams>(formatter: (...params: Param
             const lines = [
                 params,
                 [
-                    '\n\n   ',
+                    '\n\n',
+                    leftPad,
                     suppressionNotice,
                     '\n\n'
                 ].join(''),
