@@ -88,7 +88,7 @@ export const BuildLogger = {
     debug: (message: string, ...params: DefaultParams) => process.env.ENABLE_DEBUG_LOGS && console.debug(...formatMessage([pc.dim(message), ...params])),
 }
 
-export function createSimpleLogger(label: string, { debug = false }): SimpleLogger {
+export function createSimpleLogger(label: string, { debug = false } = {}): SimpleLogger {
     const log = (log: typeof console.log, colorize: typeof pc.white) => {
         return (...params: unknown[]) => log(`⚡  ${label} ${colorize('%s')}`, ...params);
     }
