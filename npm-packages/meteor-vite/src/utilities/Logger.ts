@@ -2,8 +2,9 @@ import pc from 'picocolors';
 import { MeteorViteError } from '../error/MeteorViteError';
 
 function createLogger<Params extends DefaultParams>(formatter: (...params: Params) => DefaultParams): Logger<Params> {
+    const _warnings = new Set<string>(process.env.SUPPRESS_VITE_WARNINGS?.split(',') ?? []);
     return {
-        _warnings: new Set(),
+        _warnings,
         info: (...params: Params) => console.log(...formatMessage(formatter(...params))),
         warn: (...params: Params) => console.warn(...formatMessage(formatter(...params))),
         error: (...params: Params) => console.error(...formatMessage(formatter(...params))),
@@ -16,6 +17,7 @@ function createLogger<Params extends DefaultParams>(formatter: (...params: Param
             }
             this._warnings.add(warning.id);
             this.warn(...params);
+            console.info(pc.dim(`You can suppress this warning by setting SUPPRESS_VITE_WARNINGS=${pc.green(`'some-warning,${pc.yellow(warning.id)},another-warning,etc'`)} in your environment.`))
         }
     }
 }
