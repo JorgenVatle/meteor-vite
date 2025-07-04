@@ -3,6 +3,15 @@ import Path from 'path';
 import { defineConfig } from 'tsup';
 import { EsbuildPluginMeteorStubs } from '../../tsup.config';
 
+const STRIP_ANSI_DEPS = [
+    'wrap-ansi',
+    'strip-ansi',
+    'ansi-regex',
+    'emoji-regex',
+    'string-width',
+    'get-east-asian-width',
+]
+
 export default defineConfig([
     // Internal entry points
     {
@@ -29,7 +38,7 @@ export default defineConfig([
                 console.warn(error);
             }
         },
-        noExternal: ['meteor'],
+        noExternal: ['meteor', 'picocolors', ...STRIP_ANSI_DEPS],
         esbuildPlugins: [
             EsbuildPluginMeteorStubs,
         ]
