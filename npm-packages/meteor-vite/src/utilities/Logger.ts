@@ -88,12 +88,13 @@ export const BuildLogger = {
     debug: (message: string, ...params: DefaultParams) => process.env.ENABLE_DEBUG_LOGS && console.debug(...formatMessage([pc.dim(message), ...params])),
 }
 
-export function createSimpleLogger(label: string): SimpleLogger {
+export function createSimpleLogger(label: string, { debug = false }): SimpleLogger {
     const log = (log: typeof console.log, colorize: typeof pc.white) => {
         return (...params: unknown[]) => log(`⚡  ${label} ${colorize('%s')}`, ...params);
     }
-    const debugEnabled = process.env.ENABLE_DEBUG_LOGS
-        || process.env.DEBUG?.toLowerCase()?.includes(`${label.toLowerCase()}:*`);
+    const debugEnabled = debug
+        || process.env.ENABLE_DEBUG_LOGS
+        || process.env.DEBUG?.toLowerCase()?.includes(`${label.toLowerCase()}:*`)
     
     return {
         info: log(console.info, pc.blue),
