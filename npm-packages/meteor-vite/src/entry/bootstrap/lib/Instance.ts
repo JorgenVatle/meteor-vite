@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import Path from 'path';
 import pc from 'picocolors';
 import { version as viteVersion } from 'vite';
-import { Colorize } from '../../../utilities';
+import { Colorize, formatLogBlock } from '../../../utilities';
 import { version } from '../../../utilities/Constants';
 import Logger, { createSimpleLogger } from '../../../utilities/Logger';
 import type { ProjectJson, ResolvedMeteorViteConfig } from '../../plugin/Settings';
@@ -44,14 +44,19 @@ export default new class Instance {
     public emitWarningMessages(packageJson: ProjectJson) {
         const { projectRoot} = CurrentConfig;
         if (FS.existsSync(Path.join(projectRoot, '.meteorignore'))) {
-            Logger.warnOnce({ id: '.meteorignore' }, [
-                `Detected ${Colorize.fileType('.meteorignore')} file.`,
-                `Make sure that the paths within won't match any files within ${Colorize.filepath('./_vite-bundle')} as this`,
-                `could lead to certain assets not being available in production.`,
-                '',
-                `Anything outside of this directory you're free to ignore, you can even ignore source`,
-                `files as long as they are imported by your Vite entry module.\n\n`,
-            ].join('\n   '));
+            Logger.warnOnce({ id: '.meteorignore' }, formatLogBlock(
+                    `Detected ${Colorize.fileType('.meteorignore')} file.`,
+                    [
+                        `Make sure that the paths within won't match any files within`,
+                        `${Colorize.filepath('./_vite-bundle')} as this could lead to certain assets not being`,
+                        `available in production.`,
+                        '\n\n',
+                        `Anything outside of this directory you're free to ignore, you can even ignore source`,
+                        `files as long as they are imported by your Vite entry module.\n\n`,
+                    ],
+                ),
+            );
+            
         }
         
         const nonEsmConfigFile = FS.existsSync(Path.join(projectRoot, 'vite.config.ts')) || FS.existsSync(Path.join(projectRoot, 'vite.config.js'));
@@ -59,15 +64,21 @@ export default new class Instance {
         if (packageJson.type !== 'module' && nonEsmConfigFile) {
             const mts = Colorize.fileType('.mts');
             const mjs = Colorize.fileType('.mjs');
-            Logger.warnOnce({ id: '.viteignore' }, [
+            Logger.warnOnce({ id: '.viteignore' }, formatLogBlock(
                 `Vite config without ${mts} or ${mjs} extension detected.`,
-                'This will likely prevent Meteor from starting when trying to resolve your config.',
-                `Renaming ${Colorize.fileType('vite.config.ts')} to ${Colorize.fileType('vite.config.mts')} should resolve the issue this in most cases`,
-                '',
-                `Setting ${Colorize.jsonValue('"type": "module"')} in your ${Colorize.fileType('package.json')} should fix this, but Meteor lacks good support for this`,
-                'at the time of writing. The best workaround for using package.json "module" types is to symlink your',
-                `.meteor/local directory outside of your project root (e.g. ${Colorize.command('ln -s /tmp/.meteor-local/my-app .meteor/local')})\n\n`,
-            ].join('\n   '))
+                [
+                    'This will likely prevent Meteor from starting when trying to resolve your config.',
+                    `Renaming ${Colorize.fileType('vite.config.ts')} to ${Colorize.fileType('vite.config.mts')} should`,
+                    `resolve the issue this in most cases.`,
+                    '\n\n',
+                    `Setting ${Colorize.jsonValue('"type": "module"')} in your ${Colorize.fileType('package.json')}`,
+                    `should fix this, but Meteor lacks good support for this at the time of writing.`,
+                    '\n\n ',
+                    'The best workaround for using package.json "module" types is to symlink your',
+                    `.meteor/local directory outside of your project root\n`,
+                    `(e.g. ${Colorize.command('ln -s /tmp/.meteor-local/my-app .meteor/local')})\n\n`
+                ]
+            ))
         }
     }
 }

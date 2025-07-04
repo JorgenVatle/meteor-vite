@@ -1,6 +1,7 @@
 import Path from 'path';
 import pc from 'picocolors';
 import { inspect } from 'util';
+import wrapAnsi from 'wrap-ansi';
 
 export const Colorize = {
     filepath: pc.cyan,
@@ -23,6 +24,19 @@ export const Colorize = {
  */
 function formatImportPath(path: string) {
     return path.replaceAll(Path.sep, Path.posix.sep);
+}
+
+/**
+ * Format a log message with a title and content.
+ * @param title Title of the log message
+ * @param content Content of the log message
+ */
+export function formatLogBlock(title: string, content: string[]) {
+    return [
+        title,
+        '',
+        wrapAnsi(content.join(' '), 80).replaceAll('\n', '\n   '),
+    ].flat().join('\n   ');
 }
 
 /**
