@@ -3,11 +3,9 @@ import fs from 'node:fs';
 import { performance } from 'node:perf_hooks';
 import { inspect } from 'node:util';
 
-const log = createSimpleLogger('vite-bundler');
-
 class Logger {
-    protected debugEnabled = false;
     protected github = new GithubActions();
+    protected log;
     protected static DEBUG_ENV_TRIGGERS = [
         'true',
         '*',
@@ -15,27 +13,27 @@ class Logger {
     ]
     constructor() {
         const debugEnv = process.env.DEBUG || 'false';
-        this.debugEnabled = !!debugEnv.trim().split(/\s+/).find((field) => {
+        const debugEnabled = !!debugEnv.trim().split(/\s+/).find((field) => {
             return Logger.DEBUG_ENV_TRIGGERS.includes(field.trim())
         });
-        
+        this.log = createSimpleLogger('vite-bundler', { debug: debugEnabled });
     }
     
     public info(message: string, ...args: LogMethodArgs) {
-        log.info(message, ...args);
+        this.log.info(message, ...args);
     }
     public error(message: string, ...args: LogMethodArgs) {
         this.github.annotate(message, {});
-        log.error(message, ...args);
+        this.log.error(message, ...args);
     }
     public warn(message: string, ...args: LogMethodArgs) {
-        log.warn(message, ...args);
+        this.log.warn(message, ...args);
     }
     public success(message: string, ...args: LogMethodArgs) {
-        log.success(message, ...args);
+        this.log.success(message, ...args);
     }
     public debug(message: string, ...args: LogMethodArgs) {
-        log.debug(message, ...args)
+        this.log.debug(message, ...args)
     }
     
     public startProfiler() {
