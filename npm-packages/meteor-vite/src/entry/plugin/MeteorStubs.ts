@@ -8,8 +8,8 @@ import { MeteorViteError } from '../../error/MeteorViteError';
 import { Colorize } from '../../utilities/Formatting';
 import MeteorPackage from './meteor/package/components/MeteorPackage';
 import { stubTemplate } from './meteor/package/StubTemplate';
-import ViteLoadRequest from './ViteLoadRequest';
 import { type PluginSettings, ResolvedMeteorViteConfig } from './Settings';
+import ViteLoadRequest from './ViteLoadRequest';
 
 export const MeteorStubs: () => Promise<Plugin> = setupPlugin(async () => {
     return {
@@ -59,7 +59,7 @@ export const MeteorStubs: () => Promise<Plugin> = setupPlugin(async () => {
                 'Request duration': `${Date.now() - timeStarted}ms`,
             });
             
-            if (request.context.pluginSettings.meteorStubs.debug) {
+            if (request.context.pluginSettings.meteorStubs?.debug) {
                 await storeDebugSnippet({ request, stubTemplate: template, meteorPackage })
             }
             
