@@ -92,6 +92,8 @@ export function createSimpleLogger(label: string): SimpleLogger {
     const log = (log: typeof console.log, colorize: typeof pc.white) => {
         return (...params: unknown[]) => log(`⚡  ${label} ${colorize('%s')}`, ...params);
     }
+    const debugEnabled = process.env.ENABLE_DEBUG_LOGS
+        || process.env.DEBUG?.toLowerCase()?.includes(`${label.toLowerCase()}:*`);
     
     return {
         info: log(console.info, pc.blue),
@@ -99,7 +101,7 @@ export function createSimpleLogger(label: string): SimpleLogger {
         error: log(console.error, pc.red),
         warn: log(console.warn, pc.yellow),
         debug: log(
-            process.env.ENABLE_DEBUG_LOGS ? console.debug : () => {},
+            debugEnabled ? console.debug : () => {},
             pc.dim
         )
     }
