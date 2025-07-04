@@ -1,13 +1,13 @@
-import './main.pcss'
+import './main.css';
+import { check } from 'meteor/check';
 
-import { Meteor } from 'meteor/meteor'
-import { createApp } from 'vue'
-import { Logger, WrapConsole } from '../api/logger';
-import { router } from './router'
-import { VueMeteor } from './v-meteor'
-import App from './App.vue'
-import { MEOWMEOW } from 'meteor/test:lazy'
-import { check } from 'meteor/check'
+import { Meteor } from 'meteor/meteor';
+import { MEOWMEOW } from 'meteor/test:lazy';
+import { createApp } from 'vue';
+import { WrapConsole } from '../api/logger';
+import App from './App.vue';
+import { router } from './router';
+import { VueMeteor } from './v-meteor';
 import './tests/ts-modules.test';
 
 console.log('lazy meteor package:', MEOWMEOW)
