@@ -10,6 +10,7 @@ const STRIP_ANSI_DEPS = [
     'emoji-regex',
     'string-width',
     'get-east-asian-width',
+    'eastasianwidth',
 ]
 
 export default defineConfig([
