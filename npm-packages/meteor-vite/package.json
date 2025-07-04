@@ -57,9 +57,7 @@
     "@babel/traverse": "^7.27.0",
     "execa": "^9.5.1",
     "p-limit": "^3.1.0",
-    "picocolors": "^1.0.0",
-    "semver": "^7.6.3",
-    "wrap-ansi": "^9.0.0"
+    "semver": "^7.6.3"
   },
   "devDependencies": {
     "@babel/generator": "^7.23.6",
@@ -68,10 +66,12 @@
     "@types/meteor": "^2.9.8",
     "@types/node": "^20.3.3",
     "@types/semver": "^7.5.8",
+    "picocolors": "^1.1.1",
     "tsup": "^8.4.0",
     "typescript": "^5.1.6",
     "vite": "^6.2.5",
-    "vitest": "^2.1.9"
+    "vitest": "^2.1.9",
+    "wrap-ansi": "^9.0.0"
   },
   "peerDependencies": {
     "vite": "^6.0.0"
