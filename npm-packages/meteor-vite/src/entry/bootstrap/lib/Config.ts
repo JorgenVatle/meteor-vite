@@ -24,11 +24,13 @@ export async function resolveMeteorViteConfig(
     
     if (FS.existsSync(Path.join(projectRoot, '.meteorignore'))) {
         Logger.warnOnce({ id: '.meteorignore' }, [
-            `Detected ${Colorize.fileType('.meteorignore')} file. Make sure that the paths within won't`,
-            `match any files within ${Colorize.filepath('./_vite-bundle')} as this could lead to certain assets not`,
-            `being available in production. Anything outside of this directory you're free to ignore, you can even`,
-            `ignore source files as long as they are imported by your Vite entry module.`
-        ].join(' '));
+            `Detected ${Colorize.fileType('.meteorignore')} file.`,
+            `Make sure that the paths within won't match any files within ${Colorize.filepath('./_vite-bundle')} as this`,
+            `could lead to certain assets not being available in production.`,
+            '',
+            `Anything outside of this directory you're free to ignore, you can even ignore source`,
+            `files as long as they are imported by your Vite entry module.`,
+        ].join('\n   '));
     }
     
     /**
