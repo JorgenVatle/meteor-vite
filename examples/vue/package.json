@@ -33,6 +33,7 @@
     "typescript": "^5.6.3"
   },
   "meteor": {
+    "modern": true,
     "mainModule": {
       "client": "client/entry-meteor.js",
       "server": "server/entry-meteor.js"
