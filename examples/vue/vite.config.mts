@@ -12,7 +12,10 @@ export default defineConfig({
       externalizeNpmPackages: ['test-externalization'],
       stubValidation: {
         warnOnly: true,
-      }
+      },
+      meteorStubs: {
+        debug: true,
+      },
     }),
   ],
 })
