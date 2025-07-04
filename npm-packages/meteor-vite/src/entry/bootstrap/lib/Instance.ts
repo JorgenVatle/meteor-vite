@@ -57,14 +57,16 @@ export default new class Instance {
         const nonEsmConfigFile = FS.existsSync(Path.join(projectRoot, 'vite.config.ts')) || FS.existsSync(Path.join(projectRoot, 'vite.config.js'));
         
         if (packageJson.type !== 'module' && nonEsmConfigFile) {
+            const mts = Colorize.fileType('.mts');
+            const mjs = Colorize.fileType('.mjs');
             Logger.warnOnce({ id: '.viteignore' }, [
-                `Vite config without .mjs or .mts extension detected.`,
+                `Vite config without ${mts} or ${mjs} extension detected.`,
                 'This will likely prevent Meteor from starting when trying to resolve your config.',
-                'Renaming vite.config.ts to vite.config.mts should resolve the issue this in most cases',
+                `Renaming ${Colorize.fileType('vite.config.ts')} to ${Colorize.fileType('vite.config.mts')} should resolve the issue this in most cases`,
                 '',
-                'Setting "type": "module" in your package.json should fix this, but Meteor lacks good support for this',
+                `Setting ${Colorize.jsonValue('"type": "module"')} in your ${Colorize.fileType('package.json')} should fix this, but Meteor lacks good support for this`,
                 'at the time of writing. The best workaround for using package.json "module" types is to symlink your',
-                '.meteor/local directory outside of your project root (e.g. ln -s /tmp/.meteor-local/my-app .meteor/local)\n\n',
+                `.meteor/local directory outside of your project root (e.g. ${Colorize.command('ln -s /tmp/.meteor-local/my-app .meteor/local')})\n\n`,
             ].join('\n   '))
         }
     }

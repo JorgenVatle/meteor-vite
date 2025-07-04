@@ -11,6 +11,8 @@ export const Colorize = {
     object: (data: unknown) => {
         return pc.dim(inspect(data, { colors: true }));
     },
+    command: (command: string) => pc.dim(pc.cyan(command)),
+    jsonValue: pc.green,
 };
 
 /**
