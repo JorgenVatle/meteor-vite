@@ -1,0 +1,6 @@
+---
+"meteor-vite": minor
+"jorgenvatle_vite": minor
+---
+
+Bundle log formatting utility packages into meteor-vite package to prevent warnings from Meteor when those packages aren't a direct dependency of the peer project.
