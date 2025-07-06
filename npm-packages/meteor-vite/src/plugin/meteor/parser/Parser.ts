@@ -1,7 +1,7 @@
 import { parse } from '@babel/parser';
 import {
     type FunctionExpression,
-    is, isArrayExpression,
+    is,
     isCallExpression,
     isFunctionExpression,
     isIdentifier,

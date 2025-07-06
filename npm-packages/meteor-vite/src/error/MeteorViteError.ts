@@ -1,8 +1,8 @@
-import { inspect } from 'util';
-import MeteorPackage from '../entry/plugin/meteor/package/components/MeteorPackage';
-import ViteLoadRequest, { RequestContext } from '../entry/plugin/ViteLoadRequest';
-import PackageJson from '../../package.json';
+import MeteorPackage from '@/plugin/meteor/package/components/MeteorPackage';
+import ViteLoadRequest, { RequestContext } from '@/plugin/ViteLoadRequest';
 import pc from 'picocolors';
+import { inspect } from 'util';
+import PackageJson from '../../package.json';
 
 const divColor = (text: string) => pc.dim(text);
 

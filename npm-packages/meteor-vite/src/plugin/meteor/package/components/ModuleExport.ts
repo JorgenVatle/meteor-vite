@@ -1,7 +1,7 @@
-import { ErrorMetadata, MeteorViteError } from '../../../../../error/MeteorViteError';
-import { PackageSubmodule } from './PackageSubmodule';
+import { ErrorMetadata, MeteorViteError } from '../../../../error/MeteorViteError';
 import { ModuleExportData } from '../../parser/Parser';
 import { METEOR_STUB_KEY } from '../StubTemplate';
+import { PackageSubmodule } from './PackageSubmodule';
 
 export default class ModuleExport implements ModuleExportData {
     public readonly parentModule: PackageSubmodule;

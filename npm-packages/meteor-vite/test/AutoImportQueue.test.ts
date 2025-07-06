@@ -1,6 +1,6 @@
-import { describe, expect, it, test } from 'vitest';
-import AutoImportQueue, { wait } from '../src/entry/plugin/meteor/package/AutoImportQueue';
-import { RefreshNeeded } from '../src/entry/plugin/ViteLoadRequest';
+import { describe, expect, it } from 'vitest';
+import AutoImportQueue, { wait } from '../src/plugin/meteor/package/AutoImportQueue';
+import { RefreshNeeded } from '../src/plugin/ViteLoadRequest';
 import { AutoImportMock } from './__mocks';
 
 describe('Package auto-imports', async () => {

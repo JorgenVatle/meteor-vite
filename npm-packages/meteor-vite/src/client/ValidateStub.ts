@@ -1,4 +1,4 @@
-import type { StubValidationSettings } from '../entry/plugin/Settings';
+import type { StubValidationSettings } from '@/plugin/Settings';
 import { bugs, homepage } from '../utilities/Constants';
 
 /**

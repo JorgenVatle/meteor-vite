@@ -1,6 +1,6 @@
 import pc from 'picocolors';
-import Logger from '../../../../utilities/Logger';
-import { ErrorMetadata, MeteorViteError } from '../../../../error/MeteorViteError';
+import { ErrorMetadata, MeteorViteError } from '../../../error/MeteorViteError';
+import Logger from '../../../utilities/Logger';
 import ModuleExport from './components/ModuleExport';
 import PackageExport from './components/PackageExport';
 

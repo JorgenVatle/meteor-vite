@@ -1,9 +1,9 @@
+import { meteorWorker } from '@/plugin/Meteor';
+import { type ProjectJson, type ResolvedMeteorViteConfig } from '@/plugin/Settings';
 import FS from 'fs';
 import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
 import { MeteorViteError } from '../../../error/MeteorViteError';
-import { meteorWorker } from '../../plugin/Meteor';
-import { type ProjectJson, type ResolvedMeteorViteConfig } from '../../plugin/Settings';
 import { clientMainModule, serverMainModule } from '../scripts/Setup';
 import Instance from './Instance';
 

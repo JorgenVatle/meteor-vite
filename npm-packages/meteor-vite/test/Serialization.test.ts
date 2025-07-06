@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import MeteorPackage from '../src/entry/plugin/meteor/package/components/MeteorPackage';
-import ModuleExport from '../src/entry/plugin/meteor/package/components/ModuleExport';
+import MeteorPackage from '../src/plugin/meteor/package/components/MeteorPackage';
+import ModuleExport from '../src/plugin/meteor/package/components/ModuleExport';
 
 describe('Serialization', () => {
     const meteorPackage = new MeteorPackage({

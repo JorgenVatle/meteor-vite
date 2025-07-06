@@ -1,3 +1,4 @@
+import type { ProjectJson, ResolvedMeteorViteConfig } from '@/plugin/Settings';
 import FS from 'fs';
 import { Meteor } from 'meteor/meteor';
 import Path from 'path';
@@ -6,7 +7,6 @@ import { version as viteVersion } from 'vite';
 import { Colorize, formatLogBlock } from '../../../utilities';
 import { version } from '../../../utilities/Constants';
 import Logger, { createSimpleLogger } from '../../../utilities/Logger';
-import type { ProjectJson, ResolvedMeteorViteConfig } from '../../plugin/Settings';
 import { CurrentConfig } from './Config';
 
 const startTime = performance.now();
