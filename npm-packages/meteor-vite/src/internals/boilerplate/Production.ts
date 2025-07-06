@@ -2,9 +2,9 @@ import { WebAppInternals } from 'meteor/webapp';
 import { URL } from 'node:url';
 import { inspect } from 'node:util';
 import Path from 'path';
-import { trimLeadingSlash } from '../../../utilities';
-import Logger, { createSimpleLogger, type SimpleLogger } from '../../../utilities/Logger';
-import type { TransformedViteManifest } from '../scripts/Build';
+import type { TransformedViteManifest } from '../../entry/bootstrap/scripts/Build';
+import { trimLeadingSlash } from '../../utilities';
+import Logger, { createSimpleLogger, type SimpleLogger } from '../../utilities/Logger';
 import { type Boilerplate, ViteBoilerplate } from './Boilerplate';
 
 export class ViteProductionBoilerplate extends ViteBoilerplate {

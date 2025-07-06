@@ -1,4 +1,4 @@
-import { viteAssetUrl } from '../../../utilities/Formatting';
+import { viteAssetUrl } from '../../utilities/Formatting';
 import { type Boilerplate, ViteBoilerplate } from './Boilerplate';
 
 export class ViteDevelopmentBoilerplate extends ViteBoilerplate {

@@ -1,3 +1,4 @@
+import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
 import type { MeteorStubsSettings, ProjectJson, ResolvedMeteorViteConfig } from '@/plugin/Settings';
 import { execaSync } from 'execa';
 import FS from 'fs';
@@ -9,7 +10,6 @@ import { MeteorViteError } from '../../../error/MeteorViteError';
 
 import { Colorize, hasModuleImport, isSamePath, moduleImport } from '../../../utilities/Formatting';
 import Logger, { BuildLogger } from '../../../utilities/Logger';
-import { ViteProductionBoilerplate } from '../boilerplate/Production';
 import { CurrentConfig, resolveMeteorViteConfig } from '../lib/Config';
 import Instance from '../lib/Instance';
 
