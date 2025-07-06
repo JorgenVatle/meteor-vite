@@ -1,4 +1,4 @@
-import { StubValidatorOptions } from '../../../client/ValidateStub';
+import { StubValidatorOptions } from '@/client/ValidateStub';
 import type { StubValidationSettings } from '../../Settings';
 
 import MeteorPackage from './components/MeteorPackage';

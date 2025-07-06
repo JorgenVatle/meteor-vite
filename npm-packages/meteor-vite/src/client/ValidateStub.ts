@@ -1,6 +1,5 @@
-import { bugs, homepage } from '../../utilities/Constants';
-import type { StubValidationSettings } from '../plugin/Settings';
-
+import type { StubValidationSettings } from '../entry/plugin/Settings';
+import { bugs, homepage } from '../utilities/Constants';
 
 /**
  * Validate that the provided stub export key maps to a working export.
