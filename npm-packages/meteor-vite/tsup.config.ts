@@ -23,6 +23,7 @@ export default defineConfig([
             './src/entry/bootstrap/scripts/index.ts',
             './src/entry/bootstrap/ProductionEnvironment.ts',
             './src/entry/bootstrap/CommonEnvironment.ts',
+            './src/entry/bootstrap/boilerplate/index.ts',
         ],
         format: 'esm',
         sourcemap: true,
