@@ -35,6 +35,16 @@ export function parseMeteorCliArgs() {
         useBuildPlugin = true;
     }
     
+    // $ meteor profile
+    if (meteorArgs.includes('profile')) {
+        useBuildPlugin = true;
+    }
+    
+    // $ meteor test
+    if (meteorArgs.includes('test')) {
+        useBuildPlugin = true;
+    }
+    
     const VITE_METEOR_DISABLED = process.env.VITE_METEOR_DISABLED ?? process.env.METEOR_VITE_DISABLED ?? 'false';
     try {
         // Allow use of environment variables to forcefully disable the meteor-vite build plugin
