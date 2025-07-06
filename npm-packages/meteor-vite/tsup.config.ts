@@ -27,7 +27,7 @@ export default defineConfig([
         ],
         format: 'esm',
         sourcemap: true,
-        target: 'node20',
+        target: 'node22',
         outDir: './dist/bootstrap',
         skipNodeModulesBundle: true,
         dts: true,
