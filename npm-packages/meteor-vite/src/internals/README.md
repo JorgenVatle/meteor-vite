@@ -14,8 +14,10 @@ Vite.
     loaded page/component chunks.
   
   - With `dynamicAssetBoilerplate` enabled:
-    - The Vite asset HTML boilerplate is generated per-request, injecting Vite assets into the production app's main HTML responses.
-    - Useful apps that use a CDN that may need to change the base URL after building the Meteor App.
+    - The Vite asset HTML boilerplate is generated per-request, allowing you to change the base URL for embedded links 
+      to Vite assets and scripts at runtime or through setting the `METEOR_VITE_BASE_URL` environment variable.
+    - Useful to apps that have a custom CDN configuration where the base URL of the CDN is not known until after the app 
+      has been built and assets uploaded. 
     
   - With `dynamicAssetBoilerplate` disabled: (default) 
     - Boilerplate is statically injected into the app's main HTML file at build time.
