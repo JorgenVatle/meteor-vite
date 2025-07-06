@@ -4,10 +4,10 @@ import { Meteor } from 'meteor/meteor';
 import Path from 'path';
 import pc from 'picocolors';
 import { version as viteVersion } from 'vite';
-import { Colorize, formatLogBlock } from '../../../utilities';
-import { version } from '../../../utilities/Constants';
-import Logger, { createSimpleLogger } from '../../../utilities/Logger';
-import { CurrentConfig } from './resolveMeteorViteConfig';
+import { CurrentConfig } from '../entry/bootstrap/lib/resolveMeteorViteConfig';
+import { Colorize, formatLogBlock } from '../utilities';
+import { version } from '../utilities/Constants';
+import Logger, { createSimpleLogger } from '../utilities/Logger';
 
 const startTime = performance.now();
 // The global Meteor instance may not initially be defined within the plugin context during builds.
