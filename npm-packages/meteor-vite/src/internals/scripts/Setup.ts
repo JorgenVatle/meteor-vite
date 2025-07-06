@@ -3,7 +3,7 @@ import Path from 'node:path';
 import pc from 'picocolors';
 import { parse, satisfies } from 'semver';
 import type { ModulePreloadOptions } from 'vite';
-import { CurrentConfig } from '../../entry/bootstrap/lib/Config';
+import { CurrentConfig } from '../../entry/bootstrap/lib/resolveMeteorViteConfig';
 import { MeteorViteError } from '../../error/MeteorViteError';
 import { homepage, version as npmPackageVersion } from '../../utilities/Constants';
 import { hasModuleImport, moduleImport } from '../../utilities/Formatting';

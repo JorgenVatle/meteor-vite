@@ -1,8 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { WebApp } from 'meteor/webapp';
 import { createServer, createServerModuleRunner } from 'vite';
-import { resolveMeteorViteConfig } from '../entry/bootstrap/lib/Config';
 import Instance from '../entry/bootstrap/lib/Instance';
+import { resolveMeteorViteConfig } from '../entry/bootstrap/lib/resolveMeteorViteConfig';
 
 Meteor.startup(async () => {
     const { config, modules } = await resolveMeteorViteConfig({

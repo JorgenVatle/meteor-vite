@@ -7,7 +7,7 @@ import { version as viteVersion } from 'vite';
 import { Colorize, formatLogBlock } from '../../../utilities';
 import { version } from '../../../utilities/Constants';
 import Logger, { createSimpleLogger } from '../../../utilities/Logger';
-import { CurrentConfig } from './Config';
+import { CurrentConfig } from './resolveMeteorViteConfig';
 
 const startTime = performance.now();
 // The global Meteor instance may not initially be defined within the plugin context during builds.
