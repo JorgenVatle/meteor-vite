@@ -39,6 +39,7 @@ export function parseMeteorCliArgs() {
     try {
         // Allow use of environment variables to forcefully disable the meteor-vite build plugin
         if (JSON.parse(VITE_METEOR_DISABLED)) {
+            Logger.warn(`MeteorVite build plugin disabled by environment variable: ${VITE_METEOR_DISABLED}`);
             useBuildPlugin = false;
         }
     } catch (error) {

@@ -7,6 +7,7 @@ import Path from 'path';
 import { runBootstrapScript } from '../util/Bootstrap';
 import { CurrentConfig } from '../util/CurrentConfig';
 import Logger from '../util/Logger';
+import { parseMeteorCliArgs } from '../util/parseMeteorCliArgs';
 
 class CompilerPlugin {
     protected boilerplateArc = new Set<string>();
@@ -111,11 +112,11 @@ class CompilerPlugin {
     }
 }
 
-if (process.env.VITE_METEOR_DISABLED) {
-    Logger.warn('MeteorVite build plugin disabled');
-}
+const { useBuildPlugin } = parseMeteorCliArgs();
 
-else {
+if (!useBuildPlugin) {
+    Logger.warn('Skipping initialization of Meteor-Vite build plugin');
+} else {
     
     // Cleanup temporary files from previous builds.
     const cleanup = runBootstrapScript('setupProject');
