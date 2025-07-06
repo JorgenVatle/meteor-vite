@@ -6,6 +6,9 @@
     "paths": {
       "meteor/jorgenvatle:vite": [
         "../../packages/vite/src/index.d.ts"
+      ],
+      "@/*": [
+        "./src/*"
       ]
     },
     "resolveJsonModule": true,
