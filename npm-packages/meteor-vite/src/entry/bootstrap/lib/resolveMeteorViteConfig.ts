@@ -1,7 +1,7 @@
+import { parsePackageJson } from '@/entry/bootstrap/lib/parsePackageJson';
 import { clientMainModule, serverMainModule } from '@/internals/scripts/Setup';
 import { meteorWorker } from '@/plugin/Meteor';
-import { type ProjectJson, type ResolvedMeteorViteConfig } from '@/plugin/Settings';
-import FS from 'fs';
+import { type ResolvedMeteorViteConfig } from '@/plugin/Settings';
 import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
 import { MeteorViteError } from '../../../error/MeteorViteError';
@@ -162,16 +162,3 @@ export async function resolveMeteorViteConfig(
     }
 }
 
-export function parsePackageJson(): ProjectJson {
-    const { projectRoot } = CurrentConfig;
-    const path = Path.join(projectRoot, 'package.json');
-    
-    if (!FS.existsSync(path)) {
-        throw new Error(`⚡ Could not resolve package.json for your project: ${projectRoot}`);
-    }
-    
-    return Object.assign({
-        dependencies: {},
-        devDependencies: {}
-    }, JSON.parse(FS.readFileSync(path, 'utf8')));
-}
