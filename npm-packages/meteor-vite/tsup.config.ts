@@ -29,7 +29,7 @@ export default defineConfig([
         target: 'node20',
         outDir: './dist/bootstrap',
         skipNodeModulesBundle: true,
-        dts: false,
+        dts: true,
         onSuccess: async () => {
             try {
                 const atmospherePackageOutDir = Path.join(__dirname, '..', '..', 'packages', 'vite', 'dist');
