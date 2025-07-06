@@ -12,6 +12,16 @@ import Logger from './Logger';
  */
 export function parseMeteorCliArgs() {
     const [_nodePath, _meteorTool, ...meteorArgs] = process.argv;
+    const divider = '-'.repeat(120);
+    Logger.debug(
+        `\n${divider}`,
+        {
+            'Meteor process start args': [_nodePath, _meteorTool, ...meteorArgs],
+            'Meteor args': meteorArgs,
+        },
+        `\n${divider}\n`
+    );
+    
     let useBuildPlugin = false;
     
     // $ meteor build
