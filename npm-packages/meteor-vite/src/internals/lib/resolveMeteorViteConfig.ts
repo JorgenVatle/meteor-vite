@@ -10,7 +10,7 @@ import Instance from '../MeteorViteRuntime';
 export const CurrentConfig = globalThis.MeteorViteRuntimeConfig;
 
 export async function resolveMeteorViteConfig(
-    inlineConfig: InlineConfig,
+    inlineConfig: Omit<InlineConfig, 'future'>,
     command: 'build' | 'serve',
 ) {
     Instance.printWelcomeMessage();
