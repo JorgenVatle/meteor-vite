@@ -207,7 +207,21 @@ function preparePackagesForExportAnalyzer({ mainModule, replacePackages = [] }: 
         const from = Path.join(CurrentConfig.projectRoot, file)
         const to = Path.join(inDir, file)
         FS.mkdirSync(Path.dirname(to), { recursive: true });
-        FS.copyFileSync(from, to)
+        try {
+            FS.copyFileSync(from, to)
+        } catch (error) {
+            if (!(error instanceof Error) || !('code' in error)) {
+                throw error;
+            }
+            if (error.code !== 'ENOENT') {
+                throw error;
+            }
+            if (file.includes('.finished-upgraders')) {
+                Logger.warn(`Could not copy ${Colorize.filepath(file)} from source project. Likely because you have a new Meteor project. Generally safe to ignore, only consequence may be that package export analysis may take a little longer if updates are necessary.`);
+                continue;
+            }
+            throw error;
+        }
     }
     
     // Symlink to source project's `packages` and `node_modules` folders
