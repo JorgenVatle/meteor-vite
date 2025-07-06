@@ -14,7 +14,7 @@ export async function initializeViteDevServer() {
         Logger.info('Prevented the Vite dev server from firing up, as you are already running a production build.');
         return;
     }
-    await import ('../DevelopmentEnvironment');
+    await import ('../../../meteor-server-entrypoint/DevelopmentEnvironment');
 }
 
 export async function prepareDevServerBoilerplate() {
