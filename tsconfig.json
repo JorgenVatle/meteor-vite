@@ -3,14 +3,6 @@
     "target": "es2022",
     "module": "es2022",
     "moduleResolution": "bundler",
-    "paths": {
-      "meteor-vite/*": [
-        "./npm-packages/meteor-vite/src/entry/*"
-      ],
-      "meteor-vite/utilities": [
-        "./npm-packages/meteor-vite/src/utilities/index.ts"
-      ]
-    },
     "types": [
       "node"
     ],
