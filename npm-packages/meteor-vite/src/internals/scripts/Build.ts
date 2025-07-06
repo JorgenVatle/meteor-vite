@@ -6,12 +6,12 @@ import Path from 'node:path';
 import pc from 'picocolors';
 import type { RollupOutput, RollupWatcher } from 'rollup';
 import { createBuilder, type InlineConfig, version } from 'vite';
-import { MeteorViteError } from '../../../error/MeteorViteError';
+import { CurrentConfig, resolveMeteorViteConfig } from '../../entry/bootstrap/lib/Config';
+import Instance from '../../entry/bootstrap/lib/Instance';
+import { MeteorViteError } from '../../error/MeteorViteError';
 
-import { Colorize, hasModuleImport, isSamePath, moduleImport } from '../../../utilities/Formatting';
-import Logger, { BuildLogger } from '../../../utilities/Logger';
-import { CurrentConfig, resolveMeteorViteConfig } from '../lib/Config';
-import Instance from '../lib/Instance';
+import { Colorize, hasModuleImport, isSamePath, moduleImport } from '../../utilities/Formatting';
+import Logger, { BuildLogger } from '../../utilities/Logger';
 
 export async function buildForProduction() {
     const { config, outDir, packageJson, assetsDir } = await resolveMeteorViteConfig({ mode: 'production' }, 'build');

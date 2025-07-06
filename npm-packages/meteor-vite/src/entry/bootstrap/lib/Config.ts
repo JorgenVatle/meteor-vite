@@ -1,10 +1,10 @@
+import { clientMainModule, serverMainModule } from '@/internals/scripts/Setup';
 import { meteorWorker } from '@/plugin/Meteor';
 import { type ProjectJson, type ResolvedMeteorViteConfig } from '@/plugin/Settings';
 import FS from 'fs';
 import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
 import { MeteorViteError } from '../../../error/MeteorViteError';
-import { clientMainModule, serverMainModule } from '../scripts/Setup';
 import Instance from './Instance';
 
 export const CurrentConfig = globalThis.MeteorViteRuntimeConfig;

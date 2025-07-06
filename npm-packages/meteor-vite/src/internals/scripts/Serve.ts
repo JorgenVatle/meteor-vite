@@ -1,6 +1,6 @@
 import { ViteDevelopmentBoilerplate } from '@/internals/boilerplate/Development';
-import Logger from '../../../utilities/Logger';
-import { resolveMeteorViteConfig } from '../lib/Config';
+import { resolveMeteorViteConfig } from '../../entry/bootstrap/lib/Config';
+import Logger from '../../utilities/Logger';
 
 export async function initializeViteDevServer() {
     /**
