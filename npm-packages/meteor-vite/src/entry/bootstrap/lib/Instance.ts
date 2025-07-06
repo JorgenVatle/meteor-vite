@@ -44,7 +44,7 @@ export default new class Instance {
     public emitWarningMessages(packageJson: ProjectJson) {
         const { projectRoot} = CurrentConfig;
         if (FS.existsSync(Path.join(projectRoot, '.meteorignore'))) {
-            Logger.warnOnce({ id: '.meteorignore' }, formatLogBlock(
+            Logger.warnOnce({ id: 'meteorignore' }, formatLogBlock(
                     `Detected ${Colorize.fileType('.meteorignore')} file.`,
                     [
                         `Make sure that the paths within won't match any files within`,
