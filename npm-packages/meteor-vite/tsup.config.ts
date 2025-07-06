@@ -21,7 +21,7 @@ export default defineConfig([
             './src/entry/bootstrap/index.ts',
             './src/entry/bootstrap/RuntimeHMR.ts',
             './src/entry/bootstrap/scripts/index.ts',
-            './src/entry/bootstrap/ProductionEnvironment.ts',
+            './src/entry/bootstrap/production.ts',
             './src/entry/bootstrap/CommonEnvironment.ts',
             './src/entry/bootstrap/boilerplate/index.ts',
         ],
