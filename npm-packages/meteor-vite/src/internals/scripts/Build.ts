@@ -1,4 +1,5 @@
 import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
+import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { MeteorStubsSettings, ProjectJson, ResolvedMeteorViteConfig } from '@/plugin/Settings';
 import { execaSync } from 'execa';
 import FS from 'fs';
@@ -6,7 +7,6 @@ import Path from 'node:path';
 import pc from 'picocolors';
 import type { RollupOutput, RollupWatcher } from 'rollup';
 import { createBuilder, type InlineConfig, version } from 'vite';
-import { CurrentConfig, resolveMeteorViteConfig } from '../../entry/bootstrap/lib/resolveMeteorViteConfig';
 import { MeteorViteError } from '../../error/MeteorViteError';
 
 import { Colorize, hasModuleImport, isSamePath, moduleImport } from '../../utilities/Formatting';

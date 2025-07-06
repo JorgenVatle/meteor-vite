@@ -1,11 +1,11 @@
-import { parsePackageJson } from '@/entry/bootstrap/lib/parsePackageJson';
+import { parsePackageJson } from '@/internals/lib/parsePackageJson';
 import { clientMainModule, serverMainModule } from '@/internals/scripts/Setup';
 import { meteorWorker } from '@/plugin/Meteor';
 import { type ResolvedMeteorViteConfig } from '@/plugin/Settings';
 import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
-import { MeteorViteError } from '../../../error/MeteorViteError';
-import Instance from '../../../internals/MeteorViteRuntime';
+import { MeteorViteError } from '../../error/MeteorViteError';
+import Instance from '../MeteorViteRuntime';
 
 export const CurrentConfig = globalThis.MeteorViteRuntimeConfig;
 

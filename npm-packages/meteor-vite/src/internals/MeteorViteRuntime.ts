@@ -1,10 +1,10 @@
+import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { ProjectJson, ResolvedMeteorViteConfig } from '@/plugin/Settings';
 import FS from 'fs';
 import { Meteor } from 'meteor/meteor';
 import Path from 'path';
 import pc from 'picocolors';
 import { version as viteVersion } from 'vite';
-import { CurrentConfig } from '../entry/bootstrap/lib/resolveMeteorViteConfig';
 import { Colorize, formatLogBlock } from '../utilities';
 import { version } from '../utilities/Constants';
 import Logger, { createSimpleLogger } from '../utilities/Logger';

@@ -1,4 +1,4 @@
-import { CurrentConfig } from '@/entry/bootstrap/lib/resolveMeteorViteConfig';
+import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { ProjectJson } from '@/plugin/Settings';
 import FS from 'fs';
 import Path from 'path';
