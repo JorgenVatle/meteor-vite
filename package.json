@@ -26,6 +26,9 @@
     "build:meteor-vite": "cd npm-packages/meteor-vite && npm run build --",
     "build:jorgenvatle:vite": "tsup",
 
+    "prebuild:meteor-vite": "rm -rf ./npm-packages/meteor-vite/dist",
+    "prebuild:jorgenvatle:vite": "npm run build:meteor-vite",
+
     "watch:packages": "concurrently -k -n atmosphere,npm 'npm:build:jorgenvatle:vite -- --watch' 'npm:build:meteor-vite -- --watch'",
 
     "prepare": "npm run build:packages || exit 0",
