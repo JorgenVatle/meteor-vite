@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { WebApp } from 'meteor/webapp';
 import { createServer, createServerModuleRunner } from 'vite';
-import Instance from '../entry/bootstrap/lib/Instance';
+import Instance from '../entry/bootstrap/lib/MeteorViteRuntime';
 import { resolveMeteorViteConfig } from '../entry/bootstrap/lib/resolveMeteorViteConfig';
 
 Meteor.startup(async () => {

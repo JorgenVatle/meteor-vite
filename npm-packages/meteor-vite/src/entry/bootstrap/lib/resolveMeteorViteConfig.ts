@@ -5,7 +5,7 @@ import { type ResolvedMeteorViteConfig } from '@/plugin/Settings';
 import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
 import { MeteorViteError } from '../../../error/MeteorViteError';
-import Instance from './Instance';
+import Instance from './MeteorViteRuntime';
 
 export const CurrentConfig = globalThis.MeteorViteRuntimeConfig;
 

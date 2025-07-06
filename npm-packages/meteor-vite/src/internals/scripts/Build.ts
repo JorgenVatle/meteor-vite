@@ -6,7 +6,7 @@ import Path from 'node:path';
 import pc from 'picocolors';
 import type { RollupOutput, RollupWatcher } from 'rollup';
 import { createBuilder, type InlineConfig, version } from 'vite';
-import Instance from '../../entry/bootstrap/lib/Instance';
+import Instance from '../../entry/bootstrap/lib/MeteorViteRuntime';
 import { CurrentConfig, resolveMeteorViteConfig } from '../../entry/bootstrap/lib/resolveMeteorViteConfig';
 import { MeteorViteError } from '../../error/MeteorViteError';
 

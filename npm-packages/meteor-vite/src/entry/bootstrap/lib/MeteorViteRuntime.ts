@@ -13,7 +13,7 @@ const startTime = performance.now();
 // The global Meteor instance may not initially be defined within the plugin context during builds.
 const { isDevelopment, release } = Meteor || {};
 
-export default new class Instance {
+export default new class MeteorViteRuntime {
     public readonly logger = isDevelopment
                              ? createSimpleLogger(pc.cyan('[DEV]'))
                              : createSimpleLogger(pc.yellow(`[${process.env.NODE_ENV?.toUpperCase() || 'PROD'}]`));
