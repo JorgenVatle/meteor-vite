@@ -19,7 +19,7 @@ export default defineConfig([
         name: 'meteor-vite/internals',
         entry: [
             './src/entry/bootstrap/index.ts',
-            './src/entry/bootstrap/RuntimeHMR.ts',
+            './src/entry/bootstrap/hmr.ts',
             './src/entry/bootstrap/scripts/index.ts',
             './src/entry/bootstrap/production.ts',
             './src/entry/bootstrap/CommonEnvironment.ts',
