@@ -23,8 +23,8 @@
       "require": "./dist/client.js"
     },
     "./internals": {
-      "types": "./dist/internals/index.d.mts",
-      "import": "./dist/internals/index.mjs"
+      "types": "./dist/internals.d.mts",
+      "import": "./dist/internals.mjs"
     },
     "./server-entrypoint/*": {
       "types": "./dist/server-entrypoint/*.d.mts",
