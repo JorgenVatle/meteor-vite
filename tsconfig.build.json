@@ -1,10 +1,10 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "paths": {
       "meteor-vite/*": [
         "./npm-packages/meteor-vite/dist/*.mjs",
-        "./npm-packages/meteor-vite/dist/*.d.mts",
+        "./npm-packages/meteor-vite/dist/*.d.mts"
       ]
     }
   }
