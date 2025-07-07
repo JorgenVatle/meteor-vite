@@ -1,16 +1,16 @@
 import { createErrorHandler } from '@/internals/error/ErrorHandler';
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import MeteorPackage from '@/plugin/meteor/models/MeteorPackage';
+import { stubTemplate } from '@/plugin/meteor/StubTemplate';
 import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/plugin/MeteorVitePluginConfig';
+import ViteLoadRequest from '@/plugin/ViteLoadRequest';
 import { homepage } from '@/utilities/common';
 import { Colorize } from '@/utilities/server';
 import FS from 'fs/promises';
 import Path from 'path';
 import type { Environment, Plugin, ViteDevServer } from 'vite';
-import { stubTemplate } from './meteor/StubTemplate';
-import ViteLoadRequest from './ViteLoadRequest';
 
-export const MeteorStubs: () => Promise<Plugin> = setupPlugin(async () => {
+export const meteorModuleStubs: () => Promise<Plugin> = setupPlugin(async () => {
     return {
         name: 'meteor-vite: stubs',
         resolveId: (id) => ViteLoadRequest.resolveId(id),
