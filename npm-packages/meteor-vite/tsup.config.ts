@@ -69,7 +69,7 @@ export default defineConfig([
         },
         format: ['esm', 'cjs'],
         sourcemap: true,
-        target: 'chrome',
+        platform: 'browser',
         dts: true,
         noExternal: ['meteor', 'picocolors', ...STRIP_ANSI_DEPS],
         esbuildPlugins: [
