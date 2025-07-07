@@ -7,7 +7,7 @@ import { Colorize } from '@/utilities/server';
 import FS from 'fs/promises';
 import Path from 'path';
 import type { Environment, Plugin, ViteDevServer } from 'vite';
-import { stubTemplate } from './meteor/package/StubTemplate';
+import { stubTemplate } from './meteor/StubTemplate';
 import ViteLoadRequest from './ViteLoadRequest';
 
 export const MeteorStubs: () => Promise<Plugin> = setupPlugin(async () => {

@@ -1,7 +1,7 @@
 import { bugs } from '@/utilities/common';
 import { Logger } from '@/utilities/server';
 import pc from 'picocolors';
-import { PACKAGE_SCOPE_KEY, TEMPLATE_GLOBAL_KEY } from '../package/StubTemplate';
+import { PACKAGE_SCOPE_KEY, TEMPLATE_GLOBAL_KEY } from '../StubTemplate';
 import MeteorPackage from './MeteorPackage';
 
 export default class PackageExport {

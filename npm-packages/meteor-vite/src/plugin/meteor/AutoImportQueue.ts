@@ -2,8 +2,8 @@ import { Logger } from '@/utilities/server';
 import FS from 'fs/promises';
 import PLimit from 'p-limit';
 import pc from 'picocolors';
-import { RefreshNeeded } from '../../ViteLoadRequest';
-import MeteorEvents, { EventTimeout } from '../MeteorEvents';
+import { RefreshNeeded } from '../ViteLoadRequest';
+import MeteorEvents, { EventTimeout } from './MeteorEvents';
 import { viteAutoImportBlock } from './StubTemplate';
 
 export const wait = (waitMs: number) => new Promise<void>((resolve) => setTimeout(() => resolve(), waitMs));

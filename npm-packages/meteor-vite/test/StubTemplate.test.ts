@@ -1,6 +1,6 @@
 import MeteorPackage from '@/plugin/meteor/components/MeteorPackage';
+import { METEOR_STUB_KEY, PACKAGE_SCOPE_KEY, stubTemplate } from '@/plugin/meteor/StubTemplate';
 import { describe, expect, it } from 'vitest';
-import { METEOR_STUB_KEY, PACKAGE_SCOPE_KEY, stubTemplate } from '../src/plugin/meteor/package/StubTemplate';
 
 describe('StubTemplate', () => {
     const meteorPackage = new MeteorPackage({

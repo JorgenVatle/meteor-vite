@@ -7,7 +7,7 @@ import FS from 'fs/promises';
 import Path from 'path';
 import pc from 'picocolors';
 import { type Environment, ViteDevServer } from 'vite';
-import AutoImportQueue from './meteor/package/AutoImportQueue';
+import AutoImportQueue from './meteor/AutoImportQueue';
 
 export default class ViteLoadRequest {
     

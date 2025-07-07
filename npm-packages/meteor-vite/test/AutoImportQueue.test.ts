@@ -1,4 +1,4 @@
-import AutoImportQueue, { wait } from '@/plugin/meteor/package/AutoImportQueue';
+import AutoImportQueue, { wait } from '@/plugin/meteor/AutoImportQueue';
 import { RefreshNeeded } from '@/plugin/ViteLoadRequest';
 import { describe, expect, it } from 'vitest';
 import { AutoImportMock } from './__mocks';
