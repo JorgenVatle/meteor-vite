@@ -1,6 +1,5 @@
 import FS from 'fs';
 import Path from 'path';
-import { defineConfig } from 'tsup';
 import { defineBuildConfig } from '../../build/defineBuildConfig';
 
 let clean = false;
@@ -11,9 +10,9 @@ try {
     console.warn(error);
 }
 
-export default defineConfig([
+export default defineBuildConfig(__dirname, [
     // Internal entry points
-    defineBuildConfig({
+    {
         name: 'meteor-vite/esm',
         entry: {
             // The "Meteor-Vite" Vite plugin.
@@ -46,8 +45,8 @@ export default defineConfig([
                 console.warn(error);
             }
         },
-    }),
-    defineBuildConfig({
+    },
+    {
         name: 'meteor-vite/client',
         entry: {
             // Stub validation module
@@ -57,5 +56,5 @@ export default defineConfig([
         },
         format: ['esm', 'cjs'],
         platform: 'browser',
-    }),
+    },
 ]);
