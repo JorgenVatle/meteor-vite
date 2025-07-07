@@ -8,8 +8,8 @@ import Path from 'path';
 import pc from 'picocolors';
 import type { Plugin, PluginOption, ResolvedConfig, UserConfig } from 'vite';
 import PackageJSON from '../../package.json';
+import { mergeWithTypes, parseConfig } from './lib/ParseConfig';
 import { MeteorStubs } from './MeteorStubs';
-import { mergeWithTypes, parseConfig } from './ParseConfig';
 
 /**
  * Configure the Meteor-Vite compiler.
