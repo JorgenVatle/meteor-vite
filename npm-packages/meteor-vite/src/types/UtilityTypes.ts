@@ -7,4 +7,9 @@ export type MakeOptional<
     TKeys extends keyof TObject
 > = Omit<TObject, TKeys> & Partial<Pick<TObject, TKeys>>;
 
+export type MakeOptionalDeep<
+    TObject extends object,
+    TKeys extends keyof TObject
+> = Omit<TObject, TKeys> & DeepPartial<Pick<TObject, TKeys>>;
+
 export type MakeRequired<TObject extends object, TKeys extends keyof TObject> = Omit<TObject, TKeys> & Required<Pick<TObject, TKeys>>;
