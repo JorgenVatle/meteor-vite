@@ -10,6 +10,9 @@ import FS from 'fs/promises';
 import Path from 'path';
 import type { Environment, Plugin, ViteDevServer } from 'vite';
 
+/**
+ * Intercepts Meteor imports to inject ESM-compatible exports for the requested Meteor import path.
+ */
 export const meteorModuleStubs: () => Promise<Plugin> = setupPlugin(async () => {
     return {
         name: 'meteor-vite: stubs',
