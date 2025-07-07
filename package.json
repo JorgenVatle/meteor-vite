@@ -27,6 +27,7 @@
     "build:packages": "npm run build:meteor-vite && npm run build:jorgenvatle:vite",
     "build:meteor-vite": "cd npm-packages/meteor-vite && npm run build --",
     "build:jorgenvatle:vite": "cd packages/vite && npm run build --",
+    "build:bin": "tsup-node --entry.build-if-changed ./build/bin/index.ts --outDir .bin --format esm",
 
     "prestart": "npm run build:jorgenvatle:vite",
     "prebuild:jorgenvatle:vite": "npm run build:meteor-vite",
