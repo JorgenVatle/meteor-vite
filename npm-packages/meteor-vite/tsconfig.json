@@ -22,5 +22,10 @@
     "src/**/*.ts",
     "../../packages/vite/types/**/*.ts",
     "../../packages/vite/src/index.d.ts"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/.*",
+    "dist",
   ]
 }
