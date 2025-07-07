@@ -11,7 +11,10 @@
         "./src/*"
       ]
     },
-    "lib": ["es2018", "dom"],
+    "lib": ["es2018", "es2021", "es2022", "es2023", "dom"],
+    "declaration": true,
+    "declarationMap": true,
+    "isolatedDeclarations": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
