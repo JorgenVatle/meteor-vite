@@ -32,7 +32,7 @@ export default defineConfig([
             ...COMMON_ENTRIES,
             
             // Internal tooling for the Meteor build plugin.
-            'internal': './src/internals/index.ts',
+            'internals': './src/internals/index.ts',
             
             // Meteor Production/Development environment bootstrapper
             // - Starts the vite dev server in development and loads server-side HMR hooks (if server builds are enabled)
@@ -42,6 +42,11 @@ export default defineConfig([
             
             // Initializes HMR hooks for the Meteor-server. (Cleanup of side-effects from e.g. Meteor.publish(...))
             'server-entrypoint/hmr': './src/server-entrypoint/hmr.ts',
+        },
+        outExtension(file) {
+            return {
+                dts: '.d.ts',
+            }
         },
         format: ['esm'],
         sourcemap: true,
