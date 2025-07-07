@@ -32,6 +32,7 @@
             </DockerEnvVarImpl>
           </list>
         </option>
+        <option name="commandLineOptions" value="--network development" />
         <option name="sourceFilePath" value="Dockerfile" />
       </settings>
     </deployment>
