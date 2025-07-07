@@ -6,12 +6,14 @@ import FS from 'fs/promises';
 const repoPath = process.cwd();
 const PACKAGE_NAME_REGEX = /name:\s*'(?<packageName>(?<author>[\w\-._]+):(?<name>[\w\-._]+))'\s*,/;
 const PACKAGE_VERSION_REGEX = /version:\s*'(?<version>[\d\w.+-]+)'\s*,/;
+const { METEOR_SESSION_FILE, GITHUB_STEP_SUMMARY } = process.env;
 const CHANGESET_STATUS_FILE = 'changeset-status.json';
 const meteorPackage = {
     name: 'jorgenvatle:vite',
     packageJsPath: Path.join(repoPath, './packages/vite/package.js'),
     packageJsonPath: Path.join(repoPath, './packages/vite/package.json'),
 };
+
 const logger = {
     _history: [],
     _log(level, params) {
@@ -21,7 +23,7 @@ const logger = {
     info: (...params) => logger._log('info', params),
     error: (...params) => logger._log('error', params),
     async emitSummary() {
-        if (!process.env.GITHUB_STEP_SUMMARY) {
+        if (!GITHUB_STEP_SUMMARY) {
             return;
         }
 
@@ -30,7 +32,7 @@ const logger = {
         summary += this._history.join('\n');
         summary += '\n```\n';
 
-        await FS.appendFile(process.env.GITHUB_STEP_SUMMARY, summary, (error) => {
+        await FS.appendFile(GITHUB_STEP_SUMMARY, summary, (error) => {
             if (!error) return;
             console.error(error);
         });
@@ -135,7 +137,7 @@ async function publish() {
         async: true,
         cwd: Path.dirname(meteorPackage.packageJsPath),
         env: {
-            METEOR_SESSION_FILE: process.env.METEOR_SESSION_FILE, // Authenticate using auth token stored as file.
+            METEOR_SESSION_FILE, // Authenticate using auth token stored as file.
             VITE_METEOR_DISABLED: 'true', // Prevents vite:bundler from trying to compile itself on publish
             ...process.env,
         },
