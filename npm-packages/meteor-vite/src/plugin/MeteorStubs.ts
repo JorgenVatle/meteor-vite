@@ -1,11 +1,10 @@
 import { createErrorHandler, MeteorViteError } from '@/internals/error';
 import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/plugin/MeteorVitePluginConfig';
-
+import { homepage } from '@/utilities/common';
 import { Colorize } from '@/utilities/server';
 import FS from 'fs/promises';
 import Path from 'path';
 import type { Environment, Plugin, ViteDevServer } from 'vite';
-import PackageJSON from '../../package.json';
 import MeteorPackage from './meteor/package/components/MeteorPackage';
 import { stubTemplate } from './meteor/package/StubTemplate';
 import ViteLoadRequest from './ViteLoadRequest';
@@ -22,7 +21,7 @@ export const MeteorStubs: () => Promise<Plugin> = setupPlugin(async () => {
             }
             if (!meteorStubs?.packageJson?.meteor?.mainModule?.client) {
                 throw new MeteorViteError(`You need to specify a Meteor entrypoint in your package.json!`, {
-                    subtitle: `See the following link for more info: ${PackageJSON.homepage}`
+                    subtitle: `See the following link for more info: ${homepage}`
                 })
             }
         },
