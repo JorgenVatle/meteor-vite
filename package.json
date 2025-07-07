@@ -24,7 +24,7 @@
     "build": "npm run example build",
     "build:packages": "npm run build:meteor-vite && npm run build:jorgenvatle:vite",
     "build:meteor-vite": "cd npm-packages/meteor-vite && npm run build --",
-    "build:jorgenvatle:vite": "tsup",
+    "build:jorgenvatle:vite": "cd packages/vite && npm run build --",
 
     "prestart": "npm run build:jorgenvatle:vite",
     "prebuild:jorgenvatle:vite": "npm run build:meteor-vite",
