@@ -16,6 +16,7 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
             minify: false,
         }, options, {
             outDir: Path.join(rootDir, options.outDir || 'dist'),
+            tsconfig: options.tsconfig && Path.join(rootDir, options.tsconfig),
             esbuildPlugins: [
                 EsbuildPluginMeteorStubs,
                 ...options.esbuildPlugins || [],
@@ -29,10 +30,6 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
                 return [key, Path.join(rootDir, path)];
             });
             config.entry = Object.fromEntries(entries);
-        }
-        
-        if (config.tsconfig) {
-            config.tsconfig = Path.join(rootDir, config.tsconfig);
         }
         
         return config;
