@@ -1,13 +1,14 @@
 import { Meteor } from 'meteor/meteor';
 import { runBootstrapScript } from '../util/Bootstrap';
 import { CurrentConfig } from '../util/CurrentConfig';
-import Logger from '../util/Logger';
 
 if (Meteor.isServer) {
     Meteor.startup(async () => {
         if (CurrentConfig.mode === 'production') {
             return;
         }
+        
+        const Logger = await import('../util/Logger').then(module => module.default)
         
         try {
             await runBootstrapScript('initializeViteDevServer');
