@@ -11,7 +11,7 @@ try {
     console.warn(error);
 }
 
-export default defineConfig(() => [
+export default defineConfig([
     // Internal entry points
     defineBuildConfig({
         name: 'meteor-vite/esm',
