@@ -6,6 +6,7 @@ import { EsbuildPluginMeteorStubs } from './tsup-plugins';
 export function defineBuildConfig(options: Config): Options {
     const rootDir = inferConfigRootDir();
     const config = Object.assign({
+        rootDir,
         target: 'es2022',
         sourcemap: true,
         dts: true,
