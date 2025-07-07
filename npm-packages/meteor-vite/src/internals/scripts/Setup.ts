@@ -1,5 +1,6 @@
 import { MeteorViteError } from '@/internals/error';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
+import { homepage, version as npmPackageVersion } from '@/utilities/common';
 import { createSimpleLogger, hasModuleImport, Logger, moduleImport } from '@/utilities/server';
 import FS from 'node:fs';
 import Path from 'node:path';
