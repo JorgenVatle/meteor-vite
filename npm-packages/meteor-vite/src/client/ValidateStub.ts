@@ -1,5 +1,5 @@
 import type { StubValidationSettings } from '@/types/MeteorVitePluginConfig';
-import { bugs, homepage } from '../utilities/Constants';
+import { bugs, homepage } from '@/utilities';
 
 /**
  * Validate that the provided stub export key maps to a working export.

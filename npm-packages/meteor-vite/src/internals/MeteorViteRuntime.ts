@@ -2,14 +2,13 @@ import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 
 import type { ResolvedViteConfig } from '@/types/MeteorVitePluginConfig';
 import type { ProjectJson } from '@/types/ProjectJson';
+import { createSimpleLogger, Logger, version } from '@/utilities';
 import FS from 'fs';
 import { Meteor } from 'meteor/meteor';
 import Path from 'path';
 import pc from 'picocolors';
 import { version as viteVersion } from 'vite';
 import { Colorize, formatLogBlock } from '../utilities';
-import { version } from '../utilities/Constants';
-import Logger, { createSimpleLogger } from '../utilities/Logger';
 
 const startTime = performance.now();
 // The global Meteor instance may not initially be defined within the plugin context during builds.

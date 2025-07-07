@@ -3,15 +3,14 @@ import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { ResolvedViteConfig, StubSettings } from '@/types/MeteorVitePluginConfig';
 import type { ProjectJson } from '@/types/ProjectJson';
+
+import { BuildLogger, Colorize, hasModuleImport, isSamePath, Logger, moduleImport } from '@/utilities';
 import { execaSync } from 'execa';
 import FS from 'fs';
 import Path from 'node:path';
 import pc from 'picocolors';
 import type { RollupOutput, RollupWatcher } from 'rollup';
 import { createBuilder, type InlineConfig, version } from 'vite';
-
-import { Colorize, hasModuleImport, isSamePath, moduleImport } from '../../utilities/Formatting';
-import Logger, { BuildLogger } from '../../utilities/Logger';
 import Instance from '../MeteorViteRuntime';
 
 export async function buildForProduction() {

@@ -1,8 +1,8 @@
 /// <reference types="vite/client" />
+import { createSimpleLogger } from '@/utilities';
 import { Meteor } from 'meteor/meteor';
 import pc from 'picocolors';
 import PackageJson from '../../package.json';
-import { createSimpleLogger } from '../utilities/Logger';
 
 declare global {
     interface MeteorViteRuntimeConfig {
