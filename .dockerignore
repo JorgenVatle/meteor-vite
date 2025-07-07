@@ -4,6 +4,7 @@
 **/.npm
 **/.idea
 **/dist
+**/output
 
 # Build output from npm packages
 npm-packages/**/dist
