@@ -9,6 +9,7 @@ const STRIP_ANSI_DEPS = [
     'ansi-regex',
     'emoji-regex',
     'string-width',
+    'ansi-styles',
     'get-east-asian-width',
     'eastasianwidth',
 ]
