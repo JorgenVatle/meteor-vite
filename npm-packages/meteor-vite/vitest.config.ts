@@ -9,6 +9,11 @@ export default defineConfig({
         exclude: [
             'test/__mocks/**',
         ]
-        // ...
     },
+    
+    resolve: {
+        alias: [
+            { find: /^@\//, replacement: `${__dirname}/src/` }
+        ]
+    }
 })
