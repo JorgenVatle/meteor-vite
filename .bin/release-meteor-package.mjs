@@ -20,7 +20,7 @@ const logger = {
     },
     info: (...params) => logger._log('info', params),
     error: (...params) => logger._log('error', params),
-    emitSummary() {
+    async emitSummary() {
         if (!process.env.GITHUB_STEP_SUMMARY) {
             return;
         }
@@ -30,7 +30,7 @@ const logger = {
         summary += this._history.join('\n');
         summary += '\n```\n';
 
-        FS.appendFile(process.env.GITHUB_STEP_SUMMARY, summary, (error) => {
+        await FS.appendFile(process.env.GITHUB_STEP_SUMMARY, summary, (error) => {
             if (!error) return;
             console.error(error);
         });
@@ -249,6 +249,8 @@ async function isPublished(version) {
     return versions.some((release) => release.version === version);
 }
 
+let exitCode = 0;
+
 (async () => {
     const [binPath, modulePath, action] = process.argv;
 
@@ -271,6 +273,7 @@ async function isPublished(version) {
 
 })().catch((error) => {
     const { stdout, stderr } = error;
+    exitCode = error?.status ?? 1;
 
     if (!error.code && !error.status) {
         logger.error(error);
@@ -278,20 +281,22 @@ async function isPublished(version) {
 
     // Error should already be printed to stdout
     if (error instanceof ShellError) {
-        process.exit(1);
+        return;
     }
 
     if (stdout) {
         logger.info(stdout.toString());
     }
+
     if (stderr) {
         logger.error(stderr.toString());
     }
 
-    logger.emitSummary();
-    process.exit(1);
-}).finally(() => {
-    logger.emitSummary();
+}).finally(async () => {
+    await logger.emitSummary();
+    if (exitCode) {
+        process.exit(exitCode);
+    }
 });
 
 class ShellError extends Error {
