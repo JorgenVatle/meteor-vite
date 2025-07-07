@@ -12,4 +12,12 @@ export class ModuleRunner {
         })
     }
     
+    public import<T extends keyof AvailableImports>(module: T): Promise<AvailableImports[T]> {
+        return import((`meteor-vite/${module}`));
+    }
+    
+}
+
+interface AvailableImports {
+    'utilities/server': typeof import('@/utilities/server/index'),
 }
