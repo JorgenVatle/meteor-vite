@@ -66,6 +66,7 @@ function buildConfig(config: { name: string } & Pick<Options, 'entry'  | 'platfo
         sourcemap: true,
         dts: true,
         noExternal: ['meteor'],
+        minify: false,
         esbuildPlugins: [
             EsbuildPluginMeteorStubs,
         ]
