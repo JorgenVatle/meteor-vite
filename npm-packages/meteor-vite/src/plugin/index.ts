@@ -1,4 +1,4 @@
 export { default as meteor } from './Meteor';
 
-export * from './MeteorVitePluginConfig';
-export * from './ProjectJson';
+export type * from './MeteorVitePluginConfig';
+export type * from './ProjectJson';
