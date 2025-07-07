@@ -1,7 +1,7 @@
 import FS from 'fs';
 import Path from 'path';
 import { defineConfig, Options } from 'tsup';
-import { EsbuildPluginMeteorStubs } from '../../tsup.config';
+import { EsbuildPluginMeteorStubs } from '../../build/tsup-plugins';
 
 let clean = false;
 
