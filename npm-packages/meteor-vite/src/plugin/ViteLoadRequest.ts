@@ -1,5 +1,5 @@
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
-import { isSameModulePath } from '@/plugin/meteor/components/MeteorPackage';
+import { isSameModulePath } from '@/plugin/meteor/models/MeteorPackage';
 import type { MeteorVitePluginConfig } from '@/plugin/MeteorVitePluginConfig';
 import { Colorize, createLabelledLogger, LabelLogger } from '@/utilities/server';
 import NodeFS, { existsSync } from 'fs';

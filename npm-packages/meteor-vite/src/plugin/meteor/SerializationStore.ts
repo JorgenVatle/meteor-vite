@@ -1,6 +1,6 @@
 import { ErrorMetadata, MeteorViteError } from '@/internals/error/MeteorViteError';
-import ModuleExport from '@/plugin/meteor/components/ModuleExport';
-import PackageExport from '@/plugin/meteor/components/PackageExport';
+import ModuleExport from '@/plugin/meteor/models/ModuleExport';
+import PackageExport from '@/plugin/meteor/models/PackageExport';
 import { Logger } from '@/utilities/server';
 import pc from 'picocolors';
 

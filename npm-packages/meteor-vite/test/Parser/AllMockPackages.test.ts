@@ -1,4 +1,4 @@
-import MeteorPackage from '@/plugin/meteor/components/MeteorPackage';
+import MeteorPackage from '@/plugin/meteor/models/MeteorPackage';
 import Path from 'path';
 import { describe, expect, it } from 'vitest';
 import { parseMeteorPackage } from '../../src/plugin/meteor/parser/Parser';

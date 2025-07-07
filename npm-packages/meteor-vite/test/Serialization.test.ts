@@ -1,5 +1,5 @@
-import MeteorPackage from '@/plugin/meteor/components/MeteorPackage';
-import ModuleExport from '@/plugin/meteor/components/ModuleExport';
+import MeteorPackage from '@/plugin/meteor/models/MeteorPackage';
+import ModuleExport from '@/plugin/meteor/models/ModuleExport';
 import { describe, expect, it } from 'vitest';
 
 describe('Serialization', () => {

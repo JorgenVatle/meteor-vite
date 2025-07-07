@@ -1,4 +1,4 @@
-import MeteorPackage from '@/plugin/meteor/components/MeteorPackage';
+import MeteorPackage from '@/plugin/meteor/models/MeteorPackage';
 import { METEOR_STUB_KEY, PACKAGE_SCOPE_KEY, stubTemplate } from '@/plugin/meteor/StubTemplate';
 import { describe, expect, it } from 'vitest';
 

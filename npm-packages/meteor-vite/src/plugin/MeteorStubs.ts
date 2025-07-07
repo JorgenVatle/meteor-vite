@@ -1,6 +1,6 @@
 import { createErrorHandler } from '@/internals/error/ErrorHandler';
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
-import MeteorPackage from '@/plugin/meteor/components/MeteorPackage';
+import MeteorPackage from '@/plugin/meteor/models/MeteorPackage';
 import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/plugin/MeteorVitePluginConfig';
 import { homepage } from '@/utilities/common';
 import { Colorize } from '@/utilities/server';
