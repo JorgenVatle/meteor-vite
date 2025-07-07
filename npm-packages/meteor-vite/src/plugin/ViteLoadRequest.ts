@@ -94,24 +94,22 @@ export default class ViteLoadRequest {
         environment: Environment;
         manifestPath: string;
     } {
-        let {
-            /**
-             * Base Atmosphere package import This is usually where we find the full package content, even for packages
-             * that have multiple entry points.
-             * {@link ParsedPackage.packageId}
-             */
-            packageId,
-            
-            /**
-             * Requested file path inside the package. (/some-module)
-             * Used for packages that have multiple entry points or no mainModule specified in package.js.
-             * E.g. `import { Something } from `meteor/ostrio:cookies/some-module`
-             * @type {string | undefined}
-             */
-            importPath,
-        } = id.match( // todo: maybe use the Node.js Path utility?
-            /(?<packageId>(meteor\/)[\w\-. ]+(:[\w\-. ]+)?)(?<importPath>\/.+)?/,
-        )?.groups || {} as { packageId: string, importPath?: string };
+        const matches = id.match(/(?<packageId>(meteor\/)[\w\-. ]+(:[\w\-. ]+)?)(?<importPath>\/.+)?/)?.groups || {};
+        
+        /**
+         * Base Atmosphere package import This is usually where we find the full package content, even for packages
+         * that have multiple entry points.
+         * {@link ParsedPackage.packageId}
+         */
+        const packageId = matches.packageId || `[unknownPackageId:${id}]`;
+        
+        /**
+         * Requested file path inside the package. (/some-module)
+         * Used for packages that have multiple entry points or no mainModule specified in package.js.
+         * E.g. `import { Something } from `meteor/ostrio:cookies/some-module`
+         * @type {string | undefined}
+         */
+        const importPath: string | undefined = matches.importPath;
         
         const arch = {
             programsDir: 'web.browser',
