@@ -1,4 +1,7 @@
+import Path from 'path';
 import { defineConfig } from 'vitest/config';
+
+const __dirname = new URL('.', import.meta.url).pathname;
 
 export default defineConfig({
     test: {
@@ -13,7 +16,7 @@ export default defineConfig({
     
     resolve: {
         alias: [
-            { find: /^@\//, replacement: `${__dirname}/src/` }
+            { find: /^@\//, replacement: Path.join(__dirname, 'src', '/') },
         ]
     }
 })
