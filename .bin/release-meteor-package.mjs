@@ -176,9 +176,26 @@ async function fixPackageJsonName() {
 function shell(command, options) {
     logger.info(`$ ${command}`);
     if (!options?.async) {
-        logger.info(execSync(command, { ...options, encoding: 'utf-8' }));
+        const mergedOptions = Object.assign({ stdio: 'inherit', encoding: 'utf-8' }, options)
+        let result;
+
+        try {
+            result = execSync(command, mergedOptions);
+        } catch (error) {
+            result = error;
+        }
+
+        if (mergedOptions.stdio !== 'inherit') {
+            logger.info(result);
+        }
+
+        if (result instanceof Error) {
+            throw new ShellError(result.message, { cause: result });
+        }
+
         return;
     }
+
     const [bin, ...args] = command.split(' ');
     const childProcess = spawn(bin, args, {
         ...options,
