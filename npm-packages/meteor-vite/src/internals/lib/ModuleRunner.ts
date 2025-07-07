@@ -3,7 +3,7 @@ import type * as Scripts from '@/internals/scripts';
 export class ModuleRunner {
     constructor() {}
     
-    public runScript<TName extends ScriptName>(script: TName) {
+    public runScript<TName extends ScriptName>(script: TName): Promise<Awaited<ScriptResult<TName>>> {
         return import('@/internals/scripts/index').then((scripts: any): Awaited<ScriptResult<TName>> => {
             return scripts[script]();
         })
