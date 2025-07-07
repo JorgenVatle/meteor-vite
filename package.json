@@ -27,7 +27,6 @@
     "build:jorgenvatle:vite": "tsup",
 
     "prestart": "npm run build:jorgenvatle:vite",
-    "prepublish:vite": "npm run build:jorgenvatle:vite",
     "prebuild:jorgenvatle:vite": "npm run build:meteor-vite",
 
     "watch:packages": "TSUP_CLEAN=false concurrently -k -n atmosphere,npm 'npm:build:jorgenvatle:vite -- --watch' 'npm:build:meteor-vite -- --watch'",
