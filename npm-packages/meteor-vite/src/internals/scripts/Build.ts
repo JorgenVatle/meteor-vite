@@ -1,6 +1,7 @@
 import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
-import type { MeteorStubsSettings, ProjectJson, ResolvedMeteorViteConfig } from '@/plugin/Settings';
+import type { MeteorStubsSettings, ResolvedMeteorViteConfig } from '@/plugin/Settings';
+import type { ProjectJson } from '@/types/ProjectJson';
 import { execaSync } from 'execa';
 import FS from 'fs';
 import Path from 'node:path';

@@ -1,5 +1,6 @@
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
-import type { ProjectJson } from '@/plugin/Settings';
+
+import type { ProjectJson } from '@/types/ProjectJson';
 import FS from 'fs';
 import Path from 'path';
 
