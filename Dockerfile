@@ -4,7 +4,7 @@
 ARG NODE_VERSION="22-alpine"
 
 # Meteor release (Needs to match the release in .meteor/release)
-ARG METEOR_RELEASE="3.0.4"
+ARG METEOR_RELEASE="3.3"
 
 # Meteor base image name
 ARG METEOR_BASE_IMAGE="jorgenvatle/meteor-base"
