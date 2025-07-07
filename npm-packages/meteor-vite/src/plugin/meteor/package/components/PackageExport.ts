@@ -1,6 +1,6 @@
+import { Logger } from '@/utilities';
 import pc from 'picocolors';
 import PackageJSON from '../../../../../package.json';
-import Logger from '../../../../utilities/Logger';
 import { PACKAGE_SCOPE_KEY, TEMPLATE_GLOBAL_KEY } from '../StubTemplate';
 import MeteorPackage from './MeteorPackage';
 

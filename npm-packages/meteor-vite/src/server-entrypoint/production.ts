@@ -1,8 +1,8 @@
 import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
 import type { ViteManifestFile } from '@/internals/scripts/Build';
+import { Logger } from '@/utilities';
 import { Meteor } from 'meteor/meteor';
 import { WebApp, WebAppInternals } from 'meteor/webapp';
-import Logger from '../utilities/Logger';
 
 Meteor.startup(async () => {
     if (!Meteor.isProduction) {

@@ -1,7 +1,7 @@
 import { MeteorViteError } from '@/error';
+import { Logger } from '@/utilities';
 import Path from 'path';
 import pc from 'picocolors';
-import Logger from '../../../../utilities/Logger';
 import type { ModuleList, ParsedPackage } from '../../parser/Parser';
 import { parseMeteorPackage } from '../../parser/Parser';
 import { ConflictingExportKeys, SerializationStore } from '../SerializationStore';
