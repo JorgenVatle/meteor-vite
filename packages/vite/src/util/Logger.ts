@@ -1,4 +1,4 @@
-import { createSimpleLogger } from 'meteor-vite/utilities';
+import { createSimpleLogger } from 'meteor-vite/utilities/server';
 import fs from 'node:fs';
 import { performance } from 'node:perf_hooks';
 import { inspect } from 'node:util';
