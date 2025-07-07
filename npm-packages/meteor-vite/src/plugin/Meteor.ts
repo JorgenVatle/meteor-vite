@@ -1,14 +1,11 @@
 import { FatalMeteorViteError } from '@/internals/error/MeteorViteError';
-import type {
-    MeteorVitePluginConfig,
-    MeteorVitePluginOptions,
-    PartialPluginConfig,
-} from '@/plugin/MeteorVitePluginConfig';
+import { mergeMeteorPluginSettings, mergeViteSettings } from '@/plugin/lib/MergeConfig';
+import type { MeteorVitePluginOptions, PartialPluginConfig } from '@/plugin/MeteorVitePluginConfig';
 import Path from 'path';
 import pc from 'picocolors';
-import type { Plugin, PluginOption, ResolvedConfig, UserConfig } from 'vite';
+import type { Plugin, PluginOption } from 'vite';
 import PackageJSON from '../../package.json';
-import { mergeWithTypes, parseConfig } from './lib/ParseConfig';
+import { parseConfig } from './lib/ParseConfig';
 import { MeteorStubs } from './MeteorStubs';
 
 /**
@@ -56,7 +53,7 @@ export function meteorWorker(config: PartialPluginConfig): PluginOption {
             enforce,
             resolveId,
             config: (userConfig, { command }) =>  {
-                const pluginSettings = mergeMeteorSettings(userConfig, {
+                const pluginSettings = mergeMeteorPluginSettings(userConfig, {
                     _configSource: 'plugin',
                     meteorStubs: {
                         packageJsonPath: 'package.json',
@@ -127,21 +124,3 @@ export function meteorWorker(config: PartialPluginConfig): PluginOption {
     ]
 }
 
-function mergeMeteorSettings(
-    userConfig: ResolvedConfig | UserConfig,
-    defaults: PartialPluginConfig,
-    overrides: PartialPluginConfig
-) {
-    const viteConfig = parseConfig(userConfig);
-    const existingSettings = viteConfig.meteor || {};
-    const withDefaults = mergeWithTypes(defaults, existingSettings);
-    return viteConfig.meteor = mergeWithTypes(withDefaults, overrides) as MeteorVitePluginConfig;
-}
-
-function mergeViteSettings(
-    userConfig: ResolvedConfig | UserConfig,
-    defaults: UserConfig,
-) {
-    const viteConfig = parseConfig(userConfig);
-    return mergeWithTypes(defaults, viteConfig);
-}
