@@ -1,7 +1,7 @@
 # Node.js Version to run our production server.
 # This needs to match as what's expected by our current meteor release;
 # https://docs.meteor.com/changelog.html
-ARG NODE_VERSION="20-alpine"
+ARG NODE_VERSION="22-alpine"
 
 # Meteor release (Needs to match the release in .meteor/release)
 ARG METEOR_RELEASE="3.0.4"
