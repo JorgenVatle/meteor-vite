@@ -4,32 +4,8 @@ import { defineConfig, type Options } from 'tsup';
 
 type Plugin = Required<Options>['esbuildPlugins'][number];
 
-export default defineConfig(() => ({
-    name: 'jorgenvatle:vite',
-    entry: [
-        './packages/vite/src/entry/server-runtime.ts',
-        './packages/vite/src/entry/build-plugin.ts'
-    ],
-    outDir: './packages/vite/dist',
-    skipNodeModulesBundle: true,
-    splitting: false,
-    target: 'es2022',
-    platform: 'node',
-    keepNames: false,
-    minify: false,
-    tsconfig: "tsconfig.build.json",
-    sourcemap: true,
-    format: 'esm',
-    esbuildPlugins: [
-        // fixBuildPluginCjsImports(),
-        meteorImportStubs({
-            'isobuild': () => `const PluginGlobal = Plugin; export { PluginGlobal as Plugin }`,
-        }),
-    ],
-    noExternal: ['meteor/isobuild', 'meteor-vite']
-}))
-
 export const EsbuildPluginMeteorStubs = meteorImportStubs({
+    'isobuild': () => `const PluginGlobal = Plugin; export { PluginGlobal as Plugin }`,
     'meteor': (symbol) => `export const Meteor = ${symbol}?.Meteor || globalThis.Meteor`,
     'mongo': (symbol) => `export const { Mongo } = ${symbol} || {}`,
     'server-render': (symbol) => `export const { onPageLoad } = ${symbol} || {}`,
@@ -38,6 +14,7 @@ export const EsbuildPluginMeteorStubs = meteorImportStubs({
         `export const WebAppInternals = ${symbol}?.WebAppInternals || globalThis?.WebAppInternals`,
     ].join('\n'),
 });
+
 
 const log = (...messages: unknown[]) => {
     console.log(...messages.map((message) => {
@@ -55,7 +32,9 @@ function fixBuildPluginCjsImports(): Plugin {
             build.onResolve({ filter: /^meteor-vite/ }, (args) => {
                 const parsed = Path.parse(args.path);
                 const packageRoot = parsed.dir;
-                const newPath = Path.join(packageRoot, 'dist', `${parsed.name}.js`);
+                const relativePath = Path.relative('meteor-vite', args.path);
+                
+                const newPath = Path.join('meteor-vite', 'dist', `${relativePath}.mjs`);
                 
                 log(`Rewriting external ${pc.yellow(packageRoot)} import for Meteor build plugin: ${pc.blue(args.path)} -> ${pc.green(newPath)}`);
                 
@@ -101,3 +80,25 @@ function meteorImportStubs(packages: {
         }
     } satisfies Plugin;
 }
+
+export default defineConfig(() => ({
+    name: 'jorgenvatle:vite',
+    entry: [
+        './packages/vite/src/entry/server-runtime.ts',
+        './packages/vite/src/entry/build-plugin.ts'
+    ],
+    outDir: './packages/vite/dist',
+    splitting: false,
+    target: 'es2022',
+    platform: 'node',
+    keepNames: false,
+    minify: false,
+    tsconfig: "tsconfig.build.json",
+    sourcemap: true,
+    format: 'esm',
+    esbuildPlugins: [
+        fixBuildPluginCjsImports(),
+        EsbuildPluginMeteorStubs,
+    ],
+    noExternal: ['meteor/isobuild', /meteor\//]
+}));
