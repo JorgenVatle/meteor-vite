@@ -2,7 +2,7 @@ import { parsePackageJson } from '@/internals/lib/parsePackageJson';
 import { clientMainModule, serverMainModule } from '@/internals/scripts/Setup';
 import { meteorWorker } from '@/plugin/Meteor';
 
-import type { ResolvedMeteorViteConfig } from '@/types/MeteorVitePluginSettings';
+import type { ResolvedViteConfig } from '@/types/MeteorVitePluginConfig';
 import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
 import { MeteorViteError } from '../../error/MeteorViteError';
@@ -34,7 +34,7 @@ export async function resolveMeteorViteConfig(
     const needsReactPreamble = Object.keys(packageJson?.devDependencies || {}).includes('@vitejs/plugin-react') || Object.keys(packageJson.dependencies || {}).includes('@vitejs/plugin-react');
     let viteServerMainModule: undefined | string = undefined;
     
-    const userConfig: ResolvedMeteorViteConfig = await resolveConfig(Object.assign({
+    const userConfig: ResolvedViteConfig = await resolveConfig(Object.assign({
         configFile: packageJson.meteor.vite?.configFile,
     }, inlineConfig), command);
     
@@ -142,7 +142,7 @@ export async function resolveMeteorViteConfig(
                 }
             }
         },
-    } satisfies InlineConfig & Pick<ResolvedMeteorViteConfig, 'meteor'>;
+    } satisfies InlineConfig & Pick<ResolvedViteConfig, 'meteor'>;
     
     const modules = {
         clientEntry: Path.relative(projectRoot,

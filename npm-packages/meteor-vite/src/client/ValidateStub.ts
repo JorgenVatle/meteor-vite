@@ -1,4 +1,4 @@
-import type { StubValidationSettings } from '@/types/MeteorVitePluginSettings';
+import type { StubValidationSettings } from '@/types/MeteorVitePluginConfig';
 import { bugs, homepage } from '../utilities/Constants';
 
 /**

@@ -1,4 +1,4 @@
-import type { MeteorVitePluginSettings, ResolvedMeteorViteConfig } from '@/types/MeteorVitePluginSettings';
+import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/types/MeteorVitePluginConfig';
 import FS from 'fs/promises';
 import Path from 'path';
 import type { Environment, Plugin, ViteDevServer } from 'vite';
@@ -100,8 +100,8 @@ async function storeDebugSnippet({ request, stubTemplate, meteorPackage }: {
 function setupPlugin<Context extends ViteLoadRequest>(setup: () => Promise<{
     name: string;
     load(request: Context): Promise<string>;
-    validateConfig(settings: MeteorVitePluginSettings): Promise<void>,
-    setupContext(viteId: string, server: ViteDevServer, settings: MeteorVitePluginSettings, environment: Environment): Promise<Context>;
+    validateConfig(settings: MeteorVitePluginConfig): Promise<void>,
+    setupContext(viteId: string, server: ViteDevServer, settings: MeteorVitePluginConfig, environment: Environment): Promise<Context>;
     shouldProcess(viteId: string): boolean;
     resolveId(viteId: string): string | undefined;
 }>): () => Promise<Plugin> {
@@ -109,13 +109,13 @@ function setupPlugin<Context extends ViteLoadRequest>(setup: () => Promise<{
     
     const createPlugin = async (): Promise<Plugin> => {
         const plugin = await setup();
-        let settings: MeteorVitePluginSettings;
+        let settings: MeteorVitePluginConfig;
         let server: ViteDevServer;
         return {
             name: plugin.name,
             resolveId: plugin.resolveId,
             async configResolved(resolvedConfig) {
-                const pluginSettings = (resolvedConfig as ResolvedMeteorViteConfig).meteor;
+                const pluginSettings = (resolvedConfig as ResolvedViteConfig).meteor;
                 if (!pluginSettings) {
                     throw new MeteorViteError('Unable to get configuration for Meteor-Vite!');
                 }
@@ -158,5 +158,5 @@ function setupPlugin<Context extends ViteLoadRequest>(setup: () => Promise<{
 }
 
 
-type ResolvedPluginConfig = Required<MeteorVitePluginSettings> & { meteorStubs: Required<MeteorVitePluginSettings['meteorStubs']> };
+type ResolvedPluginConfig = Required<MeteorVitePluginConfig> & { meteorStubs: Required<MeteorVitePluginConfig['meteorStubs']> };
 

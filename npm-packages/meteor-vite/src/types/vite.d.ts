@@ -1,4 +1,4 @@
-import type { ResolvedPluginSettings } from '@/types/MeteorVitePluginSettings';
+import type { ResolvedPluginSettings } from '@/types/MeteorVitePluginConfig';
 
 declare module 'vite' {
     interface ResolvedEnvironmentOptions {

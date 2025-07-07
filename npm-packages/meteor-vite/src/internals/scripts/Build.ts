@@ -1,6 +1,6 @@
 import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
-import type { ResolvedMeteorViteConfig, StubSettings } from '@/types/MeteorVitePluginSettings';
+import type { ResolvedViteConfig, StubSettings } from '@/types/MeteorVitePluginConfig';
 import type { ProjectJson } from '@/types/ProjectJson';
 import { execaSync } from 'execa';
 import FS from 'fs';
@@ -318,7 +318,7 @@ export interface BuildOptions {
 
 export type BuildResultChunk = { name?: string, type: string, fileName: string };
 export type ParsedConfig = {
-    viteConfig: ResolvedMeteorViteConfig;
+    viteConfig: ResolvedViteConfig;
     inlineBuildConfig: InlineConfig;
     outDir: string;
 }

@@ -8,7 +8,7 @@ import type { ResolvedConfig } from 'vite';
  * internal configuration has been applied.
  * @see {@link https://github.com/JorgenVatle/meteor-vite#configuration}
  */
-export interface MeteorVitePluginSettings<
+export interface MeteorVitePluginConfig<
     TChunkFileNames extends OutputOptions['chunkFileNames'] = undefined
 > {
     /**
@@ -187,7 +187,7 @@ export interface StubSettings {
     meteor: MeteorPaths;
 }
 
-interface MeteorPaths {
+export interface MeteorPaths {
     /**
      * Path to Meteor's internal package cache.
      * This can change independently of the isopack path depending on whether we're building for production or
@@ -233,17 +233,18 @@ interface MeteorPaths {
 /**
  * Partial plugin settings - utility type for merging two partial plugin configs.
  */
-export type PartialPluginSettings = DeepPartial<MeteorVitePluginSettings>;
+export type PartialPluginConfig = DeepPartial<MeteorVitePluginConfig>;
 
 /**
- * Minimal accepted meteor-vite/plugin configuration (user provided settings).
+ * Minimal accepted meteor-vite/plugin configuration.
+ * This is what's expected that users provide when adding meteor-vite to their Vite config.
  * Only requires clientEntry to be specified.
  */
-export type PluginOptions = MakeRequired<PartialPluginSettings, 'clientEntry'>;
+export type MeteorVitePluginOptions = MakeRequired<PartialPluginConfig, 'clientEntry'>;
 
 /**
  * A resolved Vite config, after our workers has merged it with default settings and overrides from the Meteor instance.
  */
-export interface ResolvedMeteorViteConfig extends ResolvedConfig {
-    meteor?: MeteorVitePluginSettings;
+export interface ResolvedViteConfig extends ResolvedConfig {
+    meteor?: MeteorVitePluginConfig;
 }

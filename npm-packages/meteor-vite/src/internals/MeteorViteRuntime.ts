@@ -1,6 +1,6 @@
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 
-import type { ResolvedMeteorViteConfig } from '@/types/MeteorVitePluginSettings';
+import type { ResolvedViteConfig } from '@/types/MeteorVitePluginConfig';
 import type { ProjectJson } from '@/types/ProjectJson';
 import FS from 'fs';
 import { Meteor } from 'meteor/meteor';
@@ -27,7 +27,7 @@ export default new class MeteorViteRuntime {
         ].map((line) => pc.green(line)).join(' '));
     }
     
-    public printUrls(config: Pick<ResolvedMeteorViteConfig, 'base'>) {
+    public printUrls(config: Pick<ResolvedViteConfig, 'base'>) {
         const printUrl = (key: string, value: string) => [
             pc.white(`> ${key}:`.padEnd(11, ' ')),
             pc.cyan(value.replace(/(\d+)/, pc.bold(pc.cyanBright('$1')))),

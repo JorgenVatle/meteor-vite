@@ -1,4 +1,8 @@
-import type { MeteorVitePluginSettings, PartialPluginSettings, PluginOptions } from '@/types/MeteorVitePluginSettings';
+import type {
+    MeteorVitePluginConfig,
+    MeteorVitePluginOptions,
+    PartialPluginConfig,
+} from '@/types/MeteorVitePluginConfig';
 import Path from 'path';
 import pc from 'picocolors';
 import type { Plugin, PluginOption, ResolvedConfig, UserConfig } from 'vite';
@@ -17,7 +21,7 @@ import { mergeWithTypes, parseConfig } from './ParseConfig';
  *     ]
  * })
  */
-export default function meteor(config: PluginOptions): PluginOption {
+export default function meteor(config: MeteorVitePluginOptions): PluginOption {
     return meteorWorker(config);
 }
 
@@ -25,7 +29,7 @@ export default function meteor(config: PluginOptions): PluginOption {
  * Internal worker plugin. Merges the user's config with necessary overrides for the Meteor compiler and loads the
  * MeteorStubs plugin.
  */
-export function meteorWorker(config: PluginOptions): PluginOption {
+export function meteorWorker(config: MeteorVitePluginOptions): PluginOption {
     const METEOR_LOCAL_DIR = process.env.METEOR_LOCAL_DIR || Path.join('.meteor', 'local');
     let enforce: 'pre' | undefined;
     let resolveId: Plugin['resolveId'];
@@ -125,13 +129,13 @@ export function meteorWorker(config: PluginOptions): PluginOption {
 
 function mergeMeteorSettings(
     userConfig: ResolvedConfig | UserConfig,
-    defaults: PartialPluginSettings,
-    overrides: PartialPluginSettings
+    defaults: PartialPluginConfig,
+    overrides: PartialPluginConfig
 ) {
     const viteConfig = parseConfig(userConfig);
     const existingSettings = viteConfig.meteor || {};
     const withDefaults = mergeWithTypes(defaults, existingSettings);
-    return viteConfig.meteor = mergeWithTypes(withDefaults, overrides) as MeteorVitePluginSettings;
+    return viteConfig.meteor = mergeWithTypes(withDefaults, overrides) as MeteorVitePluginConfig;
 }
 
 function mergeViteSettings(
