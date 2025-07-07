@@ -1,6 +1,4 @@
 /// <reference types="vite/client" />
-import { ViteDevelopmentBoilerplate } from '@/internals/boilerplate/Development';
-import { resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import { Logger } from '@/utilities/server';
 
 export async function initializeViteDevServer() {
@@ -18,14 +16,3 @@ export async function initializeViteDevServer() {
     await import ('@/server-entry/development');
 }
 
-export async function prepareDevServerBoilerplate() {
-    const { modules, needsReactPreamble, config } = await resolveMeteorViteConfig({
-        mode: 'development'
-    }, 'serve');
-    
-    return new ViteDevelopmentBoilerplate({
-        clientEntry: modules.clientEntry,
-        needsReactPreamble,
-        baseUrl: config.base,
-    });
-}

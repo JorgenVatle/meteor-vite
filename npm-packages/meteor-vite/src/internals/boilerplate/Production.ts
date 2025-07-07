@@ -1,4 +1,4 @@
-import type { TransformedViteManifest } from '@/internals/scripts/Build';
+import type { TransformedViteManifest } from '@/internals/scripts/buildForProduction';
 import { createSimpleLogger, Logger, type SimpleLogger, trimLeadingSlash } from '@/utilities/server';
 import { WebAppInternals } from 'meteor/webapp';
 import { URL } from 'node:url';
