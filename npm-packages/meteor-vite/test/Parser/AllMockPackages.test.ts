@@ -1,7 +1,7 @@
+import MeteorPackage from '@/plugin/meteor/models/MeteorPackage';
 import Path from 'path';
-import { describe, expect, it, test } from 'vitest';
-import MeteorPackage from '../../src/entry/plugin/meteor/package/components/MeteorPackage';
-import { parseMeteorPackage } from '../../src/entry/plugin/meteor/parser/Parser';
+import { describe, expect, it } from 'vitest';
+import { parseMeteorPackage } from '../../src/plugin/meteor/parser/Parser';
 import { AllMockPackages_MeteorV2, AllMockPackages_MeteorV3 } from '../__mocks';
 
 describe('Validate known exports for mock packages', () => {

@@ -6,12 +6,14 @@ import FS from 'fs/promises';
 const repoPath = process.cwd();
 const PACKAGE_NAME_REGEX = /name:\s*'(?<packageName>(?<author>[\w\-._]+):(?<name>[\w\-._]+))'\s*,/;
 const PACKAGE_VERSION_REGEX = /version:\s*'(?<version>[\d\w.+-]+)'\s*,/;
+const { METEOR_SESSION_FILE, GITHUB_STEP_SUMMARY } = process.env;
 const CHANGESET_STATUS_FILE = 'changeset-status.json';
 const meteorPackage = {
     name: 'jorgenvatle:vite',
     packageJsPath: Path.join(repoPath, './packages/vite/package.js'),
     packageJsonPath: Path.join(repoPath, './packages/vite/package.json'),
 };
+
 const logger = {
     _history: [],
     _log(level, params) {
@@ -20,8 +22,8 @@ const logger = {
     },
     info: (...params) => logger._log('info', params),
     error: (...params) => logger._log('error', params),
-    emitSummary() {
-        if (!process.env.GITHUB_STEP_SUMMARY) {
+    async emitSummary() {
+        if (!GITHUB_STEP_SUMMARY) {
             return;
         }
 
@@ -30,7 +32,7 @@ const logger = {
         summary += this._history.join('\n');
         summary += '\n```\n';
 
-        FS.appendFile(process.env.GITHUB_STEP_SUMMARY, summary, (error) => {
+        await FS.appendFile(GITHUB_STEP_SUMMARY, summary, (error) => {
             if (!error) return;
             console.error(error);
         });
@@ -135,7 +137,7 @@ async function publish() {
         async: true,
         cwd: Path.dirname(meteorPackage.packageJsPath),
         env: {
-            METEOR_SESSION_FILE: process.env.METEOR_SESSION_FILE, // Authenticate using auth token stored as file.
+            METEOR_SESSION_FILE, // Authenticate using auth token stored as file.
             VITE_METEOR_DISABLED: 'true', // Prevents vite:bundler from trying to compile itself on publish
             ...process.env,
         },
@@ -176,9 +178,26 @@ async function fixPackageJsonName() {
 function shell(command, options) {
     logger.info(`$ ${command}`);
     if (!options?.async) {
-        logger.info(execSync(command, { ...options, encoding: 'utf-8' }));
+        const mergedOptions = Object.assign({ stdio: 'inherit', encoding: 'utf-8' }, options)
+        let result;
+
+        try {
+            result = execSync(command, mergedOptions);
+        } catch (error) {
+            result = error;
+        }
+
+        if (mergedOptions.stdio !== 'inherit') {
+            logger.info(result);
+        }
+
+        if (result instanceof Error) {
+            throw new ShellError(result.message, { cause: result });
+        }
+
         return;
     }
+
     const [bin, ...args] = command.split(' ');
     const childProcess = spawn(bin, args, {
         ...options,
@@ -193,6 +212,8 @@ function shell(command, options) {
                 reject(new Error(`Command "${command}" exited with code ${code}`));
             }
         });
+    }).catch((error) => {
+        throw new ShellError(error.message, { cause: error });
     })
 }
 
@@ -230,6 +251,8 @@ async function isPublished(version) {
     return versions.some((release) => release.version === version);
 }
 
+let exitCode = 0;
+
 (async () => {
     const [binPath, modulePath, action] = process.argv;
 
@@ -252,17 +275,34 @@ async function isPublished(version) {
 
 })().catch((error) => {
     const { stdout, stderr } = error;
-    logger.error(error);
+    exitCode = error?.status ?? 1;
+
+    if (!error.code && !error.status) {
+        logger.error(error);
+    }
+
+    // Error should already be printed to stdout
+    if (error instanceof ShellError) {
+        return;
+    }
 
     if (stdout) {
         logger.info(stdout.toString());
     }
+
     if (stderr) {
         logger.error(stderr.toString());
     }
 
-    logger.emitSummary();
-    process.exit(1);
-}).finally(() => {
-    logger.emitSummary();
+}).finally(async () => {
+    await logger.emitSummary();
+    if (exitCode) {
+        process.exit(exitCode);
+    }
 });
+
+class ShellError extends Error {
+    constructor(message) {
+        super(message);
+    }
+}

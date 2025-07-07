@@ -1,35 +1,41 @@
 import FS from 'fs';
 import Path from 'path';
-import { defineConfig } from 'tsup';
-import { EsbuildPluginMeteorStubs } from '../../tsup.config';
+import { defineBuildConfig } from '../../build/defineBuildConfig';
 
-const STRIP_ANSI_DEPS = [
-    'wrap-ansi',
-    'strip-ansi',
-    'ansi-regex',
-    'emoji-regex',
-    'string-width',
-    'get-east-asian-width',
-    'eastasianwidth',
-]
+let clean = false;
 
-export default defineConfig([
+try {
+    clean = JSON.parse(process.env.TSUP_CLEAN || 'true')
+} catch (error) {
+    console.warn(error);
+}
+
+export default defineBuildConfig(__dirname, [
     // Internal entry points
     {
-        name: 'meteor-vite/internals',
-        entry: [
-            './src/entry/bootstrap/index.ts',
-            './src/entry/bootstrap/RuntimeHMR.ts',
-            './src/entry/bootstrap/scripts/index.ts',
-            './src/entry/bootstrap/ProductionEnvironment.ts',
-            './src/entry/bootstrap/CommonEnvironment.ts',
-        ],
-        format: 'esm',
-        sourcemap: true,
-        target: 'node20',
-        outDir: './dist/bootstrap',
-        skipNodeModulesBundle: true,
-        dts: false,
+        name: 'meteor-vite/esm',
+        entry: {
+            // The "Meteor-Vite" Vite plugin.
+            'plugin': './src/plugin/index.ts',
+            
+            // Internal tooling for the Meteor build plugin.
+            'internals': './src/internals/index.ts',
+            
+            // Server utility modules (logger, colorization, parsers)
+            'utilities/server': './src/utilities/server/index.ts',
+            
+            // Meteor Production/Development environment bootstrapper
+            // - Starts the vite dev server in development and loads server-side HMR hooks (if server builds are enabled)
+            // - Serves static files from the Vite bundle in production
+            'server-entry/development': './src/server-entry/development.ts',
+            'server-entry/production': './src/server-entry/production.ts',
+            
+            // Initializes HMR hooks for the Meteor-server. (Cleanup of side-effects from e.g. Meteor.publish(...))
+            'server-entry/hmr': './src/server-entry/hmr.ts',
+        },
+        format: ['esm'],
+        platform: 'node',
+        clean,
         onSuccess: async () => {
             try {
                 const atmospherePackageOutDir = Path.join(__dirname, '..', '..', 'packages', 'vite', 'dist');
@@ -39,46 +45,16 @@ export default defineConfig([
                 console.warn(error);
             }
         },
-        noExternal: ['meteor', 'picocolors', ...STRIP_ANSI_DEPS],
-        esbuildPlugins: [
-            EsbuildPluginMeteorStubs,
-        ]
     },
-    
-    // Stub validation
     {
         name: 'meteor-vite/client',
         entry: {
-            client: './src/entry/client/index.ts',
+            // Stub validation module
+            'client': './src/client/index.ts',
+            // Common utility modules; constants, package info, etc.
+            'utilities/common': './src/utilities/common/index.ts',
         },
-        format: 'esm',
-        sourcemap: true,
-        dts: true,
-        skipNodeModulesBundle: true,
-    },
-    
-    // Plugin entry
-    {
-        name: 'meteor-vite/plugin',
-        entry: {
-            plugin: './src/entry/plugin/index.ts',
-        },
-        format: ['cjs', 'esm'],
-        sourcemap: true,
-        dts: true,
-        skipNodeModulesBundle: true,
-    },
-    
-    // Utilities
-    {
-        name: 'meteor-vite/utilities',
-        entry: {
-            utilities: './src/utilities/index.ts',
-        },
-        format: ['cjs', 'esm'],
-        sourcemap: true,
-        keepNames: false,
-        dts: true,
-        skipNodeModulesBundle: true,
+        format: ['esm', 'cjs'],
+        platform: 'browser',
     },
 ]);

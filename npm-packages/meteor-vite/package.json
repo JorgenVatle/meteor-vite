@@ -1,6 +1,6 @@
 {
   "name": "meteor-vite",
-  "version": "3.8.0",
+  "version": "3.9.0-beta.0",
   "description": "Vite compatability plugin for Meteor v3",
   "files": [
     "dist"
@@ -8,26 +8,32 @@
   "main": "",
   "exports": {
     "./plugin": {
-      "types": "./dist/plugin.d.ts",
+      "types": "./dist/plugin.d.mts",
       "import": "./dist/plugin.mjs",
-      "require": "./dist/plugin.js"
+      "require": "./dist/plugin.js",
+      "default": "./dist/plugin.mjs"
     },
-    "./utilities": {
-      "types": "./dist/utilities.d.ts",
-      "import": "./dist/utilities.mjs",
-      "require": "./dist/utilities.js"
+    "./utilities/*": {
+      "types": "./dist/utilities/*.d.mts",
+      "import": "./dist/utilities/*.mjs",
+      "require": "./dist/utilities/*.js",
+      "default": "./dist/utilities/*.mjs"
     },
     "./client": {
-      "types": "./dist/client.d.ts",
-      "import": "./dist/client.mjs"
+      "types": "./dist/client.d.mts",
+      "import": "./dist/client.mjs",
+      "require": "./dist/client.js",
+      "default": "./dist/client.mjs"
     },
-    "./bootstrap/scripts": {
-      "types": "./dist/bootstrap/scripts/index.d.ts",
-      "import": "./dist/bootstrap/scripts/index.mjs"
+    "./internals": {
+      "types": "./dist/internals.d.mts",
+      "import": "./dist/internals.mjs",
+      "default": "./dist/internals.mjs"
     },
-    "./bootstrap/*": {
-      "types": "./dist/bootstrap/*.d.ts",
-      "import": "./dist/bootstrap/*.mjs"
+    "./server-entry/*": {
+      "types": "./dist/server-entry/*.d.mts",
+      "import": "./dist/server-entry/*.mjs",
+      "default": "./dist/server-entry/*.mjs"
     }
   },
   "scripts": {
@@ -57,21 +63,22 @@
     "@babel/traverse": "^7.27.0",
     "execa": "^9.5.1",
     "p-limit": "^3.1.0",
+    "picocolors": "^1.1.1",
     "semver": "^7.6.3",
     "wrap-ansi": "^9.0.0"
   },
   "devDependencies": {
     "@babel/generator": "^7.23.6",
     "@babel/types": "^7.22.5",
+    "@microsoft/api-extractor": "^7.52.8",
     "@types/babel__generator": "^7.6.8",
     "@types/meteor": "^2.9.8",
     "@types/node": "^20.3.3",
     "@types/semver": "^7.5.8",
-    "picocolors": "^1.1.1",
-    "tsup": "^8.4.0",
-    "typescript": "^5.1.6",
-    "vite": "^6.2.5",
-    "vitest": "^2.1.9"
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.2.4"
   },
   "peerDependencies": {
     "vite": "^6.0.0"

@@ -1,6 +1,6 @@
+import MeteorPackage from '@/plugin/meteor/models/MeteorPackage';
+import { PackageSubmodule } from '@/plugin/meteor/models/PackageSubmodule';
 import { describe, expect, test } from 'vitest';
-import MeteorPackage from '../src/entry/plugin/meteor/package/components/MeteorPackage';
-import { PackageSubmodule } from '../src/entry/plugin/meteor/package/components/PackageSubmodule';
 import { TsModules } from './__mocks';
 
 describe('MeteorPackage', () => {

@@ -1,3 +1,4 @@
+import FS from 'node:fs';
 import OS from 'node:os';
 import Path from 'path';
 import buildPluginPackageJson from '../../package.json';
@@ -11,7 +12,8 @@ function guessCwd () {
     return cwd
 }
 
-const projectRoot = guessCwd();
+const projectRootOriginal = guessCwd();
+const projectRoot = FS.realpathSync(projectRootOriginal);
 const configFile = Path.resolve(Path.join(projectRoot, 'vite.config.ts'));
 const tempDir = Path.join(projectRoot, '_vite-bundle');
 const bundleFileExtension = '_vite';

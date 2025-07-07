@@ -1,12 +1,14 @@
-import type { ViteBoilerplate } from 'meteor-vite/bootstrap/boilerplate/Boilerplate';
-import { Colorize } from 'meteor-vite/utilities';
+import type { ViteBoilerplate } from 'meteor-vite/internals';
 import type { InputFile } from 'meteor/isobuild';
 import { Plugin } from 'meteor/isobuild';
 import FS from 'node:fs';
 import Path from 'path';
-import { runBootstrapScript } from '../util/Bootstrap';
 import { CurrentConfig } from '../util/CurrentConfig';
 import Logger from '../util/Logger';
+import { ModuleRunner } from '../util/ModuleRunner';
+import { parseMeteorCliArgs } from '../util/parseMeteorCliArgs';
+
+const { Colorize } = await ModuleRunner.import('utilities/server');
 
 class CompilerPlugin {
     protected boilerplateArc = new Set<string>();
@@ -111,14 +113,14 @@ class CompilerPlugin {
     }
 }
 
-if (process.env.VITE_METEOR_DISABLED) {
-    Logger.warn('MeteorVite build plugin disabled');
-}
+const { useBuildPlugin } = parseMeteorCliArgs();
 
-else {
+if (!useBuildPlugin) {
+    Logger.warn('Skipping initialization of Meteor-Vite build plugin');
+} else {
     
     // Cleanup temporary files from previous builds.
-    const cleanup = runBootstrapScript('setupProject');
+    const cleanup = ModuleRunner.runScript('setupProject');
    
     // todo: Verify Meteor packages file to warn users if there are active incompatible plugins.
     //  The standard-minifier plugins strip out sources that the export analyzer depends on, so
@@ -131,7 +133,7 @@ else {
         }, async () => {
             try {
                 await cleanup;
-                const { outDir, assetsDir, boilerplate, dynamicAssetBoilerplate } = await runBootstrapScript('buildForProduction');
+                const { outDir, assetsDir, boilerplate, dynamicAssetBoilerplate } = await ModuleRunner.runScript('buildForProduction');
                 
                 return new CompilerPlugin({
                     outDir,
@@ -154,7 +156,7 @@ else {
             'vite.config.mjs',
         ]
         try {
-            const json = await runBootstrapScript('parsePackageJson');
+            const json = await ModuleRunner.runScript('parsePackageJson');
             if (json.meteor?.vite?.configFile) {
                 filenames.push(json.meteor.vite.configFile);
                 Logger.info(`Using custom Vite config file path: ${json.meteor.vite.configFile}`);
@@ -167,7 +169,7 @@ else {
             filenames,
             extensions: [],
         }, async () => {
-            const boilerplate = await runBootstrapScript('prepareDevServerBoilerplate');
+            const boilerplate = await ModuleRunner.runScript('prepareDevServerBoilerplate');
             return new CompilerPlugin({
                 outDir: '',
                 assetsDir: '',

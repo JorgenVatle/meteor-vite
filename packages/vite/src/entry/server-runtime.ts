@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
-import { runBootstrapScript } from '../util/Bootstrap';
 import { CurrentConfig } from '../util/CurrentConfig';
 import Logger from '../util/Logger';
+import { ModuleRunner } from '../util/ModuleRunner';
 
 if (Meteor.isServer) {
     Meteor.startup(async () => {
@@ -10,7 +10,7 @@ if (Meteor.isServer) {
         }
         
         try {
-            await runBootstrapScript('initializeViteDevServer');
+            await ModuleRunner.runScript('initializeViteDevServer');
             Logger.success('Vite should be ready to go!');
         }  catch (error) {
             Logger.warn('Failed to start Vite dev server!');

@@ -1,6 +1,6 @@
+import { ModuleList, PackageScopeExports } from '@/plugin/meteor/parser/Parser';
 import FS from 'fs/promises';
 import Path from 'path';
-import { ModuleList, PackageScopeExports } from '../../src/entry/plugin/meteor/parser/Parser';
 
 export const AllMockPackages_MeteorV2: MockModule<ModuleList>[] = [];
 export const AllMockPackages_MeteorV3: MockModule<ModuleList>[] = [];
@@ -207,7 +207,7 @@ function prepareMock<Modules extends ModuleList>({ fileName, meteorVersion = 2, 
 /**
  * A lazy-loaded package before we've forced an import into the Meteor entrypoint.
  */
-export const LazyLoadedPackage = new class {
+class LazyLoadedPackageStatic {
     public readonly packages = {
         TestLazy: this.prepareMock({
             fileName: 'test_lazy.js',
@@ -230,7 +230,7 @@ export const LazyLoadedPackage = new class {
     }
 }
 
-export const AutoImportMock = new class {
+class AutoImportMockStatic {
     protected readonly sourceDir = Path.join(__dirname, '/auto-imports/entrypoint');
     public readonly outDir = Path.join(this.sourceDir, '.temp');
     
@@ -258,8 +258,10 @@ export const AutoImportMock = new class {
             readContent: () => FS.readFile(outPath, 'utf-8'),
         }
     }
-    
 }
+
+export const AutoImportMock = new AutoImportMockStatic();
+export const LazyLoadedPackage = new LazyLoadedPackageStatic();
 
 interface PrepareMockModule<Modules extends ModuleList> {
     fileName: string;

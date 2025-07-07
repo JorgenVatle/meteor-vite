@@ -1,5 +1,28 @@
 # meteor-vite
 
+## 3.9.0-beta.0
+
+### Minor Changes
+
+- 2625dbb: Added internal utility for consistently formatting log messages
+- ec8a295: Bundle log formatting utility packages into meteor-vite package to prevent warnings from Meteor when those packages aren't a direct dependency of the peer project.
+
+  - Fixes (which wasn't fully resolved) #286
+
+- d133984: Refactor internal meteor-vite directory structure and package.json exports to provide more clear separation of client, server, plugin and internal module exports.
+
+### Patch Changes
+
+- cb18b0a: Prevent Meteor from attempting to start the Vite dev server when starting the production server bundle with a non-production NODE_ENV variable.
+- 217ed2d: Add warning message when non-ESM Vite configs are detected
+
+  - Fixes #322
+
+- 9db5d7a: Fix issue where apps without a .meteor/finished-upgraders file would cause package export analysis to fail with a file-not-found exception when building for production.
+- 13a9429: Add warning message whenever a .meteorignore file is detected in the application root directory.
+
+  - #345
+
 ## 3.8.0
 
 ### Minor Changes

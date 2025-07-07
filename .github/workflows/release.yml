@@ -5,10 +5,11 @@ on:
     branches:
       - main
       - release
+      - beta
 
 env:
   METEOR_SESSION_FILE_PATH: /opt/meteor/.meteor_session.json
-  METEOR_RELEASE: 3.0.4
+  METEOR_RELEASE: 3.3
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
@@ -37,7 +38,7 @@ jobs:
       - name: 'Setup Meteor'
         uses: meteorengineer/setup-meteor@v1
         with:
-          meteor-release: 3.2
+          meteor-release: ${{ env.METEOR_RELEASE }}
 
       - name: 'Install Dependencies'
         run: |
