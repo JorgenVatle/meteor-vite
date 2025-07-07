@@ -1,6 +1,6 @@
+import { parseMeteorPackage } from '@/plugin/meteor/parser/Parser';
 import Path from 'path';
 import { describe, it } from 'vitest';
-import { parseMeteorPackage } from '../../src/plugin/meteor/parser/Parser';
 
 describe('Client modules bundle', () => {
     it('can resolve npm packages', async () => {
