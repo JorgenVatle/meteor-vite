@@ -14,23 +14,19 @@ const STRIP_ANSI_DEPS = [
     'eastasianwidth',
 ]
 
-const COMMON_ENTRIES = {
-    // Common utility modules (logger, colorization, parsers)
-    'utilities': './src/utilities/index.ts',
-    
-    // The "Meteor-Vite" Vite plugin.
-    'plugin': './src/plugin/index.ts',
-}
-
 export default defineConfig([
     // Internal entry points
     {
         name: 'meteor-vite/esm',
         entry: {
-            ...COMMON_ENTRIES,
+            // The "Meteor-Vite" Vite plugin.
+            'plugin': './src/plugin/index.ts',
             
             // Internal tooling for the Meteor build plugin.
             'internals': './src/internals/index.ts',
+            
+            // Server utility modules (logger, colorization, parsers)
+            'utilities/server': './src/utilities/server/index.ts',
             
             // Meteor Production/Development environment bootstrapper
             // - Starts the vite dev server in development and loads server-side HMR hooks (if server builds are enabled)
@@ -65,7 +61,10 @@ export default defineConfig([
     {
         name: 'meteor-vite/client',
         entry: {
+            // Stub validation module
             'client': './src/client/index.ts',
+            // Common utility modules; constants, package info, etc.
+            'utilities/common': './src/utilities/common/index.ts',
         },
         format: ['esm', 'cjs'],
         sourcemap: true,
@@ -76,15 +75,4 @@ export default defineConfig([
             EsbuildPluginMeteorStubs,
         ]
     },
-    {
-        name: 'meteor-vite/cjs',
-        entry: COMMON_ENTRIES,
-        format: ['cjs'],
-        sourcemap: true,
-        target: 'node22',
-        noExternal: ['meteor', 'picocolors', ...STRIP_ANSI_DEPS],
-        esbuildPlugins: [
-            EsbuildPluginMeteorStubs,
-        ]
-    }
 ]);
