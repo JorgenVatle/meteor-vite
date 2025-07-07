@@ -29,17 +29,8 @@ export default defineConfig([
             
             // Internal tooling for the Meteor build plugin.
             'internal': './src/internals/index.ts',
-            
-            // Meteor Production/Development environment bootstrapper
-            // - Starts the vite dev server in development and loads server-side HMR hooks (if server builds are enabled)
-            // - Serves static files from the Vite bundle in production
-            'server-entrypoint/development': './src/server-entrypoint/development.ts',
-            'server-entrypoint/production': './src/server-entrypoint/production.ts',
-            
-            // Initializes HMR hooks for the Meteor-server. (Cleanup of side-effects from e.g. Meteor.publish(...))
-            'server-entrypoint/hmr': './src/server-entrypoint/hmr.ts',
         },
-        format: 'esm',
+        format: ['esm', 'cjs'],
         sourcemap: true,
         target: 'node22',
         outDir: './dist/bootstrap',
@@ -59,4 +50,25 @@ export default defineConfig([
             EsbuildPluginMeteorStubs,
         ]
     },
+    {
+        name: 'meteor-vite/server-entrypoint',
+        entry: {
+            // Meteor Production/Development environment bootstrapper
+            // - Starts the vite dev server in development and loads server-side HMR hooks (if server builds are enabled)
+            // - Serves static files from the Vite bundle in production
+            'development': './src/server-entrypoint/development.ts',
+            'production': './src/server-entrypoint/production.ts',
+            
+            // Initializes HMR hooks for the Meteor-server. (Cleanup of side-effects from e.g. Meteor.publish(...))
+            'hmr': './src/server-entrypoint/hmr.ts',
+        },
+        format: ['esm'],
+        sourcemap: true,
+        target: 'node22',
+        outDir: './dist/server-entrypoint',
+        noExternal: ['meteor', 'picocolors', ...STRIP_ANSI_DEPS],
+        esbuildPlugins: [
+            EsbuildPluginMeteorStubs,
+        ]
+    }
 ]);
