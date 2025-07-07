@@ -1,5 +1,11 @@
 # jorgenvatle:vite
 
+## 1.6.0-beta.1
+
+### Minor Changes
+
+- 16b8df4: Use Node VM to import utility modules from a locally installed `meteor-vite` package instead of bundling parts of `meteor-vite` into the `jorgenvatle:vite` Atmosphere package
+
 ## 1.6.0-beta.0
 
 ### Minor Changes
