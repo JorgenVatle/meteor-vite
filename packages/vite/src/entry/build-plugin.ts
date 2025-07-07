@@ -3,7 +3,7 @@ import type { InputFile } from 'meteor/isobuild';
 import { Plugin } from 'meteor/isobuild';
 import FS from 'node:fs';
 import Path from 'path';
-import { getUtils, runBootstrapScript } from '../util/Bootstrap';
+import { getUtils } from '../util/Bootstrap';
 import { CurrentConfig } from '../util/CurrentConfig';
 import Logger from '../util/Logger';
 import { ModuleRunner } from '../util/ModuleRunner';
@@ -157,7 +157,7 @@ if (!useBuildPlugin) {
             'vite.config.mjs',
         ]
         try {
-            const json = await runBootstrapScript('parsePackageJson');
+            const json = await ModuleRunner.runScript('parsePackageJson');
             if (json.meteor?.vite?.configFile) {
                 filenames.push(json.meteor.vite.configFile);
                 Logger.info(`Using custom Vite config file path: ${json.meteor.vite.configFile}`);
@@ -170,7 +170,7 @@ if (!useBuildPlugin) {
             filenames,
             extensions: [],
         }, async () => {
-            const boilerplate = await runBootstrapScript('prepareDevServerBoilerplate');
+            const boilerplate = await ModuleRunner.runScript('prepareDevServerBoilerplate');
             return new CompilerPlugin({
                 outDir: '',
                 assetsDir: '',
