@@ -64,12 +64,13 @@
   "devDependencies": {
     "@babel/generator": "^7.23.6",
     "@babel/types": "^7.22.5",
+    "@microsoft/api-extractor": "^7.52.8",
     "@types/babel__generator": "^7.6.8",
     "@types/meteor": "^2.9.8",
     "@types/node": "^20.3.3",
     "@types/semver": "^7.5.8",
     "picocolors": "^1.1.1",
-    "tsup": "^8.4.0",
+    "tsup": "^8.5.0",
     "typescript": "^5.1.6",
     "vite": "^6.3.5",
     "vitest": "^2.1.9"
