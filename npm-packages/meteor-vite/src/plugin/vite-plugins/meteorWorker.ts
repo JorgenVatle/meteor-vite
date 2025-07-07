@@ -1,5 +1,5 @@
 import type { PartialPluginConfig } from '@/plugin';
-import { MeteorStubs } from '@/plugin/MeteorStubs';
+import { meteorModuleStubs } from '@/plugin/vite-plugins/meteorModuleStubs';
 import { meteorPluginConfig } from '@/plugin/vite-plugins/meteorPluginConfig';
 import type { PluginOption } from 'vite';
 
@@ -10,6 +10,6 @@ import type { PluginOption } from 'vite';
 export function meteorWorker(config: PartialPluginConfig): PluginOption {
     return [
         meteorPluginConfig(config),
-        MeteorStubs(),
+        meteorModuleStubs(),
     ];
 }
