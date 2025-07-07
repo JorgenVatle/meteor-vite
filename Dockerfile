@@ -44,12 +44,12 @@ ENV METEOR_PACKAGES_FOLDER=$ROOT_FOLDER/packages
 ENV NPM_PACKAGES_FOLDER=$ROOT_FOLDER/npm-packages
 ENV METEOR_PACKAGE_DIRS=$METEOR_PACKAGES_FOLDER
 
-COPY ./packages $METEOR_PACKAGES_FOLDER
-COPY ./npm-packages $NPM_PACKAGES_FOLDER
-COPY ./test-packages/atmosphere/ $METEOR_PACKAGES_FOLDER/
-COPY ./package*.json $ROOT_FOLDER/
-COPY ./tsconfig*.json $ROOT_FOLDER/
-COPY ./build $ROOT_FOLDER/build
+COPY --link ./packages $METEOR_PACKAGES_FOLDER
+COPY --link ./npm-packages $NPM_PACKAGES_FOLDER
+COPY --link ./test-packages/atmosphere/ $METEOR_PACKAGES_FOLDER/
+COPY --link ./package*.json $ROOT_FOLDER/
+COPY --link ./tsconfig*.json $ROOT_FOLDER/
+COPY --link ./build $ROOT_FOLDER/build
 
 # Prepare repository root-level npm dependencies
 RUN cd $ROOT_FOLDER && meteor npm ci && meteor npm run build:packages
@@ -63,12 +63,12 @@ WORKDIR $APP_SOURCE_FOLDER
 FROM meteor-base AS meteor-bundler
 
 # Install local and external npm dependencies
-COPY $APP_DIR/package*.json $APP_SOURCE_FOLDER/
+COPY --link $APP_DIR/package*.json $APP_SOURCE_FOLDER/
 RUN bash $SCRIPTS_FOLDER/meteor/npm-install.sh
 RUN meteor npm link meteor-vite
 
 # Build for production
-COPY $APP_DIR $APP_SOURCE_FOLDER/
+COPY --link $APP_DIR $APP_SOURCE_FOLDER/
 RUN bash $SCRIPTS_FOLDER/meteor/build.sh
 
 # Meteor Production Server
@@ -76,8 +76,8 @@ RUN bash $SCRIPTS_FOLDER/meteor/build.sh
 FROM nodejs-runtime AS production-server
 
 # Import entrypoint script and production bundle
-COPY --from=meteor-bundler $SCRIPTS_FOLDER $SCRIPTS_FOLDER/
-COPY --from=meteor-bundler $APP_BUNDLE_FOLDER $APP_BUNDLE_FOLDER/
+COPY --link --from=meteor-bundler $SCRIPTS_FOLDER $SCRIPTS_FOLDER/
+COPY --link --from=meteor-bundler $APP_BUNDLE_FOLDER $APP_BUNDLE_FOLDER/
 
 # Install production npm dependencies
 RUN bash $SCRIPTS_FOLDER/app/npm-install.sh
