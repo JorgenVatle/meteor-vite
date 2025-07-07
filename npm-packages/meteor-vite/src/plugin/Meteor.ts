@@ -29,7 +29,7 @@ export default function meteor(config: MeteorVitePluginOptions): PluginOption {
  * Internal worker plugin. Merges the user's config with necessary overrides for the Meteor compiler and loads the
  * MeteorStubs plugin.
  */
-export function meteorWorker(config: MeteorVitePluginOptions): PluginOption {
+export function meteorWorker(config: PartialPluginConfig): PluginOption {
     const METEOR_LOCAL_DIR = process.env.METEOR_LOCAL_DIR || Path.join('.meteor', 'local');
     let enforce: 'pre' | undefined;
     let resolveId: Plugin['resolveId'];
