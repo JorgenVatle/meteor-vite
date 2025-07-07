@@ -37,13 +37,13 @@ export default class ViteLoadRequest {
         });
     };
     
-    public static resolveId(id: string) {
+    public static resolveId(id: string): string | undefined {
         if (id.startsWith('meteor/') || id.startsWith('meteor:')) {
             return `\0${id}`;
         }
     }
     
-    public static isStubRequest(id: string) {
+    public static isStubRequest(id: string): boolean {
         return id.startsWith('\0meteor/') || id.startsWith('\0meteor:');
     }
     
@@ -54,7 +54,7 @@ export default class ViteLoadRequest {
      * @param {PreContextRequest} request
      * @return {Promise<ViteLoadRequest>}
      */
-    public static async prepareContext(request: PreContextRequest) {
+    public static async prepareContext(request: PreContextRequest): Promise<ViteLoadRequest> {
         if (!this.isStubRequest(request.id)) {
             throw new MeteorViteStubRequestError('Tried to set up file context for an unrecognized file path!');
         }
@@ -76,7 +76,7 @@ export default class ViteLoadRequest {
      * '\0meteor/meteor' -> 'meteor/meteor'
      * '\0meteor:react' -> 'meteor/modules/node_modules/react'
      */
-    protected static getStubId(viteId: string) {
+    protected static getStubId(viteId: string): string {
         const importPath = viteId.slice(1);
         if (importPath.startsWith('meteor/')) {
             return importPath;
@@ -86,7 +86,14 @@ export default class ViteLoadRequest {
         return importPath.replace('meteor:', 'meteor/modules/node_modules/');
     }
 
-    protected static loadFileData({ id, pluginSettings: { meteorStubs }, environment }: PreContextRequest) {
+    protected static loadFileData({ id, pluginSettings: { meteorStubs }, environment }: PreContextRequest): {
+        content: Promise<string>;
+        packageId: string;
+        importPath?: string;
+        sourcePath: string;
+        environment: Environment;
+        manifestPath: string;
+    } {
         let {
             /**
              * Base Atmosphere package import This is usually where we find the full package content, even for packages
@@ -165,7 +172,7 @@ export default class ViteLoadRequest {
      * @return {Promise<ManifestContent>}
      * @protected
      */
-    protected static async loadManifest({ file }: PreContextRequest & { file: FileData }) {
+    protected static async loadManifest({ file }: PreContextRequest & { file: FileData }): Promise<ManifestContent | undefined> {
         if (!existsSync(file.manifestPath)) {
             return;
         }
@@ -179,7 +186,7 @@ export default class ViteLoadRequest {
      * @return {string}
      * @protected
      */
-    protected static guessMeteorPackagePath() {
+    protected static guessMeteorPackagePath(): string {
         const [root, ...parts] = process.argv0.split(/[\/\\]/);
         let packagePath = root || '/';
         
@@ -200,7 +207,7 @@ export default class ViteLoadRequest {
      * We do this to work around how Meteor deals with lazy-loaded packages.
      * @return {Promise<void>}
      */
-    public async forceImport() {
+    public async forceImport(): Promise<void> {
         const meteorEntry = Path.resolve(process.cwd(), this.meteorMainModule);
         
         if (!existsSync(meteorEntry)) {
@@ -222,7 +229,7 @@ export default class ViteLoadRequest {
         });
     }
     
-    protected get _meteorMainModule() {
+    protected get _meteorMainModule(): string | undefined {
         const mainModule = this.context.pluginSettings.meteorStubs.packageJson!.meteor.mainModule;
         if (this.context.environment.name === 'server') {
             return mainModule.server;
@@ -230,14 +237,24 @@ export default class ViteLoadRequest {
         return mainModule.client;
     }
     
-    protected get meteorMainModule() {
+    protected get meteorMainModule(): string {
         if (!this._meteorMainModule) {
             throw new MeteorViteError(`Missing Meteor mainModule for current environment! Make sure you specify mainModule paths in your ${Colorize.filepath('package.json')}`);
         }
         return this._meteorMainModule;
     }
     
-    public get cache() {
+    public get cache(): {
+        baseDir: string;
+        templatePath: string;
+        packagePath: string;
+        parserPath: string;
+        mock: {
+            bundleSource: string;
+            index: string;
+        };
+        manifestPath: string;
+    } {
         const [meteor, packageBasename] = this.context.file.packageId.replace(':', '_').split('/');
         const baseDir = Path.resolve(Path.join(this.context.pluginSettings.tempDir, 'stubs', this.context.environment.name, packageBasename));
         const templatePath = Path.join(baseDir, this.context.file.importPath || '', 'template.js');
