@@ -13,11 +13,11 @@
       "require": "./dist/plugin.js",
       "default": "./dist/plugin.mjs"
     },
-    "./utilities": {
-      "types": "./dist/utilities.d.mts",
-      "import": "./dist/utilities.mjs",
-      "require": "./dist/utilities.js",
-      "default": "./dist/utilities.mjs"
+    "./utilities/*": {
+      "types": "./dist/utilities/*.d.mts",
+      "import": "./dist/utilities/*.mjs",
+      "require": "./dist/utilities/*.js",
+      "default": "./dist/utilities/*.mjs",
     },
     "./client": {
       "types": "./dist/client.d.mts",
