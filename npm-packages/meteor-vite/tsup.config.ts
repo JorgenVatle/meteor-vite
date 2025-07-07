@@ -45,6 +45,7 @@ export default defineConfig([
         },
         format: ['esm'],
         sourcemap: true,
+        clean: true,
         target: 'node22',
         outDir: 'dist',
         skipNodeModulesBundle: true,
