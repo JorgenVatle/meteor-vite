@@ -1,5 +1,5 @@
+import type { DeepPartial, MakeRequired } from '@/internals/lib/UtilityTypes';
 import type { ProjectJson } from '@/plugin/ProjectJson';
-import type { DeepPartial, MakeRequired } from '@/types/UtilityTypes';
 import type { OutputOptions } from 'rollup';
 import type { ResolvedConfig } from 'vite';
 
