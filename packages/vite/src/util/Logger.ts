@@ -1,7 +1,9 @@
-import { createSimpleLogger } from 'meteor-vite/utilities/server';
 import fs from 'node:fs';
 import { performance } from 'node:perf_hooks';
 import { inspect } from 'node:util';
+import { getUtils } from './Bootstrap';
+
+const { createSimpleLogger } = await getUtils();
 
 class Logger {
     protected github = new GithubActions();

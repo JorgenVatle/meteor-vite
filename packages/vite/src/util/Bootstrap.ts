@@ -10,3 +10,10 @@ export function runBootstrapScript<
         importModuleDynamically: constants.USE_MAIN_CONTEXT_DEFAULT_LOADER,
     }).runInThisContext()
 }
+
+export function getUtils(): Promise<typeof import('meteor-vite/utilities/server')> {
+    return new Script(`import('meteor-vite/utilities/server')`, {
+        filename: CurrentConfig.bootstrapEvalFilename,
+        importModuleDynamically: constants.USE_MAIN_CONTEXT_DEFAULT_LOADER,
+    }).runInThisContext();
+}

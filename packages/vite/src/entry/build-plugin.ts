@@ -1,13 +1,14 @@
 import type { ViteBoilerplate } from 'meteor-vite/internals';
-import { Colorize } from 'meteor-vite/utilities/server';
 import type { InputFile } from 'meteor/isobuild';
 import { Plugin } from 'meteor/isobuild';
 import FS from 'node:fs';
 import Path from 'path';
-import { runBootstrapScript } from '../util/Bootstrap';
+import { getUtils, runBootstrapScript } from '../util/Bootstrap';
 import { CurrentConfig } from '../util/CurrentConfig';
 import Logger from '../util/Logger';
 import { parseMeteorCliArgs } from '../util/parseMeteorCliArgs';
+
+const { Colorize } = await getUtils()
 
 class CompilerPlugin {
     protected boilerplateArc = new Set<string>();
