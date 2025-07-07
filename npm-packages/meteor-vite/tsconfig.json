@@ -29,6 +29,7 @@
     "src",
     "test",
     "vitest.config.ts",
+    "tsup.config.ts",
     "../../packages/vite/types/**/*.ts",
     "../../packages/vite/src/index.d.ts"
   ],
