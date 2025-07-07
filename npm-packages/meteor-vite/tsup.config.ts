@@ -22,9 +22,6 @@ const COMMON_ENTRIES = {
     
     // The "Meteor-Vite" Vite plugin.
     'plugin': './src/plugin/index.ts',
-    
-    // Internal tooling for the Meteor build plugin.
-    'internal': './src/internals/index.ts',
 }
 
 export default defineConfig([
@@ -33,6 +30,9 @@ export default defineConfig([
         name: 'meteor-vite/esm',
         entry: {
             ...COMMON_ENTRIES,
+            
+            // Internal tooling for the Meteor build plugin.
+            'internal': './src/internals/index.ts',
             
             // Meteor Production/Development environment bootstrapper
             // - Starts the vite dev server in development and loads server-side HMR hooks (if server builds are enabled)
