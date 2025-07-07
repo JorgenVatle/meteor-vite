@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.6.0-beta.0",
   "scripts": {
-    "publish": "VITE_METEOR_DISABLED=true meteor publish"
+    "publish": "VITE_METEOR_DISABLED=true meteor publish",
+    "build": "tsup"
   }
 }
