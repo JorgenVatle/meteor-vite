@@ -14,6 +14,14 @@ const STRIP_ANSI_DEPS = [
     'eastasianwidth',
 ]
 
+let clean = false;
+
+try {
+    clean = JSON.parse(process.env.TSUP_CLEAN || 'true')
+} catch (error) {
+    console.warn(error);
+}
+
 export default defineConfig([
     // Internal entry points
     {
@@ -39,7 +47,7 @@ export default defineConfig([
         },
         format: ['esm'],
         sourcemap: true,
-        clean: JSON.parse(process.env.TSUP_CLEAN || 'true'),
+        clean,
         target: 'node22',
         outDir: 'dist',
         // skipNodeModulesBundle: true,
