@@ -1,4 +1,4 @@
-import { MeteorViteError } from '@/error';
+import { MeteorViteError } from '@/internals/error';
 import { Logger } from '@/utilities';
 import Path from 'path';
 import pc from 'picocolors';

@@ -1,4 +1,4 @@
-import { MeteorViteError } from '@/error';
+import { MeteorViteError } from '@/internals/error';
 import { Node } from '@babel/types';
 import { inspect } from 'util';
 import { ParseOptions } from './Parser';

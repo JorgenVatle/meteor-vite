@@ -1,4 +1,4 @@
-import { MeteorViteError } from '@/error';
+import { MeteorViteError } from '@/internals/error';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import {
     createSimpleLogger,

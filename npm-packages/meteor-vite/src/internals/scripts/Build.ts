@@ -1,5 +1,5 @@
-import { MeteorViteError } from '@/error';
 import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
+import { MeteorViteError } from '@/internals/error';
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { ProjectJson, ResolvedViteConfig, StubSettings } from '@/plugin';
 

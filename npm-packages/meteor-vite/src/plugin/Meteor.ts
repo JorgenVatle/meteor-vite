@@ -1,4 +1,4 @@
-import { FatalMeteorViteError } from '@/error';
+import { FatalMeteorViteError } from '@/internals/error';
 import type {
     MeteorVitePluginConfig,
     MeteorVitePluginOptions,

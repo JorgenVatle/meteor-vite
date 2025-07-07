@@ -1,4 +1,4 @@
-import { MeteorViteError } from '@/error';
+import { MeteorViteError } from '@/internals/error';
 import { parsePackageJson } from '@/internals/lib/parsePackageJson';
 import { clientMainModule, serverMainModule } from '@/internals/scripts/Setup';
 
