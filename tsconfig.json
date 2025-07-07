@@ -11,8 +11,4 @@
     "strict": true,
     "skipLibCheck": true
   },
-
-  "include": [
-    "./packages/vite/**/*.ts"
-  ]
 }
