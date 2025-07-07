@@ -1,7 +1,7 @@
 import { defineBuildConfig } from '../../build/defineBuildConfig';
 import { fixBuildPluginCjsImports } from '../../build/tsup-plugins';
 
-export default defineBuildConfig({
+export default defineBuildConfig(__dirname, {
     name: 'jorgenvatle:vite',
     entry: [
         './src/entry/server-runtime.ts',
