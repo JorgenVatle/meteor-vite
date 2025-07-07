@@ -11,7 +11,7 @@ export function defineBuildConfig(config: Config): Options {
     }, config, {
         esbuildPlugins: [
             EsbuildPluginMeteorStubs,
-            ...config.esbuildPlugins,
+            ...config.esbuildPlugins || [],
         ]
     } satisfies Options)
 }
