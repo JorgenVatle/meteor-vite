@@ -8,4 +8,4 @@ examples/*/.meteor/local
 dist/
 packages/*/dist
 .force-reload-watchfile.ts
-.bin/build-if-changed.mjs
+.bin/dist
