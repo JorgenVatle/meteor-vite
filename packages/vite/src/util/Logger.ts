@@ -1,9 +1,9 @@
 import fs from 'node:fs';
 import { performance } from 'node:perf_hooks';
 import { inspect } from 'node:util';
-import { getUtils } from './Bootstrap';
+import { ModuleRunner } from './ModuleRunner';
 
-const { createSimpleLogger } = await getUtils();
+const { createSimpleLogger } = await ModuleRunner.import('utilities/server');
 
 class Logger {
     protected github = new GithubActions();
