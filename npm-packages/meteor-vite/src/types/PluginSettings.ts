@@ -1,8 +1,13 @@
 import type { ProjectJson } from '@/types/ProjectJson';
-import type { DeepPartial, MakeOptional, MakeRequired } from '@/types/UtilityTypes';
+import type { DeepPartial, MakeRequired } from '@/types/UtilityTypes';
 import type { OutputOptions } from 'rollup';
 import type { ResolvedConfig } from 'vite';
 
+/**
+ * The full configuration object for meteor-vite after defaults and other
+ * internal configuration has been applied.
+ * @see {@link https://github.com/JorgenVatle/meteor-vite#configuration}
+ */
 export interface PluginSettings<
     TChunkFileNames extends OutputOptions['chunkFileNames'] = undefined
 > {
@@ -69,7 +74,7 @@ export interface PluginSettings<
      * unless you have a reverse proxy that can handle the rewrite to point requests to the correct path
      * @default /vite
      */
-    assetsDir?: string;
+    assetsDir: string;
     
     /**
      * Skips bundling the provided npm packages if they are already provided by Meteor.
@@ -81,7 +86,7 @@ export interface PluginSettings<
      * Override the destination directory for the intermediary Vite bundle - before the bundle is passed through
      * its final stage through the Meteor bundler.
      */
-    tempDir?: string;
+    tempDir: string;
     
     /**
      * Normally Meteor-Vite will omit any source maps from your build output, even if source maps are explicitly
@@ -98,39 +103,7 @@ export interface PluginSettings<
      * These settings only apply in a development environment. Once the app is bundled for production, runtime
      * stub validation is disabled.
      */
-    stubValidation: {
-        /**
-         * list of packages to ignore export validation for.
-         * @example
-         * { ignorePackages: ['ostrio:cookies', 'test:ts-modules', ...] }
-         */
-        ignorePackages?: string[];
-        
-        /**
-         * Suppress warning messages when we resolve a module that has conflicting export keys.
-         * This is generally only an issue for React where as we ignore conditional exports when creating an ESM stub.
-         * These are only ESM export stubs that point to your Meteor bundle, so it's generally safe to ignore.
-         */
-        ignoreDuplicateExportsInPackages?: string[];
-        
-        /**
-         * Will only emit warnings in the console instead of throwing an exception that may prevent the client app
-         * from loading.
-         * @default true
-         */
-        warnOnly?: boolean;
-        
-        /**
-         * Whether to completely disable stub validation feature for Meteor-Vite.
-         *
-         * Tip:
-         * You can use a conditional Vite configuration to enable/disable this for your production build
-         * {@link https://vitejs.dev/config/#conditional-config}
-         *
-         * @default false
-         */
-        disabled?: boolean;
-    };
+    stubValidation?: StubValidationSettings;
     
     /**
      * Internal configuration injected by the vite:bundler Meteor package. Specifies some important source paths
@@ -140,71 +113,7 @@ export interface PluginSettings<
      * using Vite independently of Meteor. Or to host the Vite dev server yourself instead of letting the vite:bundler
      * plugin do the work for you.
      */
-    meteorStubs: {
-        /**
-         * Full content of the user's Meteor project package.json.
-         * Like the one found in {@link /examples/vue/package.json}
-         */
-        packageJson?: ProjectJson;
-        
-        /**
-         * Alternatively, a path to a package.json file can be supplied.
-         */
-        packageJsonPath?: string;
-        
-        /**
-         * Enabling debug mode will write all input and output files to a `.meteor-vite` directory in the Meteor
-         * project's root. Handy for quickly assessing how things are being formatted, or for use in writing up new
-         * test cases for meteor-vite.
-         */
-        debug?: boolean;
-        
-        /**
-         * Meteor project details. This resolved at runtime by our build plugin and injected into your Vite config.
-         */
-        meteor?: {
-            /**
-             * Path to Meteor's internal package cache.
-             * This can change independently of the isopack path depending on whether we're building for production or
-             * serving up the dev server.
-             *
-             * @example {@link /examples/vue/.meteor/local/build/programs/web.browser/packages}
-             * @deprecated
-             */
-            packagePath: string;
-            
-            /**
-             * Path to Meteor's internal package cache.
-             * This can change independently of the isopack path depending on whether we're building for production or
-             * serving up the dev server.
-             *
-             * @example {@link /examples/vue/.meteor/local/build/programs}
-             */
-            buildProgramsPath: string;
-            
-            /**
-             * Path to Meteor's local Isopacks store. Used to determine where a package's mainModule is located and
-             * whether the package has lazy-loaded modules. During production builds this would be pulled from a
-             * temporary Meteor build, so that we have solid metadata to use when creating Meteor package stubs.
-             *
-             * @example {@link /examples/vue/.meteor/local/isopacks/}
-             */
-            isopackPath: string;
-            
-            /**
-             * Path to the current user's Meteor package cache. (e.g. /home/john/.meteor/packages)
-             * This is used to build up a fallback path for isopack manifests.
-             *
-             * Some packages, like `react-meteor-data` do not emit a isopack metadata file within the current project's
-             * .meteor/local directory. So we have to resort to pulling in Isopack metadata from the `meteor-tool`
-             * cache.
-             *
-             * @example `react-meteor-data` path
-             * /home/john/.meteor/packages/react-meteor-data/2.7.2/web.browser.json
-             */
-            globalMeteorPackagesDir?: string;
-        };
-    };
+    meteorStubs: StubSettings;
     
     /**
      * Customize the chunk file name format for Rollup builds.
@@ -219,18 +128,122 @@ export interface PluginSettings<
     chunkFileNames?: TChunkFileNames;
 }
 
-export type StubValidationSettings = PluginSettings['stubValidation'];
-export type PluginOptions = MakeOptional<PluginSettings, 'stubValidation' | 'meteorStubs' | 'tempDir'>;
-export type PartialPluginOptions = DeepPartial<PluginSettings>;
-export type MeteorStubsSettings = Required<MakeRequired<PluginSettings['meteorStubs'], 'meteor'>>;
-export type ResolvedPluginSettings = MakeRequired<
-    Omit<PluginSettings, 'meteorStubs'> & { meteorStubs: MeteorStubsSettings },
-    'tempDir' | 'assetsDir'
->;
+export interface StubValidationSettings {
+    /**
+     * list of packages to ignore export validation for.
+     * @example
+     * { ignorePackages: ['ostrio:cookies', 'test:ts-modules', ...] }
+     */
+    ignorePackages?: string[];
+    
+    /**
+     * Suppress warning messages when we resolve a module that has conflicting export keys.
+     * This is generally only an issue for React where as we ignore conditional exports when creating an ESM stub.
+     * These are only ESM export stubs that point to your Meteor bundle, so it's generally safe to ignore.
+     */
+    ignoreDuplicateExportsInPackages?: string[];
+    
+    /**
+     * Will only emit warnings in the console instead of throwing an exception that may prevent the client app
+     * from loading.
+     * @default true
+     */
+    warnOnly?: boolean;
+    
+    /**
+     * Whether to completely disable stub validation feature for Meteor-Vite.
+     *
+     * Tip:
+     * You can use a conditional Vite configuration to enable/disable this for your production build
+     * {@link https://vitejs.dev/config/#conditional-config}
+     *
+     * @default false
+     */
+    disabled?: boolean;
+}
+
+export interface StubSettings {
+    /**
+     * Full content of the user's Meteor project package.json.
+     * Like the one found in {@link /examples/vue/package.json}
+     */
+    packageJson: ProjectJson;
+    
+    /**
+     * Alternatively, a path to a package.json file can be supplied.
+     */
+    packageJsonPath?: string;
+    
+    /**
+     * Enabling debug mode will write all input and output files to a `.meteor-vite` directory in the Meteor
+     * project's root. Handy for quickly assessing how things are being formatted, or for use in writing up new
+     * test cases for meteor-vite.
+     */
+    debug?: boolean;
+    
+    /**
+     * Meteor project details. This resolved at runtime by our build plugin and injected into your Vite config.
+     */
+    meteor: MeteorPaths;
+}
+
+interface MeteorPaths {
+    /**
+     * Path to Meteor's internal package cache.
+     * This can change independently of the isopack path depending on whether we're building for production or
+     * serving up the dev server.
+     *
+     * @example {@link /examples/vue/.meteor/local/build/programs/web.browser/packages}
+     * @deprecated
+     */
+    packagePath: string;
+    
+    /**
+     * Path to Meteor's internal package cache.
+     * This can change independently of the isopack path depending on whether we're building for production or
+     * serving up the dev server.
+     *
+     * @example {@link /examples/vue/.meteor/local/build/programs}
+     */
+    buildProgramsPath: string;
+    
+    /**
+     * Path to Meteor's local Isopacks store. Used to determine where a package's mainModule is located and
+     * whether the package has lazy-loaded modules. During production builds this would be pulled from a
+     * temporary Meteor build, so that we have solid metadata to use when creating Meteor package stubs.
+     *
+     * @example {@link /examples/vue/.meteor/local/isopacks/}
+     */
+    isopackPath: string;
+    
+    /**
+     * Path to the current user's Meteor package cache. (e.g. /home/john/.meteor/packages)
+     * This is used to build up a fallback path for isopack manifests.
+     *
+     * Some packages, like `react-meteor-data` do not emit a isopack metadata file within the current project's
+     * .meteor/local directory. So we have to resort to pulling in Isopack metadata from the `meteor-tool`
+     * cache.
+     *
+     * @example `react-meteor-data` path
+     * /home/john/.meteor/packages/react-meteor-data/2.7.2/web.browser.json
+     */
+    globalMeteorPackagesDir?: string;
+}
+
+/**
+ * Partial plugin settings - utility type for merging two partial plugin configs.
+ */
+export type PartialPluginSettings = DeepPartial<PluginSettings>;
+
+/**
+ * Minimal accepted meteor-vite/plugin configuration (user provided settings).
+ * Only requires clientEntry to be specified.
+ */
+export type PluginOptions = MakeRequired<PartialPluginSettings, 'clientEntry'>;
 
 /**
  * A resolved Vite config, after our workers has merged it with default settings and overrides from the Meteor instance.
  */
 export interface ResolvedMeteorViteConfig extends ResolvedConfig {
-    meteor?: ResolvedPluginSettings;
+    meteor?: PluginSettings;
 }
