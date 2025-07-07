@@ -8,26 +8,26 @@
   "main": "",
   "exports": {
     "./plugin": {
-      "types": "./dist/plugin.d.ts",
+      "types": "./dist/plugin.d.mts",
       "import": "./dist/plugin.mjs",
       "require": "./dist/plugin.js"
     },
     "./utilities": {
-      "types": "./dist/utilities.d.ts",
+      "types": "./dist/utilities.d.mts",
       "import": "./dist/utilities.mjs",
       "require": "./dist/utilities.js"
     },
     "./client": {
-      "types": "./dist/client.d.ts",
+      "types": "./dist/client.d.mts",
       "import": "./dist/client.mjs",
       "require": "./dist/client.js"
     },
     "./internals": {
-      "types": "./dist/internals/index.d.ts",
+      "types": "./dist/internals/index.d.mts",
       "import": "./dist/internals/index.mjs"
     },
     "./server-entrypoint/*": {
-      "types": "./dist/server-entrypoint/*.d.ts",
+      "types": "./dist/server-entrypoint/*.d.mts",
       "import": "./dist/server-entrypoint/*.mjs"
     }
   },

@@ -43,11 +43,6 @@ export default defineConfig([
             // Initializes HMR hooks for the Meteor-server. (Cleanup of side-effects from e.g. Meteor.publish(...))
             'server-entrypoint/hmr': './src/server-entrypoint/hmr.ts',
         },
-        outExtension(file) {
-            return {
-                dts: '.d.ts',
-            }
-        },
         format: ['esm'],
         sourcemap: true,
         target: 'node22',
