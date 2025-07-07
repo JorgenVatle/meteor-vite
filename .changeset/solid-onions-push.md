@@ -3,6 +3,6 @@
 "jorgenvatle:vite": minor
 ---
 
-Bundle log formatting utility packages into meteor-vite package to prevent warnings from Meteor when those packages aren't a direct dependency of the peer project.
+Import log formatting and other utility modules directly from local `meteor-vite` package instead of bundling them into both `jorgenvatle:vite` and `meteor-vite`. 
 
 - Fixes (which wasn't fully resolved) #286
