@@ -46,6 +46,7 @@ export default defineConfig([
         format: ['esm'],
         sourcemap: true,
         target: 'node22',
+        outDir: 'dist',
         skipNodeModulesBundle: true,
         dts: true,
         onSuccess: async () => {
