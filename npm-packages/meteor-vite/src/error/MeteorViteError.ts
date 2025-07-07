@@ -1,8 +1,8 @@
 import MeteorPackage from '@/plugin/meteor/package/components/MeteorPackage';
 import ViteLoadRequest, { RequestContext } from '@/plugin/ViteLoadRequest';
+import { bugs } from '@/utilities/Constants';
 import pc from 'picocolors';
 import { inspect } from 'util';
-import PackageJson from '../../package.json';
 
 const divColor = (text: string) => pc.dim(text);
 
@@ -103,7 +103,7 @@ export class MeteorViteError extends Error implements ErrorMetadata {
         }).join('\n');
         
         const endOfLog = this.titleDivider({ divider: '_' })
-        const reportIssue = ` 🐛  Report an issue:\n  -  ${PackageJson.bugs.url}`
+        const reportIssue = ` 🐛  Report an issue:\n  -  ${bugs.url}`
         this.stack = `${this.stack}\n\n${reportIssue}\n${endOfLog}\n`;
         
         if (!this.cause) {
