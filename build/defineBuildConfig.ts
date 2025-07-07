@@ -17,4 +17,4 @@ export function defineBuildConfig(config: Config): Options {
 }
 
 type RequiredConfigFields = Required<Pick<Options, 'name' | 'entry'>>;
-type Config = RequiredConfigFields & Pick<Options, 'entry'  | 'platform' | 'format' | 'dts' | 'clean' | 'onSuccess' | 'esbuildPlugins'>;
+type Config = RequiredConfigFields & Pick<Options, 'entry'  | 'platform' | 'format' | 'dts' | 'clean' | 'onSuccess' | 'noExternal' | 'esbuildPlugins'>;
