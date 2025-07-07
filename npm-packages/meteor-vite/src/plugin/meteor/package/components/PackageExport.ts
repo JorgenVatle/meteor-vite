@@ -1,6 +1,6 @@
+import { bugs } from '@/utilities/common';
 import { Logger } from '@/utilities/server';
 import pc from 'picocolors';
-import PackageJSON from '../../../../../package.json';
 import { PACKAGE_SCOPE_KEY, TEMPLATE_GLOBAL_KEY } from '../StubTemplate';
 import MeteorPackage from './MeteorPackage';
 
@@ -16,7 +16,7 @@ export default class PackageExport {
         this.key = key;
         
         if (meteorPackage.name !== packageName) {
-            Logger.warn(`Detected multiple package definitions within ${pc.yellow(this.meteorPackage.name)}! Please report this to ${PackageJSON.bugs.url}`)
+            Logger.warn(`Detected multiple package definitions within ${pc.yellow(this.meteorPackage.name)}! Please report this to ${bugs.url}`)
             Logger.warn(`Package ${pc.red(packageName)} was defined within ${pc.yellow(meteorPackage.name)} 🤔`);
         }
     }
