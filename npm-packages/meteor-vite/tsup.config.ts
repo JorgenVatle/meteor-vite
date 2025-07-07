@@ -33,7 +33,7 @@ export default defineConfig([
         format: ['esm', 'cjs'],
         sourcemap: true,
         target: 'node22',
-        outDir: './dist/bootstrap',
+        outDir: './dist',
         skipNodeModulesBundle: true,
         dts: true,
         onSuccess: async () => {
