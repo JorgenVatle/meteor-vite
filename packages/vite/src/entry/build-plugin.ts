@@ -134,7 +134,7 @@ if (!useBuildPlugin) {
         }, async () => {
             try {
                 await cleanup;
-                const { outDir, assetsDir, boilerplate, dynamicAssetBoilerplate } = await runBootstrapScript('buildForProduction');
+                const { outDir, assetsDir, boilerplate, dynamicAssetBoilerplate } = await ModuleRunner.runScript('buildForProduction');
                 
                 return new CompilerPlugin({
                     outDir,
