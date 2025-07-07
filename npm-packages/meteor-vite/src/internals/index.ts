@@ -1,7 +1,2 @@
-export * from './boilerplate';
-
-export * from './lib/parsePackageJson';
-export * from './lib/resolveMeteorViteConfig';
-
+export type * from './boilerplate/Boilerplate';
 export * as Scripts from './scripts';
-export { default as MeteorViteRuntime } from './MeteorViteRuntime';
