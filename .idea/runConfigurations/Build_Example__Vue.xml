@@ -24,6 +24,22 @@
           </list>
         </option>
         <option name="containerName" value="" />
+        <option name="envVars">
+          <list>
+            <DockerEnvVarImpl>
+              <option name="name" value="ROOT_URL" />
+              <option name="value" value="http://localhost:3000" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="PORT" />
+              <option name="value" value="3000" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="MONGO_URL" />
+              <option name="value" value="mongodb://localhost" />
+            </DockerEnvVarImpl>
+          </list>
+        </option>
         <option name="sourceFilePath" value="Dockerfile" />
       </settings>
     </deployment>
