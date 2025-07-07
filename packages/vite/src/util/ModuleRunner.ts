@@ -1,4 +1,4 @@
-import { type ModuleRunner as InternalModuleRunner } from 'meteor-vite/src/internals';
+import { type ModuleRunner as InternalModuleRunner } from 'meteor-vite/internals';
 import { constants, Script } from 'node:vm';
 import { CurrentConfig } from './CurrentConfig';
 
