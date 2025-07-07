@@ -1,18 +1,7 @@
 import FS from 'fs';
 import Path from 'path';
-import { defineConfig } from 'tsup';
+import { defineConfig, Options } from 'tsup';
 import { EsbuildPluginMeteorStubs } from '../../tsup.config';
-
-const STRIP_ANSI_DEPS = [
-    'wrap-ansi',
-    'strip-ansi',
-    'ansi-regex',
-    'emoji-regex',
-    'string-width',
-    'ansi-styles',
-    'get-east-asian-width',
-    'eastasianwidth',
-]
 
 let clean = false;
 
@@ -22,9 +11,21 @@ try {
     console.warn(error);
 }
 
+function buildConfig(config: { name: string } & Pick<Options, 'entry'  | 'platform' | 'format' | 'dts' | 'clean' | 'onSuccess'>): Options {
+    return Object.assign({
+        target: 'es2022',
+        sourcemap: true,
+        dts: true,
+        noExternal: ['meteor'],
+        esbuildPlugins: [
+            EsbuildPluginMeteorStubs,
+        ]
+    }, config)
+}
+
 export default defineConfig([
     // Internal entry points
-    {
+    buildConfig({
         name: 'meteor-vite/esm',
         entry: {
             // The "Meteor-Vite" Vite plugin.
@@ -46,12 +47,8 @@ export default defineConfig([
             'server-entry/hmr': './src/server-entry/hmr.ts',
         },
         format: ['esm'],
-        sourcemap: true,
+        platform: 'node',
         clean,
-        target: 'node22',
-        outDir: 'dist',
-        // skipNodeModulesBundle: true,
-        dts: true,
         onSuccess: async () => {
             try {
                 const atmospherePackageOutDir = Path.join(__dirname, '..', '..', 'packages', 'vite', 'dist');
@@ -61,12 +58,8 @@ export default defineConfig([
                 console.warn(error);
             }
         },
-        noExternal: ['meteor', 'picocolors', ...STRIP_ANSI_DEPS],
-        esbuildPlugins: [
-            EsbuildPluginMeteorStubs,
-        ]
-    },
-    {
+    }),
+    buildConfig({
         name: 'meteor-vite/client',
         entry: {
             // Stub validation module
@@ -75,12 +68,6 @@ export default defineConfig([
             'utilities/common': './src/utilities/common/index.ts',
         },
         format: ['esm', 'cjs'],
-        sourcemap: true,
         platform: 'browser',
-        dts: true,
-        noExternal: ['meteor', 'picocolors', ...STRIP_ANSI_DEPS],
-        esbuildPlugins: [
-            EsbuildPluginMeteorStubs,
-        ]
-    },
+    }),
 ]);
