@@ -3,6 +3,7 @@
 **/.meteor/local
 **/.npm
 **/.idea
+**/dist
 
 # Build output from npm packages
 npm-packages/**/dist
