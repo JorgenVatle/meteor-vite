@@ -1,4 +1,4 @@
-import MeteorPackage from '@/plugin/meteor/package/components/MeteorPackage';
+import MeteorPackage from '@/plugin/meteor/components/MeteorPackage';
 import ViteLoadRequest, { RequestContext } from '@/plugin/ViteLoadRequest';
 import { bugs } from '@/utilities/common';
 import pc from 'picocolors';

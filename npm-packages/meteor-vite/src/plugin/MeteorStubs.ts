@@ -1,12 +1,12 @@
 import { createErrorHandler } from '@/internals/error/ErrorHandler';
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
+import MeteorPackage from '@/plugin/meteor/components/MeteorPackage';
 import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/plugin/MeteorVitePluginConfig';
 import { homepage } from '@/utilities/common';
 import { Colorize } from '@/utilities/server';
 import FS from 'fs/promises';
 import Path from 'path';
 import type { Environment, Plugin, ViteDevServer } from 'vite';
-import MeteorPackage from './meteor/package/components/MeteorPackage';
 import { stubTemplate } from './meteor/package/StubTemplate';
 import ViteLoadRequest from './ViteLoadRequest';
 

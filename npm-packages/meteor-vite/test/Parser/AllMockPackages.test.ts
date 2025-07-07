@@ -1,6 +1,6 @@
+import MeteorPackage from '@/plugin/meteor/components/MeteorPackage';
 import Path from 'path';
 import { describe, expect, it } from 'vitest';
-import MeteorPackage from '../../src/plugin/meteor/package/components/MeteorPackage';
 import { parseMeteorPackage } from '../../src/plugin/meteor/parser/Parser';
 import { AllMockPackages_MeteorV2, AllMockPackages_MeteorV3 } from '../__mocks';
 

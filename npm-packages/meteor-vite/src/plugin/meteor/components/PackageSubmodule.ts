@@ -1,4 +1,4 @@
-import { ModuleExportData } from '../../parser/Parser';
+import { ModuleExportData } from '../parser/Parser';
 import type MeteorPackage from './MeteorPackage';
 import ModuleExport from './ModuleExport';
 

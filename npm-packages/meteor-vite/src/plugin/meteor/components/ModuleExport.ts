@@ -1,6 +1,6 @@
 import { ErrorMetadata, MeteorViteError } from '@/internals/error/MeteorViteError';
-import { ModuleExportData } from '../../parser/Parser';
-import { METEOR_STUB_KEY } from '../StubTemplate';
+import { METEOR_STUB_KEY } from '../package/StubTemplate';
+import { ModuleExportData } from '../parser/Parser';
 import { PackageSubmodule } from './PackageSubmodule';
 
 export default class ModuleExport implements ModuleExportData {

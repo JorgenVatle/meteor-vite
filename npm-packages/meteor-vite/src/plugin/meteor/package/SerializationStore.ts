@@ -1,8 +1,8 @@
 import { ErrorMetadata, MeteorViteError } from '@/internals/error/MeteorViteError';
+import ModuleExport from '@/plugin/meteor/components/ModuleExport';
+import PackageExport from '@/plugin/meteor/components/PackageExport';
 import { Logger } from '@/utilities/server';
 import pc from 'picocolors';
-import ModuleExport from './components/ModuleExport';
-import PackageExport from './components/PackageExport';
 
 /**
  * Utility class for soaking up and validating all import/export lines for a given module or package-scope export.
