@@ -8,6 +8,7 @@ export default defineBuildConfig(__dirname, {
         './src/entry/build-plugin.ts',
     ],
     splitting: false,
+    dts: false,
     platform: 'node',
     tsconfig: "./tsconfig.json",
     format: 'esm',
