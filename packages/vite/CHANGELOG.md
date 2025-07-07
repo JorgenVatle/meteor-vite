@@ -1,5 +1,15 @@
 # jorgenvatle:vite
 
+## 1.6.0-beta.0
+
+### Minor Changes
+
+- ec8a295: Bundle log formatting utility packages into meteor-vite package to prevent warnings from Meteor when those packages aren't a direct dependency of the peer project.
+
+  - Fixes (which wasn't fully resolved) #286
+
+- d133984: Refactor internal meteor-vite directory structure and package.json exports to provide more clear separation of client, server, plugin and internal module exports.
+
 ## 1.5.4
 
 ### Patch Changes
