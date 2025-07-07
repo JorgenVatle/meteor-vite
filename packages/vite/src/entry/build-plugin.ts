@@ -6,6 +6,7 @@ import Path from 'path';
 import { getUtils, runBootstrapScript } from '../util/Bootstrap';
 import { CurrentConfig } from '../util/CurrentConfig';
 import Logger from '../util/Logger';
+import { ModuleRunner } from '../util/ModuleRunner';
 import { parseMeteorCliArgs } from '../util/parseMeteorCliArgs';
 
 const { Colorize } = await getUtils()
@@ -120,7 +121,7 @@ if (!useBuildPlugin) {
 } else {
     
     // Cleanup temporary files from previous builds.
-    const cleanup = runBootstrapScript('setupProject');
+    const cleanup = ModuleRunner.runScript('setupProject');
    
     // todo: Verify Meteor packages file to warn users if there are active incompatible plugins.
     //  The standard-minifier plugins strip out sources that the export analyzer depends on, so
