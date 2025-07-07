@@ -1,5 +1,5 @@
 import type { StubValidationSettings } from '@/plugin';
-import { bugs, homepage } from '@/utilities';
+import { bugs, homepage } from '@/utilities/common';
 
 /**
  * Validate that the provided stub export key maps to a working export.

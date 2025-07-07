@@ -1,4 +1,4 @@
-import { viteAssetUrl } from '@/utilities';
+import { viteAssetUrl } from '@/utilities/server';
 import { type Boilerplate, ViteBoilerplate } from './Boilerplate';
 
 export class ViteDevelopmentBoilerplate extends ViteBoilerplate {

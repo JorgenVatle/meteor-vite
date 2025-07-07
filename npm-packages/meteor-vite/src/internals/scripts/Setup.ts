@@ -1,13 +1,6 @@
 import { MeteorViteError } from '@/internals/error';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
-import {
-    createSimpleLogger,
-    hasModuleImport,
-    homepage,
-    Logger,
-    moduleImport,
-    version as npmPackageVersion,
-} from '@/utilities';
+import { createSimpleLogger, hasModuleImport, Logger, moduleImport } from '@/utilities/server';
 import FS from 'node:fs';
 import Path from 'node:path';
 import pc from 'picocolors';

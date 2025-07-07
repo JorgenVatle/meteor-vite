@@ -1,4 +1,4 @@
-import { Logger } from '@/utilities';
+import { Logger } from '@/utilities/server';
 import { EventEmitter } from 'events';
 
 type MeteorIPCTopic = 'webapp-reload-client' | 'webapp-pause-client' | 'client-refresh';

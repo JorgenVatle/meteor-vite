@@ -3,7 +3,7 @@ import { MeteorViteError } from '@/internals/error';
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { ProjectJson, ResolvedViteConfig, StubSettings } from '@/plugin';
 
-import { BuildLogger, Colorize, hasModuleImport, isSamePath, Logger, moduleImport } from '@/utilities';
+import { BuildLogger, Colorize, hasModuleImport, isSamePath, Logger, moduleImport } from '@/utilities/server';
 import { execaSync } from 'execa';
 import FS from 'fs';
 import Path from 'node:path';

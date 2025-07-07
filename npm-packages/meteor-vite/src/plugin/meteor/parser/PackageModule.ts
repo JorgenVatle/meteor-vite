@@ -1,4 +1,4 @@
-import { Logger } from '@/utilities';
+import { Logger } from '@/utilities/server';
 import {
     isAssignmentExpression,
     isBooleanLiteral,

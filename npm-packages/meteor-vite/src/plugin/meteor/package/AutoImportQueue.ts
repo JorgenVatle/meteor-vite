@@ -1,4 +1,4 @@
-import { Logger } from '@/utilities';
+import { Logger } from '@/utilities/server';
 import FS from 'fs/promises';
 import PLimit from 'p-limit';
 import pc from 'picocolors';

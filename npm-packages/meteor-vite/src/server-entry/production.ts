@@ -1,6 +1,6 @@
 import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
 import type { ViteManifestFile } from '@/internals/scripts/Build';
-import { Logger } from '@/utilities';
+import { Logger } from '@/utilities/server';
 import { Meteor } from 'meteor/meteor';
 import { WebApp, WebAppInternals } from 'meteor/webapp';
 

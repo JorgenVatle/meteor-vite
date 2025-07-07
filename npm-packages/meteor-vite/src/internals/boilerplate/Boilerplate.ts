@@ -1,4 +1,4 @@
-import type { Arch } from '../../utilities/Formatting';
+import type { Arch } from '@/utilities/server';
 
 export type Boilerplate = {
     dynamicHead?: string;

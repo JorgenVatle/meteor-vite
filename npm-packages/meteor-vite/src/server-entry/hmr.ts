@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import { bugs, createSimpleLogger } from '@/utilities';
+import { createSimpleLogger } from '@/utilities/server';
 import { Meteor } from 'meteor/meteor';
 import pc from 'picocolors';
 

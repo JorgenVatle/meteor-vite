@@ -1,5 +1,5 @@
 import { MeteorViteError } from '@/internals/error';
-import { Logger } from '@/utilities';
+import { Logger } from '@/utilities/server';
 import Path from 'path';
 import pc from 'picocolors';
 import type { ModuleList, ParsedPackage } from '../../parser/Parser';

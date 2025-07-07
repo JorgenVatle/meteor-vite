@@ -1,4 +1,4 @@
-import { Logger } from '@/utilities';
+import { Logger } from '@/utilities/server';
 import pc from 'picocolors';
 import PackageJSON from '../../../../../package.json';
 import { PACKAGE_SCOPE_KEY, TEMPLATE_GLOBAL_KEY } from '../StubTemplate';

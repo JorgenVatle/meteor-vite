@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 import { ViteDevelopmentBoilerplate } from '@/internals/boilerplate/Development';
 import { resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
-import { Logger } from '@/utilities';
+import { Logger } from '@/utilities/server';
 
 export async function initializeViteDevServer() {
     /**

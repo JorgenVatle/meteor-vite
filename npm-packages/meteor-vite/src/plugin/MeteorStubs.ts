@@ -1,7 +1,7 @@
 import { createErrorHandler, MeteorViteError } from '@/internals/error';
 import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/plugin/MeteorVitePluginConfig';
 
-import { Colorize } from '@/utilities';
+import { Colorize } from '@/utilities/server';
 import FS from 'fs/promises';
 import Path from 'path';
 import type { Environment, Plugin, ViteDevServer } from 'vite';

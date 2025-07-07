@@ -1,6 +1,6 @@
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import type { MeteorVitePluginConfig } from '@/plugin/MeteorVitePluginConfig';
-import { Colorize, createLabelledLogger, LabelLogger } from '@/utilities';
+import { Colorize, createLabelledLogger, LabelLogger } from '@/utilities/server';
 import NodeFS, { existsSync } from 'fs';
 import FS from 'fs/promises';
 import Path from 'path';
