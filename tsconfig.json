@@ -6,7 +6,6 @@
     "types": [
       "node"
     ],
-    "mapRoot": "./packages/vite/src",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
