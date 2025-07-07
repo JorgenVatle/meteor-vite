@@ -34,6 +34,6 @@ async function globHash(patterns: string[]) {
         return hash(buffer, { algorithm: 'md5' });
     }));
     
-    console.log(`\n\nComputed hash for build in ${Date.now() - startTime}ms\n\n`);
+    console.log(`\n\nComputed ${hashes.length} hashes for build in ${Date.now() - startTime}ms\n\n`);
     return hash(hashes.join());
 }
