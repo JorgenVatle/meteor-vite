@@ -1,0 +1,11 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@meteor-vite/plugin-zodern-relay": "1.1.0",
+    "@meteor-vite/react-meteor-data": "1.1.0",
+    "meteor-vite": "3.8.0",
+    "jorgenvatle_vite": "1.5.4"
+  },
+  "changesets": []
+}
