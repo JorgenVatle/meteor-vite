@@ -15,7 +15,7 @@ export async function initializeViteDevServer() {
         Logger.info('Prevented the Vite dev server from firing up, as you are already running a production build.');
         return;
     }
-    await import ('@/server-entrypoint/development');
+    await import ('@/server-entry/development');
 }
 
 export async function prepareDevServerBoilerplate() {

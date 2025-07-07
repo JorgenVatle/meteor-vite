@@ -38,11 +38,11 @@ export default defineConfig([
             // Meteor Production/Development environment bootstrapper
             // - Starts the vite dev server in development and loads server-side HMR hooks (if server builds are enabled)
             // - Serves static files from the Vite bundle in production
-            'server-entrypoint/development': './src/server-entrypoint/development.ts',
-            'server-entrypoint/production': './src/server-entrypoint/production.ts',
+            'server-entry/development': './src/server-entry/development.ts',
+            'server-entry/production': './src/server-entry/production.ts',
             
             // Initializes HMR hooks for the Meteor-server. (Cleanup of side-effects from e.g. Meteor.publish(...))
-            'server-entrypoint/hmr': './src/server-entrypoint/hmr.ts',
+            'server-entry/hmr': './src/server-entry/hmr.ts',
         },
         format: ['esm'],
         sourcemap: true,

@@ -26,9 +26,9 @@
       "types": "./dist/internals.d.mts",
       "import": "./dist/internals.mjs"
     },
-    "./server-entrypoint/*": {
-      "types": "./dist/server-entrypoint/*.d.mts",
-      "import": "./dist/server-entrypoint/*.mjs"
+    "./server-entry/*": {
+      "types": "./dist/server-entry/*.d.mts",
+      "import": "./dist/server-entry/*.mjs"
     }
   },
   "scripts": {
