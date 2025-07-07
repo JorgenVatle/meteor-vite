@@ -1,5 +1,5 @@
 import { StubValidatorOptions } from '@/client/ValidateStub';
-import type { StubValidationSettings } from '../../Settings';
+import type { StubValidationSettings } from '@/types/PluginSettings';
 
 import MeteorPackage from './components/MeteorPackage';
 

@@ -1,7 +1,7 @@
 import type { ProjectJson } from '@/types/ProjectJson';
 import type { DeepPartial, MakeOptional, MakeRequired } from '@/types/UtilityTypes';
 import type { OutputOptions } from 'rollup';
-import { type ResolvedConfig } from 'vite';
+import type { ResolvedConfig } from 'vite';
 
 export interface PluginSettings<
     TChunkFileNames extends OutputOptions['chunkFileNames'] = undefined
@@ -216,11 +216,10 @@ export interface PluginSettings<
      *
      * Only change this if you are sure you know what you're doing.
      */
-    chunkFileNames?: TChunkFileNames
+    chunkFileNames?: TChunkFileNames;
 }
 
 export type StubValidationSettings = PluginSettings['stubValidation'];
-
 export type PluginOptions = MakeOptional<PluginSettings, 'stubValidation' | 'meteorStubs' | 'tempDir'>;
 export type PartialPluginOptions = DeepPartial<PluginSettings>;
 export type MeteorStubsSettings = Required<MakeRequired<PluginSettings['meteorStubs'], 'meteor'>>;
@@ -234,10 +233,4 @@ export type ResolvedPluginSettings = MakeRequired<
  */
 export interface ResolvedMeteorViteConfig extends ResolvedConfig {
     meteor?: ResolvedPluginSettings;
-}
-
-declare module 'vite' {
-    interface ResolvedEnvironmentOptions {
-        meteor?: ResolvedPluginSettings
-    }
 }

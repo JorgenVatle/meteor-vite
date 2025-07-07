@@ -1,3 +1,4 @@
+import type { PluginSettings, ResolvedMeteorViteConfig } from '@/types/PluginSettings';
 import FS from 'fs/promises';
 import Path from 'path';
 import type { Environment, Plugin, ViteDevServer } from 'vite';
@@ -8,7 +9,6 @@ import { MeteorViteError } from '../error/MeteorViteError';
 import { Colorize } from '../utilities/Formatting';
 import MeteorPackage from './meteor/package/components/MeteorPackage';
 import { stubTemplate } from './meteor/package/StubTemplate';
-import { type PluginSettings, ResolvedMeteorViteConfig } from './Settings';
 import ViteLoadRequest from './ViteLoadRequest';
 
 export const MeteorStubs: () => Promise<Plugin> = setupPlugin(async () => {

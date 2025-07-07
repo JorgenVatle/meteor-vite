@@ -1,4 +1,5 @@
 import { MeteorViteError } from '@/error/MeteorViteError';
+import type { ResolvedPluginSettings } from '@/types/PluginSettings';
 import { Colorize, createLabelledLogger, LabelLogger } from '@/utilities';
 import NodeFS, { existsSync } from 'fs';
 import FS from 'fs/promises';
@@ -7,7 +8,6 @@ import pc from 'picocolors';
 import { type Environment, ViteDevServer } from 'vite';
 import AutoImportQueue from './meteor/package/AutoImportQueue';
 import { isSameModulePath } from './meteor/package/components/MeteorPackage';
-import type { ResolvedPluginSettings } from './Settings';
 
 export default class ViteLoadRequest {
     
