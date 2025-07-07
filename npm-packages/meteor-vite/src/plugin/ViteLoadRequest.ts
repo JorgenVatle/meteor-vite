@@ -1,5 +1,5 @@
 import { MeteorViteError } from '@/error/MeteorViteError';
-import type { ResolvedPluginSettings } from '@/types/MeteorVitePluginConfig';
+import type { MeteorVitePluginConfig } from '@/types/MeteorVitePluginConfig';
 import { Colorize, createLabelledLogger, LabelLogger } from '@/utilities';
 import NodeFS, { existsSync } from 'fs';
 import FS from 'fs/promises';
@@ -287,7 +287,7 @@ export type FileRequestData = ReturnType<typeof ViteLoadRequest['loadFileData']>
 
 interface PreContextRequest {
     id: string;
-    pluginSettings: ResolvedPluginSettings;
+    pluginSettings: MeteorVitePluginConfig;
     server: ViteDevServer;
     environment: Environment;
 }
