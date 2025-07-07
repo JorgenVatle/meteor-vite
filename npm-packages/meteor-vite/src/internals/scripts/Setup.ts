@@ -27,8 +27,8 @@ function validateVersions() {
     logger.info(`meteor-vite v${npmPackageVersion}`);
     
     const expectedVersion = {
-        meteorPackage: parse('1.3.5')!,
-        npmPackage: parse('3.5.0')!,
+        meteorPackage: parse('1.6.0')!,
+        npmPackage: parse('3.9.0')!,
     }
     
     if (!satisfies(npmPackageVersion, `^${expectedVersion.npmPackage.raw}`)) {
