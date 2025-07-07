@@ -11,19 +11,7 @@ try {
     console.warn(error);
 }
 
-function buildConfig(config: { name: string } & Pick<Options, 'entry'  | 'platform' | 'format' | 'dts' | 'clean' | 'onSuccess'>): Options {
-    return Object.assign({
-        target: 'es2022',
-        sourcemap: true,
-        dts: true,
-        noExternal: ['meteor'],
-        esbuildPlugins: [
-            EsbuildPluginMeteorStubs,
-        ]
-    }, config)
-}
-
-export default defineConfig([
+export default defineConfig(() => [
     // Internal entry points
     buildConfig({
         name: 'meteor-vite/esm',
@@ -71,3 +59,15 @@ export default defineConfig([
         platform: 'browser',
     }),
 ]);
+
+function buildConfig(config: { name: string } & Pick<Options, 'entry'  | 'platform' | 'format' | 'dts' | 'clean' | 'onSuccess'>): Options {
+    return Object.assign({
+        target: 'es2022',
+        sourcemap: true,
+        dts: true,
+        noExternal: ['meteor'],
+        esbuildPlugins: [
+            EsbuildPluginMeteorStubs,
+        ]
+    }, config)
+}
