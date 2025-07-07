@@ -1,8 +1,7 @@
 /// <reference types="vite/client" />
-import { createSimpleLogger } from '@/utilities';
+import { bugs, createSimpleLogger } from '@/utilities';
 import { Meteor } from 'meteor/meteor';
 import pc from 'picocolors';
-import PackageJson from '../../package.json';
 
 declare global {
     interface MeteorViteRuntimeConfig {
@@ -96,7 +95,7 @@ if (import.meta.hot) {
                 'please open an issue over on GitHub so we can have that taken care of.',
             ].map((line) => `${pc.dim('L')}   ${line}`),
             
-            `🐛  ${pc.blue(PackageJson.bugs.url)}`
+            `🐛  ${pc.blue(bugs.url)}`
             
         ].flat().join('\n') + '\n\n');
         
