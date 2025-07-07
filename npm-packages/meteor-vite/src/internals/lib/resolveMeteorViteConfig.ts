@@ -1,9 +1,9 @@
 import { MeteorViteError } from '@/error';
 import { parsePackageJson } from '@/internals/lib/parsePackageJson';
 import { clientMainModule, serverMainModule } from '@/internals/scripts/Setup';
-import { meteorWorker } from '@/plugin/Meteor';
 
-import type { ResolvedViteConfig } from '@/types/MeteorVitePluginConfig';
+import type { ResolvedViteConfig } from '@/plugin';
+import { meteorWorker } from '@/plugin/Meteor';
 import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
 import Instance from '../MeteorViteRuntime';

@@ -1,7 +1,6 @@
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 
-import type { ResolvedViteConfig } from '@/types/MeteorVitePluginConfig';
-import type { ProjectJson } from '@/types/ProjectJson';
+import type { ProjectJson, ResolvedViteConfig } from '@/plugin';
 import { Colorize, createSimpleLogger, formatLogBlock, Logger, version } from '@/utilities';
 import FS from 'fs';
 import { Meteor } from 'meteor/meteor';

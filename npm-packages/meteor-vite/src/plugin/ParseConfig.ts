@@ -1,4 +1,4 @@
-import type { MeteorVitePluginConfig } from '@/types/MeteorVitePluginConfig';
+import type { MeteorVitePluginConfig } from '@/plugin/MeteorVitePluginConfig';
 import { mergeConfig, ResolvedConfig, UserConfig } from 'vite';
 
 export function mergeWithTypes<

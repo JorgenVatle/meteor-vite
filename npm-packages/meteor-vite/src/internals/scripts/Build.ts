@@ -1,8 +1,7 @@
 import { MeteorViteError } from '@/error';
 import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
-import type { ResolvedViteConfig, StubSettings } from '@/types/MeteorVitePluginConfig';
-import type { ProjectJson } from '@/types/ProjectJson';
+import type { ProjectJson, ResolvedViteConfig, StubSettings } from '@/plugin';
 
 import { BuildLogger, Colorize, hasModuleImport, isSamePath, Logger, moduleImport } from '@/utilities';
 import { execaSync } from 'execa';

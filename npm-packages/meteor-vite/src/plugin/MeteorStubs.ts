@@ -1,5 +1,5 @@
 import { createErrorHandler, MeteorViteError } from '@/error';
-import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/types/MeteorVitePluginConfig';
+import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/plugin/MeteorVitePluginConfig';
 
 import { Colorize } from '@/utilities';
 import FS from 'fs/promises';

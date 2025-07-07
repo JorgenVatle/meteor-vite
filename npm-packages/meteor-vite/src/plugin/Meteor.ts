@@ -3,7 +3,7 @@ import type {
     MeteorVitePluginConfig,
     MeteorVitePluginOptions,
     PartialPluginConfig,
-} from '@/types/MeteorVitePluginConfig';
+} from '@/plugin/MeteorVitePluginConfig';
 import Path from 'path';
 import pc from 'picocolors';
 import type { Plugin, PluginOption, ResolvedConfig, UserConfig } from 'vite';

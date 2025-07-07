@@ -1,4 +1,4 @@
-import type { MeteorVitePluginConfig } from '@/types/MeteorVitePluginConfig';
+import type { MeteorVitePluginConfig } from './MeteorVitePluginConfig';
 
 declare module 'vite' {
     interface ResolvedEnvironmentOptions {
