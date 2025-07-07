@@ -1,3 +1,4 @@
+import { FatalMeteorViteError } from '@/error';
 import type {
     MeteorVitePluginConfig,
     MeteorVitePluginOptions,
@@ -7,7 +8,6 @@ import Path from 'path';
 import pc from 'picocolors';
 import type { Plugin, PluginOption, ResolvedConfig, UserConfig } from 'vite';
 import PackageJSON from '../../package.json';
-import { FatalMeteorViteError } from '../error/MeteorViteError';
 import { MeteorStubs } from './MeteorStubs';
 import { mergeWithTypes, parseConfig } from './ParseConfig';
 

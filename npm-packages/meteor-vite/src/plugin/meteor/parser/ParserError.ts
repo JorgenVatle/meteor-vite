@@ -1,6 +1,6 @@
+import { MeteorViteError } from '@/error';
 import { Node } from '@babel/types';
 import { inspect } from 'util';
-import { MeteorViteError } from '../../../error/MeteorViteError';
 import { ParseOptions } from './Parser';
 
 export class ParserError extends MeteorViteError {

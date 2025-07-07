@@ -1,10 +1,9 @@
+import { createErrorHandler, MeteorViteError } from '@/error';
 import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/types/MeteorVitePluginConfig';
 import FS from 'fs/promises';
 import Path from 'path';
 import type { Environment, Plugin, ViteDevServer } from 'vite';
 import PackageJSON from '../../package.json';
-import { createErrorHandler } from '../error/ErrorHandler';
-import { MeteorViteError } from '../error/MeteorViteError';
 
 import { Colorize } from '../utilities/Formatting';
 import MeteorPackage from './meteor/package/components/MeteorPackage';

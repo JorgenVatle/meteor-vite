@@ -1,5 +1,5 @@
+import { MeteorViteError } from '@/error';
 import pc from 'picocolors';
-import { MeteorViteError } from '../error/MeteorViteError';
 
 function createLogger<Params extends DefaultParams>(formatter: (...params: Params) => DefaultParams): Logger<Params> {
     const _warnings = new Set<string>(process.env.SUPPRESS_VITE_WARNINGS?.split(',') ?? []);

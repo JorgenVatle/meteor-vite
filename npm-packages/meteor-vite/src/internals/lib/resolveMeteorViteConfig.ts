@@ -1,3 +1,4 @@
+import { MeteorViteError } from '@/error';
 import { parsePackageJson } from '@/internals/lib/parsePackageJson';
 import { clientMainModule, serverMainModule } from '@/internals/scripts/Setup';
 import { meteorWorker } from '@/plugin/Meteor';
@@ -5,7 +6,6 @@ import { meteorWorker } from '@/plugin/Meteor';
 import type { ResolvedViteConfig } from '@/types/MeteorVitePluginConfig';
 import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
-import { MeteorViteError } from '../../error/MeteorViteError';
 import Instance from '../MeteorViteRuntime';
 
 export const CurrentConfig = globalThis.MeteorViteRuntimeConfig;

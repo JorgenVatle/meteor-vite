@@ -1,10 +1,10 @@
+import { MeteorViteError } from '@/error';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import FS from 'node:fs';
 import Path from 'node:path';
 import pc from 'picocolors';
 import { parse, satisfies } from 'semver';
 import type { ModulePreloadOptions } from 'vite';
-import { MeteorViteError } from '../../error/MeteorViteError';
 import { homepage, version as npmPackageVersion } from '../../utilities/Constants';
 import { hasModuleImport, moduleImport } from '../../utilities/Formatting';
 import Logger, { createSimpleLogger } from '../../utilities/Logger';
