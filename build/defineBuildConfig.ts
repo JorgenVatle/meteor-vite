@@ -3,37 +3,40 @@ import Path from 'path';
 import type { Options } from 'tsup';
 import { EsbuildPluginMeteorStubs } from './tsup-plugins';
 
-export function defineBuildConfig(options: Config): Options {
-    const rootDir = inferConfigRootDir();
-    const config = Object.assign({
-        rootDir,
-        target: 'es2022',
-        sourcemap: true,
-        dts: true,
-        noExternal: ['meteor'],
-        minify: false,
-    }, options, {
-        outDir: Path.join(rootDir, options.outDir || 'dist'),
-        esbuildPlugins: [
-            EsbuildPluginMeteorStubs,
-            ...options.esbuildPlugins || [],
-        ]
-    } satisfies Options)
+export function defineBuildConfig(rootDir: string, _options: Config | Config[]): Options | Options[] {
+    const optionList: Config[] = Array.isArray(_options) ? _options : [_options];
     
-    if (Array.isArray(config.entry)) {
-        config.entry = config.entry.map((entry) => Path.join(rootDir, entry));
-    } else {
-        const entries = Object.entries(config.entry).map(([key, path]) => {
-            return [key, Path.join(rootDir, path)];
-        });
-        config.entry = Object.fromEntries(entries);
-    }
-    
-    if (config.tsconfig) {
-        config.tsconfig = Path.join(rootDir, config.tsconfig);
-    }
-    
-    return config;
+    return optionList.map((options) => {
+        const config = Object.assign({
+            rootDir,
+            target: 'es2022',
+            sourcemap: true,
+            dts: true,
+            noExternal: ['meteor'],
+            minify: false,
+        }, options, {
+            outDir: Path.join(rootDir, options.outDir || 'dist'),
+            esbuildPlugins: [
+                EsbuildPluginMeteorStubs,
+                ...options.esbuildPlugins || [],
+            ]
+        } satisfies Options)
+        
+        if (Array.isArray(config.entry)) {
+            config.entry = config.entry.map((entry) => Path.join(rootDir, entry));
+        } else {
+            const entries = Object.entries(config.entry).map(([key, path]) => {
+                return [key, Path.join(rootDir, path)];
+            });
+            config.entry = Object.fromEntries(entries);
+        }
+        
+        if (config.tsconfig) {
+            config.tsconfig = Path.join(rootDir, config.tsconfig);
+        }
+        
+        return config;
+    });
 }
 
 function inferConfigRootDir() {
@@ -43,6 +46,7 @@ function inferConfigRootDir() {
         const err = new Error();
         Error.prepareStackTrace = (_, stack) => stack;
         const stack = err.stack as unknown as NodeJS.CallSite[];
+        console.log(stack.map((frame) => frame.getFileName()))
         
         // Skip frames until we find one that's not in this file
         for (let i = 1; i < stack.length; i++) {
