@@ -1,4 +1,4 @@
-import { MeteorViteError } from '@/internals/error';
+import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import pc from 'picocolors';
 
 function createLogger<Params extends DefaultParams>(formatter: (...params: Params) => DefaultParams): Logger<Params> {
