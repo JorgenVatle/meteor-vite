@@ -5,6 +5,7 @@
 **/.idea
 **/dist
 **/output
+**/.build-hash
 
 # Build output from npm packages
 npm-packages/**/dist
