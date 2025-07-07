@@ -1,7 +1,7 @@
 import FS from 'fs';
 import Path from 'path';
-import { defineConfig, Options } from 'tsup';
-import { EsbuildPluginMeteorStubs } from '../../build/tsup-plugins';
+import { defineConfig } from 'tsup';
+import { defineBuildConfig } from '../../build/defineBuildConfig';
 
 let clean = false;
 
@@ -13,7 +13,7 @@ try {
 
 export default defineConfig(() => [
     // Internal entry points
-    buildConfig({
+    defineBuildConfig({
         name: 'meteor-vite/esm',
         entry: {
             // The "Meteor-Vite" Vite plugin.
@@ -47,7 +47,7 @@ export default defineConfig(() => [
             }
         },
     }),
-    buildConfig({
+    defineBuildConfig({
         name: 'meteor-vite/client',
         entry: {
             // Stub validation module
@@ -59,16 +59,3 @@ export default defineConfig(() => [
         platform: 'browser',
     }),
 ]);
-
-function buildConfig(config: { name: string } & Pick<Options, 'entry'  | 'platform' | 'format' | 'dts' | 'clean' | 'onSuccess'>): Options {
-    return Object.assign({
-        target: 'es2022',
-        sourcemap: true,
-        dts: true,
-        noExternal: ['meteor'],
-        minify: false,
-        esbuildPlugins: [
-            EsbuildPluginMeteorStubs,
-        ]
-    }, config)
-}
