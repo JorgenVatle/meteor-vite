@@ -5,7 +5,7 @@ import { CurrentConfig } from './CurrentConfig';
 export function runBootstrapScript<
     TScript extends keyof typeof BootstrapScripts
 >(script: TScript): Promise<Awaited<ReturnType<typeof BootstrapScripts[TScript]>>> {
-    return new Script(`import('meteor-vite/internals').then(({ scripts }) => scripts.${script}())`, {
+    return new Script(`import('meteor-vite/internals').then(({ Scripts }) => Scripts.${script}())`, {
         filename: CurrentConfig.bootstrapEvalFilename,
         importModuleDynamically: constants.USE_MAIN_CONTEXT_DEFAULT_LOADER,
     }).runInThisContext()
