@@ -11,6 +11,7 @@
         "./src/*"
       ]
     },
+    "lib": ["es2018"],
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
