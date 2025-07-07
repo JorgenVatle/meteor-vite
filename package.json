@@ -30,8 +30,8 @@
     "build:bin": "tsup-node ./build/bin --outDir .bin/dist --format esm",
     "build-if-changed": "node .bin/dist/build-if-changed.mjs",
 
-    "prestart": "npm run build:jorgenvatle:vite",
-    "prebuild:jorgenvatle:vite": "npm run build:meteor-vite",
+    "prestart": "npm run build-if-changed packages/vite",
+    "prebuild:jorgenvatle:vite": "npm run build-if-changed npm-packages/meteor-vite",
 
     "watch:packages": "TSUP_CLEAN=false concurrently -k -n atmosphere,npm 'npm:build:jorgenvatle:vite -- --watch' 'npm:build:meteor-vite -- --watch'",
 
