@@ -1,7 +1,7 @@
 import { meteor } from './vite-plugins/meteor';
 
-export type * from './MeteorVitePluginConfig';
-export type * from './ProjectJson';
+export type * from './types/MeteorVitePluginConfig';
+export type * from './types/ProjectJson';
 
 export default meteor;
 export { meteor };

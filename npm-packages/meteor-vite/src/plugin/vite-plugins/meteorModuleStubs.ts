@@ -3,7 +3,7 @@ import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import ViteLoadRequest from '@/plugin/lib/ViteLoadRequest';
 import MeteorPackage from '@/plugin/meteor/models/MeteorPackage';
 import { stubTemplate } from '@/plugin/meteor/StubTemplate';
-import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/plugin/MeteorVitePluginConfig';
+import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/plugin/types/MeteorVitePluginConfig';
 import { homepage } from '@/utilities/common';
 import { Colorize } from '@/utilities/server';
 import FS from 'fs/promises';
