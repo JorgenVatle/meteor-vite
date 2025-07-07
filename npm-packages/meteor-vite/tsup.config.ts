@@ -46,7 +46,7 @@ export default defineConfig([
         },
         format: ['esm'],
         sourcemap: true,
-        clean: true,
+        clean: JSON.parse(process.env.TSUP_CLEAN || 'true'),
         target: 'node22',
         outDir: 'dist',
         skipNodeModulesBundle: true,
