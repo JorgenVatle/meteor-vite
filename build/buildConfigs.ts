@@ -1,26 +1,27 @@
-import type { Options } from 'tsup';
+import { defineConfig, type Options } from 'tsup';
 
-export async function buildConfigs(list: ConfigList[]) {
-    const configs: Options[] = [];
-    
-    for (const config of list) {
-        const awaited = await Promise.resolve(config).then((config) => {
-            if ('default' in config) {
-                return config.default;
-            }
-            return config;
-        });
+export function buildConfigs(list: ConfigList[]) {
+    return defineConfig(async () => {
+        const configs: Options[] = [];
         
-        if (Array.isArray(awaited)) {
-            configs.push(...awaited);
-            continue;
+        for (const config of list) {
+            const awaited = await Promise.resolve(config).then((config) => {
+                if ('default' in config) {
+                    return config.default;
+                }
+                return config;
+            });
+            
+            if (Array.isArray(awaited)) {
+                configs.push(...awaited);
+                continue;
+            }
+            
+            configs.push(awaited);
         }
         
-        configs.push(awaited);
-        
-    }
-    
-    return configs;
+        return configs;
+    })
 }
 
 type AsyncConfig = Promise<{ default: Options | Options[] }>;
