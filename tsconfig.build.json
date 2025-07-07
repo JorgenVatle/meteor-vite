@@ -4,6 +4,7 @@
     "paths": {
       "meteor-vite/*": [
         "./npm-packages/meteor-vite/dist/*.mjs",
+        "./npm-packages/meteor-vite/dist/*.d.mts",
       ]
     }
   }
