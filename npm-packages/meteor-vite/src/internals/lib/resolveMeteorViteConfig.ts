@@ -3,7 +3,8 @@ import { parsePackageJson } from '@/internals/lib/parsePackageJson';
 import { clientMainModule, serverMainModule } from '@/internals/scripts/Setup';
 
 import type { ResolvedViteConfig } from '@/plugin';
-import { meteorWorker } from '@/plugin/Meteor';
+
+import { meteorWorker } from '@/plugin/vite-plugins/meteorWorker';
 import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
 import Instance from '../MeteorViteRuntime';
