@@ -9,3 +9,4 @@ dist/
 packages/*/dist
 .force-reload-watchfile.ts
 .bin/dist
+.build-hash
