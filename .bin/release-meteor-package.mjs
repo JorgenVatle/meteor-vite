@@ -193,6 +193,8 @@ function shell(command, options) {
                 reject(new Error(`Command "${command}" exited with code ${code}`));
             }
         });
+    }).catch((error) => {
+        throw new ShellError(error.message, { cause: error });
     })
 }
 
@@ -252,7 +254,15 @@ async function isPublished(version) {
 
 })().catch((error) => {
     const { stdout, stderr } = error;
-    logger.error(error);
+
+    if (!error.code && !error.status) {
+        logger.error(error);
+    }
+
+    // Error should already be printed to stdout
+    if (error instanceof ShellError) {
+        process.exit(1);
+    }
 
     if (stdout) {
         logger.info(stdout.toString());
@@ -266,3 +276,9 @@ async function isPublished(version) {
 }).finally(() => {
     logger.emitSummary();
 });
+
+class ShellError extends Error {
+    constructor(message) {
+        super(message);
+    }
+}
