@@ -1,4 +1,4 @@
-import type { PluginSettings, ResolvedMeteorViteConfig } from '@/types/PluginSettings';
+import type { MeteorVitePluginSettings, ResolvedMeteorViteConfig } from '@/types/MeteorVitePluginSettings';
 import FS from 'fs/promises';
 import Path from 'path';
 import type { Environment, Plugin, ViteDevServer } from 'vite';
@@ -100,8 +100,8 @@ async function storeDebugSnippet({ request, stubTemplate, meteorPackage }: {
 function setupPlugin<Context extends ViteLoadRequest>(setup: () => Promise<{
     name: string;
     load(request: Context): Promise<string>;
-    validateConfig(settings: PluginSettings): Promise<void>,
-    setupContext(viteId: string, server: ViteDevServer, settings: PluginSettings, environment: Environment): Promise<Context>;
+    validateConfig(settings: MeteorVitePluginSettings): Promise<void>,
+    setupContext(viteId: string, server: ViteDevServer, settings: MeteorVitePluginSettings, environment: Environment): Promise<Context>;
     shouldProcess(viteId: string): boolean;
     resolveId(viteId: string): string | undefined;
 }>): () => Promise<Plugin> {
@@ -109,7 +109,7 @@ function setupPlugin<Context extends ViteLoadRequest>(setup: () => Promise<{
     
     const createPlugin = async (): Promise<Plugin> => {
         const plugin = await setup();
-        let settings: PluginSettings;
+        let settings: MeteorVitePluginSettings;
         let server: ViteDevServer;
         return {
             name: plugin.name,
@@ -158,5 +158,5 @@ function setupPlugin<Context extends ViteLoadRequest>(setup: () => Promise<{
 }
 
 
-type ResolvedPluginConfig = Required<PluginSettings> & { meteorStubs: Required<PluginSettings['meteorStubs']> };
+type ResolvedPluginConfig = Required<MeteorVitePluginSettings> & { meteorStubs: Required<MeteorVitePluginSettings['meteorStubs']> };
 

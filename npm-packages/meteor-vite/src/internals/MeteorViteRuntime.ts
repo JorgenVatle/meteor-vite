@@ -1,6 +1,6 @@
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 
-import type { ResolvedMeteorViteConfig } from '@/types/PluginSettings';
+import type { ResolvedMeteorViteConfig } from '@/types/MeteorVitePluginSettings';
 import type { ProjectJson } from '@/types/ProjectJson';
 import FS from 'fs';
 import { Meteor } from 'meteor/meteor';

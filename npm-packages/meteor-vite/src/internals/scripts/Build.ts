@@ -1,6 +1,6 @@
 import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
-import type { MeteorStubsSettings, ResolvedMeteorViteConfig } from '@/types/PluginSettings';
+import type { ResolvedMeteorViteConfig, StubSettings } from '@/types/MeteorVitePluginSettings';
 import type { ProjectJson } from '@/types/ProjectJson';
 import { execaSync } from 'execa';
 import FS from 'fs';
@@ -312,7 +312,7 @@ function preparePackagesForExportAnalyzer({ mainModule, replacePackages = [] }: 
 }
 
 export interface BuildOptions {
-    meteor: MeteorStubsSettings['meteor'];
+    meteor: StubSettings['meteor'];
     packageJson: ProjectJson;
 }
 

@@ -1,4 +1,4 @@
-import type { PluginSettings } from '@/types/PluginSettings';
+import type { MeteorVitePluginSettings } from '@/types/MeteorVitePluginSettings';
 import { mergeConfig, ResolvedConfig, UserConfig } from 'vite';
 
 export function mergeWithTypes<
@@ -9,7 +9,7 @@ export function mergeWithTypes<
 }
 
 export function parseConfig<TConfig extends ResolvedConfig | UserConfig>(config: TConfig): TConfig & {
-    meteor?: PluginSettings
+    meteor?: MeteorVitePluginSettings
 } {
     return config;
 }
