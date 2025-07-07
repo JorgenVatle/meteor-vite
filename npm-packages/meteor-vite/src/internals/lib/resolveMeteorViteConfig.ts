@@ -1,6 +1,7 @@
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { parsePackageJson } from '@/internals/lib/parsePackageJson';
-import { clientMainModule, serverMainModule } from '@/internals/scripts/Setup';
+import { setupClientMainModule } from '@/internals/scripts/setupClientMainModule';
+import { setupServerMainModule } from '@/internals/scripts/setupServerMainModule';
 
 import type { ResolvedViteConfig } from '@/plugin';
 
@@ -116,7 +117,7 @@ export async function resolveMeteorViteConfig(
                     rollupOptions: {
                         external: [/^meteor\//],
                         input: {
-                            main: serverMainModule({
+                            main: setupServerMainModule({
                                 meteorMainModule: packageJson.meteor.mainModule.server,
                                 viteMainModule: viteServerMainModule,
                             }),
@@ -134,7 +135,7 @@ export async function resolveMeteorViteConfig(
                 build: {
                     rollupOptions: {
                         input: {
-                            main: clientMainModule({
+                            main: setupClientMainModule({
                                 viteMainModule: userConfig.meteor.clientEntry,
                                 modulePreload: inlineConfig.build?.modulePreload
                             }),

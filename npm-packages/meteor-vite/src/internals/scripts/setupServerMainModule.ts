@@ -5,8 +5,26 @@ import { hasModuleImport, Logger, moduleImport } from '@/utilities/server';
 import FS from 'node:fs';
 import Path from 'node:path';
 import pc from 'picocolors';
-import type { ModulePreloadOptions } from 'vite';
 import { writeToPathSync } from '../lib/writeToPathSync';
+
+export function setupServerMainModule({ meteorMainModule, viteMainModule }: {
+    meteorMainModule: string | undefined,
+    viteMainModule?: string | undefined;
+}) {
+    injectServerEntryImport(meteorMainModule);
+    const importLines = [
+        `import "meteor-vite/server-entry/production"`,
+    ];
+    
+    if (viteMainModule) {
+        importLines.push(
+            moduleImport(Path.resolve(CurrentConfig.projectRoot, viteMainModule))
+        )
+    }
+    
+    writeToPathSync(CurrentConfig.serverProductionProxyModule, importLines.join('\n'));
+    return CurrentConfig.serverProductionProxyModule;
+}
 
 /**
  * Add an import for the Vite-built server entry module to Meteor's configured mainModule.
@@ -46,55 +64,3 @@ function injectServerEntryImport(mainModule: string | undefined) {
     ].join('\n'));
 }
 
-export function serverMainModule({ meteorMainModule, viteMainModule }: {
-    meteorMainModule: string | undefined,
-    viteMainModule?: string | undefined;
-}) {
-    injectServerEntryImport(meteorMainModule);
-    const importLines = [
-        `import "meteor-vite/server-entry/production"`,
-    ];
-    
-    if (viteMainModule) {
-        importLines.push(
-            moduleImport(Path.resolve(CurrentConfig.projectRoot, viteMainModule))
-        )
-    }
-    
-    writeToPathSync(CurrentConfig.serverProductionProxyModule, importLines.join('\n'));
-    return CurrentConfig.serverProductionProxyModule;
-}
-
-export function clientMainModule({ viteMainModule, modulePreload }: {
-    viteMainModule: string;
-    modulePreload?: boolean | ModulePreloadOptions | undefined;
-}) {
-    const importLines = [];
-    let polyfill = true;
-    
-    if (modulePreload === false) {
-        polyfill = false;
-    }
-    
-    if (typeof modulePreload === 'object' && modulePreload.polyfill === false) {
-        polyfill = false;
-    }
-    
-    if (polyfill) {
-        importLines.push(`import "vite/modulepreload-polyfill"`);
-    }
-    
-    if (viteMainModule) {
-        importLines.push(
-            moduleImport(Path.resolve(CurrentConfig.projectRoot, viteMainModule))
-        )
-    }
-    
-    if (!CurrentConfig.clientEntryModule) {
-        console.warn(new Error(`Missing client entry module! Maybe jorgenvatle:vite is out of date?\n Try updating it: $ ${pc.yellow('meteor update jorgenvatle:vite')}`))
-        return viteMainModule;
-    }
-    
-    writeToPathSync(CurrentConfig.clientEntryModule, importLines.join('\n'));
-    return CurrentConfig.clientEntryModule;
-}
