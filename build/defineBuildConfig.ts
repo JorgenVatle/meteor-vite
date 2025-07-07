@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import Path from 'path';
 import type { Options } from 'tsup';
 import { EsbuildPluginMeteorStubs } from './tsup-plugins';
@@ -11,7 +12,7 @@ export function defineBuildConfig(options: Config): Options {
         noExternal: ['meteor'],
         minify: false,
     }, options, {
-        outDir: Path.resolve(rootDir, options.outDir || 'dist'),
+        outDir: Path.join(rootDir, options.outDir || 'dist'),
         esbuildPlugins: [
             EsbuildPluginMeteorStubs,
             ...options.esbuildPlugins || [],
@@ -19,14 +20,16 @@ export function defineBuildConfig(options: Config): Options {
     } satisfies Options)
     
     if (Array.isArray(config.entry)) {
-        config.entry = config.entry.map((entry) => Path.resolve(rootDir, entry));
+        config.entry = config.entry.map((entry) => Path.join(rootDir, entry));
     } else {
-        const entries = Object.entries(config.entry).map(([key, path]) => [key, Path.resolve(rootDir, path)]);
+        const entries = Object.entries(config.entry).map(([key, path]) => {
+            return [key, Path.join(rootDir, path)];
+        });
         config.entry = Object.fromEntries(entries);
     }
     
     if (config.tsconfig) {
-        config.tsconfig = Path.resolve(rootDir, config.tsconfig);
+        config.tsconfig = Path.join(rootDir, config.tsconfig);
     }
     
     return config;
@@ -44,7 +47,7 @@ function inferConfigRootDir() {
         for (let i = 1; i < stack.length; i++) {
             const fileName = stack[i].getFileName();
             if (fileName && fileName !== __filename) {
-                return Path.dirname(fileName);
+                return Path.dirname(fileURLToPath(fileName));
             }
         }
     } finally {
