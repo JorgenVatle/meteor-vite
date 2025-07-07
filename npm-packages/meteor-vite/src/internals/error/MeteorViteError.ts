@@ -1,5 +1,5 @@
+import ViteLoadRequest, { RequestContext } from '@/plugin/lib/ViteLoadRequest';
 import MeteorPackage from '@/plugin/meteor/models/MeteorPackage';
-import ViteLoadRequest, { RequestContext } from '@/plugin/ViteLoadRequest';
 import { bugs } from '@/utilities/common';
 import pc from 'picocolors';
 import { inspect } from 'util';
