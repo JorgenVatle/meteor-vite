@@ -3,7 +3,7 @@
   "compilerOptions": {
     "paths": {
       "meteor-vite/*": [
-        "./npm-packages/meteor-vite/dist/*.d.mts",
+        "./npm-packages/meteor-vite/dist/*.mjs",
       ]
     }
   }
