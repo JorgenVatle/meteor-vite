@@ -6,16 +6,8 @@
         <option name="buildArgs">
           <list>
             <DockerEnvVarImpl>
-              <option name="name" value="NODE_VERSION" />
-              <option name="value" value="20-alpine" />
-            </DockerEnvVarImpl>
-            <DockerEnvVarImpl>
               <option name="name" value="METEOR_BASE_IMAGE" />
               <option name="value" value="jorgenvatle/meteor-base" />
-            </DockerEnvVarImpl>
-            <DockerEnvVarImpl>
-              <option name="name" value="METEOR_RELEASE" />
-              <option name="value" value="3.0.3" />
             </DockerEnvVarImpl>
             <DockerEnvVarImpl>
               <option name="name" value="APP_BASENAME" />
