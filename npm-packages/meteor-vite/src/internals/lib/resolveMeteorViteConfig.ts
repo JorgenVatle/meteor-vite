@@ -7,7 +7,7 @@ import type { ResolvedViteConfig } from '@/plugin';
 import { meteorWorker } from '@/plugin/vite-plugins/meteorWorker';
 import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
-import Instance from '../MeteorViteRuntime';
+import Instance from './MeteorViteRuntime';
 
 export const CurrentConfig = globalThis.MeteorViteRuntimeConfig;
 

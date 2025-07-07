@@ -10,7 +10,7 @@ import Path from 'node:path';
 import pc from 'picocolors';
 import type { RollupOutput, RollupWatcher } from 'rollup';
 import { createBuilder, type InlineConfig, version } from 'vite';
-import Instance from '../MeteorViteRuntime';
+import Instance from '../lib/MeteorViteRuntime';
 
 export async function buildForProduction() {
     const { config, outDir, packageJson, assetsDir } = await resolveMeteorViteConfig({ mode: 'production' }, 'build');
