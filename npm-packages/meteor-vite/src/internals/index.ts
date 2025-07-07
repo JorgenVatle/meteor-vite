@@ -1,2 +1,5 @@
+import { ModuleRunner as ModuleRunnerInstance } from '@/internals/lib/ModuleRunner';
+
 export type * from './boilerplate/Boilerplate';
-export * as Scripts from './scripts';
+
+const ModuleRunner = new ModuleRunnerInstance();
