@@ -19,15 +19,16 @@
     },
     "./client": {
       "types": "./dist/client.d.ts",
-      "import": "./dist/client.mjs"
+      "import": "./dist/client.mjs",
+      "require": "./dist/client.js"
     },
-    "./bootstrap/scripts": {
-      "types": "./dist/bootstrap/scripts/index.d.ts",
-      "import": "./dist/bootstrap/scripts/index.mjs"
+    "./internals": {
+      "types": "./dist/internals/index.d.ts",
+      "import": "./dist/internals/index.mjs"
     },
-    "./bootstrap/*": {
-      "types": "./dist/bootstrap/*.d.ts",
-      "import": "./dist/bootstrap/*.mjs"
+    "./server-entrypoint/*": {
+      "types": "./dist/server-entrypoint/*.d.ts",
+      "import": "./dist/server-entrypoint/*.mjs"
     }
   },
   "scripts": {
