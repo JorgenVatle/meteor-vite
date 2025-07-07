@@ -15,9 +15,6 @@ const STRIP_ANSI_DEPS = [
 ]
 
 const COMMON_ENTRIES = {
-    // Stub validation
-    'client': './src/client/index.ts',
-    
     // Common utility modules (logger, colorization, parsers)
     'utilities': './src/utilities/index.ts',
     
@@ -60,6 +57,20 @@ export default defineConfig([
                 console.warn(error);
             }
         },
+        noExternal: ['meteor', 'picocolors', ...STRIP_ANSI_DEPS],
+        esbuildPlugins: [
+            EsbuildPluginMeteorStubs,
+        ]
+    },
+    {
+        name: 'meteor-vite/client',
+        entry: {
+            'client': './src/client/index.ts',
+        },
+        format: ['esm', 'cjs'],
+        sourcemap: true,
+        target: 'browser',
+        dts: true,
         noExternal: ['meteor', 'picocolors', ...STRIP_ANSI_DEPS],
         esbuildPlugins: [
             EsbuildPluginMeteorStubs,
