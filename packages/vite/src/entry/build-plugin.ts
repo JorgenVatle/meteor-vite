@@ -1,4 +1,4 @@
-import type { ViteBoilerplate } from 'meteor-vite/bootstrap/boilerplate/Boilerplate';
+import type { ViteBoilerplate } from 'meteor-vite/internals';
 import { Colorize } from 'meteor-vite/utilities';
 import type { InputFile } from 'meteor/isobuild';
 import { Plugin } from 'meteor/isobuild';
