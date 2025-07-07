@@ -1,4 +1,4 @@
-import type { DeepPartial, MakeOptional, MakeRequired } from '@/internals/lib/TypeHelpers';
+import type { DeepPartial, MakeOptional, MakeRequired } from '@/types/UtilityTypes';
 import type { OutputOptions } from 'rollup';
 import { type ResolvedConfig } from 'vite';
 
