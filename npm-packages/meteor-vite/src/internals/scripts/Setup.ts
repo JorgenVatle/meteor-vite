@@ -126,7 +126,7 @@ export function serverMainModule({ meteorMainModule, viteMainModule }: {
 }) {
     injectServerEntryImport(meteorMainModule);
     const importLines = [
-        `import "meteor-vite/bootstrap/ProductionEnvironment"`,
+        `import "meteor-vite/server-entry/production"`,
     ];
     
     if (viteMainModule) {
