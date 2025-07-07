@@ -49,7 +49,7 @@ export default defineConfig([
         clean: JSON.parse(process.env.TSUP_CLEAN || 'true'),
         target: 'node22',
         outDir: 'dist',
-        skipNodeModulesBundle: true,
+        // skipNodeModulesBundle: true,
         dts: true,
         onSuccess: async () => {
             try {
