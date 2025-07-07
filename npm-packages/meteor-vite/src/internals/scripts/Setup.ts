@@ -6,6 +6,7 @@ import FS from 'node:fs';
 import Path from 'node:path';
 import pc from 'picocolors';
 import type { ModulePreloadOptions } from 'vite';
+import { writeToPathSync } from '../lib/writeToPathSync';
 
 /**
  * Add an import for the Vite-built server entry module to Meteor's configured mainModule.
@@ -43,11 +44,6 @@ function injectServerEntryImport(mainModule: string | undefined) {
         '/** End of vite auto-imports **/',
         originalContent,
     ].join('\n'));
-}
-
-function writeToPathSync(path: string, content: string) {
-    FS.mkdirSync(Path.dirname(path), { recursive: true });
-    FS.writeFileSync(path, content);
 }
 
 export function serverMainModule({ meteorMainModule, viteMainModule }: {
