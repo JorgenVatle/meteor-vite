@@ -1,4 +1,5 @@
-import { createErrorHandler, MeteorViteError } from '@/internals/error';
+import { createErrorHandler } from '@/internals/error/ErrorHandler';
+import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/plugin/MeteorVitePluginConfig';
 import { homepage } from '@/utilities/common';
 import { Colorize } from '@/utilities/server';

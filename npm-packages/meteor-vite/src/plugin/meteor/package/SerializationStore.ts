@@ -1,4 +1,4 @@
-import { ErrorMetadata, MeteorViteError } from '@/internals/error';
+import { ErrorMetadata, MeteorViteError } from '@/internals/error/MeteorViteError';
 import { Logger } from '@/utilities/server';
 import pc from 'picocolors';
 import ModuleExport from './components/ModuleExport';

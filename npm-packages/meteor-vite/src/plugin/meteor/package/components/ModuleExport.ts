@@ -1,4 +1,4 @@
-import { ErrorMetadata, MeteorViteError } from '@/internals/error';
+import { ErrorMetadata, MeteorViteError } from '@/internals/error/MeteorViteError';
 import { ModuleExportData } from '../../parser/Parser';
 import { METEOR_STUB_KEY } from '../StubTemplate';
 import { PackageSubmodule } from './PackageSubmodule';
