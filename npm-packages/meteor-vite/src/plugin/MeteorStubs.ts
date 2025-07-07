@@ -15,7 +15,7 @@ export const MeteorStubs: () => Promise<Plugin> = setupPlugin(async () => {
         name: 'meteor-vite: stubs',
         resolveId: (id) => ViteLoadRequest.resolveId(id),
         shouldProcess: (viteId) => ViteLoadRequest.isStubRequest(viteId),
-        async validateConfig({ meteorStubs }: ResolvedPluginConfig) {
+        async validateConfig({ meteorStubs }: MeteorVitePluginConfig) {
             if (!meteorStubs.packageJson) {
                 const jsonPath = meteorStubs.packageJsonPath || 'package.json';
                 meteorStubs.packageJson = JSON.parse(await FS.readFile(jsonPath, 'utf-8'));
@@ -26,7 +26,7 @@ export const MeteorStubs: () => Promise<Plugin> = setupPlugin(async () => {
                 })
             }
         },
-        async setupContext(viteId, server, pluginSettings: ResolvedPluginConfig, environment) {
+        async setupContext(viteId, server, pluginSettings: MeteorVitePluginConfig, environment) {
             return ViteLoadRequest.prepareContext({ id: viteId, pluginSettings, server, environment });
         },
         
@@ -41,7 +41,7 @@ export const MeteorStubs: () => Promise<Plugin> = setupPlugin(async () => {
                 filePath: request.context.file.sourcePath,
                 fileContent: request.context.file.content,
             }, {
-                ignoreDuplicateExportsInPackages: request.context.pluginSettings.stubValidation.ignoreDuplicateExportsInPackages,
+                ignoreDuplicateExportsInPackages: request.context.pluginSettings.stubValidation?.ignoreDuplicateExportsInPackages,
                 viteEnv: request.context.environment.name,
                 lazyMainModulePath: request.lazyMainModulePath,
             });
@@ -155,7 +155,3 @@ function setupPlugin<Context extends ViteLoadRequest>(setup: () => Promise<{
     
     return () => createPlugin().catch(handleError)
 }
-
-
-type ResolvedPluginConfig = Required<MeteorVitePluginConfig> & { meteorStubs: Required<MeteorVitePluginConfig['meteorStubs']> };
-
