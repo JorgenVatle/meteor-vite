@@ -1,20 +1,19 @@
 import { fileURLToPath } from 'node:url';
 import Path from 'path';
-import type { Options } from 'tsup';
+import { defineConfig, type Options } from 'tsup';
 import { EsbuildPluginMeteorStubs } from './tsup-plugins';
 
 export function defineBuildConfig(rootDir: string, _options: Config | Config[]): Options | Options[] {
     const optionList: Config[] = Array.isArray(_options) ? _options : [_options];
     
     return optionList.map((options) => {
-        const config = Object.assign({
-            rootDir,
+        const config = Object.assign({ rootDir }, defineConfig({
             target: 'es2022',
             sourcemap: true,
             dts: true,
             noExternal: ['meteor'],
             minify: false,
-        }, options, {
+        }), options, {
             outDir: Path.join(rootDir, options.outDir || 'dist'),
             tsconfig: options.tsconfig && Path.join(rootDir, options.tsconfig),
             esbuildPlugins: [
