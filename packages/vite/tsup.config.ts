@@ -12,6 +12,7 @@ export default defineBuildConfig(__dirname, {
     platform: 'node',
     tsconfig: "./tsconfig.json",
     format: 'esm',
+    sourcemap: false,
     esbuildPlugins: [
         fixBuildPluginCjsImports(),
     ],
