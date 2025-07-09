@@ -30,27 +30,27 @@ export class LoggerInstance {
         Object.assign(this.colorizers, colorizers);
     }
     
-    protected log(level: Exclude<LoggerMethod, 'success'>, params: unknown[]) {
+    protected log(level: Exclude<LoggerMethod, 'success'>, params: LoggerParams) {
         console[level](`${this.label} ${this.colorizers[level]('%s')}`, ...params)
     }
     
-    public info(...params: unknown[]) {
+    public info(...params: LoggerParams) {
         this.log('info', params);
     }
     
-    public success(...params: unknown[]) {
+    public success(...params: LoggerParams) {
         this.log('info', params);
     }
     
-    public warn(...params: unknown[]) {
+    public warn(...params: LoggerParams) {
         this.log('warn', params);
     }
     
-    public error(...params: unknown[]) {
+    public error(...params: LoggerParams) {
         this.log('error', params);
     }
     
-    public debug(...params: unknown[]) {
+    public debug(...params: LoggerParams) {
         if (!this.debugEnabled) {
             return;
         }
