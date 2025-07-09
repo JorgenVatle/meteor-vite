@@ -1,7 +1,7 @@
 import pc from 'picocolors';
 import { createLogger } from './createLogger';
 
-export const createLabelledLogger = (label: string) => createLogger((
+export const createKeyValueDataLogger = (label: string) => createLogger((
     message: string,
     dataLines?: [key: string, value: string][] | Record<string, string>,
 ) => {
@@ -18,4 +18,4 @@ export const createLabelledLogger = (label: string) => createLogger((
     return [`${label} ${message}${data}`];
 });
 
-export type LabelLogger = ReturnType<typeof createLabelledLogger>
+export type KeyValueDataLogger = ReturnType<typeof createKeyValueDataLogger>

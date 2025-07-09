@@ -1,7 +1,7 @@
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { isSameModulePath } from '@/plugin/meteor/models/MeteorPackage';
 import type { MeteorVitePluginConfig } from '@/plugin/types/MeteorVitePluginConfig';
-import { Colorize, createLabelledLogger, LabelLogger } from '@/utilities/server';
+import { Colorize, createKeyValueDataLogger, KeyValueDataLogger } from '@/utilities/server';
 import NodeFS, { existsSync } from 'fs';
 import FS from 'fs/promises';
 import Path from 'path';
@@ -13,11 +13,11 @@ export default class ViteLoadRequest {
     
     public lazyMainModulePath?: string;
     public isLazyLoaded: boolean;
-    public log: LabelLogger;
+    public log: KeyValueDataLogger;
     
     constructor(public readonly context: RequestContext) {
         this.isLazyLoaded = false;
-        this.log = createLabelledLogger(`[${pc.yellow(context.id.replace('meteor/', ''))}]`);
+        this.log = createKeyValueDataLogger(`[${pc.yellow(context.id.replace('meteor/', ''))}]`);
         
         context.manifest?.resources.forEach((resource) => {
             const isMainModule = resource.fileOptions?.mainModule;
