@@ -1,6 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-import { CurrentConfig } from '../util/CurrentConfig';
-import { ModuleRunner } from '../util/ModuleRunner';
 
 if (Meteor.isServer) {
     Meteor.startup(async () => {
@@ -11,7 +9,8 @@ if (Meteor.isServer) {
             return;
         }
         
-        const Logger = await import('../util/Logger').then(module => module.default)
+        const Logger = await import('../util/Logger').then(module => module.default);
+        const { ModuleRunner } = await import('../util/ModuleRunner');
         
         try {
             await ModuleRunner.runScript('initializeViteDevServer');
