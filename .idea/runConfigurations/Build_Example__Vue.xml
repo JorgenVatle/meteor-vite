@@ -32,6 +32,14 @@
             </DockerEnvVarImpl>
           </list>
         </option>
+        <option name="portBindings">
+          <list>
+            <DockerPortBindingImpl>
+              <option name="containerPort" value="3000" />
+              <option name="hostPort" value="3000" />
+            </DockerPortBindingImpl>
+          </list>
+        </option>
         <option name="commandLineOptions" value="--network development" />
         <option name="sourceFilePath" value="Dockerfile" />
       </settings>
