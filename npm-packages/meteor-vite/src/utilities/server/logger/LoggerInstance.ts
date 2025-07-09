@@ -87,7 +87,7 @@ export class LoggerInstance {
     
 }
 
-type LoggerParams = [...params: unknown[]];
+export type LoggerParams = [...params: unknown[]];
 interface LoggerConfig {
     label?: string;
     debugKey?: string;
