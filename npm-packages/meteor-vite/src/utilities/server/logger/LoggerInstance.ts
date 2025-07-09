@@ -7,6 +7,7 @@ export class LoggerInstance {
     protected debugEnabled: boolean;
     protected label: string;
     protected colorizers: Colorizers;
+    protected static readonly warnings = new Set<string>(process.env.SUPPRESS_VITE_WARNINGS?.split(',') ?? []);
     
     constructor({ 
         debugKey = 'meteor-vite',
@@ -56,8 +57,37 @@ export class LoggerInstance {
         this.log('debug', params);
     }
     
+    public warnOnce(warning: { id: string }, ...params: LoggerParams) {
+        if (LoggerInstance.warnings.has(warning.id)) {
+            return;
+        }
+        const leftPad = ' '.repeat(3);
+        const SUPPRESS_VITE_WARNINGS = pc.bold('SUPPRESS_VITE_WARNINGS');
+        const suppressionNotice = pc.dim([
+            `Add ${SUPPRESS_VITE_WARNINGS} to your environment to suppress this warning.`,
+            `Example: ${SUPPRESS_VITE_WARNINGS}=${pc.green(`'some-warning,${pc.yellow(warning.id)},another-warning,etc'`)}`,
+        ].join(`\n${leftPad}`));
+        
+        LoggerInstance.warnings.add(warning.id);
+        
+        console.log('\n');
+        
+        const lines = [
+            params,
+            [
+                '\n\n',
+                leftPad,
+                suppressionNotice,
+                '\n\n',
+            ].join(''),
+        ].flat();
+        
+        this.warn(...lines);
+    }
+    
 }
 
+type LoggerParams = [...params: unknown[]];
 interface LoggerConfig {
     label?: string;
     debugKey?: string;
