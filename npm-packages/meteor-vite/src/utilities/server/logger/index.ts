@@ -20,6 +20,10 @@ export const BuildLogger = {
     debug: (message: string, ...params: DefaultParams) => process.env.ENABLE_DEBUG_LOGS && console.debug(...formatMessage([pc.dim(message), ...params])),
 }
 
+export const ViteBundleLogger = new LoggerInstance({
+    label: 'vite-bundler',
+})
+
 export { createSimpleLogger,} from './createSimpleLogger';
 export { createKeyValueDataLogger, type KeyValueDataLogger } from './createKeyValueDataLogger';
 export { type LoggerObject, type DefaultParams } from './createLogger';
