@@ -12,14 +12,16 @@ export class LoggerInstance {
     protected colorizers: Colorizers;
     protected static readonly warnings = new Set<string>(process.env.SUPPRESS_VITE_WARNINGS?.split(',') ?? []);
     protected actions = new GithubActionsAnnotator();
+    protected debugKey: string;
     
     constructor({ 
-        debugKey = 'meteor-vite',
+        debugKey,
         label,
         colorizers,
     }: LoggerConfig) {
         const debugEnv = process.env.DEBUG || 'false';
-        const debugTriggers = [debugKey, 'true', '*'];
+        this.debugKey = debugKey || label || 'meteor-vite';
+        const debugTriggers = [this.debugKey, 'true', '*'];
         this.debugEnabled = ENABLE_DEBUG_LOGS || !!debugEnv.trim().split(/[\s,]+/).find((field) => {
             return debugTriggers.includes(field.trim())
         });
