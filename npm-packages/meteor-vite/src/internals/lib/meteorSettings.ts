@@ -23,11 +23,11 @@ export const meteorSettings = {
  */
 export type MeteorPackageSettings = typeof meteorSettings;
 
-const userSettings = Meteor.settings.packages?.['jorgenvatle:vite'] || {}
+const userSettings = Meteor.settings.packages?.['vite'] || {}
 
 Meteor.settings.packages = Object.assign(
     {
-        'jorgenvatle:vite': Object.assign(meteorSettings, userSettings)
+        'vite': Object.assign(meteorSettings, userSettings)
     },
     Meteor.settings.packages
 );
@@ -36,7 +36,7 @@ declare module 'meteor/meteor' {
     namespace Meteor {
         interface Settings {
             packages: {
-                'jorgenvatle:vite': MeteorPackageSettings;
+                'vite': MeteorPackageSettings;
             };
         }
     }
