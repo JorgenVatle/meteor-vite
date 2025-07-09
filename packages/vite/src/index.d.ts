@@ -1,4 +1,5 @@
 import type { CurrentConfig } from './util/CurrentConfig';
+import '../../../npm-packages/meteor-vite/src/internals/lib/meteorSettings';
 
 declare global {
     interface MeteorViteRuntimeConfig {
