@@ -21,7 +21,7 @@ export class LoggerInstance {
     }: LoggerConfig) {
         const debugEnv = process.env.DEBUG || 'false';
         this.debugKey = debugKey || label || 'meteor-vite';
-        const debugTriggers = [this.debugKey, 'true', '*'];
+        const debugTriggers = [`${this.debugKey}:*`, 'true', '*'];
         this.debugEnabled = ENABLE_DEBUG_LOGS || !!debugEnv.trim().split(/[\s,]+/).find((field) => {
             return debugTriggers.includes(field.trim())
         });
