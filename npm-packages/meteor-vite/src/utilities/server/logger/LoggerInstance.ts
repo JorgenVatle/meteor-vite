@@ -130,7 +130,7 @@ interface LoggerConfig {
     colorizers?: Partial<Colorizers>
 }
 
-type LoggerMethod = 'info' | 'success' | 'warn' | 'debug' | 'error';
+export type LoggerMethod = 'info' | 'success' | 'warn' | 'debug' | 'error';
 type Colorizers = {
     [key in LoggerMethod]: (message: string) => string;
 }
