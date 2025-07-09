@@ -1,5 +1,4 @@
 import { defineBuildConfig } from '../../build/defineBuildConfig';
-import { fixBuildPluginCjsImports } from '../../build/tsup-plugins';
 
 export default defineBuildConfig(__dirname, {
     name: 'jorgenvatle:vite',
@@ -13,8 +12,5 @@ export default defineBuildConfig(__dirname, {
     tsconfig: "./tsconfig.json",
     format: 'esm',
     sourcemap: false,
-    esbuildPlugins: [
-        fixBuildPluginCjsImports(),
-    ],
     noExternal: ['meteor/isobuild', /meteor\//]
 });
