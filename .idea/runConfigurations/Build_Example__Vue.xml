@@ -30,6 +30,10 @@
               <option name="name" value="ROOT_URL" />
               <option name="value" value="http://localhost:3000" />
             </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="DEBUG" />
+              <option name="value" value="vite-bundler:*" />
+            </DockerEnvVarImpl>
           </list>
         </option>
         <option name="portBindings">
