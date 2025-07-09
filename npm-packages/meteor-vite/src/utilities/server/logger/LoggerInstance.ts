@@ -1,8 +1,8 @@
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
-import { envFlag } from '@/utilities/server';
 import { GithubActionsAnnotator } from '@/utilities/server/logger/GithubActionsAnnotator';
 import pc from 'picocolors';
 import { inspect } from 'util';
+import { envFlag } from '../EnvFlag';
 
 const ENABLE_DEBUG_LOGS = envFlag('ENABLE_DEBUG_LOGS');
 
