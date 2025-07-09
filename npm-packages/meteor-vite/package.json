@@ -13,12 +13,6 @@
       "require": "./dist/plugin.js",
       "default": "./dist/plugin.mjs"
     },
-    "./utilities/*": {
-      "types": "./dist/utilities/*.d.mts",
-      "import": "./dist/utilities/*.mjs",
-      "require": "./dist/utilities/*.js",
-      "default": "./dist/utilities/*.mjs"
-    },
     "./client": {
       "types": "./dist/client.d.mts",
       "import": "./dist/client.mjs",
@@ -29,11 +23,6 @@
       "types": "./dist/internals.d.mts",
       "import": "./dist/internals.mjs",
       "default": "./dist/internals.mjs"
-    },
-    "./server-entry/*": {
-      "types": "./dist/server-entry/*.d.mts",
-      "import": "./dist/server-entry/*.mjs",
-      "default": "./dist/server-entry/*.mjs"
     }
   },
   "scripts": {

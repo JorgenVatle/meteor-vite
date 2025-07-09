@@ -20,18 +20,6 @@ export default defineBuildConfig(__dirname, [
             
             // Internal tooling for the Meteor build plugin.
             'internals': './src/internals/index.ts',
-            
-            // Server utility modules (logger, colorization, parsers)
-            'utilities/server': './src/utilities/server/index.ts',
-            
-            // Meteor Production/Development environment bootstrapper
-            // - Starts the vite dev server in development and loads server-side HMR hooks (if server builds are enabled)
-            // - Serves static files from the Vite bundle in production
-            'server-entry/development': './src/server-entry/development.ts',
-            'server-entry/production': './src/server-entry/production.ts',
-            
-            // Initializes HMR hooks for the Meteor-server. (Cleanup of side-effects from e.g. Meteor.publish(...))
-            'server-entry/hmr': './src/server-entry/hmr.ts',
         },
         format: ['esm'],
         platform: 'node',
