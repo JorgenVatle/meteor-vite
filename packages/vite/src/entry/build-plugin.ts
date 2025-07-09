@@ -22,14 +22,8 @@ if (!useBuildPlugin) {
             filenames: [],
             extensions: [CurrentConfig.bundleFileExtension]
         }, async () => {
-            try {
-                await cleanup;
-                return await ModuleRunner.runScript('createProductionCompilerPlugin');
-            } catch (error) {
-                Logger.error('build failed');
-                console.error(error);
-                throw error;
-            }
+            await cleanup;
+            return await ModuleRunner.runScript('createProductionCompilerPlugin');
         });
     } else {
         const filenames: string[] = [
