@@ -23,7 +23,10 @@ export const meteorSettings = {
  */
 export type MeteorPackageSettings = typeof meteorSettings;
 
-const userSettings = Meteor.settings.packages?.['vite'] || {}
+/**
+ * Overrides defined by the peer project's settings.json file.
+ */
+const userSettings = Meteor.settings.packages?.vite || {}
 
 Meteor.settings.packages = Object.assign(
     {
