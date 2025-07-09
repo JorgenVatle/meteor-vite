@@ -31,3 +31,13 @@ Meteor.settings.packages = Object.assign(
     },
     Meteor.settings.packages
 );
+
+declare module 'meteor/meteor' {
+    namespace Meteor {
+        interface Settings {
+            packages: {
+                'jorgenvatle:vite': MeteorPackageSettings;
+            };
+        }
+    }
+}
