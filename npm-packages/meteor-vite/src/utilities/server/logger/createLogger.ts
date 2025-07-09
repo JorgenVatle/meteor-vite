@@ -3,11 +3,13 @@ import { formatMessage } from './formatMessage';
 
 export function createLogger<Params extends DefaultParams>(formatter: (...params: Params) => DefaultParams): Logger<Params> {
     const _warnings = new Set<string>(process.env.SUPPRESS_VITE_WARNINGS?.split(',') ?? []);
+    const log = (level: LoggerMethods) => (...params: Params) => console[level]?.apply({}, formatMessage(formatter.apply({}, params)));
+    
     return {
         _warnings,
-        info: (...params: Params) => console.log(...formatMessage(formatter(...params))),
-        warn: (...params: Params) => console.warn(...formatMessage(formatter(...params))),
-        error: (...params: Params) => console.error(...formatMessage(formatter(...params))),
+        info: log('info'),
+        warn: log('warn'),
+        error: log('error'),
         debug: (...params: Params) => process.env.ENABLE_DEBUG_LOGS && console.debug(
             ...formatMessage(formatter(...params)).map((field) => typeof field === 'string' ? pc.dim(field) : field),
         ),
