@@ -4,7 +4,14 @@ import { MeteorViteCompilerPlugin } from '@/internals/lib/MeteorViteCompilerPlug
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { ProjectJson, ResolvedViteConfig, StubSettings } from '@/plugin';
 
-import { BuildLogger, Colorize, hasModuleImport, isSamePath, Logger, moduleImport } from '@/utilities/server';
+import {
+    BuildLogger,
+    Colorize,
+    hasModuleImport,
+    isSamePath,
+    moduleImport,
+    ViteBundleLogger as Logger,
+} from '@/utilities/server';
 import { execaSync } from 'execa';
 import FS from 'fs';
 import Path from 'node:path';
@@ -14,6 +21,15 @@ import { createBuilder, type InlineConfig, version } from 'vite';
 import Instance from '../lib/MeteorViteRuntime';
 
 export async function createProductionCompilerPlugin() {
+    try {
+        await build();
+    } catch (error) {
+        BuildLogger.error('build failed');
+        throw error;
+    }
+}
+
+async function build() {
     const { config, outDir, packageJson, assetsDir } = await resolveMeteorViteConfig({ mode: 'production' }, 'build');
     const { logger } = Instance;
     logger.info(`Building with Vite v${version}...`);
