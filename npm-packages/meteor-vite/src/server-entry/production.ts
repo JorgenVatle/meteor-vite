@@ -6,7 +6,8 @@ import { Meteor } from 'meteor/meteor';
 import { WebApp, WebAppInternals } from 'meteor/webapp';
 
 Meteor.startup(async () => {
-    if (!Meteor.isProduction) {
+    if (meteorSettings.env.MODE !== 'production') {
+        Logger.warnOnce({ id: 'vite-production-mode' }, 'Tried to load production server entry in development mode.')
         return;
     }
     
