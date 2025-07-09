@@ -10,17 +10,20 @@ export class ModuleRunner {
         })
     }
     
-    public import<T extends ImportPath>(module: T): Promise<AvailableImports[T]> {
-        console.debug(`Importing ${module} from meteor-vite`);
-        return import((`meteor-vite/${module}`));
+    public import<T extends ImportPath>(importPath: T): ModuleImport<T> {
+        console.debug(`Importing ${importPath} from meteor-vite`);
+        return AvailableModules[importPath]() as ModuleImport<T>;
     }
     
 }
 
+const AvailableModules = {
+    'utilities/server': () => import('@/utilities/server/index'),
+    'internals/scripts': () => import('@/internals/scripts/index'),
+} as const;
+
 type ScriptName = keyof typeof Scripts;
 type ScriptResult<TName extends ScriptName> = ReturnType<typeof Scripts[TName]>;
-type ImportPath = keyof AvailableImports;
-
-interface AvailableImports {
-    'utilities/server': typeof import('@/utilities/server/index'),
-}
+type ImportPath = keyof AvailableModules;
+type AvailableModules = typeof AvailableModules;
+type ModuleImport<T extends ImportPath> = ReturnType<AvailableModules[T]>;
