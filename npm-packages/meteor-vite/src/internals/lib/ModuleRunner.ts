@@ -4,11 +4,10 @@ import { Colorize } from '@/utilities/server';
 export class ModuleRunner {
     constructor() {}
     
-    public runScript<TName extends ScriptName>(script: TName): Promise<Awaited<ScriptResult<TName>>> {
+    public async runScript<TName extends ScriptName>(script: TName): Promise<ScriptResult<TName>> {
         console.debug(`Running script ${script} from meteor-vite/internals`);
-        return import('@/internals/scripts/index').then((scripts: any): Awaited<ScriptResult<TName>> => {
-            return scripts[script]();
-        })
+        const scripts = await this.import('internals/scripts');
+        return scripts[script]() as ScriptResult<TName>;
     }
     
     public import<T extends ImportPath>(importPath: T): ModuleImport<T> {
@@ -37,7 +36,7 @@ const AvailableModules = {
 } as const;
 
 type ScriptName = keyof typeof Scripts;
-type ScriptResult<TName extends ScriptName> = ReturnType<typeof Scripts[TName]>;
+type ScriptResult<TName extends ScriptName> = Awaited<ReturnType<typeof Scripts[TName]>>;
 type ImportPath = keyof AvailableModules;
 type AvailableModules = typeof AvailableModules;
 type ModuleImport<T extends ImportPath> = ReturnType<AvailableModules[T]>;
