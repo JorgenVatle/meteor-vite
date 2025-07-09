@@ -1,19 +1,19 @@
 import type * as Scripts from '@/internals/scripts';
-import { Colorize } from '@/utilities/server';
+import { Colorize, Logger } from '@/utilities/server';
 
 export class ModuleRunner {
     constructor() {
-        console.debug('Module Runner Initialized!', { url: import.meta.url });
+        Logger.debug('Module Runner Initialized!', { url: import.meta.url });
     }
     
     public async runScript<TName extends ScriptName>(script: TName): Promise<ScriptResult<TName>> {
-        console.debug(`Running script ${script} from meteor-vite/internals`);
+        Logger.debug(`Running script ${script} from meteor-vite/internals`);
         const scripts = await this.import('internals/scripts');
         return scripts[script]() as ScriptResult<TName>;
     }
     
     public import<T extends ImportPath>(importPath: T): ModuleImport<T> {
-        console.debug(`Importing ${importPath} from meteor-vite`);
+        Logger.debug(`Importing ${importPath} from meteor-vite`);
         
         if (!(importPath in AvailableModules)) {
             const vite = Colorize.packageName('jorgenvatle:vite');
