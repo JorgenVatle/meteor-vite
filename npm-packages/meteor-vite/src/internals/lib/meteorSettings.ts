@@ -35,8 +35,8 @@ Meteor.settings.packages = Object.assign(
 declare module 'meteor/meteor' {
     namespace Meteor {
         interface Settings {
-            packages: {
-                'vite': MeteorPackageSettings;
+            packages?: {
+                'vite'?: MeteorPackageSettings;
             };
         }
     }
