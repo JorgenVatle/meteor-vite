@@ -1,5 +1,6 @@
 import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
+import { MeteorViteCompilerPlugin } from '@/internals/lib/MeteorViteCompilerPlugin';
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { ProjectJson, ResolvedViteConfig, StubSettings } from '@/plugin';
 
@@ -112,21 +113,17 @@ export async function buildForProduction() {
     });
     
     
-    return {
-        fileNames,
-        entry: {
-            client: config.meteor.clientEntry,
-            server: config.meteor.serverEntry,
-        },
+    return new MeteorViteCompilerPlugin({
         outDir,
         assetsDir,
+        mode: CurrentConfig.mode,
         dynamicAssetBoilerplate: config.meteor.dynamicAssetBoilerplate,
         boilerplate: new ViteProductionBoilerplate({
             base: config.base,
             assetsDir,
             files: clientManifest,
         }),
-    }
+    });
 }
 
 function normalizeBuildOutput(output:  RollupOutput | RollupOutput[] | RollupWatcher): RollupOutput[] {
