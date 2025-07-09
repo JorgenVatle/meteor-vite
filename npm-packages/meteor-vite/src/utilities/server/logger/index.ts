@@ -11,3 +11,7 @@ export const BuildLogger = {
     warn: (message: string, ...params: DefaultParams) => console.warn(...formatMessage([pc.yellow(message), ...params])),
     debug: (message: string, ...params: DefaultParams) => process.env.ENABLE_DEBUG_LOGS && console.debug(...formatMessage([pc.dim(message), ...params])),
 }
+
+export { createSimpleLogger, type SimpleLogger } from './createSimpleLogger';
+export { createLabelledLogger } from './createLabelledLogger';
+export { type LoggerObject, type DefaultParams } from './createLogger';
