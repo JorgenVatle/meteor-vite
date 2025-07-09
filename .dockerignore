@@ -1,15 +1,23 @@
+# Editor configs and other unnecessary project files
+.idea
+.changeset
+.github
+.kubernetes
+.git
+
+
 # Meteor and npm package stores
 **/node_modules
 **/.meteor/local
 **/.npm
-**/.idea
-**/dist
-**/output
 **/.build-hash
 
-# Build output from npm packages
-npm-packages/**/dist
-npm-packages/meteor-vite/.build
+# Build output from packages and apps
+**/dist
+**/_vite-bundle
+**/.build
+examples/output
 
 # Debugging output
 **/.meteor-vite
+
