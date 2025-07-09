@@ -1,3 +1,4 @@
+import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { envFlag } from '@/utilities/server';
 import { GithubActionsAnnotator } from '@/utilities/server/logger/GithubActionsAnnotator';
 import pc from 'picocolors';
@@ -32,8 +33,26 @@ export class LoggerInstance {
         Object.assign(this.colorizers, colorizers);
     }
     
-    protected log(level: Exclude<LoggerMethod, 'success'>, params: LoggerParams) {
-        console[level](`${this.label} ${this.colorizers[level]('%s')}`, ...params)
+    protected log(level: LoggerMethod, _params: LoggerParams) {
+        const params = this.formatMessage(level, _params);
+        if (!params) {
+            return;
+        }
+        if (level === 'success') {
+            return console.info(...params);
+        }
+        console[level](...params);
+    }
+    
+    protected formatMessage(level: LoggerMethod, [message, ...params]: LoggerParams) {
+        if (message instanceof MeteorViteError) {
+            message.beautify().then(() => console.warn(message, ...params));
+            return null;
+        }
+        if (typeof message === 'string') {
+            return [`${this.label} ${this.colorizers[level]('%s')}`, ...params];
+        }
+        return [message, ...params];
     }
     
     public info(...params: LoggerParams) {
@@ -41,7 +60,7 @@ export class LoggerInstance {
     }
     
     public success(...params: LoggerParams) {
-        this.log('info', params);
+        this.log('success', params);
     }
     
     public warn(...params: LoggerParams) {
