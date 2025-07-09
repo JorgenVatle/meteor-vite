@@ -52,14 +52,7 @@ if (!useBuildPlugin) {
             filenames,
             extensions: [],
         }, async () => {
-            const boilerplate = await ModuleRunner.runScript('prepareDevServerBoilerplate');
-            return new CompilerPlugin({
-                outDir: '',
-                assetsDir: '',
-                mode: CurrentConfig.mode,
-                boilerplate,
-                dynamicAssetBoilerplate: false,
-            });
+            return await ModuleRunner.runScript('prepareDevServerBoilerplate');
         })
     }
     
