@@ -1,4 +1,5 @@
 import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
+import { meteorSettings } from '@/internals/lib/meteorSettings';
 import type { ViteManifestFile } from '@/internals/scripts/buildForProduction';
 import { Logger } from '@/utilities/server';
 import { Meteor } from 'meteor/meteor';
@@ -10,12 +11,12 @@ Meteor.startup(async () => {
     }
     
     console.log('[Vite] Fetching manifest...');
-    const manifest = await Assets.getTextAsync(`${__VITE_ASSETS_DIR__}/client.manifest.json`);
+    const manifest = await Assets.getTextAsync(`${meteorSettings.assetsDir}/client.manifest.json`);
     const files: Record<string, ViteManifestFile> = JSON.parse(manifest);
     
     const boilerplate = new ViteProductionBoilerplate({
-        base: process.env.METEOR_VITE_BASE_URL || import.meta.env.BASE_URL,
-        assetsDir: __VITE_ASSETS_DIR__,
+        base: meteorSettings.base,
+        assetsDir: meteorSettings.assetsDir,
         files,
     });
     
@@ -38,7 +39,7 @@ Meteor.startup(async () => {
     //  add a custom asset route where we have better control over caching and CORS rules.
     boilerplate.makeViteAssetsCacheable();
     
-    if (__VITE_DYNAMIC_ASSET_BOILERPLATE__) {
+    if (meteorSettings.dynamicAssetBoilerplate) {
         WebAppInternals.registerBoilerplateDataCallback('meteor-vite', (req, data) => {
             const { dynamicHead, dynamicBody } = boilerplate.getBoilerplate();
             data.dynamicHead = data.dynamicHead || '';
