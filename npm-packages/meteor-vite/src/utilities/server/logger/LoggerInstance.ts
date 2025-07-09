@@ -1,4 +1,5 @@
 import { envFlag } from '@/utilities/server';
+import { GithubActionsAnnotator } from '@/utilities/server/logger/GithubActionsAnnotator';
 import pc from 'picocolors';
 
 const ENABLE_DEBUG_LOGS = envFlag('ENABLE_DEBUG_LOGS');
@@ -8,6 +9,7 @@ export class LoggerInstance {
     protected label: string;
     protected colorizers: Colorizers;
     protected static readonly warnings = new Set<string>(process.env.SUPPRESS_VITE_WARNINGS?.split(',') ?? []);
+    protected actions = new GithubActionsAnnotator();
     
     constructor({ 
         debugKey = 'meteor-vite',
@@ -47,6 +49,7 @@ export class LoggerInstance {
     }
     
     public error(...params: LoggerParams) {
+        this.actions.annotate('Error', { title: this.label });
         this.log('error', params);
     }
     
