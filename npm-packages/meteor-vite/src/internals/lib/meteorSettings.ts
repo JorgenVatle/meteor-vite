@@ -15,7 +15,13 @@ export const meteorSettings = {
     base: process.env.METEOR_VITE_BASE_URL || import.meta.env.BASE_URL,
     assetsDir: __VITE_ASSETS_DIR__,
     env: import.meta.env,
-}
+} as const;
+
+/**
+ * Runtime settings for the Vite bundle, assigned to Meteor's settings object.
+ * {@link Meteor.settings}
+ */
+export type MeteorPackageSettings = typeof meteorSettings;
 
 const userSettings = Meteor.settings.packages?.['jorgenvatle:vite'] || {}
 
