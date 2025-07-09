@@ -51,7 +51,7 @@ export class LoggerInstance {
             return null;
         }
         if (typeof message === 'string') {
-            return [`${this.label} ${this.colorizers[level]('%s')}`, ...params];
+            return [`${this.label} ${this.colorizers[level](message)}`, ...params];
         }
         if (level === 'debug') {
             return [message, params.map((field) => {
@@ -64,7 +64,7 @@ export class LoggerInstance {
                 return pc.dim(inspect(field, { colors: true, }))
             })].flat()
         }
-        return [message, ...params];
+        return [this.label, message, ...params];
     }
     
     public info(...params: LoggerParams) {
