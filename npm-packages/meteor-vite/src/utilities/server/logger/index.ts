@@ -1,8 +1,16 @@
+import { LoggerInstance } from '@/utilities/server/logger/LoggerInstance';
 import pc from 'picocolors';
-import { createLogger, type DefaultParams } from './createLogger';
+import { type DefaultParams } from './createLogger';
 import { formatMessage } from './formatMessage';
 
-export const Logger = createLogger((...params: DefaultParams) => params);
+export const Logger = new LoggerInstance({
+    colorizers: {
+        info: (message) => message,
+        warn: (message) => message,
+        debug: (message) => pc.dim(message),
+        error: (message) => message,
+    },
+});
 
 export const BuildLogger = {
     info: (message: string, ...params: DefaultParams) => console.info(...formatMessage([pc.blue(message), ...params])),
