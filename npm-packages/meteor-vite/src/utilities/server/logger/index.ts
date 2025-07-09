@@ -13,5 +13,5 @@ export const BuildLogger = {
 }
 
 export { createSimpleLogger, type SimpleLogger } from './createSimpleLogger';
-export { createLabelledLogger } from './createLabelledLogger';
+export { createLabelledLogger, type LabelLogger } from './createLabelledLogger';
 export { type LoggerObject, type DefaultParams } from './createLogger';
