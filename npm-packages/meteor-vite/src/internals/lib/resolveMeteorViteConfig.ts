@@ -1,7 +1,7 @@
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { parsePackageJson } from '@/internals/lib/parsePackageJson';
-import { setupClientMainModule } from '@/internals/scripts/setupClientMainModule';
-import { setupServerMainModule } from '@/internals/scripts/setupServerMainModule';
+import { setupClientMainModule } from '@/internals/lib/setup/setupClientMainModule';
+import { setupServerMainModule } from '@/internals/lib/setup/setupServerMainModule';
 
 import type { ResolvedViteConfig } from '@/plugin';
 

@@ -5,7 +5,7 @@ import { hasModuleImport, Logger, moduleImport } from '@/utilities/server';
 import FS from 'node:fs';
 import Path from 'node:path';
 import pc from 'picocolors';
-import { writeToPathSync } from '../lib/writeToPathSync';
+import { writeToPathSync } from '../writeToPathSync';
 
 export function setupServerMainModule({ meteorMainModule, viteMainModule }: {
     meteorMainModule: string | undefined,
