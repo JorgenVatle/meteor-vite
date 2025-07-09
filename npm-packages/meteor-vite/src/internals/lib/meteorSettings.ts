@@ -15,6 +15,7 @@ export const meteorSettings = {
     base: process.env.METEOR_VITE_BASE_URL || import.meta.env.BASE_URL,
     assetsDir: __VITE_ASSETS_DIR__,
     env: import.meta.env,
+    dynamicAssetBoilerplate: __VITE_DYNAMIC_ASSET_BOILERPLATE__,
 } as const;
 
 /**
