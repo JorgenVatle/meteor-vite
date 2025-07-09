@@ -1,5 +1,5 @@
 import type { TransformedViteManifest } from '@/internals/scripts/buildForProduction';
-import { createSimpleLogger, Logger, type SimpleLogger, trimLeadingSlash } from '@/utilities/server';
+import { createSimpleLogger, Logger, LoggerInstance, trimLeadingSlash } from '@/utilities/server';
 import { WebAppInternals } from 'meteor/webapp';
 import { URL } from 'node:url';
 import { inspect } from 'node:util';
@@ -8,7 +8,7 @@ import { type Boilerplate, ViteBoilerplate } from './Boilerplate';
 
 export class ViteProductionBoilerplate extends ViteBoilerplate {
     
-    protected readonly logger: SimpleLogger;
+    protected readonly logger: LoggerInstance;
     protected readonly settings: Partial<{ manifest: TransformedViteManifest, imports: ManifestImports }>;
     protected readonly baseUrlType: 'path' | 'url' = 'path';
     
