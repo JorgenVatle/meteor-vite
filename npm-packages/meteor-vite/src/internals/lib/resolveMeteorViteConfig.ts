@@ -106,7 +106,7 @@ export async function resolveMeteorViteConfig(
                 },
                 resolve: {
                     external: true,
-                    noExternal: ['meteor-vite']
+                    noExternal: ['meteor-vite', ...METEOR_VITE_RUNTIME_DEPENDENCIES]
                 },
                 build: {
                     target: 'node21',
@@ -164,4 +164,18 @@ export async function resolveMeteorViteConfig(
         isSimulatedProduction,
     }
 }
+
+const WRAP_ANSI_DEPS = [
+    'wrap-ansi',
+    'strip-ansi',
+    'ansi-regex',
+    'emoji-regex',
+    'string-width',
+    'get-east-asian-width',
+    'eastasianwidth',
+]
+const METEOR_VITE_RUNTIME_DEPENDENCIES = [
+    'picocolors',
+    ...WRAP_ANSI_DEPS,
+]
 
