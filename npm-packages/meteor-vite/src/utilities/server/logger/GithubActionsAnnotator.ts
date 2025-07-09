@@ -15,7 +15,7 @@ export class GithubActionsAnnotator {
         this.useAnnotations = !!this.stepSummaryFile;
     }
     
-    public annotate(message: string, options: GithubAnnotationOptions = {}) {
+    public annotate([message]: unknown[], options: GithubAnnotationOptions = {}) {
         if (!this.useAnnotations) {
             return;
         }

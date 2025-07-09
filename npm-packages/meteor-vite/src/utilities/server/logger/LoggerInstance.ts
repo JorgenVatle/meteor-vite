@@ -49,7 +49,7 @@ export class LoggerInstance {
     }
     
     public error(...params: LoggerParams) {
-        this.actions.annotate('Error', { title: this.label });
+        this.actions.annotate(params, { title: this.label });
         this.log('error', params);
     }
     
