@@ -1,3 +1,2 @@
-export * from './Logger';
+export * from './logger/index';
 export * from './Formatting';
-export { default as Logger } from './Logger';
