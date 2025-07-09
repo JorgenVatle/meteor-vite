@@ -1,4 +1,5 @@
 import type * as Scripts from '@/internals/scripts';
+import { Colorize } from '@/utilities/server';
 
 export class ModuleRunner {
     constructor() {}
@@ -12,6 +13,19 @@ export class ModuleRunner {
     
     public import<T extends ImportPath>(importPath: T): ModuleImport<T> {
         console.debug(`Importing ${importPath} from meteor-vite`);
+        
+        if (!(importPath in AvailableModules)) {
+            const vite = Colorize.packageName('jorgenvatle:vite');
+            const meteorVite = Colorize.packageName('meteor-vite');
+            throw new Error([
+                `Meteor-Vite Module Runner: Could not find module: ${importPath}.`,
+                '',
+                `Available modules: ${Object.keys(AvailableModules).join(',')}.`,
+                `Make sure ${meteorVite} and ${vite} are fully installed and up-to-date.`,
+                `If you're seeing this error after updating ${meteorVite}, please open an issue over on GitHub.`
+            ].join('\n'))
+        }
+        
         return AvailableModules[importPath]() as ModuleImport<T>;
     }
     

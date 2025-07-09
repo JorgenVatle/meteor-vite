@@ -14,6 +14,7 @@ export const Colorize = {
     },
     command: (command: string) => pc.dim(pc.cyan(command)),
     jsonValue: pc.green,
+    packageName: (name: string) => pc.bold(pc.blue(name)),
 };
 
 /**
