@@ -10,7 +10,7 @@ if (Meteor.isServer) {
         }
         
         const { ModuleRunner } = await import('../util/ModuleRunner');
-        await ModuleRunner.runScript('initializeViteDevServer');
+        await ModuleRunner.runScript('startDevServer');
     })
 }
 

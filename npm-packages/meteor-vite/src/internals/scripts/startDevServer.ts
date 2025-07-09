@@ -1,7 +1,7 @@
 /// <reference types="vite/client" />
 import { ViteBundleLogger as Logger } from '@/utilities/server';
 
-export async function initializeViteDevServer() {
+export async function startDevServer() {
     /**
      * This function is available in production and will be called if Meteor is
      * started with a non-production NODE_ENV. This prevents Meteor from
