@@ -4,7 +4,10 @@ import { ModuleRunner } from '../util/ModuleRunner';
 
 if (Meteor.isServer) {
     Meteor.startup(async () => {
-        if (CurrentConfig.mode === 'production') {
+        if (Meteor.settings?.packages?.vite?.env?.MODE === 'production') {
+            // Production bundle detected.
+            // Meteor-Vite has been bundled into the app, so there is no need
+            // for doing anything from within the jorgenvatle:vite package runtime.
             return;
         }
         
