@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-import { Logger } from '@/utilities/server';
+import { ViteBundleLogger as Logger } from '@/utilities/server';
 
 export async function initializeViteDevServer() {
     /**
@@ -13,6 +13,12 @@ export async function initializeViteDevServer() {
         Logger.info('Prevented the Vite dev server from firing up, as you are already running a production build.');
         return;
     }
-    await import ('@/server-entry/development');
+    
+    await import ('@/server-entry/development').catch((error) => {
+        Logger.warn('Failed to start Vite dev server!');
+        throw error;
+    });
+    
+    Logger.success('Vite should be ready to go!');
 }
 

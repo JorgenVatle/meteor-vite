@@ -9,17 +9,8 @@ if (Meteor.isServer) {
             return;
         }
         
-        const Logger = await import('../util/Logger').then(module => module.default);
         const { ModuleRunner } = await import('../util/ModuleRunner');
-        
-        try {
-            await ModuleRunner.runScript('initializeViteDevServer');
-            Logger.success('Vite should be ready to go!');
-        }  catch (error) {
-            Logger.warn('Failed to start Vite dev server!');
-            console.error(error);
-            throw error;
-        }
+        await ModuleRunner.runScript('initializeViteDevServer');
     })
 }
 
