@@ -8,10 +8,8 @@
     "npm-packages/@meteor-vite/plugin-zodern-relay",
     "npm-packages/@meteor-vite/react-packages/packages/react-meteor-data"
   ],
-  "dependencies": {
-    "@changesets/cli": "^2.28.1"
-  },
   "devDependencies": {
+    "@changesets/cli": "^2.29.5",
     "@types/meteor": "^2.9.8",
     "@types/node": "^22.9.0",
     "concurrently": "^8.2.2",
