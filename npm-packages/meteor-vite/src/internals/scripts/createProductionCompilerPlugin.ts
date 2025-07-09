@@ -22,7 +22,7 @@ import Instance from '../lib/MeteorViteRuntime';
 
 export async function createProductionCompilerPlugin() {
     try {
-        await build();
+        return await build();
     } catch (error) {
         BuildLogger.error('build failed');
         throw error;
