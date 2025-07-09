@@ -14,7 +14,7 @@ export async function startDevServer() {
         return;
     }
     
-    await import ('@/server-entry/development').catch((error) => {
+    await import ('@/internals/server-entry/development').catch((error) => {
         Logger.warn('Failed to start Vite dev server!');
         throw error;
     });
