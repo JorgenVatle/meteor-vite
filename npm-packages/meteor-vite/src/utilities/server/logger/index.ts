@@ -23,3 +23,4 @@ export const BuildLogger = {
 export { createSimpleLogger, type SimpleLogger } from './createSimpleLogger';
 export { createKeyValueDataLogger, type KeyValueDataLogger } from './createKeyValueDataLogger';
 export { type LoggerObject, type DefaultParams } from './createLogger';
+export { LoggerInstance }
