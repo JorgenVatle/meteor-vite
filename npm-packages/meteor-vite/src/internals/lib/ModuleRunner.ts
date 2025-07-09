@@ -2,7 +2,9 @@ import type * as Scripts from '@/internals/scripts';
 import { Colorize } from '@/utilities/server';
 
 export class ModuleRunner {
-    constructor() {}
+    constructor() {
+        console.debug('Module Runner Initialized!', { url: import.meta.url });
+    }
     
     public async runScript<TName extends ScriptName>(script: TName): Promise<ScriptResult<TName>> {
         console.debug(`Running script ${script} from meteor-vite/internals`);
