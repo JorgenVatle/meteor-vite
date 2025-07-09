@@ -1,6 +1,6 @@
-export { buildForProduction } from './buildForProduction';
 export { parsePackageJson } from '@/internals/lib/parsePackageJson';
 
+export * from './createProductionCompilerPlugin';
 export * from './initializeViteDevServer';
-export { prepareDevServerBoilerplate } from '@/internals/scripts/prepareDevServerBoilerplate';
+export * from './createDevCompilerPlugin';
 export { setupProject } from '@/internals/scripts/setupProject';

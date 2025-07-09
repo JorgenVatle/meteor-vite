@@ -13,7 +13,7 @@ import type { RollupOutput, RollupWatcher } from 'rollup';
 import { createBuilder, type InlineConfig, version } from 'vite';
 import Instance from '../lib/MeteorViteRuntime';
 
-export async function buildForProduction() {
+export async function createProductionCompilerPlugin() {
     const { config, outDir, packageJson, assetsDir } = await resolveMeteorViteConfig({ mode: 'production' }, 'build');
     const { logger } = Instance;
     logger.info(`Building with Vite v${version}...`);

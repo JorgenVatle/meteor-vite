@@ -24,7 +24,7 @@ if (!useBuildPlugin) {
         }, async () => {
             try {
                 await cleanup;
-                return await ModuleRunner.runScript('buildForProduction');
+                return await ModuleRunner.runScript('createProductionCompilerPlugin');
             } catch (error) {
                 Logger.error('build failed');
                 console.error(error);
@@ -52,7 +52,7 @@ if (!useBuildPlugin) {
             filenames,
             extensions: [],
         }, async () => {
-            return await ModuleRunner.runScript('prepareDevServerBoilerplate');
+            return await ModuleRunner.runScript('createDevCompilerPlugin');
         })
     }
     
