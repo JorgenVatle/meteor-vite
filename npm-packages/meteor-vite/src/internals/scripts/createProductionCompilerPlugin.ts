@@ -22,14 +22,14 @@ import Instance from '../lib/MeteorViteRuntime';
 
 export async function createProductionCompilerPlugin() {
     try {
-        return await build();
+        return await createCompiler();
     } catch (error) {
         BuildLogger.error('build failed');
         throw error;
     }
 }
 
-async function build() {
+async function createCompiler() {
     const { config, outDir, packageJson, assetsDir } = await resolveMeteorViteConfig({ mode: 'production' }, 'build');
     const { logger } = Instance;
     logger.info(`Building with Vite v${version}...`);
