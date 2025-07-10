@@ -5,4 +5,5 @@ export default defineBuildConfig(import.meta.dirname, {
     entry: ['src/bin'],
     format: ['esm'],
     dts: false,
+    clean: true,
 })
