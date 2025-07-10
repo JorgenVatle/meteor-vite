@@ -22,26 +22,34 @@ export async function buildIfChanged(rootDir: string) {
 }
 
 export async function checkChanges(rootDir: string) {
-    const hash = await globHash([
-        Path.join(rootDir, 'src'),
-        Path.join(rootDir, 'tsconfig.json'),
-    ]);
+    const hash = await globHash({
+        fileContent: [
+            Path.join(rootDir, 'src'),
+            Path.join(rootDir, 'tsconfig.json'),
+        ]
+    });
     await FS.writeFile(Path.join(rootDir, '.build-hash'), hash);
     return hash;
 }
 
-/**
- * Calculate a hash for a list of filename patterns to check whether there
- * have been any changes since last build.
- *
- * @param patterns Glob patterns for files and directories to include in the hash.
- * @param hashFileNames Optionally include file names in the hash. Used to check
- *      whether 'dist/' directories are empty or only partially built.
- */
-async function globHash(patterns: string[], hashFileNames: string[] = []) {
+async function globHash(
+    patterns: {
+        /**
+         * Glob patterns for files and directories to read and include in the hash.
+         */
+        fileContent: string[],
+        
+        /**
+         * Optionally include file names in the hash. Used to check whether 'dist/'
+         * directories are empty or only partially built. (Glob patterns supported)
+         */
+        fileNames?: string[]
+    },
+    options: Options = {}
+) {
     const startTime = Date.now();
-    const files = await globby(patterns);
-    const fileNames = await globby(hashFileNames);
+    const files = await globby(patterns.fileContent);
+    const fileNames = await globby(patterns.fileNames || []);
     
     files.sort();
     fileNames.sort();
@@ -59,8 +67,17 @@ async function globHash(patterns: string[], hashFileNames: string[] = []) {
         `\n\n`,
         `Computed ${contentHashes.length} content and ${fileNameHashes.length} file name hashes for`,
         `build in ${Date.now() - startTime}ms`,
-        `\n\n`,
     ].join(' '));
     
+    if (options.detailedLogging) {
+        console.log({ files, fileNames });
+    }
+    
+    console.log('\n');
+    
     return hash([contentHashes, fileNameHashes].flat().join());
+}
+
+type Options = {
+    detailedLogging?: boolean;
 }
