@@ -7,6 +7,6 @@ export const Highlight = {
     command(command: string, params: string[] = []) {
         const base = pc.dim(`$ ${this.binary('toolkit')}`);
         
-        return `${base} ${pc.cyan(command)} ${params.join(' ')}`
+        return `${base} ${this.binary(command)} ${params.join(' ')}`
     }
 } as const;
