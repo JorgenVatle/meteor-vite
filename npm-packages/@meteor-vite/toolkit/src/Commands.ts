@@ -2,6 +2,7 @@ import { Changes } from '@/Changes';
 import { CommandList } from '@/lib/CommandList';
 import * as process from 'node:process';
 import { build } from 'tsup';
+import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
 
 export const Commands = new CommandList([
     {
@@ -31,8 +32,12 @@ export const Commands = new CommandList([
                 saveBuildHash: true,
             });
             process.chdir(rootDir);
-            await build({});
-            await changes.checkChanges();
+            if (envFlag('FORCE_BUILD') || await changes.hasChanged()) {
+                await build({});
+                await changes.checkChanges();
+            } else {
+                console.log('No changes detected, skipping build');
+            }
         }
     }
 ]);
