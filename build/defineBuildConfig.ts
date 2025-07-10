@@ -1,12 +1,13 @@
 import { fileURLToPath } from 'node:url';
 import Path from 'path';
 import { defineConfig, type Options } from 'tsup';
+import { envFlag } from '../npm-packages/meteor-vite/src/utilities/server/EnvFlag';
 import { EsbuildPluginMeteorStubs } from './tsup-plugins';
 
 export function defineBuildConfig(rootDir: string, _options: Config | Config[]): Options | Options[] {
     const optionList: Config[] = Array.isArray(_options) ? _options : [_options];
     
-    return optionList.map((options) => {
+    return optionList.map((options, index) => {
         const config = Object.assign({ rootDir }, defineConfig({
             target: 'es2022',
             sourcemap: true,
@@ -19,7 +20,11 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
                 EsbuildPluginMeteorStubs,
                 ...options.esbuildPlugins || [],
             ]
-        } satisfies Options)
+        } satisfies Options);
+        
+        if (index === 0 && envFlag('TSUP_CLEAN')) {
+            config.clean = options.clean ?? true;
+        }
         
         if (Array.isArray(config.entry)) {
             config.entry = config.entry.map((entry) => Path.join(rootDir, entry));
