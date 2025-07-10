@@ -13,7 +13,7 @@ export class ProjectCompiler {
         buildInfo: string;
     }
     
-    public static parseArgs = CommandList.defineOptions({
+    public static options = CommandList.defineOptions({
         verbose: {
             default: false,
         },
@@ -27,7 +27,7 @@ export class ProjectCompiler {
         protected readonly rootDir: string,
         options: Partial<Options> = {},
     ) {
-        this.options = Object.assign(ProjectCompiler.parseArgs([]), options);
+        this.options = Object.assign(ProjectCompiler.options.default, options);
         this.filePath = {
             buildInfo: Path.join(this.rootDir, 'dist', '.build-info.json'),
         }
@@ -240,7 +240,7 @@ export class ProjectCompiler {
 }
 
 
-type Options = ReturnType<typeof ProjectCompiler.parseArgs>;
+type Options = ReturnType<typeof ProjectCompiler.options.parse>;
 
 interface BuildHashes {
     hash: string | null;

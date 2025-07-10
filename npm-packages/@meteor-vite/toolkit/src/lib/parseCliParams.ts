@@ -23,7 +23,7 @@ export function parseCliParams(params = process.argv): ParsedArgs {
 
 function parseOptions(rootDir: string, args: string[]) {
     return {
-        compiler: new ProjectCompiler(rootDir, ProjectCompiler.parseArgs(args))
+        compiler: new ProjectCompiler(rootDir, ProjectCompiler.options.parse(args))
     }
 }
 

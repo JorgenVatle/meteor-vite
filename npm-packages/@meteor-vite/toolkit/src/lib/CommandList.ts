@@ -21,10 +21,16 @@ export class CommandList<TCommand extends CommandSpec> {
     }
     
     
-    public static defineOptions<TOptions extends OptionSpec>(options: TOptions): (params: string[]) => {
-        [key in keyof TOptions]: TOptions[key]['default'];
+    public static defineOptions<
+        TOptions extends OptionSpec,
+        TType = {
+            [key in keyof TOptions]: TOptions[key]['default'];
+        }
+    >(options: TOptions): {
+        parse(params: string[]): TType;
+        default: TType;
     } {
-        return (params: string[]) => {
+        const parse = (params: string[]) => {
             const result: Record<string, any> = {};
             
             Object.entries(options).forEach(([key, value]) => {
@@ -37,6 +43,11 @@ export class CommandList<TCommand extends CommandSpec> {
             
             return result as any;
         };
+        
+        return {
+            default: parse([]),
+            parse,
+        }
     }
     
 }
