@@ -28,7 +28,7 @@ export class Changes {
      */
     public async build() {
         const startTime = Date.now();
-        const { changed, changes } = await this.findChanges();
+        const { changed } = await this.findChanges();
         
         process.chdir(this.rootDir);
         
@@ -37,8 +37,6 @@ export class Changes {
         } else if (!changed) {
             console.log('No changes detected, skipping build');
             return;
-        } else {
-            console.log(`Changes detected: ${changes.join(', ')}. Running build...`);
         }
         
         await build({});
@@ -58,10 +56,11 @@ export class Changes {
         const { lastBuild, hash, fileNamesHash, fileContentHash } = await this.getHash();
         const changes: string[] = [];
         
-        if (!hash) {
+        if (!lastBuild.hash) {
+            console.log('No previous build info found, rebuild is necessary');
             return {
                 changed: true,
-                changes: ['Missing dist directory'],
+                changes: ['No previous build found'],
                 lastBuild: {
                     hash: null,
                 }
@@ -80,10 +79,38 @@ export class Changes {
             changes.push('Build hash changed');
         }
         
+        console.log('Detected changes:', changes.join(','));
+        
+        if (lastBuild.timestamp) {
+            console.log(`Last build: ${this.relativeTime(lastBuild.timestamp)}`);
+        }
+        
         return {
             changed: changes.length > 0,
             changes,
             lastBuild,
+        }
+    }
+    
+    protected relativeTime(timestamp: number) {
+        const now = Date.now();
+        const diff = now - timestamp;
+        const seconds = Math.floor(diff / 1000);
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+        
+        if (days > 0) {
+            return `${days} days ago`;
+        }
+        if (hours > 0) {
+            return `${hours} hours ago`;
+        }
+        if (minutes > 0) {
+            return `${minutes} minutes ago`;
+        }
+        if (seconds > 0) {
+            return `${seconds} seconds ago`;
         }
     }
     
