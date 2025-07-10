@@ -1,3 +1,4 @@
+import { CommandList } from '@/lib/CommandList';
 import FS from 'fs/promises';
 import { globby } from 'globby';
 import { hash } from 'hasha';
@@ -7,14 +8,26 @@ import { build } from 'tsup';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
 
 export class ProjectCompiler {
+    protected readonly options: Options;
     protected filePath: {
         buildInfo: string;
     }
     
+    public static parseArgs = CommandList.defineOptions({
+        verbose: {
+            default: false,
+        },
+        watch: {
+            default: false,
+        }
+    });
+    
+    
     constructor(
         protected readonly rootDir: string,
-        protected readonly options: Options = {}
+        options: Partial<Options> = {},
     ) {
+        this.options = Object.assign(ProjectCompiler.parseArgs([]), options);
         this.filePath = {
             buildInfo: Path.join(this.rootDir, 'dist', '.build-info.json'),
         }
@@ -216,7 +229,7 @@ export class ProjectCompiler {
             fileContentCount: contentHashes.length,
         };
         
-        if (this.options.detailedLogging) {
+        if (this.options.verbose) {
             result.additionalMetadata = { files, fileNames, result };
         }
         
@@ -225,9 +238,7 @@ export class ProjectCompiler {
 }
 
 
-type Options = {
-    detailedLogging?: boolean;
-}
+type Options = ReturnType<typeof ProjectCompiler.parseArgs>;
 
 interface BuildHashes {
     hash: string | null;

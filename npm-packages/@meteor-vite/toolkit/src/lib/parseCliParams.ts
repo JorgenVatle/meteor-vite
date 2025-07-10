@@ -1,5 +1,6 @@
 import { CommandNotFound, MissingCommandArguments } from '@/errors/CommandFailure';
 import { Highlight } from '@/lib/Highlight';
+import { ProjectCompiler } from '@/ProjectCompiler';
 import process from 'node:process';
 
 export function parseCliParams(params = process.argv): ParsedArgs {
@@ -16,14 +17,13 @@ export function parseCliParams(params = process.argv): ParsedArgs {
     
     return {
         command,
-        options: Object.assign(parseOptions(params.slice(4)), { rootDir }),
+        options: parseOptions(rootDir, params.slice(4)),
     }
 }
 
-function parseOptions(options: string[]) {
+function parseOptions(rootDir: string, args: string[]) {
     return {
-        watch: options.includes('--watch'),
-        debug: options.includes('--debug'),
+        compiler: new ProjectCompiler(rootDir, ProjectCompiler.parseArgs(args))
     }
 }
 
@@ -32,6 +32,4 @@ interface ParsedArgs {
     options: CommandOptions;
 }
 
-export interface CommandOptions extends ReturnType<typeof parseOptions> {
-    rootDir: string;
-}
+export interface CommandOptions extends ReturnType<typeof parseOptions> {}
