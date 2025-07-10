@@ -1,4 +1,4 @@
-import { copyFilesPlugin } from '@/buildConfig/copyFiles';
+import { copyFilesPlugin } from '@/buildConfig/copyFilesPlugin';
 import { ProjectCompiler } from '@/ProjectCompiler';
 import Path from 'path';
 import { type Options } from 'tsup';
