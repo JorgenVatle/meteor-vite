@@ -2,7 +2,7 @@ import { copyFiles } from '@/buildConfig/plugins/copyFiles';
 import Path from 'path';
 import { type Options } from 'tsup';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
-import { EsbuildPluginMeteorStubs } from '../Plugins';
+import { EsbuildPluginMeteorStubs } from './plugins';
 
 const DEFAULT_CONFIG = Object.freeze({
     target: 'es2022',
