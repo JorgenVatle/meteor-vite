@@ -5,9 +5,9 @@ export const Commands = new CommandList([
     {
         name: 'check-changes',
         description: 'Check if the current root directory has seen changes since last build.',
-        handler: async ({ rootDir }) => {
+        handler: async ({ rootDir, debug }) => {
             const changes = new ProjectCompiler(rootDir, {
-                detailedLogging: true,
+                detailedLogging: debug,
             });
             await changes.findChanges();
         }
@@ -15,8 +15,10 @@ export const Commands = new CommandList([
     {
         name: 'build',
         description: 'Run a build and compute the build hash for the provided project root directory.',
-        handler: async ({ rootDir }) => {
-            const changes = new ProjectCompiler(rootDir);
+        handler: async ({ rootDir, debug }) => {
+            const changes = new ProjectCompiler(rootDir, {
+                detailedLogging: debug,
+            });
             await changes.build();
         }
     }
