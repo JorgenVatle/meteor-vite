@@ -4,9 +4,9 @@ import { hash } from 'hasha';
 import { execSync } from 'node:child_process';
 import Path from 'node:path';
 
-export async function buildIfChanged(rootDir: string) {
+export async function buildIfChanged(rootDir: string, options?: Options) {
     const lastHash = await FS.readFile(Path.join(rootDir, '.build-hash'), 'utf8').catch(() => 'N/A');
-    const currentHash = await checkChanges(rootDir);
+    const currentHash = await checkChanges(rootDir, options);
     if (lastHash === currentHash) {
         console.log('No changes detected, skipping build');
         return;
@@ -21,13 +21,13 @@ export async function buildIfChanged(rootDir: string) {
     });
 }
 
-export async function checkChanges(rootDir: string) {
+export async function checkChanges(rootDir: string, options?: Options) {
     const hash = await globHash({
         fileContent: [
             Path.join(rootDir, 'src'),
             Path.join(rootDir, 'tsconfig.json'),
         ]
-    });
+    }, options);
     await FS.writeFile(Path.join(rootDir, '.build-hash'), hash);
     return hash;
 }
