@@ -6,4 +6,7 @@ export default defineBuildConfig(import.meta.dirname, {
     format: ['esm'],
     dts: false,
     clean: true,
+    banner: {
+        js: '#!/usr/bin/env node',
+    }
 })
