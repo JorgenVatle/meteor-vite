@@ -1,8 +1,10 @@
 import FS from 'fs/promises';
 import { globby } from 'globby';
 import { hash } from 'hasha';
-import { execSync } from 'node:child_process';
 import Path from 'node:path';
+import * as process from 'node:process';
+import { build } from 'tsup';
+import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
 
 export class Changes {
     protected filePath: {
@@ -24,19 +26,28 @@ export class Changes {
      * Run the build script if the current root directory has seen changes since
      * last build.
      */
-    public async buildIfChanged() {
+    public async build() {
+        const startTime = Date.now();
         const { changed, changes } = await this.findChanges();
-        if (!changed) {
+        
+        process.chdir(this.rootDir);
+        
+        if (envFlag('FORCE_BUILD')) {
+            console.log('Forcing build due to FORCE_BUILD environment variable');
+        } else if (!changed) {
             console.log('No changes detected, skipping build');
             return;
+        } else {
+            console.log(`Changes detected: ${changes.join(', ')}. Running build...`);
         }
-        console.log(`Changes detected: ${changes.join(', ')}. Running build...`);
-        execSync('npm run build', {
-            cwd: this.rootDir,
-            stdio: 'inherit',
-            env: Object.assign({
-                TSUP_CLEAN: true,
-            }, process.env),
+        
+        await build({});
+        
+        const durationMs = Date.now() - startTime;
+        
+        await this.saveBuildInfo({
+            durationMs,
+            timestamp: Date.now(),
         });
     }
     
@@ -91,17 +102,14 @@ export class Changes {
      * Save info from last build to file for reference in conditional build command
      * @param buildInfo
      */
-    protected async saveBuildInfo(buildInfo: BuildInfo) {
-        await FS.writeFile(this.filePath.buildInfo, JSON.stringify(buildInfo, null, 2));
-    }
-    
-    
-    public async patchBuildInfo(patch: Partial<BuildInfo>) {
-        await this.saveBuildInfo(
-            Object.assign(
-                await this.getBuildInfo(),
-                patch
-            )
+    protected async saveBuildInfo(buildInfo: Omit<BuildInfo, keyof BuildHashes>) {
+        const content = Object.assign(
+            await this.getHash(),
+            buildInfo
+        );
+        await FS.writeFile(
+            this.filePath.buildInfo,
+            JSON.stringify(content, null, 2)
         );
     }
     
