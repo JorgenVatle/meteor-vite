@@ -1,3 +1,5 @@
+import { CommandNotFound } from '@/errors/CommandFailure';
+
 export class CommandList<TCommand extends CommandSpec> {
     constructor(protected readonly commands: TCommand[]) {
     }
@@ -11,7 +13,7 @@ export class CommandList<TCommand extends CommandSpec> {
         const command = this.commands.find((command) => command.name === commandName);
         
         if (!command) {
-            throw new Error(`Unknown command: ${commandName}`);
+            throw new CommandNotFound(`Unknown command: ${commandName}`);
         }
         
         return command;
