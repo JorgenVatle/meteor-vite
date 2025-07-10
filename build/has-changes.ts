@@ -63,8 +63,10 @@ async function globHash(
         return hash(fileName, { algorithm: 'md5' });
     }));
     
+    
+    console.log('\n');
+    
     console.log([
-        `\n\n`,
         `Computed ${contentHashes.length} content and ${fileNameHashes.length} file name hashes for`,
         `build in ${Date.now() - startTime}ms`,
     ].join(' '));
@@ -73,9 +75,12 @@ async function globHash(
         console.log({ files, fileNames });
     }
     
+    const result = await hash([contentHashes, fileNameHashes].flat().join());
+    
+    console.log(`Hash: ${result}`);
     console.log('\n');
     
-    return hash([contentHashes, fileNameHashes].flat().join());
+    return result;
 }
 
 type Options = {
