@@ -91,11 +91,16 @@ export class Changes {
      * Retrieve build info from last build.
      * @protected
      */
-    public async getBuildInfo() {
-        const hash = await FS.readFile(this.filePath.buildInfo, 'utf8').catch(() => null);
-        return {
-            hash,
+    public async getLastBuildInfo(): Promise<BuildInfo> {
+        const buildInfo = await FS.readFile(this.filePath.buildInfo, 'utf8').catch(() => null);
+        
+        if (!buildInfo) {
+            return {
+                hash: null,
+            }
         }
+        
+        return JSON.parse(buildInfo);
     }
     
     /**
@@ -132,7 +137,7 @@ export class Changes {
         
         return {
             ...result,
-            lastBuild: await this.getBuildInfo(),
+            lastBuild: await this.getLastBuildInfo(),
         }
     }
     
