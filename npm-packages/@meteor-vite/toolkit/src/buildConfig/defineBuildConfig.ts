@@ -11,7 +11,6 @@ const DEFAULT_CONFIG = Object.freeze({
     dts: true,
     noExternal: ['meteor'],
     skipNodeModulesBundle: true,
-    plugins: [] as TSUpPlugin[],
 } satisfies Options);
 
 export function defineBuildConfig(rootDir: string, _options: Config | Config[]): Options | Options[] {
@@ -26,7 +25,7 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
                 esbuildPlugins: [
                     EsbuildPluginMeteorStubs,
                     ...options.esbuildPlugins || [],
-                ]
+                ],
             }
         );
         
@@ -34,10 +33,6 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
         if (index === 0 && envFlag('TSUP_CLEAN')) {
             config.clean = options.clean ?? true;
         }
-        
-        config.plugins.push(
-            copyFilesPlugin(rootDir, config)
-        );
         
         if (Array.isArray(config.entry)) {
             config.entry = config.entry.map((entry) => Path.join(rootDir, entry));
@@ -72,6 +67,17 @@ function mergeConfig(
     options: Config,
     overrides: Options
 ): MergedConfig {
-    const defaults = Object.assign({ rootDir }, DEFAULT_CONFIG);
-    return Object.assign(defaults, options, overrides);
+    const config = Object.assign({ rootDir, ...DEFAULT_CONFIG }, {
+        ...options,
+        ...overrides,
+    });
+    
+    Object.assign(config, {
+        plugins: [
+            overrides.plugins || [],
+            copyFilesPlugin(rootDir, config),
+        ].flat()
+    });
+    
+    return config;
 }
