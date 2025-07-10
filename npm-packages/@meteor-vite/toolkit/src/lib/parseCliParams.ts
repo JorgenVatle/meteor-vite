@@ -7,11 +7,11 @@ export function parseCliParams(params = process.argv): ParsedArgs {
     const exampleCommand = Highlight.command('build-if-changed', ['/npm-packages/meteor-vite']);
     
     if (!command) {
-        throw new CommandNotFound(`You need to specify a command to run. E.g. ${exampleCommand}`);
+        throw new CommandNotFound(`You need to specify a command to run.\nE.g. ${exampleCommand}`);
     }
     
     if (!rootDir) {
-        throw new MissingCommandArguments(`You need to specify a root directory path to run this command. E.g. ${exampleCommand}`);
+        throw new MissingCommandArguments(`You need to specify a root directory path to run this command.\nE.g. ${exampleCommand}`);
     }
     
     return {
