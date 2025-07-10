@@ -8,10 +8,9 @@ export default defineBuildConfig(import.meta.dirname, [
     {
         name: '@meteor-vite/toolkit: bin',
         entry: ['src/bin'],
-        outDir: 'dist/bin',
+        outDir: 'bin',
         format: ['esm'],
         dts: false,
-        clean: true,
         banner: {
             js: '#!/usr/bin/env node',
         },
