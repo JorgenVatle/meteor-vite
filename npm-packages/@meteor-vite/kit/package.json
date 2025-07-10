@@ -1,0 +1,12 @@
+{
+  "name": "@meteor-vite/kit",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jørgen Vatle <Jorgen@WcAServices.net> (https://github.com/JorgenVatle)",
+  "license": "ISC",
+  "description": "Internal toolkit for managing building and publishing meteor-vite's npm and Atmosphere packages."
+}

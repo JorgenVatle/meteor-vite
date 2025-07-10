@@ -6,7 +6,8 @@
     "packages/vite",
     "npm-packages/meteor-vite",
     "npm-packages/@meteor-vite/plugin-zodern-relay",
-    "npm-packages/@meteor-vite/react-packages/packages/react-meteor-data"
+    "npm-packages/@meteor-vite/react-packages/packages/react-meteor-data",
+    "npm-packages/@meteor-vite/kit"
   ],
   "devDependencies": {
     "@changesets/cli": "^2.29.5",
