@@ -1,6 +1,6 @@
 import type { ESBuildPlugin } from '@/buildConfig';
-import { log } from '@/Plugins';
 import pc from 'picocolors';
+import { log } from '../log';
 
 /**
  * Intercept Meteor imports and inject an ESBuild-compatible module that
