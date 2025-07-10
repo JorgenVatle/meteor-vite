@@ -1,9 +1,6 @@
-import { buildIfChanged } from '../Changes';
-import { parseCliParams } from '../lib/parseCliParams';
+import { Changes } from '@/Changes';
+import { parseCliParams } from '@/lib/parseCliParams';
 
 const { rootDir } = parseCliParams();
 
-buildIfChanged(rootDir).catch((error) => {
-    console.error(error);
-    process.exit(1);
-});
+await new Changes(rootDir).buildIfChanged();

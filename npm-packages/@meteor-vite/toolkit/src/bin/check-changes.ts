@@ -1,6 +1,8 @@
-import { checkChanges } from '../Changes';
-import { parseCliParams } from '../lib/parseCliParams';
+import { Changes } from '@/Changes';
+import { parseCliParams } from '@/lib/parseCliParams';
 
 const { rootDir } = parseCliParams();
 
-await checkChanges(rootDir, { detailedLogging: true });
+await new Changes(rootDir, {
+    detailedLogging: true
+}).checkChanges();
