@@ -34,6 +34,7 @@
       <excludeFolder url="file://$MODULE_DIR$/examples/vue-zodern-relay/server/dist" />
       <excludeFolder url="file://$MODULE_DIR$/npm-packages/@meteor-vite/react-packages/examples" />
       <excludeFolder url="file://$MODULE_DIR$/packages/vite/.npm" />
+      <excludeFolder url="file://$MODULE_DIR$/.bin/dist" />
       <excludePattern pattern=".babel-cache" />
       <excludePattern pattern="local" />
       <excludePattern pattern="package-lock.json" />
