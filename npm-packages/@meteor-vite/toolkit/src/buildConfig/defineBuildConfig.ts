@@ -1,4 +1,4 @@
-import { copyFiles } from '@/buildConfig/copyFiles';
+import { copyFilesPlugin } from '@/buildConfig/copyFiles';
 import { ProjectCompiler } from '@/ProjectCompiler';
 import Path from 'path';
 import { type Options } from 'tsup';
@@ -35,7 +35,9 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
             config.clean = options.clean ?? true;
         }
         
-        config.plugins.push(copyFiles(rootDir, config));
+        config.plugins.push(
+            copyFilesPlugin(rootDir, config)
+        );
         
         if (Array.isArray(config.entry)) {
             config.entry = config.entry.map((entry) => Path.join(rootDir, entry));
