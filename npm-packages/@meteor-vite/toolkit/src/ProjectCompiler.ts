@@ -50,7 +50,9 @@ export class ProjectCompiler {
             return;
         }
         
-        await build({});
+        await build({
+            watch: this.options.watch,
+        });
         
         const durationMs = Date.now() - startTime;
         
