@@ -2,7 +2,7 @@ import { defineBuildConfig } from '@/defineBuildConfig';
 
 export default defineBuildConfig(import.meta.dirname, [
     {
-        name: '@meteor-vite/toolkit',
+        name: '@meteor-vite/toolkit: package',
         entry: ['src/index.ts'],
     },
     {
