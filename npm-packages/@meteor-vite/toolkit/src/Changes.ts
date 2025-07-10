@@ -48,7 +48,11 @@ export class Changes {
         return lastBuild.hash !== hash;
     }
     
-    protected async getBuildInfo() {
+    /**
+     * Retrieve build info from last build.
+     * @protected
+     */
+    public async getBuildInfo() {
         const hash = await FS.readFile(this.filePath.buildInfo, 'utf8').catch(() => 'N/A');
         return {
             hash,
