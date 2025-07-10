@@ -3,4 +3,4 @@ import { checkChanges } from '../has-changes';
 
 const { rootDir } = parseCliParams();
 
-await checkChanges(rootDir);
+await checkChanges(rootDir, { detailedLogging: true });
