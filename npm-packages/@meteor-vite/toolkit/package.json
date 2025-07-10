@@ -16,13 +16,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup",
-    "toolkit": "npm exec @meteor-vite/toolkit",
+    "toolkit": "node ./bin/entrypoint.mjs",
 
     "preprepare": "node ./bin/prepare.mjs",
-    "prepare": "npm run build-if-changed ./",
-
-    "build-if-changed": "npm run toolkit build-if-changed",
-    "check-changes": "npm run toolkit check-changes"
+    "prepare": "npm run toolkit build-if-changed ./"
   },
   "dependencies": {
     "globby": "^14.1.0",
