@@ -4,4 +4,5 @@ export default defineBuildConfig(import.meta.dirname, {
     name: '@meteor-vite/toolkit/bin',
     entry: ['src/bin'],
     format: ['esm'],
+    dts: false,
 })
