@@ -1,12 +1,13 @@
+import { Changes } from '@/Changes';
 import { fileURLToPath } from 'node:url';
 import Path from 'path';
 import { defineConfig, type Options } from 'tsup';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
-import { checkChanges } from './Changes';
 import { EsbuildPluginMeteorStubs } from './Plugins';
 
 export function defineBuildConfig(rootDir: string, _options: Config | Config[]): Options | Options[] {
     const optionList: Config[] = Array.isArray(_options) ? _options : [_options];
+    const changes = new Changes(rootDir);
     
     return optionList.map((options, index, array) => {
         const config = Object.assign({ rootDir }, defineConfig({
@@ -31,7 +32,7 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
         // Calculate build hash once all builds have finished
         if (!array[index + 1]) {
             config.onSuccess = async () => {
-                await checkChanges(rootDir);
+                await changes.checkChanges();
                 if (typeof options.onSuccess === 'function') {
                     await options.onSuccess();
                 }
