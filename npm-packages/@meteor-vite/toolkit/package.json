@@ -5,6 +5,14 @@
   "description": "Internal toolkit for managing building and publishing meteor-vite's npm and Atmosphere packages.",
   "author": "Jørgen Vatle <Jorgen@WcAServices.net> (https://github.com/JorgenVatle)",
   "license": "ISC",
+  "exports": {
+    ".": {
+      "types": ["./dist/index.d.mts", "./dist/index.d.ts"],
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "default": "./dist/index.mjs"
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup",
