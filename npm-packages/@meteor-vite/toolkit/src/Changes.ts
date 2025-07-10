@@ -17,9 +17,7 @@ export class Changes {
      * last build.
      */
     public async buildIfChanged() {
-        const lastHash = await FS.readFile(Path.join(this.rootDir, '.build-hash'), 'utf8').catch(() => 'N/A');
-        const currentHash = await this.checkChanges();
-        if (lastHash === currentHash) {
+        if (!await this.hasChanged()) {
             console.log('No changes detected, skipping build');
             return;
         }
@@ -31,6 +29,15 @@ export class Changes {
                 TSUP_CLEAN: true,
             }, process.env),
         });
+    }
+    
+    /**
+     * Check if there have been any changes to the project since last build.
+     */
+    public async hasChanged() {
+        const lastHash = await FS.readFile(Path.join(this.rootDir, '.build-hash'), 'utf8').catch(() => 'N/A');
+        const currentHash = await this.checkChanges();
+        return lastHash !== currentHash;
     }
     
     /**
