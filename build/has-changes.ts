@@ -71,13 +71,14 @@ async function globHash(
         `build in ${Date.now() - startTime}ms`,
     ].join(' '));
     
+    
+    const result = await hash([contentHashes, fileNameHashes].flat().join());
+    console.log(`Hash: ${result}`);
+    
     if (options.detailedLogging) {
         console.log({ files, fileNames });
     }
     
-    const result = await hash([contentHashes, fileNameHashes].flat().join());
-    
-    console.log(`Hash: ${result}`);
     console.log('\n');
     
     return result;
