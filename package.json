@@ -21,21 +21,23 @@
   "scripts": {
     "start": "npm run example start",
     "launch": "npm run example launch",
+    "toolkit": "npm exec @meteor-vite/toolkit",
 
     "build": "npm run example build",
     "build:packages": "npm run build-if-changed npm-packages/meteor-vite && npm run build-if-changed packages/vite",
     "build:meteor-vite": "cd npm-packages/meteor-vite && npm run build --",
+    "build:toolkit": "cd npm-packages/@meteor-vite/toolkit && npm run build --",
     "build:jorgenvatle:vite": "cd packages/vite && npm run build --",
-    "build:bin": "tsup-node build/src/bin --outDir .bin/dist --format esm",
-    "build-if-changed": "node .bin/dist/build-if-changed.mjs",
-    "check-changes": "node .bin/dist/check-for-changes.mjs",
+
+    "build-if-changed": "npm run toolkit build-if-changed",
+    "check-changes": "npm run toolkit check-changes",
 
     "prestart": "npm run build-if-changed packages/vite",
     "prebuild:jorgenvatle:vite": "npm run build-if-changed npm-packages/meteor-vite",
 
     "watch:packages": "TSUP_CLEAN=false concurrently -k -n atmosphere,npm 'npm:build:jorgenvatle:vite -- --watch' 'npm:build:meteor-vite -- --watch'",
 
-    "preprepare": "npm run build:bin",
+    "preprepare": "npm run build:toolkit",
     "prepare": "npm run build:packages || exit 0",
     "link": "npm run example link",
     "release": "npm run publish:vite && changeset publish",
