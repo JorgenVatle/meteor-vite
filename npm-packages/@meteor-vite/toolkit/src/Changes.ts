@@ -16,7 +16,7 @@ export class Changes {
         }
     ) {
         this.filePath = {
-            buildInfo: Path.join(this.rootDir, '.build-hash'),
+            buildInfo: Path.join(this.rootDir, 'dist', '.build-hash'),
         }
     }
     
@@ -73,7 +73,7 @@ export class Changes {
         });
         
         if (this.options.saveBuildHash ?? true) {
-            await FS.writeFile(Path.join(this.rootDir, '.build-hash'), hash);
+            await FS.writeFile(this.filePath.buildInfo, hash);
         }
         
         return hash;
