@@ -13,9 +13,7 @@ export class ProjectCompiler {
     
     constructor(
         protected readonly rootDir: string,
-        protected readonly options: Options = {
-            saveBuildHash: true,
-        }
+        protected readonly options: Options = {}
     ) {
         this.filePath = {
             buildInfo: Path.join(this.rootDir, 'dist', '.build-info.json'),
@@ -229,7 +227,6 @@ export class ProjectCompiler {
 
 type Options = {
     detailedLogging?: boolean;
-    saveBuildHash?: boolean;
 }
 
 interface BuildHashes {

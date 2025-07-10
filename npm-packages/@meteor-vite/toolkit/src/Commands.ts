@@ -8,7 +8,6 @@ export const Commands = new CommandList([
         handler: async ({ rootDir }) => {
             const changes = new ProjectCompiler(rootDir, {
                 detailedLogging: true,
-                saveBuildHash: false,
             });
             await changes.findChanges();
         }
