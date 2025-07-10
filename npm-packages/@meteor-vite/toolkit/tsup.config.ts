@@ -1,4 +1,4 @@
-import { defineBuildConfig } from '@/defineBuildConfig';
+import { defineBuildConfig } from '@/index';
 
 export default defineBuildConfig(import.meta.dirname, [
     {
