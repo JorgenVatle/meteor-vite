@@ -1,14 +1,14 @@
 {
   "extends": "../../../tsconfig.base.json",
   "include": [
-    "src"
+    "src",
   ],
   "compilerOptions": {
     "module": "preserve",
     "paths": {
-      "@/meteor-vite/*": [
-        "../npm-packages/meteor-vite/src/*"
-      ]
+      "~/meteor-vite/*": [
+        "../../meteor-vite/src/*"
+      ],
     }
   }
 }
