@@ -15,6 +15,7 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
             sourcemap: true,
             dts: true,
             noExternal: ['meteor'],
+            skipNodeModulesBundle: true,
         }), options, {
             outDir: Path.join(rootDir, options.outDir || 'dist'),
             tsconfig: options.tsconfig && Path.join(rootDir, options.tsconfig),
