@@ -5,6 +5,9 @@
     "paths": {
       "~/meteor-vite/*": [
         "../../meteor-vite/src/*"
+      ],
+      "@/*": [
+        "./src/*"
       ]
     }
   },
