@@ -60,46 +60,36 @@ export class Changes {
             console.log(info.additionalMetadata);
         }
         
-        console.log('\n');
-        
-        console.log([
-            `Computed ${info.fileContentCount} content and ${info.filenameCount} file name hashes for`,
-            `build in ${info.durationMs}ms`,
-        ].join(' '));
-        
-        console.log(`Hash: ${hash}`);
-        
-        if (!lastBuild.hash) {
-            console.log('Status: No previous build info found, rebuild is necessary');
-            return {
-                changed: true,
-                changes: ['No previous build found'],
-                lastBuild: {
-                    hash: null,
-                }
+        if (lastBuild.hash) {
+            if (lastBuild.fileNamesHash !== fileNamesHash) {
+                changes.push('File names changed');
             }
+            
+            if (lastBuild.fileContentHash !== fileContentHash) {
+                changes.push('Source files changed');
+            }
+            
+            if (!changes.length && hash !== lastBuild.hash) {
+                changes.push('Build hash changed');
+            }
+        } else {
+            changes.push('No previous build info found, rebuild is necessary');
         }
         
-        if (lastBuild.fileNamesHash !== fileNamesHash) {
-            changes.push('File names changed');
-        }
-        
-        if (lastBuild.fileContentHash !== fileContentHash) {
-            changes.push('Source files changed');
-        }
-        
-        if (!changes.length && hash !== lastBuild.hash) {
-            changes.push('Build hash changed');
-        }
-        
-        if (changes.length) {
-            console.log('Detected changes:', changes.join(','));
-        }
+        console.log('\n');
+        console.log(`Computed ${info.fileContentCount} content and ${info.filenameCount} file name hashes!`);
+        console.log(`Duration: ${info.durationMs}ms`);
         
         if (lastBuild.timestamp) {
             console.log(`Last build: ${this.relativeTime(lastBuild.timestamp)}`);
         }
         
+        if (changes.length) {
+            console.log('\nDetected changes:\n - ', changes.join('\n - '));
+            console.log();
+        }
+      
+        console.log(`Hash: ${hash}`);
         console.log('\n');
         
         return {
