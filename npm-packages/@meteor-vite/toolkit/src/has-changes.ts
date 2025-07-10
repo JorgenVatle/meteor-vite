@@ -33,7 +33,11 @@ export async function checkChanges(rootDir: string, options?: Options) {
             Path.join(rootDir, 'dist')
         ]
     }, options);
-    await FS.writeFile(Path.join(rootDir, '.build-hash'), hash);
+    
+    if (options?.saveBuildHash ?? true) {
+        await FS.writeFile(Path.join(rootDir, '.build-hash'), hash);
+    }
+    
     return hash;
 }
 
@@ -91,4 +95,5 @@ async function globHash(
 
 type Options = {
     detailedLogging?: boolean;
+    saveBuildHash?: boolean;
 }
