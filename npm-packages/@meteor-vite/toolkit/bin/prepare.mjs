@@ -2,10 +2,11 @@ import FS from 'fs';
 import { execSync } from 'child_process';
 import Path from 'path';
 import { fileURLToPath } from 'node:url';
+import packageJson from '../package.json' with { type: 'json' };
 
 const dirname = Path.dirname(fileURLToPath(import.meta.url));
-const dist = Path.join(dirname, '..', 'dist');
-const entrypoint = Path.join(dist, 'bin', 'entrypoint.mjs');
+const rootDir = Path.join(dirname, '..');
+const entrypoint = Path.join(rootDir, packageJson.bin);
 
 if (!FS.existsSync(entrypoint)) {
     console.log([
