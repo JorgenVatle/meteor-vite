@@ -77,7 +77,7 @@ async function globHash(
     ].join(' '));
     
     
-    const result = await hash([contentHashes, fileNameHashes].flat().join());
+    const result = await hash([contentHashes, fileNameHashes].flat().join(), { algorithm: 'sha1' });
     console.log(`Hash: ${result}`);
     
     if (options.detailedLogging) {
