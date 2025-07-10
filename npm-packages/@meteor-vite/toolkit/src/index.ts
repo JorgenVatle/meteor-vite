@@ -1,2 +1,2 @@
-export * from './defineBuildConfig';
+export * from './buildConfig/index';
 export * from './Plugins';

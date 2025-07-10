@@ -1,10 +1,9 @@
-import { createLogger } from '@/lib/createLogger';
+import { copyFiles } from '@/buildConfig/copyFiles';
 import { ProjectCompiler } from '@/ProjectCompiler';
-import FS from 'fs/promises';
 import Path from 'path';
 import { defineConfig, type Options } from 'tsup';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
-import { EsbuildPluginMeteorStubs } from './Plugins';
+import { EsbuildPluginMeteorStubs } from '../Plugins';
 
 export function defineBuildConfig(rootDir: string, _options: Config | Config[]): Options | Options[] {
     const optionList: Config[] = Array.isArray(_options) ? _options : [_options];
@@ -64,31 +63,10 @@ interface CustomConfigFields extends Required<Pick<Options, 'name' | 'entry'>> {
     copy?: CopyConfig[]
 }
 
-type CopyConfig = {
+export type CopyConfig = {
     from: string;
     to: string;
     type: 'file' | 'directory';
 }
 
-type FileCopyOptions = {
-    rootDir: string;
-    name: string;
-    copy: CopyConfig;
-}
-
-async function copyFiles({ rootDir, name, copy }: FileCopyOptions) {
-    const logger = createLogger(name);
-    const srcPath = Path.join(rootDir, copy.from);
-    const destPath = Path.join(rootDir, copy.to);
-    
-    await FS.mkdir(Path.dirname(destPath), { recursive: true });
-    if (copy.type === 'directory') {
-        await FS.cp(srcPath, destPath, { recursive: true });
-    } else {
-        await FS.copyFile(srcPath, destPath);
-    }
-    
-    logger.info(`Copied ${srcPath} to ${destPath}`);
-}
-
-type Config = CustomConfigFields & Pick<Options, 'entry' | 'skipNodeModulesBundle' | 'sourcemap' | 'banner' | 'platform' | 'tsconfig' | 'format' | 'splitting' | 'dts' | 'clean' | 'onSuccess' | 'noExternal' | 'esbuildPlugins' | 'outDir'>;
+export type Config = CustomConfigFields & Pick<Options, 'entry' | 'skipNodeModulesBundle' | 'sourcemap' | 'banner' | 'platform' | 'tsconfig' | 'format' | 'splitting' | 'dts' | 'clean' | 'onSuccess' | 'noExternal' | 'esbuildPlugins' | 'outDir'>;
