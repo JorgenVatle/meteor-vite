@@ -1,5 +1,7 @@
 import { Changes } from '@/Changes';
 import { CommandList } from '@/lib/CommandList';
+import * as process from 'node:process';
+import { build } from 'tsup';
 
 export const Commands = new CommandList([
     {
@@ -18,6 +20,18 @@ export const Commands = new CommandList([
                 detailedLogging: true,
                 saveBuildHash: false,
             });
+            await changes.checkChanges();
+        }
+    },
+    {
+        name: 'build',
+        description: 'Run a build and compute the build hash for the provided project root directory.',
+        handler: async ({ rootDir }) => {
+            const changes = new Changes(rootDir, {
+                saveBuildHash: true,
+            });
+            process.chdir(rootDir);
+            await build({});
             await changes.checkChanges();
         }
     }
