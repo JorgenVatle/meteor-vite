@@ -79,7 +79,9 @@ export class Changes {
             changes.push('Build hash changed');
         }
         
-        console.log('Detected changes:', changes.join(','));
+        if (changes.length) {
+            console.log('Detected changes:', changes.join(','));
+        }
         
         if (lastBuild.timestamp) {
             console.log(`Last build: ${this.relativeTime(lastBuild.timestamp)}`);
