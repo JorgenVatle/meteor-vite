@@ -9,19 +9,17 @@ export function copyFilesPlugin(rootDir: string, config: Config): TSUpPlugin {
             const filesToCopy = config.copy;
             
             if (!filesToCopy) {
-                this.logger.info('No files to copy')
                 return;
             }
             
             await Promise.all(
                 filesToCopy.map(async (copy) => {
+                    this.logger.info(`Copy ${copy.type}:`, `${copy.from} -> ${copy.to}`);
+                    
                     await copyFiles({
                         rootDir,
-                        name: config.name,
                         copy
                     });
-                    
-                    this.logger.info(`Copied ${copy.from} to ${copy.to}`);
                 })
             );
         }
@@ -30,18 +28,23 @@ export function copyFilesPlugin(rootDir: string, config: Config): TSUpPlugin {
 
 type FileCopyOptions = {
     rootDir: string;
-    name: string;
     copy: CopyConfig;
 }
 
-async function copyFiles({ rootDir, name, copy }: FileCopyOptions) {
+async function copyFiles({ rootDir, copy }: FileCopyOptions) {
     const srcPath = Path.join(rootDir, copy.from);
     const destPath = Path.join(rootDir, copy.to);
     
     await FS.mkdir(Path.dirname(destPath), { recursive: true });
-    if (copy.type === 'directory') {
-        await FS.cp(srcPath, destPath, { recursive: true });
-    } else {
-        await FS.copyFile(srcPath, destPath);
+    
+    switch (copy.type) {
+        case 'directory':
+            await FS.cp(srcPath, destPath, { recursive: true });
+            return;
+        case 'file':
+            await FS.copyFile(srcPath, destPath);
+            return;
     }
+    
+    throw new Error(`Unknown copy type: ${copy.type}`);
 }
