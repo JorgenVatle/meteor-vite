@@ -1,7 +1,7 @@
+import { envFlag } from 'meteor-vite/src/utilities/server/EnvFlag';
 import { fileURLToPath } from 'node:url';
 import Path from 'path';
 import { defineConfig, type Options } from 'tsup';
-import { envFlag } from '../npm-packages/meteor-vite/src/utilities/server/EnvFlag';
 import { checkChanges } from './has-changes';
 import { EsbuildPluginMeteorStubs } from './tsup-plugins';
 

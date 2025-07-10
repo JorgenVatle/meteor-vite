@@ -1,6 +1,6 @@
 {
   "extends": "../tsconfig.base.json",
-  "include": ["./*", "bin"],
+  "include": ["src"],
   "compilerOptions": {
     "module": "preserve",
     "paths": {
