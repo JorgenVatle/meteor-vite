@@ -20,10 +20,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsup",
-    "toolkit": "node ./bin/entrypoint.mjs",
+    "toolkit": "node --enable-source-maps ./bin/entrypoint.mjs",
 
     "preprepare": "node ./bin/prepare.mjs",
-    "prepare": "node ./bin/entrypoint.mjs build ."
+    "prepare": "node --enable-source-maps ./bin/entrypoint.mjs build ."
   },
   "dependencies": {
     "globby": "^14.1.0",
