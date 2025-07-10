@@ -44,8 +44,8 @@ export class Changes {
      */
     public async hasChanged() {
         const lastBuild = await this.getBuildInfo();
-        const currentHash = await this.checkChanges();
-        return lastBuild.hash !== currentHash;
+        const { hash } = await this.checkChanges();
+        return lastBuild.hash !== hash;
     }
     
     protected async getBuildInfo() {
@@ -60,7 +60,7 @@ export class Changes {
      * Will save a hash of the current directory state to .build-hash
      */
     public async checkChanges() {
-        const hash = await this.globHash({
+        const { hash } = await this.globHash({
             fileContent: [
                 Path.join(this.rootDir, 'src'),
                 Path.join(this.rootDir, 'tsconfig.json'),
@@ -76,7 +76,7 @@ export class Changes {
             await FS.writeFile(this.filePath.buildInfo, hash);
         }
         
-        return hash;
+        return { hash };
     }
     
     protected async globHash(patterns: {
@@ -90,7 +90,7 @@ export class Changes {
          * directories are empty or only partially built. (Glob patterns supported)
          */
         fileNames?: string[]
-    }) {
+    }): Promise<HashResult> {
         const startTime = Date.now();
         const files = await globby(patterns.fileContent);
         const fileNames = await globby(patterns.fileNames || []);
@@ -116,11 +116,21 @@ export class Changes {
         ].join(' '));
         
         
-        const result = await hash([contentHashes, fileNameHashes].flat().join(), { algorithm: 'sha1' });
-        console.log(`Hash: ${result}`);
+        const [fileContentHash, fileNamesHash] = await Promise.all([
+            hash(contentHashes, { algorithm: 'sha1' }),
+            hash(fileNameHashes, { algorithm: 'sha1' }),
+        ])
+        
+        const result: HashResult = {
+            hash: `${fileContentHash}-${fileNamesHash}`,
+            fileNamesHash,
+            fileContentHash,
+        };
+        
+        console.log(`Hash: ${result.hash}`);
         
         if (this.options.detailedLogging) {
-            console.log({ files, fileNames });
+            console.log({ files, fileNames, result });
         }
         
         console.log('\n');
@@ -133,4 +143,17 @@ export class Changes {
 type Options = {
     detailedLogging?: boolean;
     saveBuildHash?: boolean;
+}
+
+interface BuildHashes {
+    hash: string;
+    fileContentHash?: string;
+    fileNamesHash?: string;
+}
+
+type HashResult = Required<BuildHashes>
+
+interface BuildInfo extends BuildHashes {
+    timestamp?: number;
+    durationMs?: number;
 }
