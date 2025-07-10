@@ -5,12 +5,20 @@ import { execSync } from 'node:child_process';
 import Path from 'node:path';
 
 export class Changes {
+    protected filePath: {
+        buildInfo: string;
+    }
+    
     constructor(
         protected readonly rootDir: string,
         protected readonly options: Options = {
             saveBuildHash: true,
         }
-    ) {}
+    ) {
+        this.filePath = {
+            buildInfo: Path.join(this.rootDir, '.build-hash'),
+        }
+    }
     
     /**
      * Run the build script if the current root directory has seen changes since
@@ -35,9 +43,16 @@ export class Changes {
      * Check if there have been any changes to the project since last build.
      */
     public async hasChanged() {
-        const lastHash = await FS.readFile(Path.join(this.rootDir, '.build-hash'), 'utf8').catch(() => 'N/A');
+        const lastBuild = await this.getBuildInfo();
         const currentHash = await this.checkChanges();
-        return lastHash !== currentHash;
+        return lastBuild.hash !== currentHash;
+    }
+    
+    protected async getBuildInfo() {
+        const hash = await FS.readFile(this.filePath.buildInfo, 'utf8').catch(() => 'N/A');
+        return {
+            hash,
+        }
     }
     
     /**
