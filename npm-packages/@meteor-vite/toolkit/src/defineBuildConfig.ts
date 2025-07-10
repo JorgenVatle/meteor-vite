@@ -74,4 +74,4 @@ function inferConfigRootDir() {
 }
 
 type RequiredConfigFields = Required<Pick<Options, 'name' | 'entry'>>;
-type Config = RequiredConfigFields & Pick<Options, 'entry' | 'sourcemap' | 'platform' | 'tsconfig' | 'format' | 'splitting' | 'dts' | 'clean' | 'onSuccess' | 'noExternal' | 'esbuildPlugins' | 'outDir'>;
+type Config = RequiredConfigFields & Pick<Options, 'entry' | 'sourcemap' | 'banner' | 'platform' | 'tsconfig' | 'format' | 'splitting' | 'dts' | 'clean' | 'onSuccess' | 'noExternal' | 'esbuildPlugins' | 'outDir'>;
