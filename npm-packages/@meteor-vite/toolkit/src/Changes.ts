@@ -53,11 +53,24 @@ export class Changes {
      * Check if there have been any changes to the project since last build.
      */
     public async findChanges(): Promise<ChangeSummary> {
-        const { lastBuild, hash, fileNamesHash, fileContentHash } = await this.getHash();
+        const { lastBuild, hash, fileNamesHash, fileContentHash, ...info } = await this.getHash();
         const changes: string[] = [];
         
+        if (info.additionalMetadata) {
+            console.log(info.additionalMetadata);
+        }
+        
+        console.log('\n');
+        
+        console.log([
+            `Computed ${info.fileContentCount} content and ${info.filenameCount} file name hashes for`,
+            `build in ${info.durationMs}ms`,
+        ].join(' '));
+        
+        console.log(`Hash: ${hash}`);
+        
         if (!lastBuild.hash) {
-            console.log('No previous build info found, rebuild is necessary');
+            console.log('Status: No previous build info found, rebuild is necessary');
             return {
                 changed: true,
                 changes: ['No previous build found'],
@@ -86,6 +99,8 @@ export class Changes {
         if (lastBuild.timestamp) {
             console.log(`Last build: ${this.relativeTime(lastBuild.timestamp)}`);
         }
+        
+        console.log('\n');
         
         return {
             changed: changes.length > 0,
@@ -199,14 +214,6 @@ export class Changes {
         }));
         
         
-        console.log('\n');
-        
-        console.log([
-            `Computed ${contentHashes.length} content and ${fileNameHashes.length} file name hashes for`,
-            `build in ${Date.now() - startTime}ms`,
-        ].join(' '));
-        
-        
         const [fileContentHash, fileNamesHash] = await Promise.all([
             hash(contentHashes, { algorithm: 'sha1' }),
             hash(fileNameHashes, { algorithm: 'sha1' }),
@@ -221,13 +228,9 @@ export class Changes {
             fileContentCount: contentHashes.length,
         };
         
-        console.log(`Hash: ${result.hash}`);
-        
         if (this.options.detailedLogging) {
-            console.log({ files, fileNames, result });
+            result.additionalMetadata = { files, fileNames, result };
         }
-        
-        console.log('\n');
         
         return result;
     }
@@ -249,6 +252,7 @@ interface GlobHashResult extends Required<BuildHashes> {
     filenameCount: number;
     fileContentCount: number;
     durationMs: number;
+    additionalMetadata?: Record<string, unknown>;
 }
 
 interface HashResult extends GlobHashResult {
