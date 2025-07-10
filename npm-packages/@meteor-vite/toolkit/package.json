@@ -23,7 +23,7 @@
     "toolkit": "node ./bin/entrypoint.mjs",
 
     "preprepare": "node ./bin/prepare.mjs",
-    "prepare": "npm run toolkit build-if-changed ./"
+    "prepare": "node ./bin/entrypoint.mjs build ."
   },
   "dependencies": {
     "globby": "^14.1.0",
