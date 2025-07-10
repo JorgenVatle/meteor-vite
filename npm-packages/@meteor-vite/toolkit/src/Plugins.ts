@@ -2,7 +2,7 @@ import Path from 'node:path';
 import pc from 'picocolors';
 import type { Options } from 'tsup';
 
-type Plugin = Required<Options>['esbuildPlugins'][number];
+export type ESBuildPlugin = Required<Options>['esbuildPlugins'][number];
 
 /**
  * Intercept Meteor imports and inject an ESBuild-compatible module that
@@ -33,7 +33,7 @@ const log = (...messages: unknown[]) => {
  * Rewrite meteor-vite imports to enforce imports using ESM instead of
  * CommonJS.
  */
-export function fixBuildPluginCjsImports(): Plugin {
+export function fixBuildPluginCjsImports(): ESBuildPlugin {
     return {
         name: 'fix-build-plugin-cjs-imports',
         setup(build) {
@@ -52,7 +52,7 @@ export function fixBuildPluginCjsImports(): Plugin {
                 }
             })
         }
-    } satisfies Plugin;
+    } satisfies ESBuildPlugin;
 }
 
 /**
@@ -63,7 +63,7 @@ export function fixBuildPluginCjsImports(): Plugin {
  */
 function meteorImportStubs(packages: {
     [key in string]: (symbol: string) => string;
-}): Plugin {
+}): ESBuildPlugin {
     const filter = /^meteor\//;
     let stubId = 0;
     return {
@@ -92,5 +92,5 @@ function meteorImportStubs(packages: {
                 }
             })
         }
-    } satisfies Plugin;
+    } satisfies ESBuildPlugin;
 }
