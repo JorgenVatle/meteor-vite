@@ -1,5 +1,4 @@
 import { copyFilesPlugin } from '@/buildConfig/copyFilesPlugin';
-import { ProjectCompiler } from '@/ProjectCompiler';
 import Path from 'path';
 import { type Options } from 'tsup';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
@@ -15,9 +14,8 @@ const DEFAULT_CONFIG = Object.freeze({
 
 export function defineBuildConfig(rootDir: string, _options: Config | Config[]): Options | Options[] {
     const optionList: Config[] = Array.isArray(_options) ? _options : [_options];
-    const changes = new ProjectCompiler(rootDir);
     
-    return optionList.map((options, index, array) => {
+    return optionList.map((options, index) => {
         const config = mergeConfig(rootDir, options,
             {
                 outDir: Path.join(rootDir, options.outDir || 'dist'),
