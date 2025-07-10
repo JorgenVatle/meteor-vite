@@ -60,6 +60,14 @@ export class Changes {
     }
     
     /**
+     * Save info from last build to file for reference in conditional build command
+     * @param buildInfo
+     */
+    public async saveBuildInfo(buildInfo: BuildInfo) {
+        await FS.writeFile(this.filePath.buildInfo, JSON.stringify(buildInfo, null, 2));
+    }
+    
+    /**
      * Check whether the current root directory has changed since last build.
      * Will save a hash of the current directory state to .build-hash
      */
