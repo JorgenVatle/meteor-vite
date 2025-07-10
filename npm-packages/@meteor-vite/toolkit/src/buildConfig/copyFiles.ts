@@ -1,5 +1,4 @@
-import type { CopyConfig } from '@/buildConfig/defineBuildConfig';
-import { createLogger } from '@/lib/createLogger';
+import type { Config, CopyConfig, TSUpPlugin } from '@/buildConfig/defineBuildConfig';
 import FS from 'fs/promises';
 import Path from 'path';
 
@@ -9,8 +8,7 @@ type FileCopyOptions = {
     copy: CopyConfig;
 }
 
-export async function copyFiles({ rootDir, name, copy }: FileCopyOptions) {
-    const logger = createLogger(name);
+async function copyFiles({ rootDir, name, copy }: FileCopyOptions) {
     const srcPath = Path.join(rootDir, copy.from);
     const destPath = Path.join(rootDir, copy.to);
     
@@ -20,6 +18,30 @@ export async function copyFiles({ rootDir, name, copy }: FileCopyOptions) {
     } else {
         await FS.copyFile(srcPath, destPath);
     }
-    
-    logger.info(`Copied ${srcPath} to ${destPath}`);
+}
+
+export function copyFilesPlugin(rootDir: string, config: Config): TSUpPlugin {
+    return {
+        name: 'copy-files',
+        async buildEnd() {
+            const filesToCopy = config.copy;
+            
+            if (!filesToCopy) {
+                this.logger.info('No files to copy')
+                return;
+            }
+            
+            await Promise.all(
+                filesToCopy.map(async (copy) => {
+                    await copyFiles({
+                        rootDir,
+                        name: config.name,
+                        copy
+                    });
+                    
+                    this.logger.info(`Copied ${copy.from} to ${copy.to}`);
+                })
+            );
+        }
+    }
 }
