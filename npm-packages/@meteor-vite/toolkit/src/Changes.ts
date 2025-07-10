@@ -12,6 +12,10 @@ export class Changes {
         }
     ) {}
     
+    /**
+     * Run the build script if the current root directory has seen changes since
+     * last build.
+     */
     public async buildIfChanged() {
         const lastHash = await FS.readFile(Path.join(this.rootDir, '.build-hash'), 'utf8').catch(() => 'N/A');
         const currentHash = await this.checkChanges();
@@ -29,6 +33,10 @@ export class Changes {
         });
     }
     
+    /**
+     * Check whether the current root directory has changed since last build.
+     * Will save a hash of the current directory state to .build-hash
+     */
     public async checkChanges() {
         const hash = await this.globHash({
             fileContent: [
