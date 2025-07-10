@@ -45,7 +45,7 @@ export class ProjectCompiler {
         
         if (envFlag('FORCE_BUILD')) {
             console.log('Forcing build due to FORCE_BUILD environment variable');
-        } else if (!changed) {
+        } else if (!changed && !this.options.watch) {
             console.log('No changes detected, skipping build');
             return;
         }
