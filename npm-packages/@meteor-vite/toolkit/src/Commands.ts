@@ -1,10 +1,11 @@
 import { Changes } from '@/Changes';
+import { CommandList } from '@/lib/CommandList';
 
-export const Commands = [
+export const Commands = new CommandList([
     {
         name: 'build-if-changed',
         description: 'Run the build script if the current root directory has seen changes since last build.',
-        handler: async (rootDir) => {
+        handler: async ({ rootDir }) => {
             const changes = new Changes(rootDir);
             await changes.buildIfChanged();
         }
@@ -12,7 +13,7 @@ export const Commands = [
     {
         name: 'check-changes',
         description: 'Check if the current root directory has seen changes since last build.',
-        handler: async (rootDir) => {
+        handler: async ({ rootDir }) => {
             const changes = new Changes(rootDir, {
                 detailedLogging: true,
                 saveBuildHash: false,
@@ -20,10 +21,4 @@ export const Commands = [
             await changes.checkChanges();
         }
     }
-] satisfies CommandSpec[];
-
-type CommandSpec = {
-    name: string;
-    description: string;
-    handler: (rootDir: string) => Promise<void>;
-}
+]);
