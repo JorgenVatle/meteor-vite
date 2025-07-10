@@ -26,7 +26,7 @@ interface ParsedArgs {
     options: CommandOptions;
 }
 
-interface CommandOptions {
+export interface CommandOptions {
     rootDir: string;
     watch?: boolean;
 }

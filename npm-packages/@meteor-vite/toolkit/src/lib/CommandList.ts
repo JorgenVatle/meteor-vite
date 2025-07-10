@@ -1,12 +1,13 @@
 import { CommandNotFound } from '@/errors/CommandFailure';
+import type { CommandOptions } from '@/lib/parseCliParams';
 
 export class CommandList<TCommand extends CommandSpec> {
     constructor(protected readonly commands: TCommand[]) {
     }
     
-    public async run(commandName: TCommand['name'], args: CommandArgs) {
+    public async run(commandName: TCommand['name'], options: CommandOptions) {
         const command = this.get(commandName);
-        await command.handler(args);
+        await command.handler(options);
     }
     
     protected get(commandName: TCommand['name']) {
@@ -24,9 +25,5 @@ export class CommandList<TCommand extends CommandSpec> {
 export type CommandSpec = {
     name: string;
     description: string;
-    handler: (args: CommandArgs) => Promise<void>;
-}
-
-type CommandArgs = {
-    rootDir: string;
+    handler: (args: CommandOptions) => Promise<void>;
 }
