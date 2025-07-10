@@ -26,6 +26,11 @@ export async function checkChanges(rootDir: string, options?: Options) {
         fileContent: [
             Path.join(rootDir, 'src'),
             Path.join(rootDir, 'tsconfig.json'),
+        ],
+        // Used to trigger a re-build if the dist directory is deleted or
+        // partially built.
+        fileNames: [
+            Path.join(rootDir, 'dist')
         ]
     }, options);
     await FS.writeFile(Path.join(rootDir, '.build-hash'), hash);
