@@ -16,10 +16,14 @@ export function parseCliParams(params = process.argv): ParsedArgs {
     
     return {
         command,
-        options: {
-            rootDir,
-            watch: params.includes('--watch'),
-        }
+        options: Object.assign(parseOptions(params.slice(4)), { rootDir }),
+    }
+}
+
+function parseOptions(options: string[]) {
+    return {
+        watch: options.includes('--watch'),
+        debug: options.includes('--debug'),
     }
 }
 
@@ -28,7 +32,6 @@ interface ParsedArgs {
     options: CommandOptions;
 }
 
-export interface CommandOptions {
+export interface CommandOptions extends ReturnType<typeof parseOptions> {
     rootDir: string;
-    watch?: boolean;
 }
