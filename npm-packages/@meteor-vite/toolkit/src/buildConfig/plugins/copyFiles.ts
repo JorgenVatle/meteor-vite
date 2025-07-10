@@ -2,7 +2,7 @@ import type { Config, TSUpPlugin } from '@/buildConfig/defineBuildConfig';
 import FS from 'fs/promises';
 import Path from 'path';
 
-export function copyFilesPlugin(rootDir: string, config: Config): TSUpPlugin {
+export function copyFiles(rootDir: string, config: Config): TSUpPlugin {
     return {
         name: 'copy-files',
         async buildEnd() {

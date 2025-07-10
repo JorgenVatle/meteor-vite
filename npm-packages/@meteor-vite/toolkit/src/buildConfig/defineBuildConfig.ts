@@ -1,4 +1,4 @@
-import { copyFilesPlugin } from '@/buildConfig/copyFilesPlugin';
+import { copyFiles } from '@/buildConfig/plugins/copyFiles';
 import Path from 'path';
 import { type Options } from 'tsup';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
@@ -75,7 +75,7 @@ function mergeConfig(
     Object.assign(config, {
         plugins: [
             overrides.plugins || [],
-            copyFilesPlugin(rootDir, config),
+            copyFiles(rootDir, config),
         ].flat()
     });
     
