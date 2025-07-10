@@ -12,7 +12,13 @@ export async function buildIfChanged(rootDir: string) {
         return;
     }
     console.log('Changes detected, running build');
-    execSync('npm run build', { cwd: rootDir, stdio: 'inherit' });
+    execSync('npm run build', {
+        cwd: rootDir,
+        stdio: 'inherit',
+        env: Object.assign({
+            TSUP_CLEAN: true,
+        }, process.env),
+    });
 }
 
 export async function checkChanges(rootDir: string) {
