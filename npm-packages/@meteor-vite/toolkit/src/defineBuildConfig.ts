@@ -30,16 +30,6 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
             config.clean = options.clean ?? true;
         }
         
-        // Calculate build hash once all builds have finished
-        if (!array[index + 1]) {
-            config.onSuccess = async () => {
-                await changes.checkChanges();
-                if (typeof options.onSuccess === 'function') {
-                    await options.onSuccess();
-                }
-            }
-        }
-        
         if (Array.isArray(config.entry)) {
             config.entry = config.entry.map((entry) => Path.join(rootDir, entry));
         } else {
