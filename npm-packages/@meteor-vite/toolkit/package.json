@@ -2,12 +2,13 @@
   "name": "@meteor-vite/toolkit",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "description": "Internal toolkit for managing building and publishing meteor-vite's npm and Atmosphere packages.",
   "author": "Jørgen Vatle <Jorgen@WcAServices.net> (https://github.com/JorgenVatle)",
   "license": "ISC",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsup"
+  },
   "dependencies": {
     "globby": "^14.1.0",
     "hasha": "^6.0.0"
