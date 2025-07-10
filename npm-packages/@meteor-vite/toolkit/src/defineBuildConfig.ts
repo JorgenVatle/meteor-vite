@@ -1,7 +1,6 @@
 import { createLogger } from '@/lib/createLogger';
 import { ProjectCompiler } from '@/ProjectCompiler';
 import FS from 'fs/promises';
-import { fileURLToPath } from 'node:url';
 import Path from 'path';
 import { defineConfig, type Options } from 'tsup';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
@@ -59,28 +58,6 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
         
         return config;
     });
-}
-
-function inferConfigRootDir() {
-    const originalPrepareStackTrace = Error.prepareStackTrace;
-    
-    try {
-        const err = new Error();
-        Error.prepareStackTrace = (_, stack) => stack;
-        const stack = err.stack as unknown as NodeJS.CallSite[];
-        console.log(stack.map((frame) => frame.getFileName()))
-        
-        // Skip frames until we find one that's not in this file
-        for (let i = 1; i < stack.length; i++) {
-            const fileName = stack[i].getFileName();
-            if (fileName && fileName !== __filename) {
-                return Path.dirname(fileURLToPath(fileName));
-            }
-        }
-    } finally {
-        Error.prepareStackTrace = originalPrepareStackTrace;
-    }
-    throw new Error('Unable to infer root directory for build config definition');
 }
 
 interface CustomConfigFields extends Required<Pick<Options, 'name' | 'entry'>> {
