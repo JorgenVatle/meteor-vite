@@ -2,12 +2,13 @@ import { fileURLToPath } from 'node:url';
 import Path from 'path';
 import { defineConfig, type Options } from 'tsup';
 import { envFlag } from '../npm-packages/meteor-vite/src/utilities/server/EnvFlag';
+import { checkChanges } from './has-changes';
 import { EsbuildPluginMeteorStubs } from './tsup-plugins';
 
 export function defineBuildConfig(rootDir: string, _options: Config | Config[]): Options | Options[] {
     const optionList: Config[] = Array.isArray(_options) ? _options : [_options];
     
-    return optionList.map((options, index) => {
+    return optionList.map((options, index, array) => {
         const config = Object.assign({ rootDir }, defineConfig({
             target: 'es2022',
             sourcemap: true,
@@ -22,8 +23,19 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
             ]
         } satisfies Options);
         
+        // Run cleanup on first build
         if (index === 0 && envFlag('TSUP_CLEAN')) {
             config.clean = options.clean ?? true;
+        }
+        
+        // Calculate build hash once all builds have finished
+        if (!array[index + 1]) {
+            config.onSuccess = async () => {
+                await checkChanges(rootDir);
+                if (typeof options.onSuccess === 'function') {
+                    await options.onSuccess();
+                }
+            }
         }
         
         if (Array.isArray(config.entry)) {
