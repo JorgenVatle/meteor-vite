@@ -83,7 +83,7 @@ export class ProjectCompiler {
         }
         
         if (changes.length) {
-            console.log('\nDetected changes:\n - ', changes.join('\n - '));
+            console.log('\nDetected changes:\n - %s', changes.join('\n - '));
             console.log();
         }
       
