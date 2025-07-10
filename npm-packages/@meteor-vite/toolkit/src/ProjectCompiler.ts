@@ -6,7 +6,7 @@ import * as process from 'node:process';
 import { build } from 'tsup';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
 
-export class Changes {
+export class ProjectCompiler {
     protected filePath: {
         buildInfo: string;
     }

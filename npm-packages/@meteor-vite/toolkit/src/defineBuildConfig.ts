@@ -1,4 +1,4 @@
-import { Changes } from '@/Changes';
+import { ProjectCompiler } from '@/ProjectCompiler';
 import { fileURLToPath } from 'node:url';
 import Path from 'path';
 import { defineConfig, type Options } from 'tsup';
@@ -7,7 +7,7 @@ import { EsbuildPluginMeteorStubs } from './Plugins';
 
 export function defineBuildConfig(rootDir: string, _options: Config | Config[]): Options | Options[] {
     const optionList: Config[] = Array.isArray(_options) ? _options : [_options];
-    const changes = new Changes(rootDir);
+    const changes = new ProjectCompiler(rootDir);
     
     return optionList.map((options, index, array) => {
         const config = Object.assign({ rootDir }, defineConfig({
