@@ -1,4 +1,5 @@
 import type { Config, TSUpPlugin } from '@/buildConfig/defineBuildConfig';
+import { Highlight } from '@/lib/Highlight';
 import FS from 'fs/promises';
 import Path from 'path';
 
@@ -17,7 +18,7 @@ export function copyFiles(rootDir: string, config: Config): TSUpPlugin {
                     const srcPath = Path.join(rootDir, copy.from);
                     const destPath = Path.join(rootDir, copy.to);
                     
-                    this.logger.info(`Copy ${copy.type}:`, copy.from, '->', copy.to);
+                    this.logger.info(`Copy:`, Highlight.fileType(`(${copy.to})`), copy.from, '->', copy.to);
                     
                     await FS.access(srcPath).catch((error) => {
                         throw new Error(`Could not locate source file: ${srcPath}`);
