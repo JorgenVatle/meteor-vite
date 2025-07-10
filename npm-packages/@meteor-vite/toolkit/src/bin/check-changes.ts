@@ -1,5 +1,5 @@
-import { parseCliParams } from '../CliParamParser';
-import { checkChanges } from '../has-changes';
+import { checkChanges } from '../Changes';
+import { parseCliParams } from '../lib/parseCliParams';
 
 const { rootDir } = parseCliParams();
 
