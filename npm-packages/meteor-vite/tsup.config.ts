@@ -1,6 +1,6 @@
 import FS from 'fs';
 import Path from 'path';
-import { defineBuildConfig } from '../../build/defineBuildConfig';
+import { defineBuildConfig } from '../../build/src/defineBuildConfig';
 
 let clean = false;
 

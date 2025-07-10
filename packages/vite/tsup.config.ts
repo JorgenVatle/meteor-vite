@@ -1,4 +1,4 @@
-import { defineBuildConfig } from '../../build/defineBuildConfig';
+import { defineBuildConfig } from '../../build/src/defineBuildConfig';
 
 export default defineBuildConfig(__dirname, {
     name: 'jorgenvatle:vite',
