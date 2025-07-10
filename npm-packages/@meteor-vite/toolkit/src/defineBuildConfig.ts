@@ -1,4 +1,6 @@
+import { createLogger } from '@/lib/createLogger';
 import { ProjectCompiler } from '@/ProjectCompiler';
+import FS from 'fs/promises';
 import { fileURLToPath } from 'node:url';
 import Path from 'path';
 import { defineConfig, type Options } from 'tsup';
@@ -28,6 +30,22 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
         // Run cleanup on first build
         if (index === 0 && envFlag('TSUP_CLEAN')) {
             config.clean = options.clean ?? true;
+        }
+        
+        const filesToCopy = config.copy;
+        if (filesToCopy) {
+            config.onSuccess = async () => {
+                await Promise.all(
+                    filesToCopy.map((copy) => copyFiles({
+                        rootDir,
+                        name: config.name,
+                        copy
+                    }))
+                );
+                if (typeof config.onSuccess === 'function') {
+                    await config.onSuccess();
+                }
+            }
         }
         
         if (Array.isArray(config.entry)) {
@@ -65,5 +83,35 @@ function inferConfigRootDir() {
     throw new Error('Unable to infer root directory for build config definition');
 }
 
-type RequiredConfigFields = Required<Pick<Options, 'name' | 'entry'>>;
-type Config = RequiredConfigFields & Pick<Options, 'entry' | 'skipNodeModulesBundle' | 'sourcemap' | 'banner' | 'platform' | 'tsconfig' | 'format' | 'splitting' | 'dts' | 'clean' | 'onSuccess' | 'noExternal' | 'esbuildPlugins' | 'outDir'>;
+interface CustomConfigFields extends Required<Pick<Options, 'name' | 'entry'>> {
+    copy?: CopyConfig[]
+}
+
+type CopyConfig = {
+    from: string;
+    to: string;
+    type: 'file' | 'directory';
+}
+
+type FileCopyOptions = {
+    rootDir: string;
+    name: string;
+    copy: CopyConfig;
+}
+
+async function copyFiles({ rootDir, name, copy }: FileCopyOptions) {
+    const logger = createLogger(name);
+    const srcPath = Path.join(rootDir, copy.from);
+    const destPath = Path.join(rootDir, copy.to);
+    
+    await FS.mkdir(Path.dirname(destPath), { recursive: true });
+    if (copy.type === 'directory') {
+        await FS.cp(srcPath, destPath, { recursive: true });
+    } else {
+        await FS.copyFile(srcPath, destPath);
+    }
+    
+    logger.info(`Copied ${srcPath} to ${destPath}`);
+}
+
+type Config = CustomConfigFields & Pick<Options, 'entry' | 'skipNodeModulesBundle' | 'sourcemap' | 'banner' | 'platform' | 'tsconfig' | 'format' | 'splitting' | 'dts' | 'clean' | 'onSuccess' | 'noExternal' | 'esbuildPlugins' | 'outDir'>;
