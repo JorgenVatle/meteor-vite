@@ -25,11 +25,12 @@ export class Changes {
      * last build.
      */
     public async buildIfChanged() {
-        if (!await this.hasChanged()) {
+        const { changed, changes } = await this.findChanges();
+        if (!changed) {
             console.log('No changes detected, skipping build');
             return;
         }
-        console.log('Changes detected, running build');
+        console.log(`Changes detected: ${changes.join(', ')}. Running build...`);
         execSync('npm run build', {
             cwd: this.rootDir,
             stdio: 'inherit',
@@ -42,10 +43,37 @@ export class Changes {
     /**
      * Check if there have been any changes to the project since last build.
      */
-    public async hasChanged() {
-        const lastBuild = await this.getBuildInfo();
-        const { hash } = await this.checkChanges();
-        return lastBuild.hash !== hash;
+    public async findChanges(): Promise<ChangeSummary> {
+        const { lastBuild, hash, fileNamesHash, fileContentHash } = await this.getHash();
+        const changes: string[] = [];
+        
+        if (!hash) {
+            return {
+                changed: true,
+                changes: ['Missing dist directory'],
+                lastBuild: {
+                    hash: null,
+                }
+            }
+        }
+        
+        if (lastBuild.fileNamesHash !== fileNamesHash) {
+            changes.push('File names changed');
+        }
+        
+        if (lastBuild.fileContentHash !== fileContentHash) {
+            changes.push('Source files changed');
+        }
+        
+        if (!changes.length && hash !== lastBuild.hash) {
+            changes.push('Build hash changed');
+        }
+        
+        return {
+            changed: changes.length > 0,
+            changes,
+            lastBuild,
+        }
     }
     
     /**
@@ -53,7 +81,7 @@ export class Changes {
      * @protected
      */
     public async getBuildInfo() {
-        const hash = await FS.readFile(this.filePath.buildInfo, 'utf8').catch(() => 'N/A');
+        const hash = await FS.readFile(this.filePath.buildInfo, 'utf8').catch(() => null);
         return {
             hash,
         }
@@ -81,8 +109,8 @@ export class Changes {
      * Check whether the current root directory has changed since last build.
      * Will save a hash of the current directory state to .build-hash
      */
-    public async checkChanges() {
-        const { hash } = await this.globHash({
+    public async getHash(): Promise<HashResult> {
+        const result = await this.globHash({
             fileContent: [
                 Path.join(this.rootDir, 'src'),
                 Path.join(this.rootDir, 'tsconfig.json'),
@@ -94,11 +122,10 @@ export class Changes {
             ]
         });
         
-        if (this.options.saveBuildHash ?? true) {
-            await FS.writeFile(this.filePath.buildInfo, hash);
+        return {
+            ...result,
+            lastBuild: await this.getBuildInfo(),
         }
-        
-        return { hash };
     }
     
     protected async globHash(patterns: {
@@ -112,7 +139,7 @@ export class Changes {
          * directories are empty or only partially built. (Glob patterns supported)
          */
         fileNames?: string[]
-    }): Promise<HashResult> {
+    }): Promise<GlobHashResult> {
         const startTime = Date.now();
         const files = await globby(patterns.fileContent);
         const fileNames = await globby(patterns.fileNames || []);
@@ -143,7 +170,7 @@ export class Changes {
             hash(fileNameHashes, { algorithm: 'sha1' }),
         ])
         
-        const result: HashResult = {
+        const result: GlobHashResult = {
             hash: `${fileContentHash}-${fileNamesHash}`,
             fileNamesHash,
             fileContentHash,
@@ -168,14 +195,24 @@ type Options = {
 }
 
 interface BuildHashes {
-    hash: string;
+    hash: string | null;
     fileContentHash?: string;
     fileNamesHash?: string;
 }
 
-type HashResult = Required<BuildHashes>
+type GlobHashResult = Required<BuildHashes>
+
+interface HashResult extends GlobHashResult {
+    lastBuild: BuildInfo;
+}
 
 interface BuildInfo extends BuildHashes {
     timestamp?: number;
     durationMs?: number;
+}
+
+interface ChangeSummary {
+    changes: string[];
+    changed: boolean;
+    lastBuild: BuildInfo;
 }
