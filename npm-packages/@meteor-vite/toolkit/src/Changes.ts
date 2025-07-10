@@ -216,6 +216,9 @@ export class Changes {
             hash: `${fileContentHash}-${fileNamesHash}`,
             fileNamesHash,
             fileContentHash,
+            durationMs: Date.now() - startTime,
+            filenameCount: fileNameHashes.length,
+            fileContentCount: contentHashes.length,
         };
         
         console.log(`Hash: ${result.hash}`);
@@ -242,7 +245,11 @@ interface BuildHashes {
     fileNamesHash?: string;
 }
 
-type GlobHashResult = Required<BuildHashes>
+interface GlobHashResult extends Required<BuildHashes> {
+    filenameCount: number;
+    fileContentCount: number;
+    durationMs: number;
+}
 
 interface HashResult extends GlobHashResult {
     lastBuild: BuildInfo;
