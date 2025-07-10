@@ -18,7 +18,7 @@ export class Changes {
         }
     ) {
         this.filePath = {
-            buildInfo: Path.join(this.rootDir, 'dist', '.build-hash'),
+            buildInfo: Path.join(this.rootDir, 'dist', '.build-info.json'),
         }
     }
     
