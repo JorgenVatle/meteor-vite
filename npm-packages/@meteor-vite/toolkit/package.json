@@ -4,6 +4,10 @@
   "bin": "./bin/entrypoint.mjs",
   "description": "Internal toolkit for managing building and publishing meteor-vite's npm and Atmosphere packages.",
   "author": "Jørgen Vatle <Jorgen@WcAServices.net> (https://github.com/JorgenVatle)",
+  "files": [
+    "bin",
+    "dist"
+  ],
   "license": "ISC",
   "exports": {
     ".": {
