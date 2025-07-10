@@ -30,16 +30,37 @@ export async function checkChanges(rootDir: string) {
     return hash;
 }
 
-async function globHash(patterns: string[]) {
+/**
+ * Calculate a hash for a list of filename patterns to check whether there
+ * have been any changes since last build.
+ *
+ * @param patterns Glob patterns for files and directories to include in the hash.
+ * @param hashFileNames Optionally include file names in the hash. Used to check
+ *      whether 'dist/' directories are empty or only partially built.
+ */
+async function globHash(patterns: string[], hashFileNames: string[] = []) {
     const startTime = Date.now();
     const files = await globby(patterns);
-    files.sort();
+    const fileNames = await globby(hashFileNames);
     
-    const hashes = await Promise.all(files.map(async (file) => {
+    files.sort();
+    fileNames.sort();
+    
+    const contentHashes = await Promise.all(files.map(async (file) => {
         const buffer = await FS.readFile(file);
         return hash(buffer, { algorithm: 'md5' });
     }));
     
-    console.log(`\n\nComputed ${hashes.length} hashes for build in ${Date.now() - startTime}ms\n\n`);
-    return hash(hashes.join());
+    const fileNameHashes = await Promise.all(fileNames.map(async (fileName) => {
+        return hash(fileName, { algorithm: 'md5' });
+    }));
+    
+    console.log([
+        `\n\n`,
+        `Computed ${contentHashes.length} content and ${fileNameHashes.length} file name hashes for`,
+        `build in ${Date.now() - startTime}ms`,
+        `\n\n`,
+    ].join(' '));
+    
+    return hash([contentHashes, fileNameHashes].flat().join());
 }
