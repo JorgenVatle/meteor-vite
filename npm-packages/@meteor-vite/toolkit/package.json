@@ -7,7 +7,12 @@
   "license": "ISC",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup"
+    "build": "tsup",
+
+    "prepare": "npm run build",
+
+    "build-if-changed": "node dist/build-if-changed.mjs",
+    "check-changes": "node dist/check-changes.mjs"
   },
   "dependencies": {
     "globby": "^14.1.0",
