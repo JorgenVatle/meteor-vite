@@ -1,7 +1,7 @@
 {
   "name": "@meteor-vite/toolkit",
   "version": "1.0.0",
-  "bin": "./dist/entrypoint.mjs",
+  "bin": "./dist/bin/entrypoint.mjs",
   "description": "Internal toolkit for managing building and publishing meteor-vite's npm and Atmosphere packages.",
   "author": "Jørgen Vatle <Jorgen@WcAServices.net> (https://github.com/JorgenVatle)",
   "license": "ISC",
