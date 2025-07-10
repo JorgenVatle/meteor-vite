@@ -124,13 +124,13 @@ export class ProjectCompiler {
      * @protected
      */
     public async getLastBuildInfo(): Promise<BuildInfo> {
-        const buildInfo = await FS.readFile(this.filePath.buildInfo, 'utf8').catch(() => null);
-        
-        if (!buildInfo) {
-            return {
+        const buildInfo = await FS.readFile(this.filePath.buildInfo, 'utf8').catch((error) => {
+            console.warn(`Failed to read build info file: ${error.message}`);
+            return JSON.stringify({
                 hash: null,
-            }
-        }
+                error: error.stack || error.message || error,
+            });
+        });
         
         return JSON.parse(buildInfo);
     }
