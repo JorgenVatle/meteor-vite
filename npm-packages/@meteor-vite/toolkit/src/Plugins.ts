@@ -1,8 +1,6 @@
+import type { ESBuildPlugin } from '@/buildConfig';
 import Path from 'node:path';
 import pc from 'picocolors';
-import type { Options } from 'tsup';
-
-export type ESBuildPlugin = Required<Options>['esbuildPlugins'][number];
 
 /**
  * Intercept Meteor imports and inject an ESBuild-compatible module that

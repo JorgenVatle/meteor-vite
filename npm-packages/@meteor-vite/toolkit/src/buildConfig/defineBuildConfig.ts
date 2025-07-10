@@ -55,7 +55,9 @@ export type CopyConfig = {
     type: 'file' | 'directory';
 }
 
-export type TSUpPlugin = Exclude<Options['plugins'], undefined>[number];
+type _Options = Required<Options>;
+export type TSUpPlugin = _Options['plugins'][number];
+export type ESBuildPlugin = _Options['esbuildPlugins'][number];
 
 export type Config = CustomConfigFields & Pick<Options, 'entry' | 'skipNodeModulesBundle' | 'sourcemap' | 'banner' | 'platform' | 'tsconfig' | 'format' | 'splitting' | 'dts' | 'clean' | 'onSuccess' | 'noExternal' | 'esbuildPlugins' | 'outDir'>;
 type MergedConfig = Omit<CustomConfigFields & Options, keyof typeof DEFAULT_CONFIG> & typeof DEFAULT_CONFIG;
