@@ -11,8 +11,8 @@ const logger = createSimpleLogger('Setup');
 export function setupProject() {
     validateVersions();
     cleanupPreviousBuilds();
-    prepareServerEntry();
-    // Create entry modules for the server.
+    
+    FS.writeFileSync(Path.join(CurrentConfig.tempDir, '.gitignore'), '*')
 }
 
 function validateVersions() {
@@ -52,22 +52,4 @@ function cleanupPreviousBuilds() {
     }
     FS.rmSync(CurrentConfig.outDir, { recursive: true, force: true });
     logger.info(`Cleaned up old build output in ${pc.green(CurrentConfig.outDir)}`);
-}
-
-/**
- * Create an empty entry module that can imported by Meteor's mainModule configured in package.json.
- */
-function prepareServerEntry() {
-    FS.mkdirSync(Path.dirname(CurrentConfig.serverEntryModule), { recursive: true });
-    FS.writeFileSync(
-        Path.join(
-            CurrentConfig.tempDir,
-            '.gitignore',
-        ),
-        '*',
-    );
-    FS.writeFileSync(
-        CurrentConfig.serverEntryModule,
-        '// Dynamic entrypoint for the Meteor server. Imports are added here during builds',
-    );
 }
