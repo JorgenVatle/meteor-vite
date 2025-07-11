@@ -38,6 +38,7 @@ export default defineBuildConfig(__dirname, [
     {
         name: 'meteor-vite/server-entry',
         entry: ['./src/server-entry/*.ts'],
+        outDir: './dist/server-entry',
         format: ['esm'],
         platform: 'node',
     },
