@@ -163,6 +163,7 @@ export class ProjectCompiler {
             this.filePath.buildInfo,
             JSON.stringify(content, null, 2)
         );
+        return content;
     }
     
     /**

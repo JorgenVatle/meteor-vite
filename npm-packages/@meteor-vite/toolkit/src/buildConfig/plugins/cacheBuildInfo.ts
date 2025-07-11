@@ -10,11 +10,13 @@ export function cacheBuildInfo(rootDir: string): TSUpPlugin {
             startTime = Date.now();
         },
         async buildEnd() {
-            this.logger.info('Build Info', 'Cache build info');
-            await compiler.saveBuildInfo({
+            const { fileContentHash, fileNamesHash, fileContentCount, filenameCount, durationMs } = await compiler.saveBuildInfo({
                 durationMs: Date.now() - startTime,
                 timestamp: Date.now(),
             });
+            this.logger.info('Output hash:', fileNamesHash, `(${filenameCount} files)`);
+            this.logger.info('Input hash:', fileContentHash, `(${fileContentCount} files)`);
+            this.logger.info(`Hash duration:`, `${durationMs}ms`);
         }
     }
 }
