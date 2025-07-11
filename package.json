@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "packages/vite",
-    "npm-packages/meteor-vite",
+    "npm-packages/@meteor-vite/toolkit",
     "npm-packages/@meteor-vite/plugin-zodern-relay",
     "npm-packages/@meteor-vite/react-packages/packages/react-meteor-data",
-    "npm-packages/@meteor-vite/toolkit"
+    "npm-packages/meteor-vite",
+    "packages/vite"
   ],
   "devDependencies": {
     "@changesets/cli": "^2.29.5",
