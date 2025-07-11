@@ -21,11 +21,11 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm run toolkit build . --",
-    "toolkit": "node --enable-source-maps ./bin/entrypoint.mjs",
+
+    "build": "toolkit build .",
 
     "preprepare": "node ./bin/prepare.mjs",
-    "prepare": "node --enable-source-maps ./bin/entrypoint.mjs build ."
+    "prepare": "npm run build"
   },
   "dependencies": {
     "globby": "^14.1.0",
