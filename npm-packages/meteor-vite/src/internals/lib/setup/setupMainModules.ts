@@ -1,6 +1,6 @@
-import { internalEntryModule, type MainModule } from '@/internals/lib/internalEntryModule';
+import { internalEntryModule, type MainModule, type ViteMainModule } from '@/internals/lib/internalEntryModule';
 
-export function setupMainModules(mainModule: { vite: MainModule, meteor: MainModule }) {
+export function setupMainModules(mainModule: { vite: ViteMainModule, meteor: MainModule }) {
     const { meteor, vite: { development, production } } = internalEntryModule();
     
     {
@@ -9,16 +9,16 @@ export function setupMainModules(mainModule: { vite: MainModule, meteor: MainMod
         production.client.addImport({ path: mainModule.vite.client.path });
         production.client.write();
         
+        // [DEV] Vite Client
+        development.client.addImport({ path: mainModule.vite.client.path });
+        development.client.write();
+    }
+    
+    if (mainModule.vite.server) {
         // [PROD] Vite Server
         production.server.addImport({ path: 'meteor-vite/server-entry/production' });
         production.server.addImport({ path: mainModule.vite.server.path });
         production.server.write();
-    }
-    
-    {
-        // [DEV] Vite Client
-        development.client.addImport({ path: mainModule.vite.client.path });
-        development.client.write();
         
         // [DEV] Vite Server
         development.server.addImport({ path: 'meteor-vite/server-entry/hmr' });
