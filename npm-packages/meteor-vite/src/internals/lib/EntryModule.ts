@@ -12,7 +12,7 @@ export class EntryModule {
         this.imports.push(module);
     }
     
-    public async write() {
+    public write() {
         const importLines = this.imports.map(({ path }) => {
             // Importing a file directly (not a node module)
             if (path.startsWith('.') || path.startsWith('/')) {
