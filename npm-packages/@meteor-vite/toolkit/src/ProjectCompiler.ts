@@ -122,6 +122,7 @@ export class ProjectCompiler {
             await this.getHash(),
             buildInfo
         );
+        await FS.mkdir(Path.dirname(this.filePath.buildInfo), { recursive: true });
         await FS.writeFile(
             this.filePath.buildInfo,
             JSON.stringify(content, null, 2)
