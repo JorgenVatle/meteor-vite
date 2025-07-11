@@ -181,7 +181,7 @@ export class ProjectCompiler {
             ...glob,
             changes,
             changed: changes.length > 0,
-            lastBuild: await this.getLastBuildInfo(),
+            lastBuild,
         }
     }
     
