@@ -1,7 +1,7 @@
 import { cacheBuildInfo } from '@/buildConfig/plugins/cacheBuildInfo';
 import { copyFiles } from '@/buildConfig/plugins/copyFiles';
 import Path from 'path';
-import { type Options } from 'tsup';
+import { defineConfig, type Options } from 'tsup';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
 import { EsbuildPluginMeteorStubs } from './plugins';
 
@@ -14,7 +14,7 @@ const DEFAULT_CONFIG = Object.freeze({
     format: ['esm']
 } satisfies Options);
 
-export function defineBuildConfig(rootDir: string, _options: Config | Config[]): Options | Options[] {
+export function defineBuildConfig(rootDir: string, _options: Config | Config[]): ReturnType<typeof defineConfig> {
     const optionList: Config[] = Array.isArray(_options) ? _options : [_options];
     
     return optionList.map((options, index) => {
