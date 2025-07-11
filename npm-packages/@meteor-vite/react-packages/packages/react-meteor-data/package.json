@@ -10,7 +10,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "toolkit build",
     "clean": "rm -rf ./dist",
     "postversion": "git add package.json && git commit -m 'Bump versions'",
     "postpublish": "git push --tags && git push",

@@ -21,7 +21,7 @@
   "scripts": {
     "lint": "tsc --noEmit",
     "test": "npm run lint",
-    "build": "tsup",
+    "build": "toolkit build",
     "prepack": "npm run build",
     "prepare": "npm run build || echo 'Warning: Failed to prepare package!' && exit 0"
   },
