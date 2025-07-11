@@ -5,7 +5,7 @@ export const Commands = new CommandList([
         name: 'check-changes',
         description: 'Check if the current root directory has seen changes since last build.',
         handler: async ({ compiler }) => {
-            await compiler.findChanges();
+            await compiler.getHash();
         }
     },
     {
