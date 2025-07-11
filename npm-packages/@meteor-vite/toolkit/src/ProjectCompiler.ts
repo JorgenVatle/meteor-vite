@@ -224,9 +224,9 @@ export class ProjectCompiler {
             }
             
             if (changes.length) {
-                logLines.push(['\nDetected changes', `\n`]);
+                logLines.push(['\nDetected changes', '']);
                 changes.forEach((change) => {
-                    logLines.push([' - ', change]);
+                    logLines.push(' - ', change);
                 })
                 logLines.push('');
             }
@@ -234,12 +234,13 @@ export class ProjectCompiler {
             logLines.push([`Hash`, Highlight.hash(glob.hash || 'N/A')]);
             
             logLines.forEach((line) => {
+                const padding = '';
                 if (!Array.isArray(line)) {
-                    console.log(pc.bold(line));
+                    console.log(pc.bold(padding + line));
                     return;
                 }
                 const [label, value] = line;
-                console.log(`%s: %s`, pc.bold(label), value)
+                console.log(`${padding}%s: %s`, pc.bold(label), value)
             });
             
         }
