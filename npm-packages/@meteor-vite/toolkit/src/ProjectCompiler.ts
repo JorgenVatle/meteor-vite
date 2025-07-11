@@ -52,17 +52,18 @@ export class ProjectCompiler {
      * last build.
      */
     public async build() {
-        await this.logLabel('Building');
         const startTime = Date.now();
         const { changed, changes } = await this.getHash();
         
         
         if (this.options.force) {
-            console.log('Forcing build due to FORCE_BUILD (--force) environment variable');
+            console.log(pc.bgYellow(' Forcing build due to FORCE_BUILD (--force) environment variable '));
         } else if (!changed && !this.options.watch) {
-            console.log('No changes detected, skipping build');
+            console.log(pc.bgBlackBright(pc.whiteBright(' No changes detected, skipping build ')));
             return;
         }
+        
+        await this.logLabel('Building');
         
         console.log('Detected changes: %s', ['', changes].flat().join('\n - '));
         console.log('Starting build...');
@@ -81,13 +82,12 @@ export class ProjectCompiler {
         let label = `${pc.white(` ${_label} `)}`;
         label = color(label);
         label = pc.bold(label);
-        const packageName = pc.underline(pc.green(name));
+        const packageName = pc.underline(pc.white(name));
         
         console.log(
             '\n\n%s',
             pc.gray(`[${label} ${packageName}]`),
         );
-        
     }
     
     protected async _build() {
@@ -213,7 +213,6 @@ export class ProjectCompiler {
         
         if (logSummary) {
             await this.logLabel('Build info', pc.bgBlue);
-            console.log('\n');
             console.log(`Computed ${glob.fileContentCount} content and ${glob.filenameCount} file name hashes!`);
             console.log(`Duration: ${glob.durationMs}ms`);
             
