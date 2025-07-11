@@ -5,7 +5,6 @@ import { resolveMainModules } from '@/internals/lib/setup/resolveMainModules';
 import type { ResolvedViteConfig } from '@/plugin';
 
 import { meteorWorker } from '@/plugin/vite-plugins/meteorWorker';
-import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
 import Instance from './MeteorViteRuntime';
 
@@ -141,13 +140,6 @@ export async function resolveMeteorViteConfig(
         },
     } satisfies InlineConfig & Pick<ResolvedViteConfig, 'meteor'>;
     
-    const modules = {
-        clientEntry: Path.relative(projectRoot,
-            CurrentConfig.clientEntryModule || config.meteor.clientEntry /* <- Addresses older versions of jorgenvatle:vite */
-        ),
-        serverEntry: config.meteor?.serverEntry && Path.resolve(config.meteor.serverEntry),
-    }
-    
     return {
         config,
         packageJson,
@@ -155,7 +147,7 @@ export async function resolveMeteorViteConfig(
         assetsDir: userConfig.meteor.assetsDir,
         needsReactPreamble,
         viteServerMainModule,
-        modules,
+        mainModule,
         isSimulatedProduction,
     }
 }

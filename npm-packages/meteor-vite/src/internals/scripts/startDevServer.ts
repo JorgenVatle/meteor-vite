@@ -18,24 +18,23 @@ export async function startDevServer() {
         return;
     }
     
-    const { config, modules } = await resolveMeteorViteConfig({
+    const { config, mainModule } = await resolveMeteorViteConfig({
         mode: 'development',
     }, 'serve');
     
     const server = await createServer(config);
     
-    await server.warmupRequest(modules.clientEntry);
+    await server.warmupRequest(mainModule.vite.client.path);
     
     // ⚡ [Server] Transform and load the Meteor main module using Vite.
-    if (modules.serverEntry) {
+    if (mainModule.vite.server) {
         const runner = createServerModuleRunner(server.environments.server);
-        Instance.logger.info(`Loading server entry: ${modules.serverEntry}`);
+        Instance.logger.info(`Loading server entry: ${mainModule.vite.server.path}`);
         
         // HMR listener to clean up side-effects from things like
         // Meteor.publish(), new Mongo.Collection(), etc. on server-side hot reload.
         try {
-            await runner.import('meteor-vite/server-entry/hmr');
-            await runner.import(modules.serverEntry);
+            await runner.import(mainModule.vite.server.path);
         } catch (error) {
             if (error instanceof Error) {
                 server.ssrFixStacktrace(error);
