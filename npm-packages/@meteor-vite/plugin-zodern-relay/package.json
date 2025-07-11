@@ -42,6 +42,7 @@
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.24.7",
+    "@meteor-vite/toolkit": "^1.0.0",
     "@types/babel__core": "^7.20.5",
     "tsup": "^8.0.2",
     "typescript": "^5.4.2",
