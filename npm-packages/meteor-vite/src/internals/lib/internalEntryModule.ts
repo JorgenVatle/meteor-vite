@@ -28,8 +28,8 @@ function viteEntryModule(environment: 'development' | 'production'): MainModule 
 
 type InternalModules = {
     vite: {
-        development: MainModule,
-        production: MainModule,
+        development: ViteMainModule,
+        production: ViteMainModule,
     },
     meteor: MainModule;
 }
@@ -38,3 +38,8 @@ export type MainModule = {
     client: EntryModule;
     server: EntryModule;
 }
+
+export type ViteMainModule = {
+    client: EntryModule,
+    server?: EntryModule,
+};
