@@ -1,4 +1,5 @@
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
+import { writeToPathSync } from '@/internals/lib/writeToPathSync';
 import { createSimpleLogger } from '@/utilities/server';
 import FS from 'node:fs';
 import Path from 'node:path';
@@ -12,7 +13,7 @@ export function setupProject() {
     validateVersions();
     cleanupPreviousBuilds();
     
-    FS.writeFileSync(Path.join(CurrentConfig.tempDir, '.gitignore'), '*')
+    writeToPathSync(Path.join(CurrentConfig.tempDir, '.gitignore'), '*')
 }
 
 function validateVersions() {
