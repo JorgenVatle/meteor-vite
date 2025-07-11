@@ -1,13 +1,25 @@
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import Path from 'path';
 
-export function internalEntryModule(environment: ModuleInfo['environment']): {
-    client: EntryModule;
-    server: EntryModule;
+export function internalEntryModule(): {
+    development: {
+        client: EntryModule;
+        server: EntryModule;
+    },
+    production: {
+        client: EntryModule;
+        server: EntryModule;
+    }
 } {
     return {
-        client: entryModule({ environment, context: 'client' }),
-        server: entryModule({ environment, context: 'server'})
+        development: {
+            client: entryModule({ environment: 'development', context: 'client' }),
+            server: entryModule({ environment: 'development', context: 'server'})
+        },
+        production: {
+            client: entryModule({ environment: 'production', context: 'client' }),
+            server: entryModule({ environment: 'production', context: 'server'}),
+        }
     }
 }
 
