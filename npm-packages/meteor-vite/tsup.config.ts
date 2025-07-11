@@ -20,6 +20,9 @@ export default defineBuildConfig(__dirname, [
             
             // Internal tooling for the Meteor build plugin.
             'internals': './src/internals/index.ts',
+            
+            // Server runtime entry-points
+            'server-entry': './src/server-entry',
         },
         format: ['esm'],
         platform: 'node',
