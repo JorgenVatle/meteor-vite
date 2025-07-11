@@ -6,7 +6,8 @@
         "./npm-packages/meteor-vite/dist/*",
       ],
       "@meteor-vite/toolkit": [
-        "./npm-packages/@meteor-vite/toolkit/src/index.ts"
+        "./npm-packages/@meteor-vite/toolkit/dist/index.mjs",
+        "./npm-packages/@meteor-vite/toolkit/dist/index.d.mts"
       ]
     }
   }
