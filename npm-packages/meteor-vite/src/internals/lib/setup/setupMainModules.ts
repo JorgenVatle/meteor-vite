@@ -3,29 +3,26 @@ import { internalEntryModule, type MainModule, type ViteMainModule } from '@/int
 export function setupMainModules(mainModule: { vite: ViteMainModule, meteor: MainModule }) {
     const { meteor, vite: { development, production } } = internalEntryModule();
     
-    {
-        // [PROD] Vite Client
-        production.client.addImport({ path: 'vite/modulepreload-polyfill' });
-        production.client.addImport({ path: mainModule.vite.client.path });
-        production.client.write();
-        
-        // [DEV] Vite Client
-        development.client.addImport({ path: mainModule.vite.client.path });
-        development.client.write();
-    }
+    // [Vite Client]
+    production.client.addImport({ path: 'vite/modulepreload-polyfill' });
+    production.client.addImport({ path: mainModule.vite.client.path });
+    production.client.write();
     
+    development.client.addImport({ path: mainModule.vite.client.path });
+    development.client.write();
+    
+    // [Vite Server]
     if (mainModule.vite.server) {
-        // [PROD] Vite Server
         production.server.addImport({ path: 'meteor-vite/server-entry/production' });
         production.server.addImport({ path: mainModule.vite.server.path });
         production.server.write();
         
-        // [DEV] Vite Server
         development.server.addImport({ path: 'meteor-vite/server-entry/hmr' });
         development.server.addImport({ path: mainModule.vite.server.path });
         development.server.write();
     }
     
+    // [Meteor Main Module]
     // Add internal module imports to app's Meteor mainModule.
     // This lets us un-lazy-load new packages by adding imports to our internal
     // modules instead of writing to to the app's source files directly,
