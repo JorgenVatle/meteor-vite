@@ -19,6 +19,12 @@ export class ProjectCompiler {
         },
         watch: {
             default: false,
+        },
+        /**
+         * Whether to log a summary of generated hashes to the console
+         */
+        summary: {
+            default: true,
         }
     });
     
@@ -120,7 +126,7 @@ export class ProjectCompiler {
      * Check whether the current root directory has changed since last build.
      * Will save a hash of the current directory state to .build-hash
      */
-    public async getHash({ logSummary = true } = {}): Promise<HashResult> {
+    public async getHash({ logSummary = this.options.summary } = {}): Promise<HashResult> {
         const changes: string[] = [];
         const lastBuild = await this.getLastBuildInfo();
         
