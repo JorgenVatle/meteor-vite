@@ -21,8 +21,20 @@ export function resolveMainModules({ packageJson, userConfig }: { userConfig: Re
         client: new EntryModule(userConfig.meteor?.clientEntry),
     };
     
-    return setupMainModules({
+    const mainModules = setupMainModules({
         vite,
         meteor,
-    })
+    });
+    
+    if (userConfig.command === 'build') {
+        return {
+            vite: mainModules.vite.production,
+            meteor: mainModules.meteor,
+        }
+    }
+    
+    return {
+        vite: mainModules.vite.development,
+        meteor: mainModules.meteor,
+    }
 }
