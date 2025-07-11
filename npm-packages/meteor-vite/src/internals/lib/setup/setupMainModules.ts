@@ -39,4 +39,12 @@ export function setupMainModules(mainModule: { vite: MainModule, meteor: MainMod
         mainModule.meteor.server.addImport({ path: meteor.server.path });
         mainModule.meteor.server.appendMissing();
     }
+    
+    return {
+        meteor,
+        vite: {
+            development,
+            production,
+        },
+    }
 }
