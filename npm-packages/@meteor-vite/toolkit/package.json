@@ -13,7 +13,10 @@
   "license": "ISC",
   "exports": {
     ".": {
-      "types": ["./dist/index.d.mts", "./dist/index.d.ts"],
+      "types": [
+        "./dist/index.d.mts",
+        "./dist/index.d.ts"
+      ],
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
       "default": "./dist/index.mjs"
@@ -21,15 +24,14 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-
     "build": "toolkit build .",
-
     "preprepare": "node ./bin/prepare.mjs",
     "prepare": "npm run build"
   },
   "dependencies": {
     "globby": "^14.1.0",
-    "hasha": "^6.0.0"
+    "hasha": "^6.0.0",
+    "picocolors": "^1.1.1"
   },
   "devDependencies": {
     "tsup": "^8.5.0",
