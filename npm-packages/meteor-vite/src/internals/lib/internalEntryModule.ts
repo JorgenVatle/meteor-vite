@@ -2,43 +2,39 @@ import { EntryModule } from '@/internals/lib/EntryModule';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import Path from 'path';
 
-export function internalEntryModule(): {
-    development: MainModule,
-    production: MainModule,
-} {
+export function internalEntryModule(): InternalModules {
     return {
-        development: {
-            client: entryModule({ environment: 'development', context: 'client' }),
-            server: entryModule({ environment: 'development', context: 'server'})
+        vite: {
+            development: viteEntryModule('development'),
+            production: viteEntryModule('production'),
         },
-        production: {
-            client: entryModule({ environment: 'production', context: 'client' }),
-            server: entryModule({ environment: 'production', context: 'server'}),
-        }
+        meteor: meteorEntryModule(),
     }
 }
 
-function entryModule({ environment, context }: ModuleInfo): Entrypoint {
-    const rootDir = Path.join(CurrentConfig.tempDir, context);
-    const fileExtension = `${environment}.mjs`;
-    
+function meteorEntryModule(): MainModule {
     return {
-        meteor: new EntryModule(Path.join(rootDir, `_entry-meteor.${fileExtension}`)),
-        vite: new EntryModule(Path.join(rootDir, `_entry-vite.${fileExtension}`)),
+        client: new EntryModule(Path.join(CurrentConfig.tempDir, 'client', `_entry-meteor.mjs`)),
+        server: new EntryModule(Path.join(CurrentConfig.tempDir, 'server', `_entry-meteor.mjs`)),
     }
 }
 
-type ModuleInfo = {
-    environment: 'development' | 'production';
-    context: 'client' | 'server';
+function viteEntryModule(environment: 'development' | 'production'): MainModule {
+    return {
+        client: new EntryModule(Path.join(CurrentConfig.tempDir, 'client', `_entry-vite.${environment}.mjs`)),
+        server: new EntryModule(Path.join(CurrentConfig.tempDir, 'server', `_entry-vite.${environment}.mjs`)),
+    }
 }
 
-type Entrypoint = {
-    meteor: EntryModule;
-    vite: EntryModule;
+type InternalModules = {
+    vite: {
+        development: MainModule,
+        production: MainModule,
+    },
+    meteor: MainModule;
 }
 
 export type MainModule = {
-    client: Entrypoint;
-    server: Entrypoint;
+    client: EntryModule;
+    server: EntryModule;
 }
