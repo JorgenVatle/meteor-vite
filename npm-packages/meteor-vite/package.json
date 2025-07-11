@@ -23,6 +23,11 @@
       "types": "./dist/internals.d.mts",
       "import": "./dist/internals.mjs",
       "default": "./dist/internals.mjs"
+    },
+    "./server-entry/*": {
+      "types": "./dist/server-entry/*.d.mts",
+      "import": "./dist/server-entry/*.mjs",
+      "default": "./dist/server-entry/*.mjs"
     }
   },
   "scripts": {
