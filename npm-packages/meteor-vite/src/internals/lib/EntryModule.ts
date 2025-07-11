@@ -111,7 +111,7 @@ export class EntryModule {
         FS.writeFileSync(this.path, '// Created by Meteor-Vite\n');
     }
     
-    public async clean() {
+    public clean() {
         try {
             FS.rmSync(this.dirname, { recursive: true, force: true });
         } catch (error) {
