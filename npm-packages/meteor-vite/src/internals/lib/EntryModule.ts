@@ -114,7 +114,7 @@ export class EntryModule {
     public clean() {
         try {
             FS.rmSync(this.dirname, { recursive: true, force: true });
-        } catch (error) {
+        } catch (error: any) {
             // Probably safe to ignore
             console.warn(`Failed to clean: ${error.message}`);
         } finally {
