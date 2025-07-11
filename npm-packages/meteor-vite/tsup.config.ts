@@ -20,9 +20,6 @@ export default defineBuildConfig(__dirname, [
             
             // Internal tooling for the Meteor build plugin.
             'internals': './src/internals/index.ts',
-            
-            // Server runtime entry-points
-            'server-entry': './src/server-entry',
         },
         format: ['esm'],
         platform: 'node',
@@ -37,6 +34,14 @@ export default defineBuildConfig(__dirname, [
             }
         },
     },
+    // Server runtime entry-points
+    {
+        name: 'meteor-vite/server-entry',
+        entry: ['./src/server-entry/*.ts'],
+        format: ['esm'],
+        platform: 'node',
+    },
+    // Browser modules
     {
         name: 'meteor-vite/client',
         entry: {
