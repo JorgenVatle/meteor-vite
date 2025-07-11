@@ -4,6 +4,7 @@ export default defineBuildConfig(import.meta.dirname, [
     {
         name: '@meteor-vite/toolkit: package',
         entry: ['src/index.ts'],
+        format: ['cjs', 'esm'],
     },
     {
         name: '@meteor-vite/toolkit: bin',
