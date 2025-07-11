@@ -3,14 +3,8 @@ import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import Path from 'path';
 
 export function internalEntryModule(): {
-    development: {
-        client: EntryModules;
-        server: EntryModules;
-    },
-    production: {
-        client: EntryModules;
-        server: EntryModules;
-    }
+    development: MainModule,
+    production: MainModule,
 } {
     return {
         development: {
@@ -24,7 +18,7 @@ export function internalEntryModule(): {
     }
 }
 
-function entryModule({ environment, context }: ModuleInfo): EntryModules {
+function entryModule({ environment, context }: ModuleInfo): Entrypoint {
     const rootDir = Path.join(CurrentConfig.tempDir, context);
     const fileExtension = `${environment}.mjs`;
     
@@ -39,7 +33,12 @@ type ModuleInfo = {
     context: 'client' | 'server';
 }
 
-type EntryModules = {
+type Entrypoint = {
     meteor: EntryModule;
     vite: EntryModule;
+}
+
+export type MainModule = {
+    client: Entrypoint;
+    server: Entrypoint;
 }
