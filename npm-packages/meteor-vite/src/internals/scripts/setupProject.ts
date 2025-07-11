@@ -53,7 +53,7 @@ function cleanupPreviousBuilds() {
         return;
     }
     FS.rmSync(CurrentConfig.outDir, { recursive: true, force: true });
-    internalEntryModule.buildOutput.client.clean();
-    internalEntryModule.buildOutput.server.clean();
+    internalEntryModule().buildOutput.client.clean();
+    internalEntryModule().buildOutput.server.clean();
     logger.info(`Cleaned up old build output in ${pc.green(CurrentConfig.outDir)}`);
 }

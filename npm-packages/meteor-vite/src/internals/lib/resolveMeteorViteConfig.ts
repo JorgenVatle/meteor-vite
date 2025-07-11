@@ -163,6 +163,7 @@ const WRAP_ANSI_DEPS = [
 ]
 const METEOR_VITE_RUNTIME_DEPENDENCIES = [
     'picocolors',
+    'meteor-vite',
     ...WRAP_ANSI_DEPS,
 ]
 
