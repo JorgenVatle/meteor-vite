@@ -10,6 +10,7 @@ import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
 export class ProjectCompiler {
     protected readonly options: Options;
     protected filePath;
+    protected packageJson?: PackageJSON;
     
     public static options = CommandList.defineOptions({
         verbose: {
@@ -75,10 +76,10 @@ export class ProjectCompiler {
         });
     }
     
-    protected async logLabel(_label: string) {
+    public async logLabel(_label: string, color = pc.bgGreen) {
         const { name } = await this.getProjectInfo();
         let label = `${pc.white(` ${_label} `)}`;
-        label = pc.bgGreen(label);
+        label = color(label);
         label = pc.bold(label);
         const packageName = pc.underline(pc.green(name));
         
@@ -102,9 +103,12 @@ export class ProjectCompiler {
         }
     }
     
-    protected async getProjectInfo(): Promise<{ name: string }> {
+    protected async getProjectInfo(): Promise<PackageJSON> {
+        if (this.packageJson) {
+            return this.packageJson;
+        }
         const content = await FS.readFile(this.filePath.packageJson, 'utf8');
-        return JSON.parse(content);
+        return this.packageJson = JSON.parse(content);
     }
     
     protected relativeTime(timestamp: number) {
@@ -208,6 +212,7 @@ export class ProjectCompiler {
         }
         
         if (logSummary) {
+            await this.logLabel('Build info', pc.bgBlue);
             console.log('\n');
             console.log(`Computed ${glob.fileContentCount} content and ${glob.filenameCount} file name hashes!`);
             console.log(`Duration: ${glob.durationMs}ms`);
@@ -310,3 +315,5 @@ interface BuildInfo extends BuildHashes {
     timestamp?: number;
     durationMs?: number;
 }
+
+type PackageJSON = { name: string }
