@@ -154,7 +154,7 @@ export class ProjectCompiler {
      * Save info from last build to file for reference in conditional build command
      * @param buildInfo
      */
-    protected async saveBuildInfo(buildInfo: Omit<BuildInfo, keyof BuildHashes>) {
+    public async saveBuildInfo(buildInfo: Omit<BuildInfo, keyof BuildHashes>) {
         const content = Object.assign(
             await this.getHash(),
             buildInfo
@@ -178,7 +178,12 @@ export class ProjectCompiler {
             // Used to trigger a re-build if the dist directory is deleted or
             // partially built.
             fileNames: [
-                Path.join(this.rootDir, 'dist')
+                Path.join(this.rootDir, 'dist'),
+                // Ignore dts files. These are generated after onSuccess hooks,
+                // so file build comparison will always result in a mismatch
+                // when hashes are generated with the --watch flag.
+                `!**.d.ts`,
+                '!**.d.mts',
             ]
         });
         
