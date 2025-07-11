@@ -2,15 +2,13 @@ import { EntryModule } from '@/internals/lib/EntryModule';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import Path from 'path';
 
-export function internalEntryModule(): InternalModules {
-    return {
-        vite: {
-            development: viteEntryModule('development'),
-            production: viteEntryModule('production'),
-        },
-        meteor: meteorEntryModule(),
-        buildOutput: buildOutputEntryModule(),
-    }
+export const internalEntryModule: InternalModules = {
+    vite: {
+        development: viteEntryModule('development'),
+        production: viteEntryModule('production'),
+    },
+    meteor: meteorEntryModule(),
+    buildOutput: buildOutputEntryModule(),
 }
 
 function meteorEntryModule(): MainModule {
