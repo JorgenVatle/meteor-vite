@@ -17,9 +17,10 @@ const DEFAULT_CONFIG = Object.freeze({
 export function defineBuildConfig(rootDir: string, _options: Config | Config[]): ReturnType<typeof defineConfig> {
     const optionList: Config[] = Array.isArray(_options) ? _options : [_options];
     
-    return optionList.map((options, index) => {
+    return ({ watch }) => optionList.map((options, index) => {
         const config = mergeConfig(rootDir, options,
             {
+                watch,
                 outDir: Path.join(rootDir, options.outDir || 'dist'),
                 tsconfig: options.tsconfig && Path.join(rootDir, options.tsconfig),
                 esbuildPlugins: [
@@ -35,6 +36,10 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
         // Run cleanup on first build
         if (index === 0 && envFlag('TSUP_CLEAN')) {
             config.clean = options.clean ?? true;
+        }
+        
+        if (watch) {
+            config.clean = false;
         }
         
         if (Array.isArray(config.entry)) {
