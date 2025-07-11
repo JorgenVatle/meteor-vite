@@ -47,7 +47,7 @@ export class EntryModule {
         }
         
         const template = this.insertImportTemplate(content, imports);
-        FS.writeFileSync(this.path, template);
+        writeToPathSync(this.path, template);
     }
     
     protected insertImportTemplate(originalContent: string, imports: string[]) {
