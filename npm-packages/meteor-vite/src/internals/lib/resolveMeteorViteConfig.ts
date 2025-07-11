@@ -1,7 +1,6 @@
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { parsePackageJson } from '@/internals/lib/parsePackageJson';
-import { setupClientMainModule } from '@/internals/lib/setup/setupClientMainModule';
-import { setupServerMainModule } from '@/internals/lib/setup/setupServerMainModule';
+import { resolveMainModules } from '@/internals/lib/setup/resolveMainModules';
 
 import type { ResolvedViteConfig } from '@/plugin';
 
@@ -76,6 +75,8 @@ export async function resolveMeteorViteConfig(
         Instance.logger.warn('See the readme for an example: https://github.com/JorgenVatle/meteor-vite?tab=readme-ov-file#vite-config')
     }
     
+    const mainModule = resolveMainModules({ packageJson, userConfig });
+    
     const config = {
         ...inlineConfig,
         meteor: userConfig.meteor,
@@ -117,10 +118,7 @@ export async function resolveMeteorViteConfig(
                     rollupOptions: {
                         external: [/^meteor\//],
                         input: {
-                            main: setupServerMainModule({
-                                meteorMainModule: packageJson.meteor.mainModule.server,
-                                viteMainModule: viteServerMainModule,
-                            }),
+                            main: mainModule.vite.server.path,
                         },
                         output: {
                             // Unfortunately Meteor still doesn't support
@@ -135,10 +133,7 @@ export async function resolveMeteorViteConfig(
                 build: {
                     rollupOptions: {
                         input: {
-                            main: setupClientMainModule({
-                                viteMainModule: userConfig.meteor.clientEntry,
-                                modulePreload: inlineConfig.build?.modulePreload
-                            }),
+                            main: mainModule.vite.client.path,
                         },
                     }
                 }
