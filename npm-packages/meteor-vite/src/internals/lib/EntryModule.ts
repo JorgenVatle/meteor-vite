@@ -57,6 +57,9 @@ export class EntryModule {
     protected insertImportTemplate(originalContent: string, imports: string[]) {
         const TERMINATION_LINE = `/** End of vite auto-imports **/`;
         let patchedContent = originalContent;
+        OLD_TERMINATION_LINES.forEach(line => {
+            patchedContent.replace(line, TERMINATION_LINE);
+        })
         if (!originalContent.includes(TERMINATION_LINE)) {
             patchedContent = [
                 `/**`,
@@ -77,6 +80,10 @@ export class EntryModule {
         )
     }
 }
+
+const OLD_TERMINATION_LINES = [
+    '/** End of vite-bundler auto-imports **/',
+]
 
 type ModuleImport = {
     path: string;
