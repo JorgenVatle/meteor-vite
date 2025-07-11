@@ -11,6 +11,7 @@ const DEFAULT_CONFIG = Object.freeze({
     dts: true,
     noExternal: ['meteor'],
     skipNodeModulesBundle: true,
+    format: ['esm']
 } satisfies Options);
 
 export function defineBuildConfig(rootDir: string, _options: Config | Config[]): Options | Options[] {
