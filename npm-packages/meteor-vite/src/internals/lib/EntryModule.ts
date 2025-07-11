@@ -56,9 +56,7 @@ export class EntryModule {
     }
     
     protected getContent() {
-        if (!FS.existsSync(this.path)) {
-            FS.writeFileSync(this.path, '// Created by Meteor-Vite\n');
-        }
+        this.prepare();
         const content = FS.readFileSync(this.path, 'utf-8');
         return this.stripOldImports(content);
     }
@@ -103,6 +101,14 @@ export class EntryModule {
             }
             return true;
         }).join('\n');
+    }
+    
+    public prepare() {
+        if (FS.existsSync(this.path)) {
+            return;
+        }
+        FS.mkdirSync(this.dirname, { recursive: true });
+        FS.writeFileSync(this.path, '// Created by Meteor-Vite\n');
     }
 }
 

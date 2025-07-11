@@ -29,10 +29,12 @@ export function setupMainModules(mainModule: { vite: ViteMainModule, meteor: Mai
     // apart from this one time here.
     {
         // Client
+        meteor.client.prepare();
         mainModule.meteor.client.addImport({ path: meteor.client.path });
         mainModule.meteor.client.appendMissing();
         
         // Server
+        meteor.server.prepare();
         mainModule.meteor.server.addImport({ path: meteor.server.path });
         mainModule.meteor.server.appendMissing();
     }
