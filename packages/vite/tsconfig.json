@@ -3,6 +3,7 @@
   "include": [
     "src",
     "types",
-    "../../npm-packages/meteor-vite/dist"
+    "../../npm-packages/meteor-vite/dist",
+    "tsup.config.ts",
   ]
 }

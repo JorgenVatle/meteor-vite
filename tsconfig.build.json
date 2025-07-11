@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
+    "module": "preserve",
     "paths": {
       "meteor-vite/*": [
         "./npm-packages/meteor-vite/dist/*",
@@ -9,6 +10,6 @@
         "./npm-packages/@meteor-vite/toolkit/dist/index.mjs",
         "./npm-packages/@meteor-vite/toolkit/dist/index.d.mts"
       ]
-    }
+    },
   }
 }
