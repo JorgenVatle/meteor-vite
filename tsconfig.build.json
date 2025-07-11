@@ -1,7 +1,6 @@
 {
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "module": "preserve",
     "paths": {
       "meteor-vite/*": [
         "./npm-packages/meteor-vite/dist/*",
