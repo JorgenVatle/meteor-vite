@@ -58,7 +58,7 @@ export class EntryModule {
         const TERMINATION_LINE = `/** End of vite auto-imports **/`;
         let patchedContent = originalContent;
         OLD_TERMINATION_LINES.forEach(line => {
-            patchedContent = patchedContent.replace(line, TERMINATION_LINE);
+            patchedContent = patchedContent.replaceAll(line, TERMINATION_LINE);
         })
         if (!originalContent.includes(TERMINATION_LINE)) {
             patchedContent = [
