@@ -5,7 +5,6 @@ import { hash } from 'hasha';
 import Path from 'node:path';
 import * as process from 'node:process';
 import pc from 'picocolors';
-import { build } from 'tsup';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
 
 export class ProjectCompiler {
@@ -70,6 +69,8 @@ export class ProjectCompiler {
             console.log('No changes detected, skipping build');
             return;
         }
+        
+        const { build } = await import('tsup');
         
         await build({
             watch: this.options.watch,
