@@ -26,9 +26,8 @@
     "watch:packages": "concurrently -k -n atmosphere,npm 'toolkit build packages/vite --watch' 'toolkit build npm-packages/meteor-vite --watch'",
 
     "build": "npm run example build",
-    "build:packages": "toolkit build npm-packages/meteor-vite && toolkit build packages/vite",
+    "build:packages": "npm run build -w npm-packages/@meteor-vite/toolkit -w npm-packages/meteor-vite -w packages/vite",
 
-    "preprepare": "npm run build:toolkit",
     "prepare": "npm run build:packages || exit 0",
     "prestart": "npm run build:packages",
 
