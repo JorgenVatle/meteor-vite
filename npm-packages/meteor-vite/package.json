@@ -27,8 +27,8 @@
   },
   "scripts": {
     "start": "ts-node-dev src/bin/debug/watch-mocks.ts",
-    "watch": "tsup --watch --dts --sourcemap",
-    "build": "tsup",
+    "watch": "npm run build -- --watch",
+    "build": "toolkit build",
     "clean": "rm -rf ./dist",
     "prepack": "npm run build",
     "test": "vitest",
