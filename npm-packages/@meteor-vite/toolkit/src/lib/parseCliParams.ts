@@ -4,7 +4,7 @@ import { ProjectCompiler } from '@/ProjectCompiler';
 import process from 'node:process';
 
 export function parseCliParams(params = process.argv): ParsedArgs {
-    const [_nodePath, _scriptPath, command, rootDir] = params;
+    const [_nodePath, _scriptPath, command, rootDir = '.'] = params;
     const exampleCommand = Highlight.command('build-if-changed', ['/npm-packages/meteor-vite']);
     
     if (!command) {
