@@ -21,16 +21,15 @@
   "scripts": {
     "start": "npm run example start",
     "launch": "npm run example launch",
-    "toolkit": "npm exec @meteor-vite/toolkit",
 
     "build": "npm run example build",
-    "build:packages": "npm run build-if-changed npm-packages/meteor-vite && npm run build-if-changed packages/vite",
+    "build:packages": "toolkit build npm-packages/meteor-vite && toolkit build packages/vite",
     "build:meteor-vite": "cd npm-packages/meteor-vite && npm run build --",
     "build:toolkit": "cd npm-packages/@meteor-vite/toolkit && npm run build --",
     "build:jorgenvatle:vite": "cd packages/vite && npm run build --",
 
-    "build-if-changed": "npm run toolkit build-if-changed",
-    "check-changes": "npm run toolkit check-changes",
+    "build-if-changed": "toolkit build-if-changed",
+    "check-changes": "toolkit check-changes",
 
     "prestart": "npm run build-if-changed packages/vite",
     "prebuild:jorgenvatle:vite": "npm run build-if-changed npm-packages/meteor-vite",
