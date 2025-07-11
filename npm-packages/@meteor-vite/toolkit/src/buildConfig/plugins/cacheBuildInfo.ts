@@ -1,5 +1,6 @@
 import type { TSUpPlugin } from '@/buildConfig';
 import { ProjectCompiler } from '@/ProjectCompiler';
+import pc from 'picocolors';
 
 export function cacheBuildInfo(rootDir: string): TSUpPlugin {
     const compiler = new ProjectCompiler(rootDir);
@@ -14,9 +15,9 @@ export function cacheBuildInfo(rootDir: string): TSUpPlugin {
                 durationMs: Date.now() - startTime,
                 timestamp: Date.now(),
             });
-            this.logger.info('Output hash:', fileNamesHash, `(${filenameCount} files)`);
-            this.logger.info('Input hash:', fileContentHash, `(${fileContentCount} files)`);
-            this.logger.info(`Hash duration:`, `${durationMs}ms`);
+            this.logger.info(`Hash info:`, pc.bold(`Hashed files in`), pc.yellow(`${durationMs}ms`));
+            this.logger.info('Output hash:', pc.bold(`${filenameCount} files`), '|', fileNamesHash,);
+            this.logger.info('Input hash:', pc.bold(`${fileContentCount} files`), '|', fileContentHash,);
         }
     }
 }
