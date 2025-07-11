@@ -120,7 +120,7 @@ export class ProjectCompiler {
      * Check whether the current root directory has changed since last build.
      * Will save a hash of the current directory state to .build-hash
      */
-    public async getHash(): Promise<HashResult> {
+    public async getHash({ logSummary = true } = {}): Promise<HashResult> {
         const changes: string[] = [];
         const lastBuild = await this.getLastBuildInfo();
         
@@ -161,21 +161,23 @@ export class ProjectCompiler {
             changes.push('No previous build info found, rebuild is necessary');
         }
         
-        console.log('\n');
-        console.log(`Computed ${glob.fileContentCount} content and ${glob.filenameCount} file name hashes!`);
-        console.log(`Duration: ${glob.durationMs}ms`);
-        
-        if (lastBuild.timestamp) {
-            console.log(`Last build: ${this.relativeTime(lastBuild.timestamp)}`);
+        if (logSummary) {
+            console.log('\n');
+            console.log(`Computed ${glob.fileContentCount} content and ${glob.filenameCount} file name hashes!`);
+            console.log(`Duration: ${glob.durationMs}ms`);
+            
+            if (lastBuild.timestamp) {
+                console.log(`Last build: ${this.relativeTime(lastBuild.timestamp)}`);
+            }
+            
+            if (changes.length) {
+                console.log('\nDetected changes:\n - %s', changes.join('\n - '));
+                console.log();
+            }
+            
+            console.log(`Hash: ${glob.hash}`);
+            console.log('\n');
         }
-        
-        if (changes.length) {
-            console.log('\nDetected changes:\n - %s', changes.join('\n - '));
-            console.log();
-        }
-        
-        console.log(`Hash: ${glob.hash}`);
-        console.log('\n');
         
         return {
             ...glob,
