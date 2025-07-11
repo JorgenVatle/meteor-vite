@@ -37,7 +37,7 @@ export class EntryModule {
      * @param module
      */
     public appendMissing() {
-        const content = FS.readFileSync(this.path, 'utf-8');
+        const content = this.getContent();
         const imports: string[] = [];
         
         for (const module of this.imports) {
@@ -53,6 +53,14 @@ export class EntryModule {
         
         const template = this.insertImportTemplate(content, imports);
         writeToPathSync(this.path, template);
+    }
+    
+    protected getContent() {
+        if (!FS.existsSync(this.path)) {
+            FS.writeFileSync(this.path, '// Created by Meteor-Vite\n');
+        }
+        const content = FS.readFileSync(this.path, 'utf-8');
+        return this.stripOldImports(content);
     }
     
     protected insertImportTemplate(originalContent: string, imports: string[]) {
@@ -80,6 +88,21 @@ export class EntryModule {
             TERMINATION_LINE,
             [imports, TERMINATION_LINE].flat().join('\n')
         )
+    }
+    
+    protected stripOldImports(_content: string) {
+        const OLD_IMPORTS = [
+            '../_vite-bundle/server/_entry.mjs',
+        ];
+        const contentLines = _content.split(/[\r\n]/);
+        return contentLines.filter(line => {
+            for (const oldImport of OLD_IMPORTS) {
+                if (line.includes(oldImport)) {
+                    return false;
+                }
+            }
+            return true;
+        }).join('\n');
     }
 }
 
