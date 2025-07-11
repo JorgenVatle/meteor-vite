@@ -1,5 +1,5 @@
 {
-  "mode": "exit",
+  "mode": "pre",
   "tag": "beta",
   "initialVersions": {
     "@meteor-vite/plugin-zodern-relay": "1.1.0",
