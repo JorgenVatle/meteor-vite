@@ -25,6 +25,13 @@ export class ProjectCompiler {
          */
         summary: {
             default: true,
+        },
+        /**
+         * Whether to build regardless of whether there were any changes since
+         * last build.
+         */
+        force: {
+            default: envFlag('FORCE_BUILD')
         }
     });
     
@@ -49,8 +56,8 @@ export class ProjectCompiler {
         
         process.chdir(this.rootDir);
         
-        if (envFlag('FORCE_BUILD')) {
-            console.log('Forcing build due to FORCE_BUILD environment variable');
+        if (this.options.force) {
+            console.log('Forcing build due to FORCE_BUILD (--force) environment variable');
         } else if (!changed && !this.options.watch) {
             console.log('No changes detected, skipping build');
             return;
