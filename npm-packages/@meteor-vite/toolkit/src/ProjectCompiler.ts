@@ -174,7 +174,7 @@ export class ProjectCompiler {
             console.log();
         }
         
-        console.log(`Hash: ${hash}`);
+        console.log(`Hash: ${glob.hash}`);
         console.log('\n');
         
         return {
