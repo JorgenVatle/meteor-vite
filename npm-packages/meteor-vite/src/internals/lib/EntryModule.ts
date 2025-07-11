@@ -4,27 +4,31 @@ import FS from 'node:fs';
 import Path from 'path';
 
 export class EntryModule {
-    protected readonly imports: ModuleImport[] = [];
+    protected readonly imports: (ModuleImport & { line: string })[] = [];
     constructor(public readonly path: string) {
     
     }
     
     public addImport(module: ModuleImport) {
-        this.imports.push(module);
+        let path = module.path;
+        
+        // Importing a file directly (not a node module)
+        if (module.path.startsWith('.') || module.path.startsWith('/')) {
+            path = Path.relative(this.path, module.path);
+        }
+        
+        this.imports.push({
+            path,
+            line: moduleImport(path),
+        });
+    }
+    
+    protected get importLines() {
+        return this.imports.map(({ line }) => line).join('\n');
     }
     
     public write() {
-        const importLines = this.imports.map(({ path }) => {
-            // Importing a file directly (not a node module)
-            if (path.startsWith('.') || path.startsWith('/')) {
-                return moduleImport(Path.relative(this.path, path))
-            }
-            
-            // Importing a package from node_modules
-            return moduleImport(path);
-        });
-        
-        writeToPathSync(this.path, importLines.join('\n'));
+        writeToPathSync(this.path, this.importLines);
     }
     
     /**
@@ -39,7 +43,7 @@ export class EntryModule {
             if (hasModuleImport({ content, path: module.path })) {
                 continue;
             }
-            imports.push(moduleImport(module.path));
+            imports.push(module.line);
         }
         
         if (imports.length === 0) {
