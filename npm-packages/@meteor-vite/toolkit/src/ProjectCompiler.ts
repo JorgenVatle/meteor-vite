@@ -1,4 +1,5 @@
 import { CommandList } from '@/lib/CommandList';
+import { Highlight } from '@/lib/Highlight';
 import FS from 'fs/promises';
 import { globby } from 'globby';
 import { hash } from 'hasha';
@@ -86,7 +87,7 @@ export class ProjectCompiler {
         
         console.log(
             '\n\n%s',
-            pc.gray(`[${label} ${packageName}]`),
+            pc.gray(`${label} ${packageName}`),
         );
     }
     
@@ -131,6 +132,7 @@ export class ProjectCompiler {
         if (seconds > 0) {
             return `${seconds} seconds ago`;
         }
+        return 'just now';
     }
     
     /**
@@ -212,21 +214,34 @@ export class ProjectCompiler {
         }
         
         if (logSummary) {
+            const logLines: ([string, string] | string)[] = [];
             await this.logLabel('Build info', pc.bgBlue);
-            console.log(`Computed ${glob.fileContentCount} content and ${glob.filenameCount} file name hashes!`);
-            console.log(`Duration: ${glob.durationMs}ms`);
+            logLines.push(`Computed ${pc.yellow(glob.fileContentCount)} content and ${pc.yellow(glob.filenameCount)} file name hashes!`);
+            logLines.push(['Duration', Highlight.duration(`${glob.durationMs}ms`)]);
             
             if (lastBuild.timestamp) {
-                console.log(`Last build: ${this.relativeTime(lastBuild.timestamp)}`);
+                logLines.push([`Last build`, Highlight.duration(this.relativeTime(lastBuild.timestamp))]);
             }
             
             if (changes.length) {
-                console.log('\nDetected changes:\n - %s', changes.join('\n - '));
-                console.log();
+                logLines.push(['\nDetected changes', `\n`]);
+                changes.forEach((change) => {
+                    logLines.push([' - ', change]);
+                })
+                logLines.push('');
             }
             
-            console.log(`Hash: ${glob.hash}`);
-            console.log('\n');
+            logLines.push([`Hash`, Highlight.hash(glob.hash || 'N/A')]);
+            
+            logLines.forEach((line) => {
+                if (!Array.isArray(line)) {
+                    console.log(pc.bold(line));
+                    return;
+                }
+                const [label, value] = line;
+                console.log(`%s: %s`, pc.bold(label), value)
+            });
+            
         }
         
         return {
