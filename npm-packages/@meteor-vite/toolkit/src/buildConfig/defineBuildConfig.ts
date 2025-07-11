@@ -1,3 +1,4 @@
+import { cacheBuildInfo } from '@/buildConfig/plugins/cacheBuildInfo';
 import { copyFiles } from '@/buildConfig/plugins/copyFiles';
 import Path from 'path';
 import { type Options } from 'tsup';
@@ -24,6 +25,9 @@ export function defineBuildConfig(rootDir: string, _options: Config | Config[]):
                     EsbuildPluginMeteorStubs,
                     ...options.esbuildPlugins || [],
                 ],
+                plugins: index + 1 === optionList.length
+                         ? [cacheBuildInfo(rootDir)]
+                         : undefined
             }
         );
         
@@ -65,7 +69,7 @@ type MergedConfig = Omit<CustomConfigFields & Options, keyof typeof DEFAULT_CONF
 function mergeConfig(
     rootDir: string,
     options: Config,
-    overrides: Options
+    overrides: Options,
 ): MergedConfig {
     const config = Object.assign({ rootDir, ...DEFAULT_CONFIG }, {
         ...options,
