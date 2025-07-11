@@ -22,22 +22,16 @@
     "start": "npm run example start",
     "launch": "npm run example launch",
 
+    "check-changes": "toolkit check-changes",
+    "watch:packages": "concurrently -k -n atmosphere,npm 'toolkit build packages/vite --watch' 'toolkit build npm-packages/meteor-vite --watch'",
+
     "build": "npm run example build",
     "build:packages": "toolkit build npm-packages/meteor-vite && toolkit build packages/vite",
-    "build:meteor-vite": "cd npm-packages/meteor-vite && npm run build --",
-    "build:toolkit": "cd npm-packages/@meteor-vite/toolkit && npm run build --",
-    "build:jorgenvatle:vite": "cd packages/vite && npm run build --",
-
-    "build-if-changed": "toolkit build-if-changed",
-    "check-changes": "toolkit check-changes",
-
-    "prestart": "npm run build-if-changed packages/vite",
-    "prebuild:jorgenvatle:vite": "npm run build-if-changed npm-packages/meteor-vite",
-
-    "watch:packages": "TSUP_CLEAN=false concurrently -k -n atmosphere,npm 'npm:build:jorgenvatle:vite -- --watch' 'npm:build:meteor-vite -- --watch'",
 
     "preprepare": "npm run build:toolkit",
     "prepare": "npm run build:packages || exit 0",
+    "prestart": "npm run build:packages",
+
     "link": "npm run example link",
     "release": "npm run publish:vite && changeset publish",
     "version": "npm run version:vite && changeset version",
