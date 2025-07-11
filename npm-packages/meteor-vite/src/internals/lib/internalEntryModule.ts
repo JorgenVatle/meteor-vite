@@ -9,6 +9,7 @@ export function internalEntryModule(): InternalModules {
             production: viteEntryModule('production'),
         },
         meteor: meteorEntryModule(),
+        buildOutput: buildOutputEntryModule(),
     }
 }
 
@@ -26,12 +27,20 @@ function viteEntryModule(environment: 'development' | 'production'): MainModule 
     }
 }
 
+function buildOutputEntryModule(): MainModule {
+    return {
+        client: new EntryModule(Path.join(CurrentConfig.outDir, 'client', `_entry-build.mjs`)),
+        server: new EntryModule(Path.join(CurrentConfig.outDir, 'server', `_entry-build.mjs`)),
+    }
+}
+
 type InternalModules = {
     vite: {
         development: MainModule,
         production: MainModule,
     },
     meteor: MainModule;
+    buildOutput: MainModule;
 }
 
 export type MainModule = {
