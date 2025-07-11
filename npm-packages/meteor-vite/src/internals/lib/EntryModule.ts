@@ -4,7 +4,7 @@ import Path from 'path';
 
 export class EntryModule {
     protected readonly imports: ModuleImport[] = [];
-    constructor(protected readonly path: string) {
+    constructor(public readonly path: string) {
     
     }
     
