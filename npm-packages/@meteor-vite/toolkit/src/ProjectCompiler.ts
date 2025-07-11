@@ -42,6 +42,7 @@ export class ProjectCompiler {
         this.filePath = {
             buildInfo: Path.join(this.rootDir, 'dist', '.build-info.json'),
             packageJson: Path.join(this.rootDir, 'package.json'),
+            cwd: process.cwd(),
         }
     }
     
@@ -50,18 +51,10 @@ export class ProjectCompiler {
      * last build.
      */
     public async build() {
+        await this.logLabel('Building');
         const startTime = Date.now();
-        const { changed } = await this.getHash();
-        const { name } = await this.getProjectInfo();
-        process.chdir(this.rootDir);
+        const { changed, changes } = await this.getHash();
         
-        let buildLabel = `${pc.white(' Building ')}`;
-        buildLabel = pc.bgGreen(buildLabel);
-        buildLabel = pc.bold(buildLabel);
-        console.log([
-            '\n',
-            pc.gray(`[${buildLabel} ${pc.green(pc.underline(name))}]`)
-        ].join('\n'));
         
         if (this.options.force) {
             console.log('Forcing build due to FORCE_BUILD (--force) environment variable');
@@ -70,18 +63,43 @@ export class ProjectCompiler {
             return;
         }
         
-        const { build } = await import('tsup');
+        console.log('Detected changes: %s', ['', changes].flat().join('\n - '));
+        console.log('Starting build...');
         
-        await build({
-            watch: this.options.watch,
-        });
-        
+        await this._build();
         const durationMs = Date.now() - startTime;
         
         await this.saveBuildInfo({
             durationMs,
             timestamp: Date.now(),
         });
+    }
+    
+    protected async logLabel(_label: string) {
+        const { name } = await this.getProjectInfo();
+        let label = `${pc.white(` ${_label} `)}`;
+        label = pc.bgGreen(label);
+        label = pc.bold(label);
+        const packageName = pc.underline(pc.green(name));
+        
+        console.log(
+            '\n\n%s',
+            pc.gray(`[${label} ${packageName}]`),
+        );
+        
+    }
+    
+    protected async _build() {
+        try {
+            process.chdir(this.rootDir);
+            const { build } = await import('tsup');
+            
+            await build({
+                watch: this.options.watch,
+            });
+        } finally {
+            process.chdir(this.filePath.cwd);
+        }
     }
     
     protected async getProjectInfo(): Promise<{ name: string }> {
