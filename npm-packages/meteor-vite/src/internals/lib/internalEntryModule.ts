@@ -16,8 +16,8 @@ function entryModule({ environment, context }: ModuleInfo): EntryModule {
     const fileExtension = `${environment}.mjs`;
     
     return {
-        meteor: Path.join(rootDir, 'meteor', `_entry.${fileExtension}`),
-        vite: Path.join(rootDir, 'vite', `_entry.${fileExtension}`),
+        meteor: Path.join(rootDir, `_entry-meteor.${fileExtension}`),
+        vite: Path.join(rootDir, `_entry-vite.${fileExtension}`),
     }
 }
 
