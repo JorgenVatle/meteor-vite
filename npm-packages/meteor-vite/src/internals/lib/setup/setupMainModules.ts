@@ -1,30 +1,28 @@
 import { internalEntryModule, type MainModule } from '@/internals/lib/internalEntryModule';
 
-export function setupMainModules(mainModule: MainModule) {
+export function setupMainModules(mainModule: { vite: MainModule, meteor: MainModule }) {
+    const { vite, meteor } = internalEntryModule();
+    
     {
-        const { client, server } = internalEntryModule().production;
-        
         // [PROD] Vite Client
-        client.vite.addImport({ path: 'vite/modulepreload-polyfill' });
-        client.vite.addImport({ path: mainModule.client.vite.path });
-        client.vite.write();
+        vite.production.client.addImport({ path: 'vite/modulepreload-polyfill' });
+        vite.production.client.addImport({ path: mainModule.vite.client.path });
+        vite.production.client.write();
         
         // [PROD] Vite Server
-        server.vite.addImport({ path: 'meteor-vite/server-entry/production' });
-        server.vite.addImport({ path: mainModule.server.vite.path });
-        server.vite.write();
+        vite.production.server.addImport({ path: 'meteor-vite/server-entry/production' });
+        vite.production.server.addImport({ path: mainModule.vite.server.path });
+        vite.production.server.write();
     }
     
     {
-        const { client, server } = internalEntryModule().development;
-        
         // [DEV] Vite Client
-        client.vite.addImport({ path: mainModule.client.vite.path });
-        client.vite.write();
+        vite.development.client.addImport({ path: mainModule.vite.client.path });
+        vite.development.client.write();
         
-        // [DEV:] Vite Server
-        server.vite.addImport({ path: 'meteor-vite/server-entry/hmr' });
-        server.vite.addImport({ path: mainModule.server.vite.path });
-        server.vite.write();
+        // [DEV] Vite Server
+        vite.development.server.addImport({ path: 'meteor-vite/server-entry/hmr' });
+        vite.development.server.addImport({ path: mainModule.vite.server.path });
+        vite.development.server.write();
     }
 }
