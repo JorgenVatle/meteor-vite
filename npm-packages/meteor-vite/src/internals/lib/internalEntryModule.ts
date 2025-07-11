@@ -1,17 +1,17 @@
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import Path from 'path';
 
-export function mainModulePaths(environment: ModuleInfo['environment']): {
-    client: MainModule;
-    server: MainModule;
+export function internalEntryModule(environment: ModuleInfo['environment']): {
+    client: EntryModule;
+    server: EntryModule;
 } {
     return {
-        client: mainModule({ environment, context: 'client' }),
-        server: mainModule({ environment, context: 'server'})
+        client: entryModule({ environment, context: 'client' }),
+        server: entryModule({ environment, context: 'server'})
     }
 }
 
-function mainModule({ environment, context }: ModuleInfo): MainModule {
+function entryModule({ environment, context }: ModuleInfo): EntryModule {
     const rootDir = Path.join(CurrentConfig.tempDir, context);
     const fileExtension = `${environment}.mjs`;
     
@@ -26,7 +26,7 @@ type ModuleInfo = {
     context: 'client' | 'server';
 }
 
-type MainModule = {
+type EntryModule = {
     meteor: string;
     vite: string;
 }
