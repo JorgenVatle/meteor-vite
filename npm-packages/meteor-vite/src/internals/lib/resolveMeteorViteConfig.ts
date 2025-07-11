@@ -106,7 +106,7 @@ export async function resolveMeteorViteConfig(
                 },
                 resolve: {
                     external: true,
-                    noExternal: ['meteor-vite', ...METEOR_VITE_RUNTIME_DEPENDENCIES]
+                    noExternal: command === 'build' ? METEOR_VITE_RUNTIME_DEPENDENCIES : [],
                 },
                 build: {
                     target: 'node21',
