@@ -6,7 +6,7 @@ import packageJson from '../package.json' with { type: 'json' };
 
 const dirname = Path.dirname(fileURLToPath(import.meta.url));
 const rootDir = Path.join(dirname, '..');
-const entrypoint = Path.join(rootDir, packageJson.bin);
+const entrypoint = Path.join(rootDir, packageJson.bin.toolkit);
 
 if (!FS.existsSync(entrypoint)) {
     console.log([
