@@ -226,7 +226,7 @@ export class ProjectCompiler {
             if (changes.length) {
                 logLines.push(['\nDetected changes', '']);
                 changes.forEach((change) => {
-                    logLines.push(' - ', change);
+                    logLines.push(` - ${change}`);
                 })
                 logLines.push('');
             }
