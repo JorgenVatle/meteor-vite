@@ -17,9 +17,9 @@ export function cacheBuildInfo(rootDir: string): TSUpPlugin {
                 durationMs: Date.now() - startTime,
                 timestamp: Date.now(),
             });
-            this.logger.info(`Hash info:`, pc.bold(`Hashed files in`), pc.yellow(`${durationMs}ms`));
-            this.logger.info('Output hash:', pc.bold(`${filenameCount} files`), '|', fileNamesHash,);
-            this.logger.info('Input hash:', pc.bold(`${fileContentCount} files`), '|', fileContentHash,);
+            this.logger.info('Build info:', pc.bold(`${filenameCount} output files:`), pc.yellow(fileNamesHash));
+            this.logger.info('Build info:', pc.bold(`${fileContentCount} source files:`), pc.yellow(fileContentHash),);
+            this.logger.info(`Build info:`, pc.bold(`Hashing duration:`), pc.yellow(`${durationMs}ms`));
         }
     }
 }
