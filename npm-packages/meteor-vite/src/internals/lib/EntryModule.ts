@@ -1,5 +1,6 @@
 import { writeToPathSync } from '@/internals/lib/writeToPathSync';
-import { moduleImport } from '@/utilities/server';
+import { hasModuleImport, moduleImport } from '@/utilities/server';
+import FS from 'node:fs';
 import Path from 'path';
 
 export class EntryModule {
@@ -24,6 +25,28 @@ export class EntryModule {
         });
         
         writeToPathSync(this.path, importLines.join('\n'));
+    }
+    
+    /**
+     * Append missing imports to to file instead of overwriting it.
+     * @param module
+     */
+    public appendMissing() {
+        const content = FS.readFileSync(this.path, 'utf-8');
+        const imports: string[] = [];
+        
+        for (const module of this.imports) {
+            if (hasModuleImport({ content, path: module.path })) {
+                continue;
+            }
+            imports.push(moduleImport(module.path));
+        }
+        
+        if (imports.length === 0) {
+            return;
+        }
+        
+        FS.writeFileSync(this.path, [imports, content].flat().join('\n'));
     }
 }
 
