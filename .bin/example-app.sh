@@ -53,11 +53,11 @@ PROD_MONGO_CONNECTION_URI="mongodb://127.0.0.1:$(($PROD_MONGO_METEOR_PORT + 1))/
 # Start a development server
 start() {
   if [[ "$METEOR_VITE_TSUP_BUILD_WATCHER" == 'true' ]]; then
-     export METEOR_VITE_TSUP_BUILD_WATCHER="false"
-     npx concurrently -k -n "tsup,tsup,$app" -c dim,dim,yellow "'npm:build:meteor-vite -- --watch'" "'npm:build:jorgenvatle:vite -- --watch'" "'npm:start $app'"
+      export METEOR_VITE_TSUP_BUILD_WATCHER="false"
+      npx concurrently -k -n "tsup,$app" -c dim,yellow "npm run watch:packages" "npm start $app"
   else
-    cd "$APP_DIR" || exit 1
-    $npm start -- "$@" $EXTRA_ARGS
+      cd "$APP_DIR" || exit 1
+      $npm start -- "$@" $EXTRA_ARGS
   fi
 }
 
