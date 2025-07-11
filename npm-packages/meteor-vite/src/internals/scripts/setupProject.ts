@@ -1,3 +1,4 @@
+import { internalEntryModule } from '@/internals/lib/internalEntryModule';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import { writeToPathSync } from '@/internals/lib/writeToPathSync';
 import { createSimpleLogger } from '@/utilities/server';
@@ -52,5 +53,7 @@ function cleanupPreviousBuilds() {
         return;
     }
     FS.rmSync(CurrentConfig.outDir, { recursive: true, force: true });
+    internalEntryModule.buildOutput.client.clean();
+    internalEntryModule.buildOutput.server.clean();
     logger.info(`Cleaned up old build output in ${pc.green(CurrentConfig.outDir)}`);
 }
