@@ -5,8 +5,9 @@ import Path from 'path';
 
 export class EntryModule {
     protected readonly imports: (ModuleImport & { line: string })[] = [];
+    protected readonly dirname: string;
     constructor(public readonly path: string) {
-    
+        this.dirname = Path.dirname(path);
     }
     
     public addImport(module: ModuleImport) {
@@ -14,7 +15,7 @@ export class EntryModule {
         
         // Importing a file directly (not a node module)
         if (module.path.startsWith('.') || module.path.startsWith('/')) {
-            path = Path.relative(this.path, module.path);
+            path = Path.relative(this.dirname, module.path);
         }
         
         this.imports.push({
