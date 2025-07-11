@@ -55,13 +55,14 @@ export class EntryModule {
     }
     
     protected insertImportTemplate(originalContent: string, imports: string[]) {
-        const TERMINATION_LINE = `/** End of vite auto-imports **/`;
-        let patchedContent = originalContent;
+        let content = originalContent;
+        
         OLD_TERMINATION_LINES.forEach(line => {
-            patchedContent = patchedContent.replaceAll(line, TERMINATION_LINE);
+            content = content.replaceAll(line, TERMINATION_LINE);
         })
-        if (!originalContent.includes(TERMINATION_LINE)) {
-            patchedContent = [
+        
+        if (!content.includes(TERMINATION_LINE)) {
+            content = [
                 `/**`,
                 ` * These modules are automatically imported by jorgenvatle:vite.`,
                 ` * You can commit these to your project or move them elsewhere if you'd like,`,
@@ -70,17 +71,18 @@ export class EntryModule {
                 ` * More info: https://github.com/JorgenVatle/meteor-vite#lazy-loaded-meteor-packages`,
                 ` **/`,
                 TERMINATION_LINE,
-                originalContent,
+                content,
             ].join('\n');
         }
         
-        return patchedContent.replace(
+        return content.replace(
             TERMINATION_LINE,
             [imports, TERMINATION_LINE].flat().join('\n')
         )
     }
 }
 
+const TERMINATION_LINE = `/** End of vite auto-imports **/`;
 const OLD_TERMINATION_LINES = [
     '/** End of vite-bundler auto-imports **/',
 ]
