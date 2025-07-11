@@ -46,7 +46,31 @@ export class EntryModule {
             return;
         }
         
-        FS.writeFileSync(this.path, [imports, content].flat().join('\n'));
+        const template = this.insertImportTemplate(content, imports);
+        FS.writeFileSync(this.path, template);
+    }
+    
+    protected insertImportTemplate(originalContent: string, imports: string[]) {
+        const TERMINATION_LINE = `/** End of vite auto-imports **/`;
+        let patchedContent = originalContent;
+        if (!originalContent.includes(TERMINATION_LINE)) {
+            patchedContent = [
+                `/**`,
+                ` * These modules are automatically imported by jorgenvatle:vite.`,
+                ` * You can commit these to your project or move them elsewhere if you'd like,`,
+                ` * but they must be imported somewhere in your Meteor mainModule.`,
+                ` *`,
+                ` * More info: https://github.com/JorgenVatle/meteor-vite#lazy-loaded-meteor-packages`,
+                ` **/`,
+                TERMINATION_LINE,
+                originalContent,
+            ].join('\n');
+        }
+        
+        return patchedContent.replace(
+            TERMINATION_LINE,
+            [imports, TERMINATION_LINE].flat().join('\n')
+        )
     }
 }
 
