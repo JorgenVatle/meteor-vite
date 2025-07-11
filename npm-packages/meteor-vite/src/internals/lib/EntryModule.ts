@@ -110,6 +110,17 @@ export class EntryModule {
         FS.mkdirSync(this.dirname, { recursive: true });
         FS.writeFileSync(this.path, '// Created by Meteor-Vite\n');
     }
+    
+    public async clean() {
+        try {
+            FS.rmSync(this.dirname, { recursive: true, force: true });
+        } catch (error) {
+            // Probably safe to ignore
+            console.warn(`Failed to clean: ${error.message}`);
+        } finally {
+            this.prepare();
+        }
+    }
 }
 
 const TERMINATION_LINE = `/** End of vite auto-imports **/`;
