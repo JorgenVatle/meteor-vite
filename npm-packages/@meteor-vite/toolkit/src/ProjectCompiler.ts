@@ -4,14 +4,13 @@ import { globby } from 'globby';
 import { hash } from 'hasha';
 import Path from 'node:path';
 import * as process from 'node:process';
+import pc from 'picocolors';
 import { build } from 'tsup';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
 
 export class ProjectCompiler {
     protected readonly options: Options;
-    protected filePath: {
-        buildInfo: string;
-    }
+    protected filePath;
     
     public static options = CommandList.defineOptions({
         verbose: {
@@ -43,6 +42,7 @@ export class ProjectCompiler {
         this.options = Object.assign(ProjectCompiler.options.default, options);
         this.filePath = {
             buildInfo: Path.join(this.rootDir, 'dist', '.build-info.json'),
+            packageJson: Path.join(this.rootDir, 'package.json'),
         }
     }
     
@@ -53,8 +53,16 @@ export class ProjectCompiler {
     public async build() {
         const startTime = Date.now();
         const { changed } = await this.getHash();
-        
+        const { name } = await this.getProjectInfo();
         process.chdir(this.rootDir);
+        
+        let buildLabel = `${pc.white(' Building ')}`;
+        buildLabel = pc.bgGreen(buildLabel);
+        buildLabel = pc.bold(buildLabel);
+        console.log([
+            '\n',
+            pc.gray(`[${buildLabel} ${pc.green(pc.underline(name))}]`)
+        ].join('\n'));
         
         if (this.options.force) {
             console.log('Forcing build due to FORCE_BUILD (--force) environment variable');
@@ -73,6 +81,11 @@ export class ProjectCompiler {
             durationMs,
             timestamp: Date.now(),
         });
+    }
+    
+    protected async getProjectInfo(): Promise<{ name: string }> {
+        const content = await FS.readFile(this.filePath.packageJson, 'utf8');
+        return JSON.parse(content);
     }
     
     protected relativeTime(timestamp: number) {
