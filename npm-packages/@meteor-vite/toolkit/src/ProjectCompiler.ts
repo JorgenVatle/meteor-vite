@@ -39,7 +39,7 @@ export class ProjectCompiler {
      */
     public async build() {
         const startTime = Date.now();
-        const { changed } = await this.findChanges();
+        const { changed } = await this.getHash();
         
         process.chdir(this.rootDir);
         
@@ -60,56 +60,6 @@ export class ProjectCompiler {
             durationMs,
             timestamp: Date.now(),
         });
-    }
-    
-    /**
-     * Check if there have been any changes to the project since last build.
-     */
-    public async findChanges(): Promise<ChangeSummary> {
-        const { lastBuild, hash, fileNamesHash, fileContentHash, ...info } = await this.getHash();
-        const changes: string[] = [];
-        
-        if (info.additionalMetadata) {
-            console.log(info.additionalMetadata);
-        }
-        
-        if (lastBuild.hash) {
-            if (lastBuild.fileNamesHash !== fileNamesHash) {
-                changes.push('File names changed');
-            }
-            
-            if (lastBuild.fileContentHash !== fileContentHash) {
-                changes.push('Source files changed');
-            }
-            
-            if (!changes.length && hash !== lastBuild.hash) {
-                changes.push('Build hash changed');
-            }
-        } else {
-            changes.push('No previous build info found, rebuild is necessary');
-        }
-        
-        console.log('\n');
-        console.log(`Computed ${info.fileContentCount} content and ${info.filenameCount} file name hashes!`);
-        console.log(`Duration: ${info.durationMs}ms`);
-        
-        if (lastBuild.timestamp) {
-            console.log(`Last build: ${this.relativeTime(lastBuild.timestamp)}`);
-        }
-        
-        if (changes.length) {
-            console.log('\nDetected changes:\n - %s', changes.join('\n - '));
-            console.log();
-        }
-      
-        console.log(`Hash: ${hash}`);
-        console.log('\n');
-        
-        return {
-            changed: changes.length > 0,
-            changes,
-            lastBuild,
-        }
     }
     
     protected relativeTime(timestamp: number) {
@@ -171,7 +121,10 @@ export class ProjectCompiler {
      * Will save a hash of the current directory state to .build-hash
      */
     public async getHash(): Promise<HashResult> {
-        const result = await this.globHash({
+        const changes: string[] = [];
+        const lastBuild = await this.getLastBuildInfo();
+        
+        const glob = await this.globHash({
             fileContent: [
                 Path.join(this.rootDir, 'src'),
                 Path.join(this.rootDir, 'tsconfig.json'),
@@ -188,8 +141,46 @@ export class ProjectCompiler {
             ]
         });
         
+        if (glob.additionalMetadata) {
+            console.log(glob.additionalMetadata);
+        }
+        
+        if (lastBuild.hash) {
+            if (lastBuild.fileNamesHash !== glob.fileNamesHash) {
+                changes.push('File names changed');
+            }
+            
+            if (lastBuild.fileContentHash !== glob.fileContentHash) {
+                changes.push('Source files changed');
+            }
+            
+            if (!changes.length && glob.hash !== lastBuild.hash) {
+                changes.push('Build hash changed');
+            }
+        } else {
+            changes.push('No previous build info found, rebuild is necessary');
+        }
+        
+        console.log('\n');
+        console.log(`Computed ${glob.fileContentCount} content and ${glob.filenameCount} file name hashes!`);
+        console.log(`Duration: ${glob.durationMs}ms`);
+        
+        if (lastBuild.timestamp) {
+            console.log(`Last build: ${this.relativeTime(lastBuild.timestamp)}`);
+        }
+        
+        if (changes.length) {
+            console.log('\nDetected changes:\n - %s', changes.join('\n - '));
+            console.log();
+        }
+        
+        console.log(`Hash: ${hash}`);
+        console.log('\n');
+        
         return {
-            ...result,
+            ...glob,
+            changes,
+            changed: changes.length > 0,
             lastBuild: await this.getLastBuildInfo(),
         }
     }
@@ -263,15 +254,11 @@ interface GlobHashResult extends Required<BuildHashes> {
 
 interface HashResult extends GlobHashResult {
     lastBuild: BuildInfo;
+    changes: string[];
+    changed: boolean;
 }
 
 interface BuildInfo extends BuildHashes {
     timestamp?: number;
     durationMs?: number;
-}
-
-interface ChangeSummary {
-    changes: string[];
-    changed: boolean;
-    lastBuild: BuildInfo;
 }
