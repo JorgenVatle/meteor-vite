@@ -1,4 +1,5 @@
 import { CommandList } from '@/lib/CommandList';
+import { Highlight } from '@/lib/Highlight';
 
 export const Commands = new CommandList([
     {
@@ -13,6 +14,13 @@ export const Commands = new CommandList([
         description: 'Run a build and compute the build hash for the provided project root directory.',
         handler: async ({ compiler }) => {
             await compiler.build();
+        }
+    },
+    {
+        name: 'clean',
+        description: `Clean the build output directory (${Highlight.filePath('/dist')}) for the current project.`,
+        handler: async ({ compiler }) => {
+            await compiler.clean();
         }
     }
 ]);
