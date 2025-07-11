@@ -168,6 +168,10 @@ export class ProjectCompiler {
         return content;
     }
     
+    public async clean() {
+        await FS.rm(Path.join(this.rootDir, 'dist'), { recursive: true });
+    }
+    
     /**
      * Check whether the current root directory has changed since last build.
      * Will save a hash of the current directory state to .build-hash
