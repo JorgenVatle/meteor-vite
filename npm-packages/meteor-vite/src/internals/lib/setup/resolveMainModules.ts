@@ -1,11 +1,14 @@
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { EntryModule } from '@/internals/lib/EntryModule';
 import type { MainModule, ViteMainModule } from '@/internals/lib/internalEntryModule';
+import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import { setupMainModules } from '@/internals/lib/setup/setupMainModules';
 import type { ProjectJson, ResolvedViteConfig } from '@/plugin';
+import Path from 'path';
 
 export function resolveMainModules({ packageJson, userConfig }: { userConfig: ResolvedViteConfig, packageJson: ProjectJson }) {
     const mainModulePath = packageJson.meteor.mainModule;
+    const rootDir = CurrentConfig.projectRoot;
     
     if (!mainModulePath.server) {
         throw new MeteorViteError('package.json is missing a server mainModule. Make sure the meteor.mainModule.server field is set your package.json');
@@ -16,17 +19,17 @@ export function resolveMainModules({ packageJson, userConfig }: { userConfig: Re
     }
     
     const meteor: MainModule = {
-        server: new EntryModule(mainModulePath.server),
-        client: new EntryModule(mainModulePath.client),
+        server: new EntryModule(Path.resolve(rootDir, mainModulePath.server)),
+        client: new EntryModule(Path.resolve(rootDir, mainModulePath.client)),
     }
     
     const vite: ViteMainModule = {
         server: undefined,
-        client: new EntryModule(userConfig.meteor?.clientEntry),
+        client: new EntryModule(Path.resolve(rootDir, userConfig.meteor?.clientEntry)),
 };
 
     if (userConfig.meteor.serverEntry) {
-        vite.server = new EntryModule(userConfig.meteor.serverEntry);
+        vite.server = new EntryModule(Path.resolve(rootDir, userConfig.meteor.serverEntry));
     }
     
     const mainModules = setupMainModules({
