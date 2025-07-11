@@ -2,14 +2,6 @@ import { defineBuildConfig } from '@meteor-vite/toolkit';
 import FS from 'fs';
 import Path from 'path';
 
-let clean = false;
-
-try {
-    clean = JSON.parse(process.env.TSUP_CLEAN || 'true')
-} catch (error) {
-    console.warn(error);
-}
-
 export default defineBuildConfig(__dirname, [
     // Internal entry points
     {
@@ -23,7 +15,6 @@ export default defineBuildConfig(__dirname, [
         },
         format: ['esm'],
         platform: 'node',
-        clean,
         onSuccess: async () => {
             try {
                 const atmospherePackageOutDir = Path.join(__dirname, '..', '..', 'packages', 'vite', 'dist');
