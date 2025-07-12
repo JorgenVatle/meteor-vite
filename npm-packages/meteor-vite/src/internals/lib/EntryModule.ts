@@ -1,3 +1,4 @@
+import Instance from '@/internals/lib/MeteorViteRuntime';
 import { writeToPathSync } from '@/internals/lib/writeToPathSync';
 import { hasModuleImport, moduleImport } from '@/utilities/server';
 import FS from 'node:fs';
@@ -6,8 +7,10 @@ import Path from 'path';
 export class EntryModule {
     protected readonly imports: (ModuleImport & { line: string })[] = [];
     protected readonly dirname: string;
+    protected logger;
     constructor(public readonly path: string) {
         this.dirname = Path.dirname(path);
+        this.logger = Instance.logger;
     }
     
     public addImport(module: ModuleImport) {
@@ -22,6 +25,11 @@ export class EntryModule {
             path,
             line: moduleImport(path),
         });
+        
+        this.logger.debug(`Added import`, {
+            import: path,
+            entryModule: this.path,
+        });
     }
     
     protected get importLines() {
@@ -30,6 +38,9 @@ export class EntryModule {
     
     public write() {
         writeToPathSync(this.path, this.importLines);
+        this.logger.debug('Saved entry module', {
+            entryModule: this.path,
+        })
     }
     
     /**
@@ -53,6 +64,10 @@ export class EntryModule {
         
         const template = this.insertImportTemplate(content, imports);
         writeToPathSync(this.path, template);
+        this.logger.debug('Appended missing imports to entry module', {
+            entryModule: this.path,
+            imports: imports,
+        })
     }
     
     protected getContent() {
