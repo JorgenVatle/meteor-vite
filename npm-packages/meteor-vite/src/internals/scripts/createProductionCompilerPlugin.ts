@@ -54,7 +54,7 @@ async function createCompiler() {
     
     const builder = await createBuilder(config);
     const fileNames: FileNames = {};
-    const internalEntry = internalEntryModule();
+    const internalEntry = internalEntryModule().buildOutput;
     
     let clientManifest = {};
     
@@ -136,15 +136,15 @@ async function createCompiler() {
             return;
         }
         
-        internalEntry.meteor.server.addImport({
+        internalEntry.server.addImport({
             path: file.filePath,
         })
-        logger.debug(`Added import for Vite server bundle to ${internalEntry.meteor.server.path}`, {
+        logger.debug(`Added import for Vite server bundle to internal output entry module (${internalEntry.server.path})`, {
             path: file.filePath,
         });
     });
     
-    internalEntry.meteor.server.appendMissing();
+    internalEntry.server.appendMissing();
     
     return new MeteorViteCompilerPlugin({
         outDir,
