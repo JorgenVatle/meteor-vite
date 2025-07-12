@@ -9,6 +9,7 @@ export const internalEntryModule = (): InternalModules => {
             production: viteEntryModule('production'),
         },
         meteor: meteorEntryModule(),
+        buildOutput: buildOutputEntryModule(),
     }
 }
 
@@ -26,7 +27,7 @@ function viteEntryModule(environment: 'development' | 'production'): MainModule 
     }
 }
 
-function buildOutputEntryModule(): MainModule {
+function buildOutputEntryModule(): BuildOutputModule {
     return {
         client: new EntryModule(Path.join(CurrentConfig.outDir, 'client', `_entry-build.mjs`)),
         server: new EntryModule(Path.join(CurrentConfig.outDir, 'server', `_entry-build.mjs`)),
@@ -39,6 +40,7 @@ type InternalModules = {
         production: MainModule,
     },
     meteor: MainModule;
+    buildOutput: BuildOutputModule,
 }
 
 export type MainModule = {
