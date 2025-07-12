@@ -2,7 +2,7 @@ import { bugs, homepage, version } from '../../../package.json';
 
 export { version, bugs, homepage }
 
-function documentationLink(section: SectionId) {
+export function documentationLink(section: SectionId) {
     return `${homepage}#${section}`;
 }
 
