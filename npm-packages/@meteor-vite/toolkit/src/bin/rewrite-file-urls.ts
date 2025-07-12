@@ -29,7 +29,7 @@ const { replacement, baseUrl } = parse(
         },
         replacement: {
             type: String,
-            defaultValue: '//wsl.localhost/Ubuntu',
+            defaultValue: '//wsl.localhost/Ubuntu/',
             description: 'Replacement for file:// URLs. Defaults to //wsl.localhost/Ubuntu. (file://<replacement>)'
         }
     },
