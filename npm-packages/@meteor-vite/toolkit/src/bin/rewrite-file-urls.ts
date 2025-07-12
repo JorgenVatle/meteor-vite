@@ -46,12 +46,15 @@ const readline = Readline.createInterface({
     terminal: false,
 });
 
+const search = `file://${baseUrl}`;
+const replace = `file://${replacement}`;
+
 console.log([
     '\n',
-    `[Rewriting file URLs from file://${baseUrl} to: file://${replacement}/]`,
+    `[Rewriting file URLs from ${search} to: ${replace}]`,
     '\n',
 ].join('\n'));
 
 readline.on('line', (line) => {
-    console.log(line.replace(`file://${baseUrl}`, `file://${replacement}/`));
+    console.log(line.replace(search, replace));
 });
