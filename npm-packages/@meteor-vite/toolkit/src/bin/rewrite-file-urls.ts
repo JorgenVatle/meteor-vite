@@ -22,12 +22,14 @@ import pc from 'picocolors';
 import Readline from 'readline';
 import { parse } from 'ts-command-line-args';
 
+const defaultBaseUrl = process.cwd() + '/';
+
 const args = parse(
     {
         baseUrl: {
             type: String,
-            defaultValue: process.cwd(),
-            description: `Base URL to replace \t ${pc.dim(`Default: file://${process.cwd()}`)}`
+            defaultValue: defaultBaseUrl,
+            description: `Base URL to replace \t ${pc.dim(`Default: file://${defaultBaseUrl}`)}`
         },
         replacement: {
             type: String,
