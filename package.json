@@ -28,6 +28,7 @@
     "build": "npm run example build",
     "build:packages": "npm run build -w npm-packages/@meteor-vite/toolkit -w npm-packages/meteor-vite -w packages/vite",
 
+    "preprepare": "npm i -w npm-packages/@meteor-vite/toolkit",
     "prepare": "npm run build:packages || exit 0",
     "prestart": "npm run build:packages",
 
