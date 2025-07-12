@@ -29,3 +29,8 @@ export class MeteorEntryModule extends EntryModuleBase {
 interface MeteorModuleConfig extends EntryModuleConfig {
     context: 'server' | 'client';
 }
+
+export type MeteorMainModule = {
+    client: MeteorEntryModule;
+    server: MeteorEntryModule;
+}

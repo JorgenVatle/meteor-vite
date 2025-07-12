@@ -16,3 +16,8 @@ export class ViteEntryModule extends EntryModuleBase {
         })
     }
 }
+
+export type ViteMainModule = {
+    client: ViteEntryModule,
+    server?: ViteEntryModule,
+};

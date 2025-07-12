@@ -20,3 +20,8 @@ export class InternalEntryModule extends EntryModuleBase {
         })
     }
 }
+
+export type InternalMainModule = {
+    client: InternalEntryModule;
+    server: InternalEntryModule;
+}
