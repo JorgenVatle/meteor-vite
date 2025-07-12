@@ -1,6 +1,6 @@
-bin/
+./bin/
 dist/
 node_modules/
 
 # This file is written by hand and should not be ignored
-!bin/prepare.mjs
+!./bin/prepare.mjs
