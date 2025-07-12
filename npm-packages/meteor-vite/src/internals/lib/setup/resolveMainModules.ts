@@ -5,6 +5,7 @@ import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import { setupEntryModules } from '@/internals/lib/setup/setupEntryModules';
 import type { ProjectJson, ResolvedViteConfig } from '@/plugin';
 import { documentationLink } from '@/utilities/common/Constants';
+import { Colorize } from '@/utilities/server';
 import Path from 'path';
 import pc from 'picocolors';
 
@@ -13,7 +14,13 @@ export function resolveMainModules({ packageJson, userConfig }: { userConfig: Re
     const rootDir = CurrentConfig.projectRoot;
     
     if (!mainModulePath.server) {
-        throw new MeteorViteError('Could not find a server mainModule path in your package.json!', {
+        throw new MeteorViteError(`Could not find a ${Colorize.arch('server')} mainModule path in your package.json!`, {
+            subtitle: `Visit ${pc.blue(documentationLink('packagejson'))} for more details`
+        })
+    }
+    
+    if (!mainModulePath.client) {
+        throw new MeteorViteError(`Could not find a ${Colorize.arch('client')} mainModule path in your package.json!`, {
             subtitle: `Visit ${pc.blue(documentationLink('packagejson'))} for more details`
         })
     }
