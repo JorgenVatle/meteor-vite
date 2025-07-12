@@ -1,4 +1,4 @@
-import { EntryModule } from '@/internals/lib/EntryModule';
+import { EntryModule, MeteorEntryModule } from '@/internals/lib/EntryModule';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import Path from 'path';
 
@@ -46,6 +46,11 @@ type InternalModules = {
 export type MainModule = {
     client: EntryModule;
     server: EntryModule;
+}
+
+export type MeteorMainModule = {
+    client: MeteorEntryModule;
+    server: MeteorEntryModule;
 }
 
 export type ViteMainModule = {

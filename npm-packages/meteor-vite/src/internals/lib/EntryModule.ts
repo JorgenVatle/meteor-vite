@@ -146,7 +146,7 @@ export class EntryModule {
     }
 }
 
-export class MeteorMainModule extends EntryModule {
+export class MeteorEntryModule extends EntryModule {
     constructor(
         public readonly path: string,
         public readonly config: MeteorModuleConfig,
