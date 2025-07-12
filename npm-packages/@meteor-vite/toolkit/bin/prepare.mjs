@@ -19,5 +19,8 @@ if (!FS.existsSync(entrypoint)) {
     ].join('\n'));
     execSync('npx tsup', {
         stdio: 'inherit',
+    });
+    execSync('node ./dist/bin/entrypoint.mjs', {
+        stdio: 'inherit',
     })
 }
