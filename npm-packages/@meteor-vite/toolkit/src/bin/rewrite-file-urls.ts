@@ -35,7 +35,10 @@ const { replacement, baseUrl } = parse(
     },
     {
         helpArg: 'help',
-        headerContentSections: [{ header: 'Replace File URLs', content: 'Rewrite file URLs to handle stack traces with absolute paths that don\'t correctly map to the current filesystem.' }],
+        headerContentSections: [{
+            header: 'Replace File URLs',
+            content: 'Rewrite file URLs to handle stack traces with absolute paths that don\'t correctly map to the current filesystem.'
+        }],
         stopAtFirstUnknown: true,
     }
 )
