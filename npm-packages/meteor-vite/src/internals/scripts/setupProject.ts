@@ -1,5 +1,4 @@
 import { getInternalModules } from '@/internals/lib/EntryModule/helpers/get';
-import { meteorSettings } from '@/internals/lib/meteorSettings';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import { writeToPathSync } from '@/internals/lib/writeToPathSync';
 import { createSimpleLogger } from '@/utilities/server';
@@ -19,15 +18,13 @@ export function setupProject() {
 }
 
 function validateVersions() {
-    const pluginVersion = meteorSettings?.package?.version;
-    if (!pluginVersion) {
+    if (!CurrentConfig.buildPluginVersion) {
         logger.warn(`Could not retrieve version from jorgenvatle:vite. This could mean it's out of date. Try running ${pc.yellow(
             'meteor update jorgenvatle:vite')} to update it`);
         return;
     }
     
-    
-    logger.info(`jorgenvatle:vite v${pluginVersion}`);
+    logger.info(`jorgenvatle:vite v${CurrentConfig.buildPluginVersion}`);
     logger.info(`meteor-vite v${npmPackageVersion}`);
     
     const expectedVersion = {
@@ -41,7 +38,7 @@ function validateVersions() {
         logger.warn(`meteor-vite is out of date! Try updating it: ${command}`);
     }
     
-    if (!satisfies(pluginVersion, `^${expectedVersion.meteorPackage.raw}`)) {
+    if (!satisfies(CurrentConfig.buildPluginVersion, `^${expectedVersion.meteorPackage.raw}`)) {
         const command = pc.yellow(`meteor update jorgenvatle:vite`);
         logger.warn(`jorgenvatle:vite is out of date! Try updating it: ${command}`);
     }
