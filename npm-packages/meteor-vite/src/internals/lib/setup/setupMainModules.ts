@@ -1,7 +1,7 @@
 import { internalEntryModule, type MainModule, type ViteMainModule } from '@/internals/lib/internalEntryModule';
 
 export function setupMainModules(mainModule: { vite: ViteMainModule, meteor: MainModule, buildOutput: MainModule }) {
-    const { meteor, vite: { development, production}, buildOutput } = internalEntryModule;
+    const { meteor, vite: { development, production}, buildOutput } = internalEntryModule();
     
     // [Vite Client]
     production.client.addImport({ path: 'vite/modulepreload-polyfill' });
@@ -12,13 +12,16 @@ export function setupMainModules(mainModule: { vite: ViteMainModule, meteor: Mai
     development.client.write();
     
     // [Vite Server]
-    if (mainModule.vite.server) {
+    {
         production.server.addImport({ path: 'meteor-vite/server-entry/production' });
-        production.server.addImport({ path: mainModule.vite.server.path });
-        production.server.write();
-        
         development.server.addImport({ path: 'meteor-vite/server-entry/hmr' });
-        development.server.addImport({ path: mainModule.vite.server.path });
+        
+        if (mainModule.vite.server) {
+            production.server.addImport({ path: mainModule.vite.server.path });
+            development.server.addImport({ path: mainModule.vite.server.path });
+        }
+        
+        production.server.write();
         development.server.write();
     }
     
