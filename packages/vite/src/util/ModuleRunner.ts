@@ -1,4 +1,5 @@
 import { type ModuleRunner as InternalModuleRunner } from 'meteor-vite/internals';
+import { pathToFileURL } from 'node:url';
 import { constants, Script } from 'node:vm';
 import { CurrentConfig } from './CurrentConfig';
 
@@ -12,7 +13,7 @@ const script = `
 export const ModuleRunner: InternalModuleRunner = await new Script(
     script,
     {
-        filename: CurrentConfig.bootstrapEvalFilename,
+        filename: pathToFileURL(CurrentConfig.bootstrapEvalFilename).href,
         importModuleDynamically: constants.USE_MAIN_CONTEXT_DEFAULT_LOADER,
     },
 ).runInThisContext();
