@@ -28,7 +28,12 @@ export const meteorSettings = {
  * Runtime settings for the Vite bundle, assigned to Meteor's settings object.
  * {@link Meteor.settings}
  */
-export type MeteorPackageSettings = typeof meteorSettings;
+export type MeteorPackageSettings = typeof meteorSettings & {
+    package?: {
+        name: string,
+        version: string,
+    }
+};
 
 /**
  * Overrides defined by the peer project's settings.json file.
