@@ -1,11 +1,12 @@
-import { InternalModules, type MeteorMainModule, type ViteMainModule } from '@/internals/lib/EntryModule';
+import { type MeteorMainModule, type ViteMainModule } from '@/internals/lib/EntryModule';
+import { getInternalModules } from '@/internals/lib/EntryModule/helpers/get';
 
 export function setupEntryModules(mainModule: { vite: ViteMainModule, meteor: MeteorMainModule }) {
     const {
         meteor: internalMeteorEntry,
         vite: { development, production },
         buildOutput,
-    } = InternalModules();
+    } = getInternalModules();
     
     /**
      * [Vite Client]

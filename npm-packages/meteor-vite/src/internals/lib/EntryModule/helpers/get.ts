@@ -2,7 +2,7 @@ import { InternalEntryModule, type InternalMainModule } from '@/internals/lib/En
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import Path from 'path';
 
-export function InternalModules(): InternalModules {
+export function getInternalModules(): InternalModules {
     return {
         vite: {
             development: viteEntryModule('development'),

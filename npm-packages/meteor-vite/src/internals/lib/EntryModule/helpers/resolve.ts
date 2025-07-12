@@ -1,8 +1,8 @@
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
-import { EntryModule, MeteorEntryModule } from '@/internals/lib/EntryModule';
-import type { MeteorMainModule, ViteMainModule } from '@/internals/lib/internalEntryModule';
+import type { MeteorMainModule, ViteMainModule } from '@/internals/lib/EntryModule';
+import { MeteorEntryModule } from '@/internals/lib/EntryModule';
+import { setupEntryModules } from '@/internals/lib/EntryModule/helpers/setup';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
-import { setupEntryModules } from '@/internals/lib/setup/setupEntryModules';
 import type { ProjectJson, ResolvedViteConfig } from '@/plugin';
 import { documentationLink } from '@/utilities/common/Constants';
 import { Colorize } from '@/utilities/server';
