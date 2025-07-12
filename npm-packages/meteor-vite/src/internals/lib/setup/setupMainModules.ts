@@ -1,7 +1,7 @@
 import { internalEntryModule, type MainModule, type ViteMainModule } from '@/internals/lib/internalEntryModule';
 
 export function setupMainModules(mainModule: { vite: ViteMainModule, meteor: MainModule, buildOutput: MainModule }) {
-    const { meteor, vite: { development, production}, buildOutput } = internalEntryModule();
+    const { meteor: internalMeteorEntry, vite: { development, production}, buildOutput } = internalEntryModule();
     
     // [Vite Client]
     production.client.addImport({ path: 'vite/modulepreload-polyfill' });
@@ -27,11 +27,11 @@ export function setupMainModules(mainModule: { vite: ViteMainModule, meteor: Mai
     
     // [Build Output]
     {
-        meteor.client.addImport({ path: buildOutput.client.path });
-        meteor.client.write();
+        internalMeteorEntry.client.addImport({ path: buildOutput.client.path });
+        internalMeteorEntry.client.write();
         
-        meteor.server.addImport({ path: buildOutput.server.path });
-        meteor.server.write();
+        internalMeteorEntry.server.addImport({ path: buildOutput.server.path });
+        internalMeteorEntry.server.write();
     }
     
     // [Meteor Main Module]
@@ -41,16 +41,16 @@ export function setupMainModules(mainModule: { vite: ViteMainModule, meteor: Mai
     // apart from this one time here.
     {
         // Client
-        mainModule.meteor.client.addImport({ path: meteor.client.path });
+        mainModule.meteor.client.addImport({ path: internalMeteorEntry.client.path });
         mainModule.meteor.client.appendMissing();
         
         // Server
-        mainModule.meteor.server.addImport({ path: meteor.server.path });
+        mainModule.meteor.server.addImport({ path: internalMeteorEntry.server.path });
         mainModule.meteor.server.appendMissing();
     }
     
     return {
-        meteor,
+        meteor: internalMeteorEntry,
         vite: {
             development,
             production,
