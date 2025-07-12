@@ -1,4 +1,10 @@
 import { Colorize, Logger } from '@/utilities/server';
+import { install } from 'source-map-support';
+
+install({
+    handleUncaughtExceptions: false,
+    environment: 'node',
+});
 
 export class ModuleRunner {
     constructor() {
