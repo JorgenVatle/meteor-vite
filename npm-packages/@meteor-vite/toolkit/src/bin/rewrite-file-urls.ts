@@ -20,7 +20,7 @@
 import Readline from 'readline';
 import { parse } from 'ts-command-line-args';
 
-const { replacement, baseUrl } = parse(
+const args = parse(
     {
         baseUrl: {
             type: String,
@@ -31,7 +31,8 @@ const { replacement, baseUrl } = parse(
             type: String,
             defaultValue: '//wsl.localhost/Ubuntu/',
             description: 'Replacement for file:// URLs. Defaults to //wsl.localhost/Ubuntu. (file://<replacement>)'
-        }
+        },
+        help: Boolean,
     },
     {
         helpArg: 'help',
@@ -43,21 +44,24 @@ const { replacement, baseUrl } = parse(
     }
 )
 
-const readline = Readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    terminal: false,
-});
+if (!args.help) {
+    const readline = Readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+        terminal: false,
+    });
+    
+    const search = `file://${args.baseUrl}`;
+    const replace = `file://${args.replacement}`;
+    
+    console.log([
+        '\n',
+        `[Rewriting file URLs from ${search} to: ${replace}]`,
+        '\n',
+    ].join('\n'));
+    
+    readline.on('line', (line) => {
+        console.log(line.replace(search, replace));
+    });
+}
 
-const search = `file://${baseUrl}`;
-const replace = `file://${replacement}`;
-
-console.log([
-    '\n',
-    `[Rewriting file URLs from ${search} to: ${replace}]`,
-    '\n',
-].join('\n'));
-
-readline.on('line', (line) => {
-    console.log(line.replace(search, replace));
-});
