@@ -2,7 +2,7 @@
  * Rewrite file URLs to handle stack traces with absolute paths that don't
  * correctly map to the current filesystem.
  *
- * Primarily to map e.g. WSL file paths to Windows-compatible filepath.
+ * For example to map WSL file paths to Windows-compatible format.
  *
  * @example Usage from the terminal
  * node ./bar.js  2>&1 | rewrite-file-urls '//wsl$/Ubuntu'
