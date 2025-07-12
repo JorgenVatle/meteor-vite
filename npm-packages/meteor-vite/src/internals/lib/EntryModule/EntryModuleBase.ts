@@ -85,13 +85,7 @@ export abstract class EntryModuleBase {
         
         if (!content.includes(TERMINATION_LINE)) {
             content = [
-                `/**`,
-                ` * These modules are automatically imported by jorgenvatle:vite.`,
-                ` * You can commit these to your project or move them elsewhere if you'd like,`,
-                ` * but they must be imported somewhere in your Meteor mainModule.`,
-                ` *`,
-                ` * More info: https://github.com/JorgenVatle/meteor-vite#lazy-loaded-meteor-packages`,
-                ` **/`,
+                IMPORT_TEMPLATE[this.config.location],
                 TERMINATION_LINE,
                 content,
             ].join('\n');
@@ -132,6 +126,25 @@ const TERMINATION_LINE = `/** End of vite auto-imports **/`;
 const OLD_TERMINATION_LINES = [
     '/** End of vite-bundler auto-imports **/',
 ]
+
+const IMPORT_TEMPLATE = {
+    'app-source': [
+        `/**`,
+        ` * These modules are automatically imported by jorgenvatle:vite.`,
+        ` * You can commit these to your project or move them elsewhere if you'd like,`,
+        ` * but they must be imported somewhere in your Meteor mainModule.`,
+        ` *`,
+        ` * More info: https://github.com/JorgenVatle/meteor-vite#lazy-loaded-meteor-packages`,
+        ` **/`,
+    ].join('\n'),
+    'internal': [
+        `/**`,
+        ` * Internally managed module imports.`,
+        ` * These files change based on the build configuration and current runtime environment.`,
+        ` * Any files within this directory should not be committed to source control.`,
+        ` **/`,
+    ].join('\n'),
+}
 
 type ModuleImport = {
     path: string;
