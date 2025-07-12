@@ -45,7 +45,6 @@ export abstract class EntryModuleBase {
     
     /**
      * Append missing imports to to file instead of overwriting it.
-     * @param module
      */
     public appendMissing() {
         const content = this.getContent();
