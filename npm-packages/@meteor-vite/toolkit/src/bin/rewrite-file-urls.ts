@@ -18,8 +18,27 @@
  */
 
 import Readline from 'readline';
+import { parse } from 'ts-command-line-args';
 
-const [nodePath, scriptPath, replacement = '//wsl.localhost/Ubuntu'] = process.argv;
+const { replacement, baseUrl } = parse(
+    {
+        baseUrl: {
+            type: String,
+            defaultValue: '/',
+            description: 'Base URL to replace. Defaults to / (file://<baseUrl>)'
+        },
+        replacement: {
+            type: String,
+            defaultValue: '//wsl.localhost/Ubuntu',
+            description: 'Replacement for file:// URLs. Defaults to //wsl.localhost/Ubuntu. (file://<replacement>)'
+        }
+    },
+    {
+        helpArg: 'help',
+        headerContentSections: [{ header: 'Replace File URLs', content: 'Rewrite file URLs to handle stack traces with absolute paths that don\'t correctly map to the current filesystem.' }],
+        stopAtFirstUnknown: true,
+    }
+)
 
 const readline = Readline.createInterface({
     input: process.stdin,
@@ -29,9 +48,10 @@ const readline = Readline.createInterface({
 
 console.log([
     '\n',
-    `[Rewriting file URLs to: file://${replacement}/]`,
+    `[Rewriting file URLs from file://${baseUrl} to: file://${replacement}/]`,
     '\n',
 ].join('\n'));
+
 readline.on('line', (line) => {
-    console.log(line.replace('file:///', `file://${replacement}/`));
+    console.log(line.replace(`file://${baseUrl}`, `file://${replacement}/`));
 });
