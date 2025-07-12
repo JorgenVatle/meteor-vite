@@ -1,4 +1,3 @@
-import type * as Scripts from '@/internals/scripts';
 import { Colorize, Logger } from '@/utilities/server';
 
 export class ModuleRunner {
@@ -37,8 +36,9 @@ const AvailableModules = {
     'internals/scripts': () => import('@/internals/scripts/index'),
 } as const;
 
-type ScriptName = keyof typeof Scripts;
-type ScriptResult<TName extends ScriptName> = Awaited<ReturnType<typeof Scripts[TName]>>;
+type Scripts = Awaited<ModuleImport<'internals/scripts'>>;
+type ScriptName = keyof Awaited<ModuleImport<'internals/scripts'>>;
+type ScriptResult<TName extends ScriptName> = Awaited<ReturnType<Scripts[TName]>>;
 type ImportPath = keyof AvailableModules;
 type AvailableModules = typeof AvailableModules;
 type ModuleImport<T extends ImportPath> = ReturnType<AvailableModules[T]>;
