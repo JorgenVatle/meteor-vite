@@ -1,7 +1,6 @@
 import FS from 'node:fs';
 import OS from 'node:os';
 import Path from 'path';
-import buildPluginPackageJson from '../../package.json';
 
 function guessCwd () {
     let cwd = process.env.PWD ?? process.cwd()
@@ -22,7 +21,6 @@ const productionPreview = process.argv.includes('--production');
 process.env.METEOR_PROJECT_ROOT = projectRoot;
 
 export const CurrentConfig = {
-    buildPluginVersion: buildPluginPackageJson.version,
     projectRoot,
     bootstrapEvalFilename: Path.join(projectRoot, '__meteor-vite-runtime-bootstrap__.ts'),
     configFile,
