@@ -20,7 +20,4 @@ if (!FS.existsSync(entrypoint)) {
     execSync('npx tsup', {
         stdio: 'inherit',
     });
-    execSync('node ./dist/bin/entrypoint.mjs', {
-        stdio: 'inherit',
-    })
 }

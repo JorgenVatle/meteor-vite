@@ -25,7 +25,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "toolkit build .",
-    "prepare": "node ./bin/prepare.mjs"
+    "prepare": "node ./bin/prepare.mjs",
+    "postprepare": "npm run build"
   },
   "dependencies": {
     "globby": "^14.1.0",
