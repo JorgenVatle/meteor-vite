@@ -1,4 +1,4 @@
-import { internalEntryModule } from '@/internals/lib/internalEntryModule';
+import { getInternalModules } from '@/internals/lib/EntryModule/helpers/get';
 import { meteorSettings } from '@/internals/lib/meteorSettings';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import { writeToPathSync } from '@/internals/lib/writeToPathSync';
@@ -56,7 +56,8 @@ function cleanupPreviousBuilds() {
         return;
     }
     FS.rmSync(CurrentConfig.outDir, { recursive: true, force: true });
-    internalEntryModule().buildOutput.client.clean();
-    internalEntryModule().buildOutput.server.clean();
+    const { buildOutput } = getInternalModules();
+    buildOutput.client.clean();
+    buildOutput.server.clean();
     logger.info(`Cleaned up old build output in ${pc.green(CurrentConfig.outDir)}`);
 }
