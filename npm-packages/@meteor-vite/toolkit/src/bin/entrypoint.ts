@@ -1,16 +1,14 @@
 import { Commands } from '@/Commands';
 import { CommandFailure } from '@/errors/CommandFailure';
 import { parseCliParams } from '@/lib/parseCliParams';
-import * as process from 'node:process';
 
-try {
-    const { command, options } = parseCliParams();
-    
-    await Commands.run(command, options);
-} catch (error) {
-    if (error instanceof CommandFailure) {
-        console.error(error.message);
-        process.exit(1);
+const { command, options } = parseCliParams();
+
+await Commands.run(command, options).catch((error) => {
+    if (!(error instanceof CommandFailure)) {
+        throw error;
     }
-    throw error;
-}
+    
+    process.exitCode = 1;
+    console.error(error.message);
+});
