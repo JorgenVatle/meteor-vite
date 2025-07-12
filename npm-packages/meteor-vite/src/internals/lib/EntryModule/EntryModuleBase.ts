@@ -87,6 +87,7 @@ export abstract class EntryModuleBase {
             content = [
                 IMPORT_TEMPLATE[this.config.location],
                 TERMINATION_LINE,
+                '\n',
                 content,
             ].join('\n');
         }
