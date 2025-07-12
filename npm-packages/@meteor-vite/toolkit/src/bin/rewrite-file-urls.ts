@@ -31,8 +31,8 @@ const args = parse(
         },
         replacement: {
             type: String,
-            defaultValue: '/',
-            description: `Replacement for provided base URL \t ${pc.dim('Default: file:///')}`,
+            defaultValue: '',
+            description: `Replacement for provided base URL`,
         },
         help: Boolean,
     },
