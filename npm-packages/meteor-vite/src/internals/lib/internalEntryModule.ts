@@ -9,7 +9,6 @@ export const internalEntryModule = (): InternalModules => {
             production: viteEntryModule('production'),
         },
         meteor: meteorEntryModule(),
-        buildOutput: buildOutputEntryModule(),
     }
 }
 
@@ -40,7 +39,6 @@ type InternalModules = {
         production: MainModule,
     },
     meteor: MainModule;
-    buildOutput: MainModule;
 }
 
 export type MainModule = {
@@ -52,3 +50,8 @@ export type ViteMainModule = {
     client: EntryModule,
     server?: EntryModule,
 };
+
+export type BuildOutputModule = {
+    client: EntryModule,
+    server: EntryModule,
+}
