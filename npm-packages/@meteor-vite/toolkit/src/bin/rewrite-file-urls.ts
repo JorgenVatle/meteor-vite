@@ -39,6 +39,10 @@ const args = parse(
             defaultValue: DEFAULTS.replacement,
             description: `Replacement for provided base URL \t ${pc.dim(`Default: ${DEFAULTS.replacement || '(empty string)'}`)}`,
         },
+        run: {
+            description: 'Run the command and pipe the output to this script. By default, this script will read from stdin and write to stdout.',
+            type: String,
+        },
         help: Boolean,
     },
     {
@@ -51,24 +55,31 @@ const args = parse(
     }
 )
 
-if (!args.help) {
+const search = `file://${args.baseUrl}`;
+const replace = `file://${args.replacement}`;
+
+console.log([
+    '\n',
+    `[Rewriting file URLs from ${search} to: ${replace}]`,
+    '\n',
+].join('\n'));
+
+
+function processLine(line: string) {
+    return line.replace(search, replace);
+}
+
+if (args.help) {}
+else if (args.run) {
+    // todo
+} else {
     const readline = Readline.createInterface({
         input: process.stdin,
         output: process.stdout,
         terminal: false,
     });
     
-    const search = `file://${args.baseUrl}`;
-    const replace = `file://${args.replacement}`;
-    
-    console.log([
-        '\n',
-        `[Rewriting file URLs from ${search} to: ${replace}]`,
-        '\n',
-    ].join('\n'));
-    
     readline.on('line', (line) => {
-        console.log(line.replace(search, replace));
+        console.log(processLine(line));
     });
 }
-
