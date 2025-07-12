@@ -1,6 +1,6 @@
 import { internalEntryModule, type MainModule, type ViteMainModule } from '@/internals/lib/internalEntryModule';
 
-export function setupMainModules(mainModule: { vite: ViteMainModule, meteor: MainModule, buildOutput: MainModule }) {
+export function setupEntryModules(mainModule: { vite: ViteMainModule, meteor: MainModule, buildOutput: MainModule }) {
     const { meteor: internalMeteorEntry, vite: { development, production}, buildOutput } = internalEntryModule();
     
     /**

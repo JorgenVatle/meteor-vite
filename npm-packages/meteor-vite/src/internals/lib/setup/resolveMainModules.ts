@@ -2,7 +2,7 @@ import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { EntryModule } from '@/internals/lib/EntryModule';
 import type { MainModule, ViteMainModule } from '@/internals/lib/internalEntryModule';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
-import { setupMainModules } from '@/internals/lib/setup/setupMainModules';
+import { setupEntryModules } from '@/internals/lib/setup/setupEntryModules';
 import type { ProjectJson, ResolvedViteConfig } from '@/plugin';
 import Path from 'path';
 
@@ -32,7 +32,7 @@ export function resolveMainModules({ packageJson, userConfig }: { userConfig: Re
         vite.server = new EntryModule(Path.resolve(rootDir, userConfig.meteor.serverEntry));
     }
     
-    const mainModules = setupMainModules({
+    const mainModules = setupEntryModules({
         vite,
         meteor,
     });
