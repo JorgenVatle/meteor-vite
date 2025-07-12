@@ -8,7 +8,12 @@ export class EntryModule {
     protected readonly imports: (ModuleImport & { line: string })[] = [];
     protected readonly dirname: string;
     protected logger;
-    constructor(public readonly path: string) {
+    constructor(
+        public readonly path: string,
+        public readonly config: EntryModuleConfig = {
+            location: 'internal'
+        },
+    ) {
         this.dirname = Path.dirname(path);
         this.logger = Instance.logger;
     }
@@ -145,4 +150,19 @@ const OLD_TERMINATION_LINES = [
 
 type ModuleImport = {
     path: string;
+}
+
+type EntryModuleConfig = {
+    location:
+        /**
+         * Internal module (placed in /_vite-bundle)
+         * @Example /_vite-bundle/client/_entry-vite.js
+         */
+        | 'internal'
+        
+        /**
+         * This module lives in the source files of an app.
+         * @example /server/entry-meteor.js
+         */
+        | 'app-source'
 }
