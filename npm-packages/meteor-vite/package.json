@@ -71,6 +71,7 @@
     "@types/meteor": "^2.9.8",
     "@types/node": "^20.3.3",
     "@types/semver": "^7.5.8",
+    "@types/source-map-support": "^0.5.10",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",
