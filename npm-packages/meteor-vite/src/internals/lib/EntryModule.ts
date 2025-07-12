@@ -1,19 +1,18 @@
 import Instance from '@/internals/lib/MeteorViteRuntime';
 import { writeToPathSync } from '@/internals/lib/writeToPathSync';
-import { hasModuleImport, moduleImport } from '@/utilities/server';
+import { documentationLink } from '@/utilities/common';
+import { Colorize, formatLogBlock, hasModuleImport, moduleImport } from '@/utilities/server';
 import FS from 'node:fs';
 import Path from 'path';
 
 export class EntryModule {
     protected readonly imports: (ModuleImport & { line: string })[] = [];
     protected readonly dirname: string;
+    protected readonly config: EntryModuleConfig = {
+        location: 'internal',
+    };
     protected logger;
-    constructor(
-        public readonly path: string,
-        public readonly config: EntryModuleConfig = {
-            location: 'internal'
-        },
-    ) {
+    constructor(public readonly path: string) {
         this.dirname = Path.dirname(path);
         this.logger = Instance.logger;
     }
@@ -41,8 +40,12 @@ export class EntryModule {
         return this.imports.map(({ line }) => line).join('\n');
     }
     
+    protected _write(content: string) {
+        writeToPathSync(this.path, content);
+    }
+    
     public write() {
-        writeToPathSync(this.path, this.importLines);
+        this._write(this.importLines);
         this.logger.debug('Saved entry module', {
             entryModule: this.path,
         })
@@ -68,7 +71,7 @@ export class EntryModule {
         }
         
         const template = this.insertImportTemplate(content, imports);
-        writeToPathSync(this.path, template);
+        this._write(template);
         this.logger.debug('Appended missing imports to entry module', {
             entryModule: this.path,
             imports: imports,
@@ -143,6 +146,30 @@ export class EntryModule {
     }
 }
 
+export class MeteorMainModule extends EntryModule {
+    constructor(
+        public readonly path: string,
+        public readonly config: MeteorModuleConfig,
+    ) {
+        super(path);
+    }
+    
+    protected _write(content: string) {
+        const arch = Colorize.arch(this.config.context);
+        this.logger.warn(
+            formatLogBlock(
+                `Meteor-Vite needs to write to your Meteor ${arch}'s main module defined in your package.json`,
+                [
+                    `If you've migrated an existing project, please make sure to move any existing code`,
+                    `in this file over to the entry module specified in your Vite config.`,
+                    '\n',
+                    `More info: ${documentationLink('lazy-loaded-meteor-packages')}`
+            ])
+        );
+        return super._write(content);
+    }
+}
+
 const TERMINATION_LINE = `/** End of vite auto-imports **/`;
 const OLD_TERMINATION_LINES = [
     '/** End of vite-bundler auto-imports **/',
@@ -152,12 +179,12 @@ type ModuleImport = {
     path: string;
 }
 
-type EntryModuleConfig = {
+interface EntryModuleConfig {
     location:
-        /**
-         * Internal module (placed in /_vite-bundle)
-         * @Example /_vite-bundle/client/_entry-vite.js
-         */
+    /**
+     * Internal module (placed in /_vite-bundle)
+     * @Example /_vite-bundle/client/_entry-vite.js
+     */
         | 'internal'
         
         /**
@@ -165,4 +192,8 @@ type EntryModuleConfig = {
          * @example /server/entry-meteor.js
          */
         | 'app-source'
+}
+
+interface MeteorModuleConfig extends EntryModuleConfig {
+    context?: 'server' | 'client';
 }
