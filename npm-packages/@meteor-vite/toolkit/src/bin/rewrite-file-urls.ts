@@ -17,6 +17,8 @@
  * at (file:///wsl$/Ubuntu/foo/bar.js:13:37)
  */
 
+import process from 'node:process';
+import pc from 'picocolors';
 import Readline from 'readline';
 import { parse } from 'ts-command-line-args';
 
@@ -24,13 +26,13 @@ const args = parse(
     {
         baseUrl: {
             type: String,
-            defaultValue: '/',
-            description: 'Base URL to replace. Defaults to / (file://<baseUrl>)'
+            defaultValue: process.cwd(),
+            description: `Base URL to replace \t ${pc.dim(`Default: file://${process.cwd()}`)}`
         },
         replacement: {
             type: String,
-            defaultValue: '//wsl.localhost/Ubuntu/',
-            description: 'Replacement for file:// URLs. Defaults to //wsl.localhost/Ubuntu. (file://<replacement>)'
+            defaultValue: '/',
+            description: `Replacement for provided base URL \t ${pc.dim('Default: file:///')}`,
         },
         help: Boolean,
     },
