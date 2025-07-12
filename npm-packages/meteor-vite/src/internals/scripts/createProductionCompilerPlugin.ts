@@ -1,6 +1,6 @@
 import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
-import { internalEntryModule } from '@/internals/lib/internalEntryModule';
+import { getInternalModules } from '@/internals/lib/EntryModule/helpers/get';
 import { MeteorViteCompilerPlugin } from '@/internals/lib/MeteorViteCompilerPlugin';
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { ProjectJson, ResolvedViteConfig, StubSettings } from '@/plugin';
@@ -54,7 +54,7 @@ async function createCompiler() {
     
     const builder = await createBuilder(config);
     const fileNames: FileNames = {};
-    const internalEntry = internalEntryModule().buildOutput;
+    const internalEntry = getInternalModules().buildOutput;
     
     let clientManifest = {};
     
