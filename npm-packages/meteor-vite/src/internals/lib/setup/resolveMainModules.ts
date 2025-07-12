@@ -4,18 +4,24 @@ import type { MainModule, ViteMainModule } from '@/internals/lib/internalEntryMo
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import { setupEntryModules } from '@/internals/lib/setup/setupEntryModules';
 import type { ProjectJson, ResolvedViteConfig } from '@/plugin';
+import { documentationLink } from '@/utilities/common/Constants';
 import Path from 'path';
+import pc from 'picocolors';
 
 export function resolveMainModules({ packageJson, userConfig }: { userConfig: ResolvedViteConfig, packageJson: ProjectJson }) {
     const mainModulePath = packageJson.meteor.mainModule;
     const rootDir = CurrentConfig.projectRoot;
     
     if (!mainModulePath.server) {
-        throw new MeteorViteError('package.json is missing a server mainModule. Make sure the meteor.mainModule.server field is set your package.json');
+        throw new MeteorViteError('Could not find a server mainModule path in your package.json!', {
+            subtitle: `Visit ${pc.blue(documentationLink('packagejson'))} for more details`
+        })
     }
     
     if (!userConfig.meteor?.clientEntry) {
-        throw new MeteorViteError('You need to specify a clientEntry in your Vite config file!');
+        throw new MeteorViteError('You need to specify a clientEntry in your Vite config file!', {
+            subtitle: `Visit ${pc.blue(documentationLink('vite-config'))} for more details`
+        });
     }
     
     const meteor: MainModule = {
