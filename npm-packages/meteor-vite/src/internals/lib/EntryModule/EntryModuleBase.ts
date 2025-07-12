@@ -123,7 +123,7 @@ export abstract class EntryModuleBase {
             return;
         }
         FS.mkdirSync(this.dirname, { recursive: true });
-        FS.writeFileSync(this.path, '// Created by Meteor-Vite\n');
+        this._write('// Created by Meteor-Vite\n');
     }
     
 }
