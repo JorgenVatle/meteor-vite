@@ -24,7 +24,7 @@ describe('primitive type parsing', () => {
         }
     })
     
-    describe('basic primitive types', () => {
+    describe('primitives', () => {
         test('boolean', () => {
             expectTypeOf(result.foo).toEqualTypeOf<boolean>()
         });
@@ -42,7 +42,7 @@ describe('primitive type parsing', () => {
         })
     })
     
-    describe('array fields', () => {
+    describe('arrays', () => {
         test('strings', () => {
             expectTypeOf(result.multiple).toEqualTypeOf<string[]>()
         });
