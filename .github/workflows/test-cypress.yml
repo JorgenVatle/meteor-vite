@@ -10,3 +10,9 @@ jobs:
     uses: ./.github/workflows/_reuse_.cypress-test.yml
     with:
       appBasename: 'vue'
+
+  react:
+    name: 'React'
+    uses: ./.github/workflows/_reuse_.cypress-test.yml
+    with:
+      appBasename: 'react'
