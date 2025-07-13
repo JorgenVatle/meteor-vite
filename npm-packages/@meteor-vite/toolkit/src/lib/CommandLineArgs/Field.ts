@@ -14,10 +14,11 @@ export type MultiField<T = any> = {
     multiple: true;
 } & BaseField<T>;
 
-export type BaseField<T = any> = {
+export type BaseField<T = any, TDefault = T> = {
     type: {
         (value?: any): T;
     }
+    defaultValue?: TDefault;
 };
 
 export type InferFieldType<
