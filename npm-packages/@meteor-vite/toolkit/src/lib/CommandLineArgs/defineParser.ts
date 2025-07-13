@@ -6,6 +6,7 @@ import {
     type ResolveFieldInputTypes,
     type ResolveFieldTypes,
 } from '@/lib/CommandLineArgs/parseArgs';
+import type { CommandList } from '@/lib/CommandList';
 import type { Content } from 'ts-command-line-args/src/contracts';
 
 export class Parser<
@@ -34,7 +35,7 @@ export class Parser<
             headerContentSections: [
                 { header: content.title, content: content.description },
             ],
-            footerContentSections: content.footer,
+            footerContentSections: [...content.footer || [], ...content.subCommands?.commandsList || []],
         }
         Object.assign(this.options, options);
     }
@@ -80,4 +81,5 @@ export type HelpContent = {
     title: string;
     description: string;
     footer?: Content[];
+    subCommands?: CommandList<any, any, any>;
 }

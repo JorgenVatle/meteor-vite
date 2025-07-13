@@ -3,6 +3,7 @@ import type { CommandSpec } from '@/lib/CommandDefinition';
 import { Parser } from '@/lib/CommandLineArgs/defineParser';
 import { GlobalConfig } from '@/lib/GlobalConfig';
 import pc from 'picocolors';
+import type { Content } from 'ts-command-line-args/src/contracts';
 
 export class CommandList<
     TCommands extends CommandSpec[],
@@ -52,6 +53,15 @@ export class CommandList<
                 })}
             ]
         });
+    }
+    
+    public get commandsList(): Content[] {
+        return this.commands.map(({ name, config }) => {
+            return {
+                header: config.title,
+                content: config.description,
+            }
+        })
     }
     
     public async runWithParser(argv?: string[]) {

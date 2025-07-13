@@ -1,6 +1,7 @@
 import { Parser, type ParserInstanceOptions } from '@/lib/CommandLineArgs/defineParser';
 import type { FieldConfig } from '@/lib/CommandLineArgs/Field';
 import type { Pretty, ResolveFieldTypes } from '@/lib/CommandLineArgs/parseArgs';
+import type { CommandList } from '@/lib/CommandList';
 
 export class CommandDefinition<
     TName extends string = string,
@@ -17,6 +18,7 @@ export class CommandDefinition<
             description: string;
             fields: TFields;
             handler: (args: TOutput) => Promise<void>;
+            subCommands?: CommandList<any, any, any>;
         },
     ) {
         this.parser = new Parser({
@@ -27,6 +29,7 @@ export class CommandDefinition<
         this.parser.setHelpContent({
             title: config.title || this.name,
             description: config.description,
+            subCommands: config.subCommands,
         });
     }
     
