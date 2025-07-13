@@ -24,6 +24,8 @@ describe('result type', () => {
         }
     })
     
+    result.multipleOptionalStrings
+    
     describe('primitives', () => {
         test('boolean', () => {
             expectTypeOf(result.boolean).toEqualTypeOf<boolean>()
@@ -83,7 +85,14 @@ describe('default values', () => {
         parseArgs({
             foo: {
                 type: Boolean,
-                defaultValue: true,
+            },
+            bar: {
+                type: Number,
+            }
+        }, {
+            defaults: {
+                foo: true,
+                bar: 123,
             }
         })
     })
@@ -92,8 +101,11 @@ describe('default values', () => {
         parseArgs({
             foo: {
                 type: Boolean,
+            }
+        }, {
+            defaults: {
                 // @ts-expect-error
-                defaultValue: '123',
+                foo: '123',
             }
         })
     })
