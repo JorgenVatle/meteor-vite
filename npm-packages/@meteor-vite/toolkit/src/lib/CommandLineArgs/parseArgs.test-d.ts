@@ -3,21 +3,21 @@ import { describe, expectTypeOf, it, test } from 'vitest';
 
 describe('result type', () => {
     const result = parseArgs({
-        foo: {
+        boolean: {
             type: Boolean,
         },
-        bar: {
+        string: {
             type: String,
         },
-        imOptional: {
+        optionalString: {
             type: String,
             optional: true,
         },
-        multiple: {
+        multipleStrings: {
             type: String,
             multiple: true,
         },
-        multipleOptional: {
+        multipleOptionalStrings: {
             type: String,
             multiple: true,
             optional: true,
@@ -26,15 +26,15 @@ describe('result type', () => {
     
     describe('primitives', () => {
         test('boolean', () => {
-            expectTypeOf(result.foo).toEqualTypeOf<boolean>()
+            expectTypeOf(result.boolean).toEqualTypeOf<boolean>()
         });
         
         test('strings', () => {
-            expectTypeOf(result.bar).toEqualTypeOf<string>()
+            expectTypeOf(result.string).toEqualTypeOf<string>()
         });
         
         test('optional strings', () => {
-            expectTypeOf(result.imOptional).toEqualTypeOf<string | undefined>()
+            expectTypeOf(result.optionalString).toEqualTypeOf<string | undefined>()
         })
         
         test('numbers', () => {
@@ -44,14 +44,14 @@ describe('result type', () => {
     
     describe('mismatched types emit errors', () => {
         test('booleans', () => {
-            expectTypeOf(result.foo).not.toEqualTypeOf<number>()
+            expectTypeOf(result.boolean).not.toEqualTypeOf<number>()
         })
         test('strings', () => {
-            expectTypeOf(result.bar).not.toEqualTypeOf<number>()
+            expectTypeOf(result.string).not.toEqualTypeOf<number>()
         })
         test('optional strings', () => {
-            expectTypeOf(result.imOptional).not.toEqualTypeOf<number>()
-            expectTypeOf(result.imOptional).not.toEqualTypeOf<string>()
+            expectTypeOf(result.optionalString).not.toEqualTypeOf<number>()
+            expectTypeOf(result.optionalString).not.toEqualTypeOf<string>()
         })
         test('numbers', () => {
             // todo
@@ -60,11 +60,11 @@ describe('result type', () => {
     
     describe('arrays', () => {
         test('strings', () => {
-            expectTypeOf(result.multiple).toEqualTypeOf<string[]>()
+            expectTypeOf(result.multipleStrings).toEqualTypeOf<string[]>()
         });
         
         test('optional strings', () => {
-            expectTypeOf(result.multipleOptional).toEqualTypeOf<string[] | undefined>()
+            expectTypeOf(result.multipleOptionalStrings).toEqualTypeOf<string[] | undefined>()
         })
         
         test('booleans', () => {
