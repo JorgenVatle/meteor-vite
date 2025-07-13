@@ -3,9 +3,7 @@ import { concurrently, type ConcurrentlyCommandInput, type ConcurrentlyOptions }
 export class CommandConcurrency {
     public readonly commands: CommandInfo[] = [];
     protected readonly extraArgs = new Set<[string] | [string, string[]]>();
-    constructor(
-        protected readonly inheritOptions: Record<string, unknown> = {}
-    ) {
+    constructor({ inheritOptions = {} }: { inheritOptions?: Record<string, unknown> } = {}) {
         Object.entries(inheritOptions).forEach(([key, value]) => {
             if (value === true) {
                 this.extraArgs.add([key]);

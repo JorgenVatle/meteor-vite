@@ -85,25 +85,25 @@ export const Commands = new CommandList([
                 optional: true,
             }
         },
-        handler: async (options) => {
-            const concurrency = new CommandConcurrency();
+        handler: async ({ watch, verbose, summary, command, build }) => {
+            const concurrency = new CommandConcurrency({
+                inheritOptions: {
+                    watch,
+                    verbose,
+                    summary,
+                }
+            });
             
-            const extraArgs: string[] = [];
-            
-            if (options.watch) {
-                extraArgs.push('--watch');
-            }
-            
-            options.build?.forEach(rootDir => {
+            build?.forEach(rootDir => {
                 const [node, script] = process.argv;
-                const args = [script, 'build', '--rootDir', rootDir, ...extraArgs]
+                const args = [script, 'build', '--rootDir', rootDir]
                 concurrency.add({
                     command: node,
                     args,
                 })
             })
             
-            concurrency.add(options.command)
+            concurrency.add(command);
         }
     })
 ]);
