@@ -12,6 +12,7 @@ export class Parser<
     TOutput extends Pretty<ResolveFieldTypes<TFields>> = Pretty<ResolveFieldTypes<TFields>>,
     TInput extends Pretty<ResolveFieldInputTypes<TFields>> = Pretty<ResolveFieldInputTypes<TFields>>,
     TDefaults extends Partial<TOutput> = {},
+    TOptions extends ParserOptions<TOutput, TDefaults> = ParserOptions<TOutput, TDefaults>,
     TTransform = TOutput,
 > {
     declare _inputType: Pretty<TInput>;
@@ -19,27 +20,29 @@ export class Parser<
     
     constructor(
         public readonly fields: TFields,
-        protected readonly options: ParserOptions<TOutput, TDefaults> & {
+        protected readonly options?: TOptions & {
             transform?: (output: TOutput) => TTransform;
-        } = {}
+        }
     ) {
         this.options = options;
     }
     
-    public parse(input?: TInput): TOutput {
+    public parse(options?: TOptions): TOutput {
         const defaults = {
-            ...this.options.defaults,
-            ...input,
+            ...this.options?.defaults,
+            ...options?.defaults,
         };
         return parseArgs(this.fields, {
             ...this.options,
+            ...options,
+            // @ts-expect-error
             defaults,
         });
     }
     
-    public transform(input?: TInput): TTransform {
-        const output = this.parse(input);
-        if (!this.options.transform) {
+    public transform(options?: TOptions): TTransform {
+        const output = this.parse(options);
+        if (!this.options?.transform) {
             return output as any;
         }
         return this.options.transform(output);
