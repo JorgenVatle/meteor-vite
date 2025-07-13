@@ -1,6 +1,6 @@
 {
   "name": "meteor-vite",
-  "version": "3.9.0-beta.0",
+  "version": "3.9.0-beta.1",
   "description": "Vite compatability plugin for Meteor v3",
   "files": [
     "dist"
