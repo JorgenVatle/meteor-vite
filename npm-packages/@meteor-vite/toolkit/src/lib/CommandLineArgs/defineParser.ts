@@ -65,7 +65,7 @@ export class Parser<
     }
 }
 
-type ParserInstanceOptions<TOutput, TTransform = unknown> = ParserOptions<TOutput> & {
+export type ParserInstanceOptions<TOutput, TTransform = unknown> = ParserOptions<TOutput> & {
     transform?: (output: TOutput) => TTransform;
 }
 

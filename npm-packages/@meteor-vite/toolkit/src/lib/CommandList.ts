@@ -55,24 +55,19 @@ export class CommandList<
         const { command: name, _unknown } = this.parser.parse({
             partial: true,
         });
-        const command = this.get(name as any);
-        if (!command) {
-            this.parser.printHelp();
-            process.exitCode = 1;
-            return;
-        }
-        return await command.run(_unknown);
+        return await this.run(name as any, _unknown);
     }
     
-    public async run<TName extends TCommand>(commandName: TName, options: TOptions[TName]) {
+    public async run<TName extends TCommand>(commandName: TName, argv: string[], options?: TOptions[TName]) {
         const command = this.get(commandName);
-        await command.run(options);
+        await command.run(argv, options);
     }
     
     protected get<TName extends TCommand>(commandName: TName) {
         const command = this.commands.find((command) => command.name === commandName);
         
         if (!command) {
+            this.parser.printHelp();
             throw new CommandNotFound(`Unknown command: ${commandName}`);
         }
         
