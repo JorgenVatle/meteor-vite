@@ -1,7 +1,7 @@
 import { parseArgs } from '@/lib/CommandLineArgs/parseArgs';
 import { describe, expectTypeOf, test } from 'vitest';
 
-describe('primitive type parsing', () => {
+describe('result type', () => {
     const result = parseArgs({
         foo: {
             type: Boolean,
