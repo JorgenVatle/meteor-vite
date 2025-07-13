@@ -1,4 +1,4 @@
-import { Parser } from '@/lib/CommandLineArgs/defineParser';
+import { Parser, type ParserInstanceOptions } from '@/lib/CommandLineArgs/defineParser';
 import type { FieldConfig } from '@/lib/CommandLineArgs/Field';
 import type { Pretty, ResolveFieldTypes } from '@/lib/CommandLineArgs/parseArgs';
 
@@ -6,13 +6,13 @@ export class CommandDefinition<
     TName extends string = string,
     TFields extends Record<string, FieldConfig> = {},
     TOutput extends Pretty<ResolveFieldTypes<TFields>> = Pretty<ResolveFieldTypes<TFields>>,
-> {
+> implements CommandSpec {
     
     protected parser: Parser<TFields & typeof CommandDefinition.defaultFields, TOutput>;
     
     constructor(
         public readonly name: TName,
-        protected readonly config: {
+        public readonly config: {
             title?: string;
             description: string;
             fields: TFields;
@@ -39,9 +39,14 @@ export class CommandDefinition<
         }
     };
     
-    public run(options?: typeof this.parser.options) {
+    public async run(args: string[], options?: typeof this.parser.options) {
         try {
-            return this.config.handler(this.parser.parse(options));
+            return await this.config.handler(
+                this.parser.parse({
+                    ...options,
+                    argv: args,
+                })
+            );
         } catch (error) {
             if (!(error instanceof Error)) {
                 throw error;
@@ -56,7 +61,7 @@ export class CommandDefinition<
 
 export type CommandSpec = {
     name: string;
-    run: (args: any) => Promise<void>;
+    run: (args: string[], options?: ParserInstanceOptions<{}>) => Promise<void>;
     config: {
         title?: string;
         description: string;
