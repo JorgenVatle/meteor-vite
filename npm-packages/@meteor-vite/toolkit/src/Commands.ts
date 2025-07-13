@@ -104,6 +104,8 @@ export const Commands = new CommandList([
             })
             
             concurrency.add(command);
+            
+            await concurrency.run();
         }
     })
 ]);
