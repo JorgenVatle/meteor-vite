@@ -37,9 +37,7 @@ export class ProjectCompiler {
     protected readonly rootDir: string;
     protected packageJson?: PackageJSON;
     
-    public static init(overrides?: typeof parser._inputType) {
-        return new ProjectCompiler(parser.parse(overrides));
-    }
+    public static readonly parser = parser;
     
     constructor(
         public readonly options: Options,

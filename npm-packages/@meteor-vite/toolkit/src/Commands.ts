@@ -7,14 +7,16 @@ import { concurrently } from 'concurrently';
 export const Commands = new CommandList([
     new Command('check-changes', {
         description: 'Check if the current root directory has seen changes since last build.',
-        fields: {},
-        handler: async () => {
-            await ProjectCompiler.init().getHash();
+        fields: ProjectCompiler.parser.fields,
+        handler: async (options) => {
+            const compiler = new ProjectCompiler(options)
+            await compiler.getHash();
         }
     }),
     new Command('build', {
         description: 'Run a build and compute the build hash for the provided project root directory.',
         fields: {
+            ...ProjectCompiler.parser.fields,
             concurrent: {
                 type: String,
                 description: 'Run the same command in parallel within the root directories specified',
@@ -30,6 +32,7 @@ export const Commands = new CommandList([
             },
         },
         handler: async (options) => {
+            const compiler = new ProjectCompiler(options)
             const commands: { command: string, arguments: string[] }[] = [];
             if (options.concurrent) {
                 options.concurrent.forEach(rootDir => {
@@ -47,7 +50,7 @@ export const Commands = new CommandList([
                 });
             }
             if (!commands.length) {
-                await ProjectCompiler.init().build();
+                await compiler.build();
                 return;
             }
             try {
@@ -63,9 +66,10 @@ export const Commands = new CommandList([
     }),
     new Command('clean', {
         description: `Clean the build output directory (${Highlight.filePath('/dist')}) for the current project.`,
-        fields: {},
-        handler: async () => {
-            await ProjectCompiler.init().clean();
+        fields: ProjectCompiler.parser.fields,
+        handler: async (options) => {
+            const compiler = new ProjectCompiler(options)
+            await compiler.clean();
         }
     }),
 ]);
