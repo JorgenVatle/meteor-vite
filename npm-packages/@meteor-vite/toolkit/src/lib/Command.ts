@@ -22,8 +22,8 @@ export class Command<
         this.parser = new Parser(config.fields, {});
     }
     
-    public run(input?: TInput) {
-        return this.config.handler(this.parser.parse(input));
+    public run(options?: typeof this.parser.options) {
+        return this.config.handler(this.parser.parse(options));
     }
 }
 
