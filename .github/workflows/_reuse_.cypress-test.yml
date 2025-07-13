@@ -39,6 +39,5 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          working-directory: test/cypress-suite
-          build: npm run setup ${{ env.APP_IMAGE }}
-          start: npm start
+          build: npm run cypress:setup ${{ env.APP_IMAGE }}
+          start: npm run cypress:start
