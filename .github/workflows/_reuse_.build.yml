@@ -7,7 +7,7 @@ on:
         type: string
       meteorRelease:
         type: string
-        default: '3.2'
+        default: '3.3'
       nodeVersion:
         type: string
         default: '22-alpine'
