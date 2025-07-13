@@ -27,25 +27,3 @@ export function parseArgs<
     
     return parse(args as any, options);
 }
-
-const result = parseArgs({
-    boolean: {
-        type: Boolean,
-    },
-    string: {
-        type: String,
-    },
-    optionalString: {
-        type: String,
-        optional: true,
-    },
-    multipleStrings: {
-        type: String,
-        multiple: true,
-    },
-    multipleOptionalStrings: {
-        type: String,
-        multiple: true,
-        optional: true,
-    }
-})
