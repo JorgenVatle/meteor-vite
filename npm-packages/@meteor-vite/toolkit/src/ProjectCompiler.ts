@@ -156,7 +156,12 @@ export class ProjectCompiler {
             });
         });
         
-        return JSON.parse(buildInfo);
+        try {
+            return JSON.parse(buildInfo);
+        } catch (error) {
+            console.error(`Failed to parse build info file: ${this.filePath.buildInfo}:`, { buildInfo });
+            throw error;
+        }
     }
     
     /**
