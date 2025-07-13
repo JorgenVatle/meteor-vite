@@ -27,7 +27,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "toolkit build .",
     "prepare": "node ./bin/prepare.mjs",
-    "postprepare": "npm run build"
+    "postprepare": "npm run build",
+    "lint": "tsc --noEmit"
   },
   "dependencies": {
     "concurrently": "^9.2.0",
