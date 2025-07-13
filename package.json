@@ -23,7 +23,7 @@
     "launch": "npm run example launch",
 
     "check-changes": "toolkit check-changes",
-    "watch:packages": "concurrently -k -p none 'toolkit build packages/vite --watch' 'toolkit build npm-packages/meteor-vite --watch'",
+    "watch:packages": "toolkit build --concurrent npm-packages/meteor-vite packages/vite --watch",
 
     "clean": "toolkit clean --ws",
     "build": "npm run example build",
