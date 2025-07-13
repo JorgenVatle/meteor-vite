@@ -1,10 +1,10 @@
-import { Command } from '@/lib/Command';
 import { CommandConcurrency } from '@/lib/CommandConcurrency';
+import { CommandDefinition } from '@/lib/CommandDefinition';
 import { Highlight } from '@/lib/Highlight';
 import { ProjectCompiler } from '@/ProjectCompiler';
 
 export default [
-    new Command('check-changes', {
+    new CommandDefinition('check-changes', {
         description: 'Check if the current root directory has seen changes since last build.',
         fields: ProjectCompiler.parser.fields,
         handler: async (options) => {
@@ -12,7 +12,7 @@ export default [
             await compiler.getHash();
         }
     }),
-    new Command('build', {
+    new CommandDefinition('build', {
         description: 'Run a build and compute the build hash for the provided project root directory.',
         fields: {
             ...ProjectCompiler.parser.fields,
@@ -68,7 +68,7 @@ export default [
             await concurrency.run();
         }
     }),
-    new Command('clean', {
+    new CommandDefinition('clean', {
         description: `Clean the build output directory (${Highlight.filePath('/dist')}) for the current project.`,
         fields: ProjectCompiler.parser.fields,
         handler: async (options) => {
@@ -76,7 +76,7 @@ export default [
             await compiler.clean();
         }
     }),
-    new Command('run', {
+    new CommandDefinition('run', {
         description: 'Run a command within the context of the provided project root directory.',
         fields: {
             ...ProjectCompiler.parser.fields,

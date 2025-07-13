@@ -1,5 +1,5 @@
 import { CommandNotFound } from '@/errors/CommandFailure';
-import type { CommandSpec } from '@/lib/Command';
+import type { CommandSpec } from '@/lib/CommandDefinition';
 
 export class CommandList<
     TCommands extends CommandSpec[],

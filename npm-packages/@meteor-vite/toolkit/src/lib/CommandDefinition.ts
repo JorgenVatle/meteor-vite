@@ -2,7 +2,7 @@ import { Parser } from '@/lib/CommandLineArgs/defineParser';
 import type { FieldConfig } from '@/lib/CommandLineArgs/Field';
 import type { Pretty, ResolveFieldInputTypes, ResolveFieldTypes } from '@/lib/CommandLineArgs/parseArgs';
 
-export class Command<
+export class CommandDefinition<
     TName extends string = string,
     TFields extends Record<string, FieldConfig> = {},
     TOutput extends Pretty<ResolveFieldTypes<TFields>> = Pretty<ResolveFieldTypes<TFields>>,
