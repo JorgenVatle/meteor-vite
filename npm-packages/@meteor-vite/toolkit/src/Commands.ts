@@ -57,7 +57,7 @@ export const Commands = new CommandList([
                 await concurrently(commands, {
                     prefix: 'none',
                     restartTries: 0,
-                    killOthers: ['failure'],
+                    killOthersOn: ['failure'],
                 }).result
             } catch (error) {
                 console.error(error);
