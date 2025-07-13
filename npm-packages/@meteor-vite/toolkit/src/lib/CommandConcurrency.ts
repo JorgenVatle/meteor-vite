@@ -9,9 +9,9 @@ export class CommandConcurrency {
         killOthersOn: 'failure',
     };
     
+    public add(params: string[]): void
     public add(params: ConcurrentCommand): void;
-    public add(params: [string, ...string[]]): void
-    public add(params: [string, ...string[]] | ConcurrentCommand): void {
+    public add(params: string[] | ConcurrentCommand): void {
         if (Array.isArray(params)) {
             const [command, ...args] = params;
             this.add({ command, args });
