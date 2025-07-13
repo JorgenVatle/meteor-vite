@@ -1,8 +1,8 @@
 import { Command } from '@/lib/Command';
+import { CommandConcurrency } from '@/lib/CommandConcurrency';
 import { CommandList } from '@/lib/CommandList';
 import { Highlight } from '@/lib/Highlight';
 import { ProjectCompiler } from '@/ProjectCompiler';
-import { concurrently } from 'concurrently';
 
 export const Commands = new CommandList([
     new Command('check-changes', {
@@ -32,12 +32,13 @@ export const Commands = new CommandList([
             },
         },
         handler: async (options) => {
+            const concurrency = new CommandConcurrency();
             const compiler = new ProjectCompiler(options)
-            const commands: { command: string, args: string[] }[] = [];
+            
             if (options.concurrent) {
                 options.concurrent.forEach(rootDir => {
                     const [node, script] = process.argv;
-                    commands.push({
+                    concurrency.add({
                         command: node,
                         args: [script, 'build', rootDir, '--watch']
                     })
@@ -45,28 +46,18 @@ export const Commands = new CommandList([
             }
             if (options.run) {
                 const [command, ...args] = options.run;
-                commands.push({
+                concurrency.add({
                     command,
                     args,
                 });
             }
-            if (!commands.length) {
+            
+            if (!concurrency.commands.length) {
                 await compiler.build();
                 return;
             }
-            try {
-                await concurrently(commands.map(({ command, args }) => {
-                    return {
-                        command: [command, args.map(arg => JSON.stringify(arg))].flat().join(' '),
-                    }
-                }), {
-                    prefix: 'none',
-                    restartTries: 0,
-                    killOthersOn: ['failure'],
-                }).result
-            } catch (error) {
-                console.error(error);
-            }
+            
+            await concurrency.run();
         }
     }),
     new Command('clean', {

@@ -2,7 +2,7 @@ import { concurrently, type ConcurrentlyCommandInput, type ConcurrentlyOptions }
 
 export class CommandConcurrency {
     constructor(
-        protected readonly commands: CommandInfo[] = []
+        public readonly commands: CommandInfo[] = []
     ) {};
     
     protected readonly defaultOptions: Partial<ConcurrentlyOptions> = {
