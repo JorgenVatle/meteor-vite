@@ -1,10 +1,9 @@
 import { Command } from '@/lib/Command';
 import { CommandConcurrency } from '@/lib/CommandConcurrency';
-import { CommandList } from '@/lib/CommandList';
 import { Highlight } from '@/lib/Highlight';
 import { ProjectCompiler } from '@/ProjectCompiler';
 
-export const Commands = new CommandList([
+export default [
     new Command('check-changes', {
         description: 'Check if the current root directory has seen changes since last build.',
         fields: ProjectCompiler.parser.fields,
@@ -119,4 +118,4 @@ export const Commands = new CommandList([
             await concurrency.run();
         }
     })
-]);
+]

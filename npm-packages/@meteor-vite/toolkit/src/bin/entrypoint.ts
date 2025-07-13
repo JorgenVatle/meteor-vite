@@ -1,4 +1,4 @@
-import { Commands } from '@/Commands';
+import { Commands } from '@/commands';
 import { CommandFailure } from '@/errors/CommandFailure';
 
 const [command, ...options] = process.argv.slice(2);
