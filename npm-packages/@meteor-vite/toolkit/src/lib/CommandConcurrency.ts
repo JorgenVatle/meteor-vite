@@ -2,15 +2,18 @@ import { concurrently, type ConcurrentlyCommandInput, type ConcurrentlyOptions }
 
 export class CommandConcurrency {
     constructor(
-        protected readonly commands: ConcurrentCommand[] = []
+        protected readonly commands: CommandInfo[] = []
     ) {};
     
     protected readonly defaultOptions: Partial<ConcurrentlyOptions> = {
         killOthersOn: 'failure',
     };
     
-    public add(command: ConcurrentCommand) {
-        this.commands.push(command);
+    public add({ command, args, ...options }: ConcurrentCommand) {
+        this.commands.push({
+            command: [command, this.formatArgs(args)].flat().join(' '),
+            ...options,
+        });
     };
     
     protected formatArgs(args: string[]) {
@@ -18,13 +21,7 @@ export class CommandConcurrency {
     }
     
     public run(options?: Partial<ConcurrentlyOptions>) {
-        const commands: CommandInfo[] = this.commands.map(({ command, args, ...options }) => {
-            return {
-                command: [command, this.formatArgs(args)].flat().join(' '),
-                ...options,
-            }
-        });
-        return concurrently(commands, {
+        return concurrently(this.commands, {
             ...this.defaultOptions,
             ...options,
         }).result;
