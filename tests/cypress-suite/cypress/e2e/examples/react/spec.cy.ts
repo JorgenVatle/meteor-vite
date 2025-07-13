@@ -17,7 +17,7 @@ describe('Vue example app', () => {
         })
         
         it('Renders navigation links', () => {
-            cy.get('a').contains('https://www.meteor.com/tutorials');
+            cy.get('a').contains('Do the Tutorial');
         });
         
         it('Rendered a form to add links', () => {
