@@ -8,7 +8,7 @@ const dirname = Path.dirname(fileURLToPath(import.meta.url));
 const rootDir = Path.join(dirname, '..');
 const entrypoint = Path.join(rootDir, packageJson.bin.toolkit);
 
-if (!FS.existsSync(entrypoint)) {
+if (!FS.existsSync(entrypoint) || process.argv.includes('--force')) {
     console.log([
         '\n',
         'Looks like this is the first time you are running this command.',
