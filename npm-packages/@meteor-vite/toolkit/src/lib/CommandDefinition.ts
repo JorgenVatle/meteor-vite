@@ -39,7 +39,7 @@ export class CommandDefinition<
         }
     };
     
-    public async run(args: string[], options?: typeof this.parser.options) {
+    public async run(args: string[] = [], options?: typeof this.parser.options) {
         try {
             return await this.config.handler(
                 this.parser.parse({
