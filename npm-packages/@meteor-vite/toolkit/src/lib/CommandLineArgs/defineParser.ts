@@ -18,7 +18,7 @@ export class Parser<
     declare _outputType: Pretty<TOutput>;
     
     constructor(
-        protected readonly fields: TFields,
+        public readonly fields: TFields,
         protected readonly options: ParserOptions<TOutput, TDefaults> & {
             transform?: (output: TOutput) => TTransform;
         } = {}
