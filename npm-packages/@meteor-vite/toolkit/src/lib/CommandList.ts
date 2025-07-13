@@ -1,5 +1,6 @@
 import { CommandNotFound } from '@/errors/CommandFailure';
 import type { CommandSpec } from '@/lib/CommandDefinition';
+import { Parser } from '@/lib/CommandLineArgs/defineParser';
 
 export class CommandList<
     TCommands extends CommandSpec[],
@@ -9,9 +10,49 @@ export class CommandList<
     TCommand extends Extract<TCommands[number]['name'], string>,
 > {
     
+    protected readonly parser;
+    
     constructor(
         protected readonly commands: [...TCommands]
-    ) {}
+    ) {
+        this.parser = new Parser({
+            command: {
+                type: String,
+                description: 'Command to run',
+                defaultOption: true,
+            },
+            help: {
+                type: Boolean,
+                alias: 'h',
+                description: 'Show help',
+                defaultValue: false,
+            }
+        }, {
+            helpArg: 'help',
+            partial: true,
+            headerContentSections: [
+                { header: 'Meteor Vite Toolkit', content: 'A collection of tools for Meteor and Vite.' },
+                { header: 'Usage', content: '$ toolkit <command> [options]' },
+            ],
+            footerContentSections: [
+                { header: 'Commands', content: this.commands.map((command) => command.name).join(', ') },
+                { header: 'Global Options', content: []}
+            ]
+        });
+    }
+    
+    public async runWithParser() {
+        const { command: name, _unknown } = this.parser.parse({
+            partial: true,
+        });
+        const command = this.get(name as any);
+        if (!command) {
+            this.parser.printHelp();
+            process.exitCode = 1;
+            return;
+        }
+        return await command.run(_unknown);
+    }
     
     public async run<TName extends TCommand>(commandName: TName, options: TOptions[TName]) {
         const command = this.get(commandName);
