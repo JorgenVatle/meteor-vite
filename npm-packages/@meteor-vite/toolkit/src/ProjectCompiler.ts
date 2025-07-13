@@ -5,6 +5,7 @@ import { globby } from 'globby';
 import { hash } from 'hasha';
 import Path from 'node:path';
 import * as process from 'node:process';
+import { inspect } from 'node:util';
 import pc from 'picocolors';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
 
@@ -42,6 +43,7 @@ export class ProjectCompiler {
     constructor(
         public readonly options: Options,
     ) {
+        console.log(options);
         this.rootDir = options.rootDir;
         this.filePath = {
             buildInfo: Path.join(this.rootDir, 'dist', '.build-info.json'),
@@ -162,12 +164,17 @@ export class ProjectCompiler {
             await this.getHash(),
             buildInfo
         );
-        await FS.mkdir(Path.dirname(this.filePath.buildInfo), { recursive: true });
-        await FS.writeFile(
-            this.filePath.buildInfo,
-            JSON.stringify(content, null, 2)
-        );
-        return content;
+        try {
+            await FS.mkdir(Path.dirname(this.filePath.buildInfo), { recursive: true });
+            await FS.writeFile(
+                this.filePath.buildInfo,
+                JSON.stringify(content, null, 2)
+            );
+            return content;
+        } catch (error) {
+            console.error(`Failed to write build info file: ${this.filePath.buildInfo}:\n ${inspect(content, { colors: true })}`);
+            throw error;
+        }
     }
     
     public async clean() {
