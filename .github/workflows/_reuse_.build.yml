@@ -112,8 +112,8 @@ jobs:
             ${{ steps.image.outputs.deploymentImage }}
             ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
+          cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
           build-args: |
             APP_BASENAME=${{ inputs.appBasename }}
             METEOR_RELEASE=${{ steps.image.outputs.meteorRelease }}
