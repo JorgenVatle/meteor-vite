@@ -9,10 +9,17 @@ export class CommandConcurrency {
         killOthersOn: 'failure',
     };
     
-    public add({ command, args, ...options }: ConcurrentCommand) {
+    public add(params: ConcurrentCommand): void;
+    public add(params: [string, ...string[]]): void
+    public add(params: [string, ...string[]] | ConcurrentCommand): void {
+        if (Array.isArray(params)) {
+            const [command, ...args] = params;
+            this.add({ command, args });
+            return;
+        }
         this.commands.push({
-            command: [command, this.formatArgs(args)].flat().join(' '),
-            ...options,
+            ...params,
+            command: [params.command, this.formatArgs(params.args)].flat().join(' '),
         });
     };
     
