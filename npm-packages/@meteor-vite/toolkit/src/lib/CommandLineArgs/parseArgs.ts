@@ -30,6 +30,19 @@ export type ResolveFieldTypes<TFields extends Record<string, FieldConfig>> = {
     [key in keyof TFields]: InferFieldType<TFields[key]>;
 }
 
+export type ResolveFieldInputTypes<
+    TFields extends Record<string, FieldConfig>,
+    TDefaults extends keyof TFields = {
+        [key in keyof TFields]-?: TFields[key] extends { defaultValue: infer T }
+                                 ? key
+                                 : never;
+    }[keyof TFields],
+> = {
+    [key in TDefaults]?: InferFieldType<TFields[key]>;
+} & {
+    [key in Exclude<keyof TFields, TDefaults>]: InferFieldType<TFields[key]>;
+}
+
 export type Pretty<T> = {
     [key in keyof T]: T[key]
 } & {}
