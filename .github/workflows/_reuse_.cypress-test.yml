@@ -22,6 +22,7 @@ jobs:
     # Todo: add mongo sidecar container
     env:
       APP_IMAGE: ${{ needs.build.outputs.deploymentImage }}
+      APP_BASENAME: ${{ inputs.appBasename }}
       PORT: 3000
     steps:
       - name: Checkout
