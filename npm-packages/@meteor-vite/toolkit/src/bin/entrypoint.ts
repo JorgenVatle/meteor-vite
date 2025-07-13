@@ -1,3 +1,4 @@
+import 'source-map-support/register.js';
 import { Commands } from '@/commands';
 import { CommandFailure } from '@/errors/CommandFailure';
 
