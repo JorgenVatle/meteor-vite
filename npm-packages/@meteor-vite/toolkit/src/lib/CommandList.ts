@@ -1,21 +1,23 @@
 import { CommandNotFound } from '@/errors/CommandFailure';
-import type { CommandOptions } from '@/lib/parseCliParams';
 
 export class CommandList<
-    TParams extends unknown[],
-    TCommand extends CommandSpec<TParams[keyof TParams]>
+    TOptions extends { [key in string]: unknown },
+    TCommand extends Extract<keyof TOptions, string>,
 > {
+    
     constructor(
-        protected readonly commands: { [key in keyof TParams]: CommandSpec<TParams[key]> }) {
+        protected readonly commands: {
+            [key in keyof TOptions]: CommandSpec<TOptions[key]>
+        }) {
     }
     
-    public async run(commandName: TCommand['name'], options: CommandOptions) {
+    public async run<TName extends TCommand>(commandName: TName, options: TOptions[TName]) {
         const command = this.get(commandName);
         await command.handler(options);
     }
     
-    protected get(commandName: TCommand['name']) {
-        const command = this.commands.find((command) => command.name === commandName);
+    protected get<TName extends TCommand>(commandName: TName) {
+        const command = this.commands[commandName];
         
         if (!command) {
             throw new CommandNotFound(`Unknown command: ${commandName}`);
@@ -59,7 +61,6 @@ export class CommandList<
 export type CommandSpec<
     TParsedOptions = unknown,
 > = {
-    name: string;
     description: string;
     options: () => TParsedOptions;
     handler: (args: NoInfer<TParsedOptions>) => Promise<void>;
