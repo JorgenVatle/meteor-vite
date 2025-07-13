@@ -17,6 +17,14 @@ export function parseArgs<
         ...fields,
     }
     
+    Object.entries(fields).forEach(([key, field]) => {
+        if (field.type) {
+            return;
+        }
+        if (field.defaultValue) {
+            field.type = (field).constructor;
+        }
+    })
     Object.entries(options.defaults || {}).forEach(([key, value]) => {
         args[key] = {
             defaultValue: value,
