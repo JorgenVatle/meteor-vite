@@ -36,7 +36,7 @@ export function parseArgs<
 
 export type ResolveFieldTypes<TFields extends Record<string, FieldConfig>> = {
     [key in keyof TFields]: InferFieldType<TFields[key]>;
-}
+} & { _unknown: any[] }
 
 export type ResolveFieldInputTypes<
     TFields extends Record<string, FieldConfig>,
