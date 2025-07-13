@@ -71,4 +71,14 @@ describe('default values', () => {
             }
         })
     })
+    
+    it('will not allow defaults that do not match the underlying primitive type', () => {
+        parseArgs({
+            foo: {
+                type: Boolean,
+                // @ts-expect-error
+                defaultValue: '123',
+            }
+        })
+    })
 })
