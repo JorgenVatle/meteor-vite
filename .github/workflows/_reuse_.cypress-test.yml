@@ -27,6 +27,7 @@ jobs:
     env:
       APP_IMAGE: ${{ needs.build.outputs.deploymentImage }}
       APP_BASENAME: ${{ inputs.appBasename }}
+      MONGO_URL: mongodb://localhost:27017
       PORT: 3000
     steps:
       - name: Checkout
