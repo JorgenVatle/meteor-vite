@@ -2,4 +2,9 @@
 
 set -e
 
-docker run --name test-container -p "$PORT:$PORT" --env-file .env.cypress "$APP_IMAGE"
+docker run \
+    --name test-container \
+    --network development \
+    --env-file .env.cypress \
+    -p "$PORT:$PORT" \
+    "$APP_IMAGE"
