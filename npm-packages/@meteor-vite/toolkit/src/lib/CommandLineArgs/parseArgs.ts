@@ -11,7 +11,7 @@ export function parseArgs<
     fields: {
         [key in keyof TFields]: FieldConfig<TFields[key]>;
     },
-    options: ParserOptions<TResult> & { defaults?: TDefaults } = {},
+    options: ParserOptions<TResult, TDefaults> = {},
 ): TResult {
     const args: Record<string, unknown> = {
         ...fields,
@@ -47,4 +47,9 @@ export type Pretty<T> = {
     [key in keyof T]: T[key]
 } & {}
 
-export type ParserOptions<TFields> = TSCliArgs.ParseOptions<TFields>;
+export type ParserOptions<
+    TFields,
+    TDefaults extends Partial<TFields> = {}
+> = TSCliArgs.ParseOptions<TFields> & {
+    defaults?: TDefaults
+};

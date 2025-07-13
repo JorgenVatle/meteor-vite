@@ -2,42 +2,45 @@ import type { FieldConfig } from '@/lib/CommandLineArgs/Field';
 import {
     parseArgs,
     type ParserOptions,
-    type Pretty,
     type ResolveFieldInputTypes,
     type ResolveFieldTypes,
 } from '@/lib/CommandLineArgs/parseArgs';
 
-export function defineParser<
+export class Parser<
     TFields extends Record<string, FieldConfig>,
-    TResolvedFields extends ResolveFieldTypes<TFields>,
-    TInputType extends Pretty<ResolveFieldInputTypes<TFields>>,
-    TDefaults extends Partial<TResolvedFields> = {},
-    TResult = ResolveFieldTypes<TFields>,
->({ options, defaults, transform, fields }: {
-    fields: TFields;
-    defaults?: TDefaults;
-    options?: ParserOptions<TResolvedFields>;
-    transform?: (fields: Pretty<TResolvedFields>) => TResult;
-}): DefinedParser<TInputType, Pretty<TResult>> {
+    TOutput extends ResolveFieldTypes<TFields>,
+    TInput = ResolveFieldInputTypes<TFields>,
+    TDefaults extends Partial<TOutput> = {},
+    TTransform = TOutput,
+> {
+    declare _inputType: TInput;
+    declare _outputType: TOutput;
     
-    function parse(): TResult {
-        const parsed: any = parseArgs(fields, Object.assign({ defaults }, options));
-        
-        if (transform) {
-            return transform(parsed);
-        }
-        
-        return parsed;
+    constructor(
+        protected readonly fields: TFields,
+        protected readonly options: ParserOptions<TOutput, TDefaults> & {
+            transform?: (output: TOutput) => TTransform;
+        } = {}
+    ) {
+        this.options = options;
     }
     
-    type IOTypes = DefinedParser<TInputType, TResult>;
+    public parse(input?: TInput): TOutput {
+        const defaults = {
+            ...this.options.defaults,
+            ...input,
+        };
+        return parseArgs(this.fields, {
+            ...this.options,
+            defaults,
+        });
+    }
     
-    return parse as IOTypes;
-}
-
-
-interface DefinedParser<TInput, TResult> {
-    '_inputType': TInput;
-    '_outputType': TResult;
-    (): TResult;
+    public transform(input?: TInput): TTransform {
+        const output = this.parse(input);
+        if (!this.options.transform) {
+            return output as any;
+        }
+        return this.options.transform(output);
+    }
 }
