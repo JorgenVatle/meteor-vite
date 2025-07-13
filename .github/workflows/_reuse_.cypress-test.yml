@@ -19,7 +19,11 @@ jobs:
   cypress-run:
     runs-on: ubuntu-24.04
     needs: build
-    # Todo: add mongo sidecar container
+    services:
+      mongo:
+        image: mongo
+        ports:
+          - 27017:27017
     env:
       APP_IMAGE: ${{ needs.build.outputs.deploymentImage }}
       APP_BASENAME: ${{ inputs.appBasename }}
