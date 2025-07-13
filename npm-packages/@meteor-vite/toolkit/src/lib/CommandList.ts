@@ -1,6 +1,7 @@
 import { CommandNotFound } from '@/errors/CommandFailure';
 import type { CommandSpec } from '@/lib/CommandDefinition';
 import { Parser } from '@/lib/CommandLineArgs/defineParser';
+import pc from 'picocolors';
 
 export class CommandList<
     TCommands extends CommandSpec[],
@@ -35,7 +36,16 @@ export class CommandList<
                 { header: 'Usage', content: '$ toolkit <command> [options]' },
             ],
             footerContentSections: [
-                { header: 'Commands', content: this.commands.map((command) => command.name).join(', ') },
+                { header: 'Commands',  },
+                ...this.commands.map(({ name, config }) => {
+                    return {
+                        header: config.title,
+                        content: [
+                            `${pc.dim('$ toolkit')} ${pc.yellow(name)}`,
+                            config.description
+                        ],
+                    }
+                }),
                 { header: 'Global Options', content: []}
             ]
         });
