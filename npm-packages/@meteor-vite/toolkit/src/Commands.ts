@@ -68,4 +68,42 @@ export const Commands = new CommandList([
             await compiler.clean();
         }
     }),
+    new Command('run', {
+        description: 'Run a command within the context of the provided project root directory.',
+        fields: {
+            ...ProjectCompiler.parser.fields,
+            command: {
+                type: String,
+                multiple: true,
+                defaultOption: true,
+            },
+            build: {
+                type: String,
+                description: 'Run build build command in provided workspace roots concurrently with the provided command.',
+                typeLabel: 'rootDir1 rootDir2 ...',
+                multiple: true,
+                optional: true,
+            }
+        },
+        handler: async (options) => {
+            const concurrency = new CommandConcurrency();
+            
+            const extraArgs: string[] = [];
+            
+            if (options.watch) {
+                extraArgs.push('--watch');
+            }
+            
+            options.build?.forEach(rootDir => {
+                const [node, script] = process.argv;
+                const args = [script, 'build', '--rootDir', rootDir, ...extraArgs]
+                concurrency.add({
+                    command: node,
+                    args,
+                })
+            })
+            
+            concurrency.add(options.command)
+        }
+    })
 ]);

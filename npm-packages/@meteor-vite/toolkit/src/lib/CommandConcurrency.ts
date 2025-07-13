@@ -35,6 +35,14 @@ export class CommandConcurrency {
     }
 }
 
+class CommandInstance {
+    constructor(protected readonly info: ConcurrentCommand) {}
+    
+    public setOption(key: string, value: string | boolean | null) {
+    
+    }
+}
+
 type CommandInfo = Extract<ConcurrentlyCommandInput, { command: string }>;
 type ConcurrentCommand = {
     command: string;
