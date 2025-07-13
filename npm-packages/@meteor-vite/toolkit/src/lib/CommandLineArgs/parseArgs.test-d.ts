@@ -1,5 +1,5 @@
 import { parseArgs } from '@/lib/CommandLineArgs/parseArgs';
-import { describe, expectTypeOf, test } from 'vitest';
+import { describe, expectTypeOf, it, test } from 'vitest';
 
 describe('result type', () => {
     const result = parseArgs({
@@ -61,3 +61,14 @@ describe('result type', () => {
     })
     
 });
+
+describe('default values', () => {
+    it('will allow defaults matching the underlying primitive type', () => {
+        parseArgs({
+            foo: {
+                type: Boolean,
+                defaultValue: true,
+            }
+        })
+    })
+})
