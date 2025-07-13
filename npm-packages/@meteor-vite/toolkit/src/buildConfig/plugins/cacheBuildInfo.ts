@@ -3,7 +3,8 @@ import { ProjectCompiler } from '@/ProjectCompiler';
 import pc from 'picocolors';
 
 export function cacheBuildInfo(rootDir: string): TSUpPlugin {
-    const compiler = new ProjectCompiler(rootDir, {
+    const compiler = new ProjectCompiler({
+        rootDir,
         summary: false,
     });
     let startTime = Date.now();
