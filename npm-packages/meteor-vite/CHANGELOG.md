@@ -1,5 +1,11 @@
 # meteor-vite
 
+## 3.9.0-beta.1
+
+### Patch Changes
+
+- 4cfcf72: Added type exports for meteor-vite/plugin options.
+
 ## 3.9.0-beta.0
 
 ### Minor Changes
