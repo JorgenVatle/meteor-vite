@@ -3,9 +3,7 @@ import { parse, type ParseOptions } from 'ts-command-line-args';
 
 export function parseArgs<
     TFields extends Record<string, FieldConfig>,
-    TResult extends {
-        [key in keyof TFields]: InferFieldType<TFields[key]>;
-    },
+    TResult extends ResolveFieldTypes<TFields>,
     TDefaults extends {
         [key in keyof TResult]?: TResult[key];
     }
@@ -26,4 +24,8 @@ export function parseArgs<
     })
     
     return parse(args as any, options);
+}
+
+export type ResolveFieldTypes<TFields extends Record<string, FieldConfig>> = {
+    [key in keyof TFields]: InferFieldType<TFields[key]>;
 }
