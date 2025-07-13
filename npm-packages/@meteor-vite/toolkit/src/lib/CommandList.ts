@@ -31,7 +31,6 @@ export class CommandList<
             }
         }, {
             helpArg: 'help',
-            partial: true,
             headerContentSections: [
                 { header: 'Meteor Vite Toolkit', content: 'A collection of tools for Meteor and Vite.' },
                 { header: 'Usage', content: '$ toolkit <command> [options]' },
@@ -60,6 +59,7 @@ export class CommandList<
     }
     
     public async run<TName extends TCommand>(commandName: TName, argv: string[], options?: TOptions[TName]) {
+        console.log({ commandName, argv, trace: new Error(), proc: process.argv });
         const command = this.get(commandName);
         await command.run(argv, options);
     }
@@ -69,6 +69,7 @@ export class CommandList<
         
         if (!command) {
             this.parser.printHelp(`Unknown command: ${commandName}`, [
+                { content: pc.dim(`(${process.argv.join(' ')})`) },
                 { content: 'Try some of the above commands, or run toolkit --help for a list of all commands.' },
             ]);
             throw new CommandNotFound(`Unknown command: ${commandName}`);
