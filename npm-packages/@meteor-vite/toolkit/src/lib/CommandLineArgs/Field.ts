@@ -32,7 +32,7 @@ export type InferFieldType<
           ? T
           : never;
 
-export type FieldConfig<TField extends Field = Field> = TField & PropertyOptions<TField>
+export type FieldConfig<TField extends Field = Field> = TField & BasePropertyOptions
 
 type BasePropertyOptions = Omit<TsCliArgs.PropertyOptions<any>, 'type' | 'multiple' | 'optional' | 'defaultValue'>
 
