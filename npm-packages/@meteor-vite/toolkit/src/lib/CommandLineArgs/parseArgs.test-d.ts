@@ -40,6 +40,22 @@ describe('result type', () => {
         test('numbers', () => {
             // todo
         })
+    });
+    
+    describe('mismatched types emit errors', () => {
+        test('booleans', () => {
+            expectTypeOf(result.foo).not.toEqualTypeOf<number>()
+        })
+        test('strings', () => {
+            expectTypeOf(result.bar).not.toEqualTypeOf<number>()
+        })
+        test('optional strings', () => {
+            expectTypeOf(result.imOptional).not.toEqualTypeOf<number>()
+            expectTypeOf(result.imOptional).not.toEqualTypeOf<string>()
+        })
+        test('numbers', () => {
+            // todo
+        })
     })
     
     describe('arrays', () => {
