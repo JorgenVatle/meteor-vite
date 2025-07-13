@@ -30,7 +30,6 @@
     "build:packages": "npm run build -w npm-packages/@meteor-vite/toolkit -w npm-packages/meteor-vite -w packages/vite",
 
     "postprepare": "npm run build:packages",
-    "prestart": "npm run build:packages",
 
     "link": "npm run example link",
     "release": "npm run publish:vite && changeset publish",
