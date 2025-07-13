@@ -9,11 +9,12 @@ import { inspect } from 'node:util';
 import pc from 'picocolors';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
 
-type Options = typeof parser._inputType;
+type Options = typeof parser._outputType;
 const parser = new Parser({
     rootDir: {
         type: String,
         defaultOption: true,
+        defaultValue: '.',
     },
     verbose: {
         description: 'Print full summary of last build and changes to console',
