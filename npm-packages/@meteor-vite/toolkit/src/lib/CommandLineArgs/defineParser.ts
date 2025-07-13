@@ -25,6 +25,7 @@ export class Parser<
         options?: ParserInstanceOptions<TOutput, TTransform>,
     ) {
         this.options = options || {} as TOptions;
+        Object.assign(this.options, { helpArg: options?.helpArg || 'help' })
         this._transform = options?.transform;
     }
     
