@@ -29,7 +29,7 @@ jobs:
     env:
       APP_IMAGE: ${{ needs.build.outputs.deploymentImage }}
       APP_BASENAME: ${{ inputs.appBasename }}
-      MONGO_URL: mongodb://localhost:${{ inputs.mongoPort }}
+      MONGO_URL: mongodb://mongo:${{ inputs.mongoPort }}
       PORT: ${{ inputs.port }}
       ROOT_URL: http://localhost:${{ inputs.port }}/
       MONGO_PORT: ${{ inputs.mongoPort }}
