@@ -18,11 +18,24 @@ export type BaseField<T = any> = {
     type: {
         (value?: any): T;
     }
-} & PropertyOptions<T>;
+};
 
+export type InferFieldType<
+    TField,
+> = TField extends OptionalMultiField<infer T>
+    ? T[] | undefined
+    : TField extends OptionalField<infer T>
+      ? T | undefined
+      : TField extends MultiField<infer T>
+        ? T[]
+        : TField extends BaseField<infer T>
+          ? T
+          : never;
+
+export type FieldConfig<TField extends Field = Field> = TField & PropertyOptions<TField>
 
 type BasePropertyOptions = Omit<TsCliArgs.PropertyOptions<any>, 'type' | 'multiple' | 'optional' | 'defaultValue'>
 
-interface PropertyOptions<T = any> extends BasePropertyOptions {
-    defaultValue?: T;
+interface PropertyOptions<TField> extends BasePropertyOptions {
+    defaultValue?: InferFieldType<TField>;
 }
