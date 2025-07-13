@@ -27,7 +27,7 @@ const DEFAULTS = {
     replacement: '',
 }
 
-const args = parse(
+const args = parse<{ baseUrl: string, replacement: string, run?: string[], help: boolean }>(
     {
         baseUrl: {
             type: String,
@@ -42,6 +42,8 @@ const args = parse(
         run: {
             description: 'Run the command and pipe the output to this script. By default, this script will read from stdin and write to stdout.',
             type: String,
+            multiple: true,
+            optional: true,
         },
         help: Boolean,
     },
@@ -72,7 +74,8 @@ function processLine(io: 'log' | 'error') {
 
 if (args.help) {}
 else if (args.run) {
-    const child = spawn(args.run)
+    const [command, ...params] = args.run;
+    const child = spawn(command, params);
     const stdout = Readline.createInterface({
         input: child.stdout,
     });
