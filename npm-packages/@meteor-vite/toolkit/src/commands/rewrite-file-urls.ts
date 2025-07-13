@@ -39,6 +39,12 @@ export default [
                 return (line: string) => log(line.replace(search, replace));
             }
             
+            console.log([
+                '\n',
+                `[Rewriting file URLs from ${search} to: ${replace}]`,
+                '\n',
+            ].join('\n'));
+            
             if (!run) {
                 const readline = Readline.createInterface({
                     input: process.stdin,
