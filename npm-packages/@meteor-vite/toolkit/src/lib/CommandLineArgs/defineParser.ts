@@ -1,8 +1,8 @@
-import type { Field } from '@/lib/CommandLineArgs/Field';
-import { parseArgs, type ParserOptions, type ResolveFieldTypes } from '@/lib/CommandLineArgs/parseArgs';
+import type { FieldConfig } from '@/lib/CommandLineArgs/Field';
+import { parseArgs, type ParserOptions, type Pretty, type ResolveFieldTypes } from '@/lib/CommandLineArgs/parseArgs';
 
 export function defineParser<
-    TFields extends Record<string, Field>,
+    TFields extends Record<string, FieldConfig>,
     TResolvedFields extends ResolveFieldTypes<TFields>,
     TDefaults extends Partial<TResolvedFields> = {},
     TResult = ResolveFieldTypes<TFields>
@@ -10,7 +10,7 @@ export function defineParser<
     fields: TFields;
     defaults?: TDefaults;
     options?: ParserOptions<TResolvedFields>;
-    transform?: (fields: TResolvedFields) => TResult;
+    transform?: (fields: Pretty<TResolvedFields>) => TResult;
 }) {
     return (): TResult => {
         const parsed: any = parseArgs(fields, Object.assign({ defaults }, options));

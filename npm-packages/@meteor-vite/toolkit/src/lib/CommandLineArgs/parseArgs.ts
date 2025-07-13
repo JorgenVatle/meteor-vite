@@ -30,4 +30,8 @@ export type ResolveFieldTypes<TFields extends Record<string, FieldConfig>> = {
     [key in keyof TFields]: InferFieldType<TFields[key]>;
 }
 
+export type Pretty<T> = {
+    [key in keyof T]: T[key]
+} & {}
+
 export type ParserOptions<TFields> = TSCliArgs.ParseOptions<TFields>;
