@@ -38,7 +38,11 @@ export class Parser<
         Object.assign(this.options, options);
     }
     
-    public parse(options?: TOptions): TOutput {
+    public printHelp() {
+        this.parse({ argv: [`--${this.options.helpArg?.toString() || 'help'}`] })
+    }
+    
+    public parse(options?: ParserInstanceOptions<TOutput>): TOutput {
         const defaults = {
             ...this.options?.defaults,
             ...options?.defaults,
