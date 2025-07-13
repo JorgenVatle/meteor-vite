@@ -54,9 +54,10 @@ export class CommandList<
         });
     }
     
-    public async runWithParser() {
+    public async runWithParser(argv?: string[]) {
         const { command: name, _unknown } = this.parser.parse({
             partial: true,
+            argv,
         });
         return await this.run(name as any, _unknown);
     }
