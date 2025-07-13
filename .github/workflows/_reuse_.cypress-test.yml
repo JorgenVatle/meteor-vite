@@ -46,4 +46,4 @@ jobs:
           build: npm run cypress:setup ${{ env.APP_IMAGE }}
           start: npm run cypress:start
           wait-on: ${{ env.ROOT_URL }}
-          working-directory: test/cypress-suite
+          working-directory: tests/cypress-suite
