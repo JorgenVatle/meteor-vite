@@ -39,8 +39,15 @@ export class Parser<
         Object.assign(this.options, options);
     }
     
-    public printHelp() {
-        this.parse({ argv: [`--${this.options.helpArg?.toString() || 'help'}`] })
+    public printHelp(header?: string, content?: Content[]) {
+        this.parse({
+            argv: [`--${this.options.helpArg?.toString() || 'help'}`],
+            addOptionalDefaultExplanatoryFooter: true,
+            footerContentSections: [
+                ...this.options.footerContentSections || [],
+                { header: header, content: content },
+            ],
+        })
     }
     
     public parse(options?: ParserInstanceOptions<TOutput>): TOutput {

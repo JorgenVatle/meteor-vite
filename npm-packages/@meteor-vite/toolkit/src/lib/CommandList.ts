@@ -21,6 +21,7 @@ export class CommandList<
                 type: String,
                 description: 'Command to run',
                 defaultOption: true,
+                optional: true,
             },
             help: {
                 type: Boolean,
@@ -67,7 +68,9 @@ export class CommandList<
         const command = this.commands.find((command) => command.name === commandName);
         
         if (!command) {
-            this.parser.printHelp();
+            this.parser.printHelp(`Unknown command: ${commandName}`, [
+                { content: 'Try some of the above commands, or run toolkit --help for a list of all commands.' },
+            ]);
             throw new CommandNotFound(`Unknown command: ${commandName}`);
         }
         
