@@ -11,8 +11,9 @@ export function defineParser<
     defaults?: TDefaults;
     options?: ParserOptions<TResolvedFields>;
     transform?: (fields: Pretty<TResolvedFields>) => TResult;
-}) {
-    return (): TResult => {
+}): DefinedParser<Pretty<TResolvedFields>, Pretty<TResult>> {
+    
+    function parse(): TResult {
         const parsed: any = parseArgs(fields, Object.assign({ defaults }, options));
         
         if (transform) {
@@ -21,4 +22,15 @@ export function defineParser<
         
         return parsed;
     }
+    
+    type IOTypes = DefinedParser<TResolvedFields, TResult>;
+    
+    return parse as IOTypes;
+}
+
+
+interface DefinedParser<TFields, TResult> {
+    '_inputType': TFields;
+    '_outputType': TResult;
+    (): TResult;
 }
