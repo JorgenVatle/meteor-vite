@@ -18,6 +18,8 @@ export type BaseField<T = unknown> = {
     type: {
         (value?: unknown): T;
     },
+} | {
+    defaultValue: T;
 };
 
 export type InferFieldType<

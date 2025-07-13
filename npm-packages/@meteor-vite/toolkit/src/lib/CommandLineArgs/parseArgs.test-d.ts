@@ -21,6 +21,9 @@ describe('result type', () => {
             type: String,
             multiple: true,
             optional: true,
+        },
+        defaultString: {
+            defaultValue: 'foobar',
         }
     })
     
@@ -35,6 +38,10 @@ describe('result type', () => {
         
         test('optional strings', () => {
             expectTypeOf(result.optionalString).toEqualTypeOf<string | undefined>()
+        });
+        
+        test('default string', () => {
+            expectTypeOf(result.defaultString).toEqualTypeOf<string>();
         })
         
         test('numbers', () => {
