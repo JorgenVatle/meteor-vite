@@ -33,7 +33,7 @@ jobs:
       APP_BASENAME: ${{ inputs.appBasename }}
       MONGO_URL: mongodb://localhost:27017
       PORT: ${{ inputs.port }}
-      BASE_URL: http://localhost/${{ inputs.port }}
+      BASE_URL: http://localhost:${{ inputs.port }}/
     steps:
       - name: Checkout
         uses: actions/checkout@v4
