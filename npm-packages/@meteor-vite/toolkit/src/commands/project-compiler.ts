@@ -70,10 +70,48 @@ export default [
     }),
     new CommandDefinition('clean', {
         description: `Clean the build output directory (${Highlight.filePath('/dist')}) for the current project.`,
-        fields: ProjectCompiler.parser.fields,
+        fields: {
+            ...ProjectCompiler.parser.fields,
+            ws: {
+                type: Boolean,
+                description: 'Clean the build output directory for all workspaces.',
+                defaultValue: false,
+            }
+        },
         handler: async (options) => {
-            const compiler = new ProjectCompiler(options)
-            await compiler.clean();
+            const compiler = new ProjectCompiler(options);
+            const project = await compiler.getProjectInfo();
+            
+            if (!options.ws) {
+                await compiler.clean();
+                return;
+            }
+            
+            if (!project.workspaces) {
+                throw new Error(`Missing workspaces field in ${compiler.filePath.packageJson}`);
+            }
+            
+            console.log('Cleaning up workspaces', project.workspaces);
+            
+            const concurrency = new CommandConcurrency({
+                inheritOptions: options,
+                whitelist: [
+                    'watch',
+                    'summary',
+                    'verbose',
+                    'force'
+                ]
+            });
+            
+            project.workspaces.forEach(workspace => {
+                const [node, script] = process.argv;
+                concurrency.add({
+                    command: node,
+                    args: [script, 'clean', workspace]
+                })
+            })
+            
+            await concurrency.run();
         }
     }),
     new CommandDefinition('run', {

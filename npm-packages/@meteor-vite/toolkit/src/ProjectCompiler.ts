@@ -36,7 +36,7 @@ const parser = new Parser({
 })
 
 export class ProjectCompiler {
-    protected filePath;
+    public readonly filePath;
     protected readonly rootDir: string;
     protected packageJson?: PackageJSON;
     
@@ -112,7 +112,7 @@ export class ProjectCompiler {
         }
     }
     
-    protected async getProjectInfo(): Promise<PackageJSON> {
+    public async getProjectInfo(): Promise<PackageJSON> {
         if (this.packageJson) {
             return this.packageJson;
         }
@@ -346,4 +346,4 @@ interface BuildInfo extends BuildHashes {
     durationMs?: number;
 }
 
-type PackageJSON = { name: string }
+type PackageJSON = { name: string, workspaces?: string[] };
