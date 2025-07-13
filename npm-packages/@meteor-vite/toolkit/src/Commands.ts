@@ -31,13 +31,15 @@ export const Commands = new CommandList([
                 optional: true,
             },
         },
-        handler: async ({ watch, verbose, summary, ...options }) => {
+        handler: async (options) => {
             const concurrency = new CommandConcurrency({
-                inheritOptions: {
-                    watch,
-                    verbose,
-                    summary,
-                }
+                inheritOptions: options,
+                whitelist: [
+                    'watch',
+                    'summary',
+                    'verbose',
+                    'force'
+                ]
             });
             const compiler = new ProjectCompiler(options)
             
@@ -92,13 +94,15 @@ export const Commands = new CommandList([
                 optional: true,
             }
         },
-        handler: async ({ watch, verbose, summary, command, build }) => {
+        handler: async ({ build, command, ...options }) => {
             const concurrency = new CommandConcurrency({
-                inheritOptions: {
-                    watch,
-                    verbose,
-                    summary,
-                }
+                inheritOptions: options,
+                whitelist: [
+                    'watch',
+                    'summary',
+                    'verbose',
+                    'force'
+                ]
             });
             
             build?.forEach(rootDir => {

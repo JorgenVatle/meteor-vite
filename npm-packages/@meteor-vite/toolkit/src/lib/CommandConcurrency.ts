@@ -1,10 +1,19 @@
 import { concurrently, type ConcurrentlyCommandInput, type ConcurrentlyOptions } from 'concurrently';
 
-export class CommandConcurrency {
+export class CommandConcurrency<TOptions extends  Record<string, unknown> = {}> {
     public readonly commands: CommandInfo[] = [];
     protected readonly extraArgs = new Set<[string] | [string, string[]]>();
-    constructor({ inheritOptions = {} }: { inheritOptions?: Record<string, unknown> } = {}) {
+    constructor(
+        config: {
+            inheritOptions?: TOptions,
+            whitelist?: (keyof TOptions)[],
+        }
+    ) {
+        const { inheritOptions = {}, whitelist = [] } = config;
         Object.entries(inheritOptions).forEach(([_key, value]) => {
+            if (!whitelist.includes(_key)) {
+                return;
+            }
             const key = `--${_key}`;
             if (value === true) {
                 this.extraArgs.add([key]);
