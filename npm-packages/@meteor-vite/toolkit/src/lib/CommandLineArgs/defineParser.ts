@@ -2,19 +2,20 @@ import type { FieldConfig } from '@/lib/CommandLineArgs/Field';
 import {
     parseArgs,
     type ParserOptions,
+    type Pretty,
     type ResolveFieldInputTypes,
     type ResolveFieldTypes,
 } from '@/lib/CommandLineArgs/parseArgs';
 
 export class Parser<
     TFields extends Record<string, FieldConfig>,
-    TOutput extends ResolveFieldTypes<TFields>,
-    TInput = ResolveFieldInputTypes<TFields>,
+    TOutput extends Pretty<ResolveFieldTypes<TFields>>,
+    TInput extends Pretty<ResolveFieldInputTypes<TFields>>,
     TDefaults extends Partial<TOutput> = {},
     TTransform = TOutput,
 > {
-    declare _inputType: TInput;
-    declare _outputType: TOutput;
+    declare _inputType: Pretty<TInput>;
+    declare _outputType: Pretty<TOutput>;
     
     constructor(
         protected readonly fields: TFields,
