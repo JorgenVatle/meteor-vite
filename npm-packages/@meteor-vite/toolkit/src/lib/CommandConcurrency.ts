@@ -20,7 +20,7 @@ export class CommandConcurrency<TOptions extends  Record<string, unknown> = {}> 
                 return;
             }
             if (value === false) {
-                this.extraArgs.add([`${key}=0`]);
+                this.extraArgs.add([`${key}=false`]);
                 return;
             }
             if (typeof value === 'string') {
