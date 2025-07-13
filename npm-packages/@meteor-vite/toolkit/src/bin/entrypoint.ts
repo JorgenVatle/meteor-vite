@@ -1,10 +1,11 @@
 import { Commands } from '@/Commands';
 import { CommandFailure } from '@/errors/CommandFailure';
-import { parseCliParams } from '@/lib/parseCliParams';
 
-const { command, options } = parseCliParams();
+const [command, ...options] = process.argv.slice(2);
 
-await Commands.run(command, options).catch((error) => {
+await Commands.run(command as 'build', {
+    argv: options,
+}).catch((error) => {
     if (!(error instanceof CommandFailure)) {
         throw error;
     }
