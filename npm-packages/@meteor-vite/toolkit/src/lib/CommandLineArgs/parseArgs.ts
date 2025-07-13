@@ -1,5 +1,5 @@
 import type { FieldConfig, InferFieldType } from '@/lib/CommandLineArgs/Field';
-import { parse, type ParseOptions } from 'ts-command-line-args';
+import * as TSCliArgs from 'ts-command-line-args';
 
 export function parseArgs<
     TFields extends Record<string, FieldConfig>,
@@ -11,7 +11,7 @@ export function parseArgs<
     fields: {
         [key in keyof TFields]: FieldConfig<TFields[key]>;
     },
-    options: ParseOptions<TResult> & { defaults?: TDefaults } = {},
+    options: ParserOptions<TResult> & { defaults?: TDefaults } = {},
 ): TResult {
     const args: Record<string, unknown> = {
         ...fields,
@@ -23,9 +23,11 @@ export function parseArgs<
         }
     })
     
-    return parse(args as any, options);
+    return TSCliArgs.parse(args as any, options);
 }
 
 export type ResolveFieldTypes<TFields extends Record<string, FieldConfig>> = {
     [key in keyof TFields]: InferFieldType<TFields[key]>;
 }
+
+export type ParserOptions<TFields> = TSCliArgs.ParseOptions<TFields>;
