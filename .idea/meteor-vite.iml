@@ -37,6 +37,8 @@
       <excludeFolder url="file://$MODULE_DIR$/packages/vite/.npm" />
       <excludeFolder url="file://$MODULE_DIR$/.bin/dist" />
       <excludeFolder url="file://$MODULE_DIR$/npm-packages/@meteor-vite/toolkit/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/npm-packages/@meteor-vite/plugin-zodern-relay" />
+      <excludeFolder url="file://$MODULE_DIR$/npm-packages/@meteor-vite/react-packages" />
       <excludePattern pattern=".babel-cache" />
       <excludePattern pattern="local" />
       <excludePattern pattern="package-lock.json" />
