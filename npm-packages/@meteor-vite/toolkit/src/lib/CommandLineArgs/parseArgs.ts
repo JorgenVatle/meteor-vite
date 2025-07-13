@@ -57,7 +57,7 @@ export type Pretty<T> = {
 
 export type ParserOptions<
     TFields,
-    TDefaults extends Partial<TFields> = {}
+    TDefaults = Partial<TFields>
 > = TSCliArgs.ParseOptions<TFields> & {
     defaults?: TDefaults
 };

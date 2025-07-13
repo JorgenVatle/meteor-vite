@@ -6,25 +6,36 @@ import {
     type ResolveFieldInputTypes,
     type ResolveFieldTypes,
 } from '@/lib/CommandLineArgs/parseArgs';
+import type { Content } from 'ts-command-line-args/src/contracts';
 
 export class Parser<
     TFields extends Record<string, FieldConfig> = Record<string, FieldConfig>,
     TOutput extends Pretty<ResolveFieldTypes<TFields>> = Pretty<ResolveFieldTypes<TFields>>,
     TInput extends Pretty<ResolveFieldInputTypes<TFields>> = Pretty<ResolveFieldInputTypes<TFields>>,
-    TDefaults extends Partial<TOutput> = {},
-    TOptions extends ParserOptions<TOutput, TDefaults> = ParserOptions<TOutput, TDefaults>,
+    TOptions extends ParserInstanceOptions<TOutput> = ParserInstanceOptions<TOutput>,
     TTransform = TOutput,
 > {
     declare _inputType: Pretty<TInput>;
     declare _outputType: Pretty<TOutput>;
+    public readonly options: ParserInstanceOptions<TOutput>;
+    protected readonly _transform?: (output: TOutput) => TTransform;
     
     constructor(
         public readonly fields: TFields,
-        public readonly options?: TOptions & {
-            transform?: (output: TOutput) => TTransform;
-        }
+        options?: ParserInstanceOptions<TOutput, TTransform>,
     ) {
-        this.options = options;
+        this.options = options || {} as TOptions;
+        this._transform = options?.transform;
+    }
+    
+    public setHelpContent(content: HelpContent) {
+        const options: ParserInstanceOptions<TOutput> = {
+            headerContentSections: [
+                { header: content.title, content: content.description },
+            ],
+            footerContentSections: content.footer,
+        }
+        Object.assign(this.options, options);
     }
     
     public parse(options?: TOptions): TOutput {
@@ -42,9 +53,19 @@ export class Parser<
     
     public transform(options?: TOptions): TTransform {
         const output = this.parse(options);
-        if (!this.options?.transform) {
+        if (!this._transform) {
             return output as any;
         }
-        return this.options.transform(output);
+        return this._transform(output);
     }
+}
+
+type ParserInstanceOptions<TOutput, TTransform = unknown> = ParserOptions<TOutput> & {
+    transform?: (output: TOutput) => TTransform;
+}
+
+export type HelpContent = {
+    title: string;
+    description: string;
+    footer?: Content[];
 }
