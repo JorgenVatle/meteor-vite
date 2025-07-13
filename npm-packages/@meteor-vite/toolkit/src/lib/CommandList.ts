@@ -1,8 +1,8 @@
 import { CommandNotFound } from '@/errors/CommandFailure';
-import type { Command } from '@/lib/Command';
+import type { CommandSpec } from '@/lib/Command';
 
 export class CommandList<
-    TCommands extends Command[],
+    TCommands extends CommandSpec[],
     TOptions extends {
         [key in keyof TCommands]: { [k in TCommands[key]['name']]: TCommands[key] };
     }[keyof TCommands],
@@ -10,8 +10,8 @@ export class CommandList<
 > {
     
     constructor(
-        protected readonly commands: TCommands) {
-    }
+        protected readonly commands: [...TCommands]
+    ) {}
     
     public async run<TName extends TCommand>(commandName: TName, options: TOptions[TName]) {
         const command = this.get(commandName);
