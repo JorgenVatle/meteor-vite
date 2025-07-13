@@ -1,8 +1,12 @@
 import { CommandNotFound } from '@/errors/CommandFailure';
 import type { CommandOptions } from '@/lib/parseCliParams';
 
-export class CommandList<TCommand extends CommandSpec> {
-    constructor(protected readonly commands: TCommand[]) {
+export class CommandList<
+    TParams extends unknown[],
+    TCommand extends CommandSpec<TParams[keyof TParams]>
+> {
+    constructor(
+        protected readonly commands: { [key in keyof TParams]: CommandSpec<TParams[key]> }) {
     }
     
     public async run(commandName: TCommand['name'], options: CommandOptions) {
@@ -52,10 +56,13 @@ export class CommandList<TCommand extends CommandSpec> {
     
 }
 
-export type CommandSpec = {
+export type CommandSpec<
+    TParsedOptions = unknown,
+> = {
     name: string;
     description: string;
-    handler: (args: CommandOptions) => Promise<void>;
+    options: () => TParsedOptions;
+    handler: (args: NoInfer<TParsedOptions>) => Promise<void>;
 }
 
 type OptionSpec = Record<string, {
