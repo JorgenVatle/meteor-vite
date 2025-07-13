@@ -40,11 +40,25 @@ export class CommandDefinition<
     };
     
     public run(options?: typeof this.parser.options) {
-        return this.config.handler(this.parser.parse(options));
+        try {
+            return this.config.handler(this.parser.parse(options));
+        } catch (error) {
+            if (!(error instanceof Error)) {
+                throw error;
+            }
+            if (error.name === 'UNKNOWN_VALUE') {
+                this.parser.printHelp();
+            }
+            throw error;
+        }
     }
 }
 
 export type CommandSpec = {
     name: string;
     run: (args: any) => Promise<void>;
+    config: {
+        title?: string;
+        description: string;
+    }
 }
