@@ -17,7 +17,7 @@
  * at (file:///wsl$/Ubuntu/foo/bar.js:13:37)
  */
 
-import process from 'node:process';
+import { spawn } from 'node:child_process';
 import pc from 'picocolors';
 import Readline from 'readline';
 import { parse } from 'ts-command-line-args';
@@ -65,13 +65,28 @@ console.log([
 ].join('\n'));
 
 
-function processLine(line: string) {
-    return line.replace(search, replace);
+function processLine(io: 'log' | 'error') {
+    const log = console[io];
+    return (line: string) => log(line.replace(search, replace));
 }
 
 if (args.help) {}
 else if (args.run) {
-    // todo
+    const child = spawn(args.run)
+    const stdout = Readline.createInterface({
+        input: child.stdout,
+    });
+    const stderr = Readline.createInterface({
+        input: child.stderr,
+    });
+    
+    stdout.on('line', processLine('log'));
+    stderr.on('line', processLine('error'));
+    
+    child.on('exit', (code) => {
+        process.exitCode = code || 0;
+        console.log(`Run command "${args.run}" exited with code: `, process.exitCode);
+    });
 } else {
     const readline = Readline.createInterface({
         input: process.stdin,
@@ -79,7 +94,5 @@ else if (args.run) {
         terminal: false,
     });
     
-    readline.on('line', (line) => {
-        console.log(processLine(line));
-    });
+    readline.on('line', processLine('log'));
 }
