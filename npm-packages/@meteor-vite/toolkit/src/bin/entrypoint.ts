@@ -3,9 +3,7 @@ import { CommandFailure } from '@/errors/CommandFailure';
 
 const [command, ...options] = process.argv.slice(2);
 
-await Commands.run(command as 'build', {
-    argv: options,
-}).catch((error) => {
+await Commands.runWithParser().catch((error) => {
     if (!(error instanceof CommandFailure)) {
         throw error;
     }
