@@ -1,9 +1,27 @@
 import { concurrently, type ConcurrentlyCommandInput, type ConcurrentlyOptions } from 'concurrently';
 
 export class CommandConcurrency {
+    public readonly commands: CommandInfo[] = [];
+    protected readonly extraArgs = new Set<[string] | [string, string[]]>();
     constructor(
-        public readonly commands: CommandInfo[] = []
-    ) {};
+        protected readonly inheritOptions: Record<string, unknown> = {}
+    ) {
+        Object.entries(inheritOptions).forEach(([key, value]) => {
+            if (value === true) {
+                this.extraArgs.add([key]);
+                return;
+            }
+            if (typeof value === 'string') {
+                this.extraArgs.add([key, [value]]);
+                return;
+            }
+            if (Array.isArray(value)) {
+                this.extraArgs.add([key, value]);
+                return;
+            }
+            console.warn(`Unknown option: ${key}=${value}`);
+        })
+    };
     
     protected readonly defaultOptions: Partial<ConcurrentlyOptions> = {
         killOthersOn: 'failure',
@@ -24,7 +42,7 @@ export class CommandConcurrency {
     };
     
     protected formatArgs(args: string[]) {
-        return args.map((arg) => JSON.stringify(arg))
+        return [args, ...this.extraArgs].flat(2).map((arg) => JSON.stringify(arg))
     }
     
     public run(options?: Partial<ConcurrentlyOptions>) {
