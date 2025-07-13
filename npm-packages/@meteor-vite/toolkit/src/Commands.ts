@@ -33,12 +33,13 @@ export const Commands = new CommandList([
         },
         handler: async (options) => {
             const compiler = new ProjectCompiler(options)
-            const commands: { command: string, arguments: string[] }[] = [];
+            const commands: { command: string, args: string[] }[] = [];
             if (options.concurrent) {
                 options.concurrent.forEach(rootDir => {
+                    const [node, script] = process.argv;
                     commands.push({
-                        command: process.argv[1],
-                        arguments: ['build', rootDir, '--watch']
+                        command: node,
+                        args: [script, 'build', rootDir, '--watch']
                     })
                 })
             }
@@ -46,7 +47,7 @@ export const Commands = new CommandList([
                 const [command, ...args] = options.run;
                 commands.push({
                     command,
-                    arguments: args,
+                    args,
                 });
             }
             if (!commands.length) {
@@ -54,7 +55,11 @@ export const Commands = new CommandList([
                 return;
             }
             try {
-                await concurrently(commands, {
+                await concurrently(commands.map(({ command, args }) => {
+                    return {
+                        command: [command, args.map(arg => JSON.stringify(arg))].flat().join(' '),
+                    }
+                }), {
                     prefix: 'none',
                     restartTries: 0,
                     killOthersOn: ['failure'],
