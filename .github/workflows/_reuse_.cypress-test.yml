@@ -9,6 +9,9 @@ on:
       port:
         type: string
         default: 3000
+      mongoPort:
+        type: string
+        default: 27017
 
 jobs:
   build:
@@ -23,17 +26,13 @@ jobs:
   cypress-run:
     runs-on: ubuntu-24.04
     needs: build
-    services:
-      mongo:
-        image: mongo
-        ports:
-          - 27017:27017
     env:
       APP_IMAGE: ${{ needs.build.outputs.deploymentImage }}
       APP_BASENAME: ${{ inputs.appBasename }}
-      MONGO_URL: mongodb://localhost:27017
+      MONGO_URL: mongodb://localhost:${{ inputs.mongoPort }}
       PORT: ${{ inputs.port }}
       ROOT_URL: http://localhost:${{ inputs.port }}/
+      MONGO_PORT: ${{ inputs.mongoPort }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
