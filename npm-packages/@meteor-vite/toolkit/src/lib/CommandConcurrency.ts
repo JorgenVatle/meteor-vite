@@ -10,6 +10,10 @@ export class CommandConcurrency {
                 this.extraArgs.add([key]);
                 return;
             }
+            if (value === false) {
+                this.extraArgs.add([`${key}=0`]);
+                return;
+            }
             if (typeof value === 'string') {
                 this.extraArgs.add([key, [value]]);
                 return;
