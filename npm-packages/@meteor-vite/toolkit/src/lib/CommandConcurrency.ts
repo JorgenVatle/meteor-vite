@@ -24,11 +24,10 @@ export class CommandConcurrency {
                 ...options,
             }
         });
-        const defaultOptions: Partial<ConcurrentlyOptions> = {}
-        concurrently(commands, {
+        return concurrently(commands, {
             ...this.defaultOptions,
             ...options,
-        });
+        }).result;
     }
 }
 
