@@ -6,7 +6,7 @@ export class CommandList<
     TOptions extends {
         [key in keyof TCommands]: { [k in TCommands[key]['name']]: TCommands[key] };
     }[keyof TCommands],
-    TCommand extends Extract<keyof TOptions, string>,
+    TCommand extends Extract<TCommands[number]['name'], string>,
 > {
     
     constructor(
