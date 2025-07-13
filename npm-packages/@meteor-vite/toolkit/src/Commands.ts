@@ -1,33 +1,34 @@
+import { Command } from '@/lib/Command';
 import { CommandList } from '@/lib/CommandList';
 import { Highlight } from '@/lib/Highlight';
 import { ProjectCompiler } from '@/ProjectCompiler';
 
 const options = () => {
     return {
-        compiler: new ProjectCompiler(ProjectCompiler.parseOptions()),
+        compiler: ProjectCompiler.init(),
     };
 }
 
-export const Commands = new CommandList({
-    'check-changes': {
+export const Commands = new CommandList([
+    new Command('check-changes', {
         description: 'Check if the current root directory has seen changes since last build.',
-        options,
-        handler: async ({ compiler }) => {
-            await compiler.getHash();
+        fields: {},
+        handler: async () => {
+            await ProjectCompiler.init().getHash();
         }
-    },
-    'build': {
+    }),
+    new Command('build', {
         description: 'Run a build and compute the build hash for the provided project root directory.',
-        options,
-        handler: async ({ compiler }) => {
-            await compiler.build();
+        fields: {},
+        handler: async () => {
+            await ProjectCompiler.init().build();
         }
-    },
-    'clean': {
+    }),
+    new Command('clean', {
         description: `Clean the build output directory (${Highlight.filePath('/dist')}) for the current project.`,
-        options,
-        handler: async ({ compiler }) => {
-            await compiler.clean();
+        fields: {},
+        handler: async () => {
+            await ProjectCompiler.init().clean();
         }
-    }
-});
+    }),
+]);

@@ -3,8 +3,8 @@ import type { FieldConfig } from '@/lib/CommandLineArgs/Field';
 import type { Pretty, ResolveFieldInputTypes, ResolveFieldTypes } from '@/lib/CommandLineArgs/parseArgs';
 
 export class Command<
-    TName extends string,
-    TFields extends Record<string, FieldConfig>,
+    TName extends string = string,
+    TFields extends Record<string, FieldConfig> = {},
     TOutput extends Pretty<ResolveFieldTypes<TFields>> = Pretty<ResolveFieldTypes<TFields>>,
     TInput extends Pretty<ResolveFieldInputTypes<TFields>> = Pretty<ResolveFieldInputTypes<TFields>>,
 > {
@@ -12,8 +12,8 @@ export class Command<
     protected parser: Parser<TFields, TOutput, TInput>;
     
     constructor(
+        public readonly name: TName,
         protected readonly config: {
-            name: TName,
             description: string;
             fields: TFields;
             handler: (args: TOutput) => Promise<void>;

@@ -8,9 +8,9 @@ import {
 } from '@/lib/CommandLineArgs/parseArgs';
 
 export class Parser<
-    TFields extends Record<string, FieldConfig>,
-    TOutput extends Pretty<ResolveFieldTypes<TFields>>,
-    TInput extends Pretty<ResolveFieldInputTypes<TFields>>,
+    TFields extends Record<string, FieldConfig> = Record<string, FieldConfig>,
+    TOutput extends Pretty<ResolveFieldTypes<TFields>> = Pretty<ResolveFieldTypes<TFields>>,
+    TInput extends Pretty<ResolveFieldInputTypes<TFields>> = Pretty<ResolveFieldInputTypes<TFields>>,
     TDefaults extends Partial<TOutput> = {},
     TTransform = TOutput,
 > {
