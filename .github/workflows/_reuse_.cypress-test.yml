@@ -47,4 +47,4 @@ jobs:
           start: npm run start
           wait-on: ${{ env.ROOT_URL }}
           working-directory: tests/cypress-suite
-          spec: cypress/e2e/${{ inputs.appBasename }}/**/*.cy.ts
+          spec: cypress/e2e/examples/${{ inputs.appBasename }}/**
