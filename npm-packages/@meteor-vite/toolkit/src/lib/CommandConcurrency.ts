@@ -57,11 +57,16 @@ export class CommandConcurrency<TOptions extends  Record<string, unknown> = {}> 
         return [args, ...this.extraArgs].flat(2).map((arg) => JSON.stringify(arg))
     }
     
-    public run(options?: Partial<ConcurrentlyOptions>) {
-        return concurrently(this.commands, {
-            ...this.defaultOptions,
-            ...options,
-        }).result;
+    public async run(options?: Partial<ConcurrentlyOptions>) {
+        try {
+            return await concurrently(this.commands, {
+                ...this.defaultOptions,
+                ...options,
+            }).result;
+        } catch (error) {
+            console.log('Concurrent command failure');
+            throw error;
+        }
     }
 }
 
