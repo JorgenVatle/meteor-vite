@@ -20,7 +20,7 @@ export class Parser<
     
     constructor(
         public readonly fields: TFields,
-        protected readonly options?: TOptions & {
+        public readonly options?: TOptions & {
             transform?: (output: TOutput) => TTransform;
         }
     ) {
