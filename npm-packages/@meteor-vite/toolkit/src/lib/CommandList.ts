@@ -1,6 +1,7 @@
 import { CommandNotFound } from '@/errors/CommandFailure';
 import type { CommandSpec } from '@/lib/CommandDefinition';
 import { Parser } from '@/lib/CommandLineArgs/defineParser';
+import { GlobalConfig } from '@/lib/GlobalConfig';
 import pc from 'picocolors';
 
 export class CommandList<
@@ -12,7 +13,6 @@ export class CommandList<
 > {
     
     protected readonly parser;
-    public debug = false;
     
     constructor(
         protected readonly commands: [...TCommands]
@@ -23,12 +23,6 @@ export class CommandList<
                 description: 'Command to run',
                 defaultOption: true,
                 optional: true,
-            },
-            debug: {
-                type: Boolean,
-                description: 'Enable debug logging',
-                defaultValue: false,
-                global: true,
             },
             help: {
                 type: Boolean,
@@ -53,21 +47,22 @@ export class CommandList<
                         ],
                     }
                 }),
-                { header: 'Global Options', content: []}
+                { header: 'Global Options', content: Object.entries(GlobalConfig.parser.fields).map(([name, field]) => {
+                    return `${pc.dim('$ toolkit')} --${name} ${pc.yellow(field.typeLabel || field.type.name)}`;
+                })}
             ]
         });
     }
     
     public async runWithParser() {
-        const { command: name, debug, _unknown } = this.parser.parse({
+        const { command: name, _unknown } = this.parser.parse({
             partial: true,
         });
-        this.debug = debug;
         return await this.run(name as any, _unknown);
     }
     
     public async run<TName extends TCommand>(commandName: TName, argv: string[], options?: TOptions[TName]) {
-        if (this.debug) {
+        if (GlobalConfig.debug) {
             console.log({ commandName, argv, trace: new Error(), proc: process.argv });
         }
         const command = this.get(commandName);

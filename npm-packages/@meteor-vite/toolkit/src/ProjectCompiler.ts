@@ -1,5 +1,5 @@
-import { Commands } from '@/commands';
 import { Parser } from '@/lib/CommandLineArgs/defineParser';
+import { GlobalConfig } from '@/lib/GlobalConfig';
 import { Highlight } from '@/lib/Highlight';
 import FS from 'fs/promises';
 import { globby } from 'globby';
@@ -45,7 +45,7 @@ export class ProjectCompiler {
     constructor(
         public readonly options: Options,
     ) {
-        if (Commands.debug) {
+        if (GlobalConfig.debug) {
             console.log(options);
         }
         this.rootDir = options.rootDir;
