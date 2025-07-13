@@ -1,5 +1,14 @@
 # jorgenvatle:vite
 
+## 1.6.0-beta.2
+
+### Minor Changes
+
+- f0e1fd4: Attempt to unwrap any symlinks in current project root path
+
+  - https://github.com/meteor/meteor/issues/13819
+  - #352
+
 ## 1.6.0-beta.1
 
 ### Minor Changes
