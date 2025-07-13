@@ -1,5 +1,5 @@
 import { parseArgs } from '@/lib/CommandLineArgs/parseArgs';
-import { describe, expectTypeOf, it } from 'vitest';
+import { describe, expectTypeOf, test } from 'vitest';
 
 describe('primitive type parsing', () => {
     const result = parseArgs({
@@ -24,23 +24,40 @@ describe('primitive type parsing', () => {
         }
     })
     
-    it('will infer boolean types', () => {
-        expectTypeOf(result.foo).toEqualTypeOf<boolean>()
+    describe('basic primitive types', () => {
+        test('boolean', () => {
+            expectTypeOf(result.foo).toEqualTypeOf<boolean>()
+        });
+        
+        test('strings', () => {
+            expectTypeOf(result.bar).toEqualTypeOf<string>()
+        });
+        
+        test('optional strings', () => {
+            expectTypeOf(result.imOptional).toEqualTypeOf<string | undefined>()
+        })
+        
+        test('numbers', () => {
+            // todo
+        })
     })
     
-    it('will infer string types', () => {
-        expectTypeOf(result.bar).toEqualTypeOf<string>()
+    describe('array fields', () => {
+        test('strings', () => {
+            expectTypeOf(result.multiple).toEqualTypeOf<string[]>()
+        });
+        
+        test('optional strings', () => {
+            expectTypeOf(result.multipleOptional).toEqualTypeOf<string[] | undefined>()
+        })
+        
+        test('booleans', () => {
+            // todo
+        });
+        
+        test('numbers', () => {
+            // todo
+        });
     })
     
-    it('will infer optional string types', () => {
-        expectTypeOf(result.imOptional).toEqualTypeOf<string | undefined>()
-    })
-    
-    it('will infer array types', () => {
-        expectTypeOf(result.multiple).toEqualTypeOf<string[]>()
-    })
-    
-    it('will infer optional array types', () => {
-        expectTypeOf(result.multipleOptional).toEqualTypeOf<string[] | undefined>()
-    })
-})
+});
