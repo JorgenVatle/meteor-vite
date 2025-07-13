@@ -7,4 +7,4 @@ docker pull $1
 
 echo "Preparing Mongo container"
 docker network create development
-docker run -p "$MONGO_PORT:$MONGO_PORT" --network development -d mongo
+docker run --name mongo -p "$MONGO_PORT:$MONGO_PORT" --network development -d mongo
