@@ -7,7 +7,7 @@ on:
         type: string
       meteorRelease:
         type: string
-        default: '3.2'
+        default: '3.3'
       nodeVersion:
         type: string
         default: '22-alpine'
@@ -20,6 +20,9 @@ on:
       meteorBaseImage:
         type: string
         default: jorgenvatle/meteor-base
+      target:
+        type: string
+        default: "universal"
     outputs:
       deploymentImage:
         value: ${{ jobs.docker.outputs.deploymentImage }}
@@ -32,7 +35,7 @@ jobs:
   ubuntu:
     name: 'Ubuntu 🐧'
     runs-on: ubuntu-latest
-    if: inputs.push != true
+    if: inputs.push != true && inputs.target != 'docker'
     timeout-minutes: 10
     steps:
       - name: 'Checkout'

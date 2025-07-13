@@ -47,6 +47,9 @@
 
     "start:vue": "npm start vue",
     "start:react": "npm start react",
-    "start:<example app>": "npm start <example app>"
+    "start:<example app>": "npm start <example app>",
+
+    "cypress:setup": "cd tests/cypress-suite && npm run setup",
+    "cypress:start": "cd tests/cypress-suite && npm run start"
   }
 }
