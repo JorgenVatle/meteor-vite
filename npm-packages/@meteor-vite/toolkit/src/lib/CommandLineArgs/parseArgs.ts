@@ -16,21 +16,21 @@ export function parseArgs<
 }
 
 const result = parseArgs({
-    foo: {
+    boolean: {
         type: Boolean,
     },
-    bar: {
+    string: {
         type: String,
     },
-    imOptional: {
+    optionalString: {
         type: String,
         optional: true,
     },
-    multiple: {
+    multipleStrings: {
         type: String,
         multiple: true,
     },
-    multipleOptional: {
+    multipleOptionalStrings: {
         type: String,
         multiple: true,
         optional: true,
