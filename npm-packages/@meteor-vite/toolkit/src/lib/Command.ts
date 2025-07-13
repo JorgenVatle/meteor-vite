@@ -26,3 +26,8 @@ export class Command<
         return this.config.handler(this.parser.parse(input));
     }
 }
+
+export type CommandSpec = {
+    name: string;
+    run: (args: any) => Promise<void>;
+}
