@@ -15,7 +15,7 @@ jobs:
     with:
       appBasename: ${{ inputs.appBasename }}
       target: 'docker'
-      push: false
+      push: true
 
   cypress-run:
     runs-on: ubuntu-24.04
