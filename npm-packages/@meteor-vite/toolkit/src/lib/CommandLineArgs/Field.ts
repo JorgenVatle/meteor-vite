@@ -1,3 +1,5 @@
+import type TsCliArgs from 'ts-command-line-args';
+
 export type Field<T = any> = OptionalField<T> | MultiField<T> | BaseField<T>;
 
 export type OptionalField<T = any> = {
@@ -16,4 +18,11 @@ export type BaseField<T = any> = {
     type: {
         (value?: any): T;
     }
+} & PropertyOptions<T>;
+
+
+type BasePropertyOptions = Omit<TsCliArgs.PropertyOptions<any>, 'type' | 'multiple' | 'optional' | 'defaultValue'>
+
+interface PropertyOptions<T = any> extends BasePropertyOptions {
+    defaultValue?: T;
 }
