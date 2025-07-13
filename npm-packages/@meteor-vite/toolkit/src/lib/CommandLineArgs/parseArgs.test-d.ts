@@ -24,8 +24,6 @@ describe('result type', () => {
         }
     })
     
-    result.multipleOptionalStrings
-    
     describe('primitives', () => {
         test('boolean', () => {
             expectTypeOf(result.boolean).toEqualTypeOf<boolean>()
