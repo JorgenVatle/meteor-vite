@@ -12,6 +12,7 @@ export class CommandList<
 > {
     
     protected readonly parser;
+    protected debug = false;
     
     constructor(
         protected readonly commands: [...TCommands]
@@ -22,6 +23,12 @@ export class CommandList<
                 description: 'Command to run',
                 defaultOption: true,
                 optional: true,
+            },
+            debug: {
+                type: Boolean,
+                description: 'Enable debug logging',
+                defaultValue: false,
+                global: true,
             },
             help: {
                 type: Boolean,
@@ -52,14 +59,17 @@ export class CommandList<
     }
     
     public async runWithParser() {
-        const { command: name, _unknown } = this.parser.parse({
+        const { command: name, debug, _unknown } = this.parser.parse({
             partial: true,
         });
+        this.debug = debug;
         return await this.run(name as any, _unknown);
     }
     
     public async run<TName extends TCommand>(commandName: TName, argv: string[], options?: TOptions[TName]) {
-        console.log({ commandName, argv, trace: new Error(), proc: process.argv });
+        if (this.debug) {
+            console.log({ commandName, argv, trace: new Error(), proc: process.argv });
+        }
         const command = this.get(commandName);
         await command.run(argv, options);
     }
