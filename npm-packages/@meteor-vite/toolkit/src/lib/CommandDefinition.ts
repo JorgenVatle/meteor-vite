@@ -14,12 +14,17 @@ export class CommandDefinition<
     constructor(
         public readonly name: TName,
         protected readonly config: {
+            title?: string;
             description: string;
             fields: TFields;
             handler: (args: TOutput) => Promise<void>;
         },
     ) {
-        this.parser = new Parser(config.fields, {});
+        this.parser = new Parser(config.fields);
+        this.parser.setHelpContent({
+            title: config.title || this.name,
+            description: config.description,
+        });
     }
     
     public run(options?: typeof this.parser.options) {
