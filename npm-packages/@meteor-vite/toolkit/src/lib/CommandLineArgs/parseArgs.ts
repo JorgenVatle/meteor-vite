@@ -26,7 +26,7 @@ export function parseArgs<
         if (field.type) {
             return;
         }
-        if (field.defaultValue) {
+        if (typeof field.defaultValue !== 'undefined') {
             return field.type = field.defaultValue.constructor;
         }
     })
