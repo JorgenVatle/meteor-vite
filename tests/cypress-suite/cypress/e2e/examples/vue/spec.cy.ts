@@ -3,8 +3,25 @@ describe('Vue example app', () => {
         cy.visit('/')
     });
     
-    it('Renders home-page content from Vue', () => {
-        cy.visit('/');
-        cy.contains('h1', 'Home');
+    describe('Home page', () => {
+        beforeEach(() => {
+            cy.visit('/');
+        })
+        it('Renders a main heading from Vue', () => {
+            cy.contains('h1', 'Home');
+        });
+        
+        it('Renders navigation links', () => {
+            cy.contains('a');
+        })
+        
+        it('Renders active Vue router links', () => {
+            cy.get('.router-link-active');
+        });
+        
+        it('Renders home page links as active', () => {
+            cy.get('.router-link-active').contains('Home');
+        });
     })
+    
 })
