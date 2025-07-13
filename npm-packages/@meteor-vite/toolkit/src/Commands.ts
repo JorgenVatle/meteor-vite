@@ -3,12 +3,6 @@ import { CommandList } from '@/lib/CommandList';
 import { Highlight } from '@/lib/Highlight';
 import { ProjectCompiler } from '@/ProjectCompiler';
 
-const options = () => {
-    return {
-        compiler: ProjectCompiler.init(),
-    };
-}
-
 export const Commands = new CommandList([
     new Command('check-changes', {
         description: 'Check if the current root directory has seen changes since last build.',
