@@ -22,22 +22,30 @@
   "scripts": {
     "start": "npm run example start",
     "launch": "npm run example launch",
+
     "check-changes": "toolkit check-changes",
     "watch:packages": "toolkit build --concurrent npm-packages/meteor-vite packages/vite --watch",
+
     "clean": "toolkit clean --ws",
     "build": "npm run example build",
     "build:packages": "npm run build -w npm-packages/@meteor-vite/toolkit -w npm-packages/meteor-vite -w packages/vite",
+
     "postprepare": "npm run build:packages",
+
     "link": "npm run example link",
     "release": "npm run publish:vite && changeset publish",
     "version": "npm run version:vite && changeset version",
     "example": ".bin/example-app.sh",
+
     "fix-package-name": "node .bin/release-meteor-package.mjs fix-package-name",
+
     "subtree": "npm run subtree:pull && npm run subtree:push",
     "subtree:pull": "git subtree pull --prefix npm-packages/@meteor-vite/react-packages https://github.com/JorgenVatle/react-packages vite --squash",
     "subtree:push": "git subtree push --prefix npm-packages/@meteor-vite/react-packages https://github.com/JorgenVatle/react-packages vite",
+
     "version:vite": "node .bin/release-meteor-package.mjs version",
     "publish:vite": "node .bin/release-meteor-package.mjs publish",
+
     "start:vue": "npm start vue",
     "start:react": "npm start react",
     "start:<example app>": "npm start <example app>"
