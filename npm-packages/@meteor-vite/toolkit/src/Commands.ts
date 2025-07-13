@@ -31,8 +31,14 @@ export const Commands = new CommandList([
                 optional: true,
             },
         },
-        handler: async (options) => {
-            const concurrency = new CommandConcurrency();
+        handler: async ({ watch, verbose, summary, ...options }) => {
+            const concurrency = new CommandConcurrency({
+                inheritOptions: {
+                    watch,
+                    verbose,
+                    summary,
+                }
+            });
             const compiler = new ProjectCompiler(options)
             
             if (options.concurrent) {
@@ -40,10 +46,11 @@ export const Commands = new CommandList([
                     const [node, script] = process.argv;
                     concurrency.add({
                         command: node,
-                        args: [script, 'build', rootDir, '--watch']
+                        args: [script, 'build', rootDir]
                     })
                 })
             }
+            
             if (options.run) {
                 const [command, ...args] = options.run;
                 concurrency.add({
