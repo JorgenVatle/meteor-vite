@@ -13,21 +13,21 @@ export function parseArgs<
     },
     options: ParserOptions<TResult, TDefaults> = {},
 ): TResult {
-    const args: Record<string, unknown> = {
+    const args: Record<string, { type?: any; defaultValue?: any } & FieldConfig> = {
         ...fields,
     }
     
-    Object.entries(fields).forEach(([key, field]) => {
+    Object.entries(options.defaults || {}).forEach(([key, value]) => {
+        args[key] = Object.assign({
+            defaultValue: value,
+        }, args[key]);
+    })
+    Object.entries(args).forEach(([key, field]) => {
         if (field.type) {
             return;
         }
         if (field.defaultValue) {
-            field.type = (field).constructor;
-        }
-    })
-    Object.entries(options.defaults || {}).forEach(([key, value]) => {
-        args[key] = {
-            defaultValue: value,
+            return field.type = field.defaultValue.constructor;
         }
     })
     
