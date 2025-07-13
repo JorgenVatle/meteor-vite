@@ -1,3 +1,4 @@
+import { Commands } from '@/commands';
 import { Parser } from '@/lib/CommandLineArgs/defineParser';
 import { Highlight } from '@/lib/Highlight';
 import FS from 'fs/promises';
@@ -44,7 +45,9 @@ export class ProjectCompiler {
     constructor(
         public readonly options: Options,
     ) {
-        console.log(options);
+        if (Commands.debug) {
+            console.log(options);
+        }
         this.rootDir = options.rootDir;
         this.filePath = {
             buildInfo: Path.join(this.rootDir, 'dist', '.build-info.json'),

@@ -12,7 +12,7 @@ export class CommandList<
 > {
     
     protected readonly parser;
-    protected debug = false;
+    public debug = false;
     
     constructor(
         protected readonly commands: [...TCommands]
