@@ -4,7 +4,8 @@ export class CommandConcurrency {
     public readonly commands: CommandInfo[] = [];
     protected readonly extraArgs = new Set<[string] | [string, string[]]>();
     constructor({ inheritOptions = {} }: { inheritOptions?: Record<string, unknown> } = {}) {
-        Object.entries(inheritOptions).forEach(([key, value]) => {
+        Object.entries(inheritOptions).forEach(([_key, value]) => {
+            const key = `--${_key}`;
             if (value === true) {
                 this.extraArgs.add([key]);
                 return;
