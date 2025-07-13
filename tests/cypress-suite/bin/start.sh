@@ -2,6 +2,13 @@
 
 set -e
 
+echo ""
+echo ""
+echo ""
+echo "------------------------ Starting Test Container ------------------------"
+echo ""
+echo ""
+echo ""
 docker run \
     --name test-container \
     --network development \
