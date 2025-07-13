@@ -1,4 +1,4 @@
-import { CommandList } from '@/lib/CommandList';
+import { defineParser } from '@/lib/CommandLineArgs/defineParser';
 import { Highlight } from '@/lib/Highlight';
 import FS from 'fs/promises';
 import { globby } from 'globby';
@@ -8,39 +8,44 @@ import * as process from 'node:process';
 import pc from 'picocolors';
 import { envFlag } from '~/meteor-vite/utilities/server/EnvFlag';
 
+type Options = typeof ProjectCompiler.parseOptions._inputType;
+
 export class ProjectCompiler {
-    protected readonly options: Options;
     protected filePath;
+    protected readonly rootDir: string;
     protected packageJson?: PackageJSON;
     
-    public static options = CommandList.defineOptions({
-        verbose: {
-            default: false,
+    public static parseOptions = defineParser({
+        fields: {
+            rootDir: {
+                type: String,
+                defaultOption: true,
+            },
+            verbose: {
+                description: 'Print full summary of last build and changes to console',
+                defaultValue: false,
+            },
+            watch: {
+                description: 'Watch for changes and rebuild on change',
+                defaultValue: false,
+            },
+            summary: {
+                description: 'Log a summary of generated hashes to the console',
+                defaultValue: true,
+            },
+            force: {
+                description: 'Build regardless of whether there were any changes since last build.',
+                defaultValue: envFlag('FORCE_BUILD'),
+            },
         },
-        watch: {
-            default: false,
-        },
-        /**
-         * Whether to log a summary of generated hashes to the console
-         */
-        summary: {
-            default: true,
-        },
-        /**
-         * Whether to build regardless of whether there were any changes since
-         * last build.
-         */
-        force: {
-            default: envFlag('FORCE_BUILD')
-        }
     });
     
     
     constructor(
-        protected readonly rootDir: string,
-        options: Partial<Options> = {},
+        public readonly options: Options = ProjectCompiler.parseOptions(),
     ) {
-        this.options = Object.assign(ProjectCompiler.options.default, options);
+        this.rootDir = options.rootDir;
+        this.options = Object.assign(ProjectCompiler.parseOptions, options);
         this.filePath = {
             buildInfo: Path.join(this.rootDir, 'dist', '.build-info.json'),
             packageJson: Path.join(this.rootDir, 'package.json'),
@@ -308,8 +313,6 @@ export class ProjectCompiler {
     }
 }
 
-
-type Options = ReturnType<typeof ProjectCompiler.options.parse>;
 
 interface BuildHashes {
     hash: string | null;
