@@ -1,15 +1,14 @@
 import { Parser } from '@/lib/CommandLineArgs/defineParser';
 import type { FieldConfig } from '@/lib/CommandLineArgs/Field';
-import type { Pretty, ResolveFieldInputTypes, ResolveFieldTypes } from '@/lib/CommandLineArgs/parseArgs';
+import type { Pretty, ResolveFieldTypes } from '@/lib/CommandLineArgs/parseArgs';
 
 export class CommandDefinition<
     TName extends string = string,
     TFields extends Record<string, FieldConfig> = {},
     TOutput extends Pretty<ResolveFieldTypes<TFields>> = Pretty<ResolveFieldTypes<TFields>>,
-    TInput extends Pretty<ResolveFieldInputTypes<TFields>> = Pretty<ResolveFieldInputTypes<TFields>>,
 > {
     
-    protected parser: Parser<TFields, TOutput, TInput>;
+    protected parser: Parser<TFields & typeof CommandDefinition.defaultFields, TOutput>;
     
     constructor(
         public readonly name: TName,
@@ -20,12 +19,25 @@ export class CommandDefinition<
             handler: (args: TOutput) => Promise<void>;
         },
     ) {
-        this.parser = new Parser(config.fields);
+        this.parser = new Parser({
+            ...config.fields,
+            ...CommandDefinition.defaultFields
+        });
+        
         this.parser.setHelpContent({
             title: config.title || this.name,
             description: config.description,
         });
     }
+    
+    protected static defaultFields: Record<string, FieldConfig> = {
+        help: {
+            type: Boolean,
+            alias: 'h',
+            description: 'Show help',
+            defaultValue: false,
+        }
+    };
     
     public run(options?: typeof this.parser.options) {
         return this.config.handler(this.parser.parse(options));
