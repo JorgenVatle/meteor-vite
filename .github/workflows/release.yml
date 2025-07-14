@@ -9,7 +9,7 @@ on:
 env:
   METEOR_SESSION_FILE_PATH: /opt/meteor/.meteor_session.json
   METEOR_RELEASE: 2.16
-  NODE_VERSION: 14
+  LOCAL_NODE_VERSION: 22
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
@@ -23,7 +23,7 @@ jobs:
       - name: 'Setup Node.js'
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: ${{ env.LOCAL_NODE_VERSION }}
 
       - name: 'Prepare Meteor Session'
         run: |
