@@ -3,10 +3,8 @@ run-name: '📦 Release: ${{ github.event.head_commit.message }}'
 on:
   push:
     branches:
-      - main
       - release
-      - meteor-v3
-      - v3
+      - meteor-v2
 
 env:
   METEOR_SESSION_FILE_PATH: /opt/meteor/.meteor_session.json
