@@ -14,7 +14,8 @@ declare global {
             extensions: string[];
             filenames: string[];
         }
-        type FactoryFunction = () => { processFilesForTarget(): void };
+        type Compiler = { processFilesForTarget(): void };
+        type FactoryFunction = () => Promise<Compiler> | Compiler;
         function registerCompiler(config: CompilerPluginConfig, compilerFactory: FactoryFunction): void;
     }
     
