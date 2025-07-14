@@ -51,7 +51,7 @@ meteor npm i -D vite@4
 meteor npm i meteor-vite@2
 meteor add jorgenvatle:vite-bundler
 ```
-- [Release branch](https://github.com/JorgenVatle/meteor-vite/tree/v3)
+- [Release branch](https://github.com/JorgenVatle/meteor-vite/tree/meteor-v2)
 
 #### Application structure
 You can structure your app just like you would with a typical Meteor application. The key difference is the addition of 
