@@ -26,5 +26,9 @@
       ],
     },
     "skipLibCheck": true
-  }
+  },
+  "include": [
+    "vite-bundler/src",
+    "vite-bundler/loading"
+  ]
 }
