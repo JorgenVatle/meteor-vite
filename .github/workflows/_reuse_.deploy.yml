@@ -23,6 +23,12 @@ on:
         type: string
         default: 14-alpine
         description: Node.js Docker image version to use for the final production build.
+
+env:
+  APP_NAME: meteor-v2-${{ inputs.appBasename }}
+  APP_HOSTNAME: ${{ inputs.appBasename }}--meteor-vite.wcaserver.com
+  METEOR_RELEASE: ${{ inputs.meteorRelease }}
+  APP_NAMESPACE: meteor-vite
 jobs:
   build:
     name: Build 🐋
@@ -34,20 +40,15 @@ jobs:
       meteorBaseImage: ${{ inputs.meteorBaseImage }}
       push: true
 
-
   deploy:
     name: Deploy 🚀
     runs-on: ubuntu-latest
     environment:
-      name: ${{ inputs.appBasename }}
+      name: ${{ env.APP_NAME }}
       url: https://${{ env.APP_HOSTNAME }}
     env:
-      APP_NAME: ${{ inputs.appBasename }}
       APP_VERSION: ${{ needs.build.outputs.imageVersion }}
       APP_IMAGE: ${{ needs.build.outputs.deploymentImage }}
-      APP_HOSTNAME: ${{ inputs.appBasename }}--meteor-vite.wcaserver.com
-      APP_NAMESPACE: meteor-vite
-      METEOR_RELEASE: ${{ inputs.meteorRelease }}
     needs:
       - build
     steps:
