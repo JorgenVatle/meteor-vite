@@ -8,7 +8,8 @@ on:
 
 env:
   METEOR_SESSION_FILE_PATH: /opt/meteor/.meteor_session.json
-  METEOR_RELEASE: 3.0-rc.2
+  METEOR_RELEASE: 2.16
+  NODE_VERSION: 14
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
@@ -22,7 +23,7 @@ jobs:
       - name: 'Setup Node.js'
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: 'Prepare Meteor Session'
         run: |
@@ -37,7 +38,7 @@ jobs:
       - name: 'Setup Meteor'
         uses: meteorengineer/setup-meteor@v1
         with:
-          meteor-release: '3.0'
+          meteor-release: ${{ env.METEOR_RELEASE }}
 
       - name: 'Install Dependencies'
         run: |
