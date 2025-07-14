@@ -1,10 +1,10 @@
 # Node.js Version to run our production server.
 # This needs to match as what's expected by our current meteor release;
 # https://docs.meteor.com/changelog.html
-ARG NODE_VERSION="20-alpine"
+ARG NODE_VERSION="14-alpine"
 
 # Meteor release (Needs to match the release in .meteor/release)
-ARG METEOR_RELEASE="3.0-rc.2"
+ARG METEOR_RELEASE="2.16"
 
 # Meteor base image name
 ARG METEOR_BASE_IMAGE="jorgenvatle/meteor-base"
