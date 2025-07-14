@@ -40,10 +40,19 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
+
+      - name: 'Setup Node (for building meteor-vite with modern tooling)'
+        uses: actions/setup-node@v4
+        with:
+            node-version: 22
+
       - name: 'Setup Meteor'
         uses: meteorengineer/setup-meteor@v1
         with:
           meteor-release: ${{ inputs.meteorRelease }}
+
+      - name: 'Install dependencies'
+        run: npm i
 
       - name: 'Install and link dependencies for `examples/${{ inputs.appBasename }}`'
         run: meteor npm run example prepare ${{ inputs.appBasename }}
