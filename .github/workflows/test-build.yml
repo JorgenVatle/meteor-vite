@@ -1,15 +1,8 @@
 name: 'Test build'
-run-name: '🗃️ Test build: ${{ github.event.head_commit.message || github.event.pull_request.title }}'
+run-name: '🗃️ Test build: ${{ github.event.head_commit.message || github.event.pull_request.head. }}'
 
 on:
   push:
-    branches:
-      - release
-      - meteor-v2
-  pull_request:
-    branches:
-      - release
-      - meteor-v2
 
 jobs:
   vue:
