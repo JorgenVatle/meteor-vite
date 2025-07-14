@@ -28,6 +28,9 @@ on:
       meteorRelease:
         value: ${{ jobs.docker.outputs.meteorRelease }}
 
+env:
+  APP_NAME: meteor-v2-${{ inputs.appBasename }}
+
 jobs:
   ubuntu:
     name: 'Ubuntu 🐧'
@@ -73,7 +76,7 @@ jobs:
         # language="bashpro shell script"
         run: |
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
-          imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ inputs.appBasename }}"
+          imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ env.APP_NAME }}"
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
 
