@@ -6,3 +6,8 @@ examples/*/vite
 examples/*/_vite-bundle
 examples/*/.meteor/local
 dist/
+packages/*/dist
+.force-reload-watchfile.ts
+.bin/dist
+.build-hash
+tests/cypress-suite/cypress/screenshots/
