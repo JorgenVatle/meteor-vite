@@ -18,7 +18,7 @@
     "@meteor-vite/test-externalization": "^1.0.0",
     "chalk": "^4.1.2",
     "meteor-node-stubs": "^1.2.5",
-    "meteor-vite": "^2.0.0",
+    "meteor-vite": "^2.1.0",
     "safe-json-stringify": "^1.2.0",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
