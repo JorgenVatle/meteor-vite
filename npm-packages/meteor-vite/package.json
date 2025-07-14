@@ -8,12 +8,9 @@
   "main": "",
   "exports": {
     "./plugin": {
-      "import": [
-        "./dist/plugin/index.mjs"
-      ],
-      "require": [
-        "./dist/plugin/index.js"
-      ]
+      "types": "./dist/plugin/index.d.ts",
+      "import": "./dist/plugin/index.mjs",
+      "require": "./dist/plugin/index.js"
     },
     "./client": "./dist/client/index.mjs"
   },
