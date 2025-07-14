@@ -1,8 +1,9 @@
-import { Mongo } from 'meteor/mongo';
-import { Meteor } from 'meteor/meteor';
-import safeJson from 'safe-json-stringify';
 import Chalk from 'chalk';
+import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
+import safeJson from 'safe-json-stringify';
 import util from 'util';
+
 const chalk = new Chalk.Instance({ level: 3 });
 
 interface LogEntry {
@@ -39,7 +40,7 @@ if (Meteor.isServer) {
     
     LogsCollection.allow({
         insert: insertHook,
-        insertAsync: insertHook,
+        // insertAsync: insertHook, // Only available in early Meteor v3 releases
     })
 }
 
