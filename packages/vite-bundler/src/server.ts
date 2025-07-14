@@ -1,5 +1,6 @@
 import HTTP from 'http';
 import { WebApp, WebAppInternals } from 'meteor/webapp';
+import pc from 'picocolors';
 import Logger from './utility/Logger';
 import type { BoilerplateData } from './vite-boilerplate/common';
 import { ViteDevServerWorker } from './vite-boilerplate/development';
@@ -8,11 +9,29 @@ import { ViteProductionBoilerplate } from './vite-boilerplate/production';
 const worker = Meteor.isProduction ? new ViteProductionBoilerplate()
                                    : new ViteDevServerWorker();
 
-if ('start' in worker) {
-    Meteor.startup(() => {
+
+Meteor.startup(() => {
+    const viteBundlerLegacy = pc.blue('jorgenvatle:vite-bundler');
+    const viteBundler = pc.underline(pc.blue('jorgenvatle:vite'));
+    const sh = pc.dim('$');
+    const command = (command: string, params: string) => [pc.underline(pc.bold(pc.cyan(command))), pc.cyan(params)].join(' ')
+    if (Meteor.release.toLowerCase().startsWith('meteor@3')) {
+        Logger.warn(`You are using a Meteor v2 compatability release of ${viteBundlerLegacy}!`);
+        Logger.warn(`This package has been deprecated in favor of ${viteBundler}`);
+        Logger.warn(`More info: https://github.com/JorgenVatle/meteor-vite?tab=readme-ov-file#meteor-v3`)
+        Logger.warn(`To upgrade:`, [
+            '',
+            `${sh} ${command('meteor', 'remove jorgenvatle:vite-bundler')}`,
+            `${sh} ${command('meteor', 'add jorgenvatle:vite')}`,
+            `${sh} ${command('npm', 'i meteor-vite@latest')}`,
+            ''
+        ].join('\n   '));
+    }
+    
+    if ('start' in worker) {
         worker.start();
-    })
-}
+    }
+})
 
 WebAppInternals.registerBoilerplateDataCallback('meteor-vite', async (request: HTTP.IncomingMessage, data: BoilerplateData) => {
     const { dynamicBody, dynamicHead } = await worker.getBoilerplate();
