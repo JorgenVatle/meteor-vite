@@ -1,4 +1,4 @@
-import { execSync, spawn, execFileSync } from 'child_process';
+import { execFileSync, execSync, spawn } from 'child_process';
 import Path from 'path';
 import FS from 'fs/promises';
 
@@ -103,7 +103,7 @@ async function publish() {
     logger.info(`✨  Publishing to Atmosphere with Meteor ${release} release...`);
     await setVersion(version);
 
-    await shell(`meteor publish`, {
+    await shell(`meteor publish --release 2.16`, {
         async: true,
         cwd: Path.dirname(meteorPackage.packageJsPath),
         env: {
