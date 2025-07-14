@@ -21,17 +21,6 @@
     "postprepare": "npm run build",
     "test": "vitest"
   },
-  "typesVersions": {
-    "*": {
-      "plugin": [
-        "./dist/plugin/index.d.mts",
-        "./dist/plugin/index.d.ts"
-      ],
-      "client": [
-        "./dist/client/index.d.mts"
-      ]
-    }
-  },
   "keywords": [
     "meteor",
     "vite"
