@@ -14,11 +14,11 @@ declare global {
             extensions: string[];
             filenames: string[];
         }
-        type Compiler = { processFilesForTarget(files: BuildPluginFile[]): void };
+        type Compiler = { processFilesForTarget(files: FileHandle[]): void };
         type FactoryFunction = () => Promise<Compiler> | Compiler;
         function registerCompiler(config: CompilerPluginConfig, compilerFactory: FactoryFunction): void;
         type PluginFileBuffer = ArrayBufferLike;
-        interface BuildPluginFile {
+        interface FileHandle {
             getContentsAsString(): string;
             getPathInPackage(): string;
             getContentsAsBuffer(): PluginFileBuffer;

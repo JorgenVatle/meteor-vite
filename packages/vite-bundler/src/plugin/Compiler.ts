@@ -26,7 +26,7 @@ export default class Compiler {
         return nameOrPath.replace(`.${BUNDLE_FILE_EXTENSION}`, '');
     }
     
-    public processFilesForTarget(files: BuildPluginFile[]) {
+    public processFilesForTarget(files: Plugin.FileHandle[]) {
         files.forEach(file => {
             const fileMeta = {
                 _original: {
