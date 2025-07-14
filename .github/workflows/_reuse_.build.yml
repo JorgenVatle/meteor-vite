@@ -7,10 +7,10 @@ on:
         type: string
       meteorRelease:
         type: string
-        default: '3.0.3'
+        default: '2.16'
       nodeVersion:
         type: string
-        default: '20-alpine'
+        default: '14-alpine'
       push:
         type: boolean
         default: false
