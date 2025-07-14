@@ -11,3 +11,4 @@ packages/*/dist
 .bin/dist
 .build-hash
 tests/cypress-suite/cypress/screenshots/
+npm-packages/@meteor-vite/toolkit/bin
