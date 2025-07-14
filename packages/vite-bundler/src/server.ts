@@ -14,18 +14,30 @@ Meteor.startup(() => {
     const viteBundlerLegacy = pc.blue('jorgenvatle:vite-bundler');
     const viteBundler = pc.underline(pc.blue('jorgenvatle:vite'));
     const sh = pc.dim('$');
-    const command = (command: string, params: string) => [pc.underline(pc.bold(pc.cyan(command))), pc.cyan(params)].join(' ')
+    const label = {
+        upgrade: 'Upgrade: ',
+        link: 'More info: ',
+    }
+    const padCount = Math.max(label.upgrade.length, label.link.length) + 6;
+    const padLabelEndCount = padCount - 4;
+    const padding = ' '.repeat(padCount);
+    
+    const command = (command: string, params: string) => [((pc.cyan(command))), pc.bold(pc.cyan(params))].join(' ')
     if (Meteor.release.toLowerCase().startsWith('meteor@3')) {
         Logger.warn(`You are using a Meteor v2 compatability release of ${viteBundlerLegacy}!`);
-        Logger.warn(`This package has been deprecated in favor of ${viteBundler}`);
-        Logger.warn(`More info: https://github.com/JorgenVatle/meteor-vite?tab=readme-ov-file#meteor-v3`)
-        Logger.warn(`To upgrade:`, [
-            '',
-            `${sh} ${command('meteor', 'remove jorgenvatle:vite-bundler')}`,
-            `${sh} ${command('meteor', 'add jorgenvatle:vite')}`,
-            `${sh} ${command('npm', 'i meteor-vite@latest')}`,
+        Logger.warn(`This package has been deprecated in favor of ${viteBundler}\n`);
+        
+        Logger.warn(label.upgrade.padEnd(padLabelEndCount, ' '), [
+            `${sh} ${command('meteor remove', 'jorgenvatle:vite-bundler')}`,
+            `${sh} ${command('meteor add', 'jorgenvatle:vite')}`,
+            `${sh} ${command('npm i', 'meteor-vite@latest')}`,
             ''
-        ].join('\n   '));
+        ].join('\n' + padding));
+        
+        Logger.warn(
+            label.link.padEnd(padLabelEndCount, ' '),
+            `https://github.com/JorgenVatle/meteor-vite?tab=readme-ov-file#meteor-v3\n`
+        )
     }
     
     if ('start' in worker) {
