@@ -118,6 +118,8 @@ build() {
 
     cd "$APP_DIR" || exit 1
     meteor build "$BUILD_TARGET" --directory "$@" $extraArgs
+
+    (production:install) || exit 1
 }
 
 npmPackage() {
@@ -141,7 +143,6 @@ launch() {
 
 # Start an already built production app
 start:production() {
-  (production:install) || exit 1
   (install:mongo) || exit 1
 
   local PRODUCTION_SERVER="$this production:app $app"
@@ -177,11 +178,10 @@ link() {
 }
 
 production:install() {
-    cd "$BUILD_TARGET/bundle/programs/server" || exit 1
-
     # Ensures the correct Meteor binaries are used
-    # when installing dependencies
-    cp -rf "$APP_DIR/.meteor" .meteor || exit 1
+    # when installing dependencies and launching Node
+    cp -rf "$APP_DIR/.meteor" "$BUILD_TARGET/bundle/.meteor" || exit 1
+    cd "$BUILD_TARGET/bundle/programs/server" || exit 1
 
     chmod +w npm-shrinkwrap.json
     $npm install
