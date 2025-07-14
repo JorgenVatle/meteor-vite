@@ -2,7 +2,7 @@
   <configuration default="false" name="Build Example: Vue" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
     <deployment type="dockerfile">
       <settings>
-        <option name="imageTag" value="meteor-vite/example/vue:local" />
+        <option name="imageTag" value="meteor-vite/example/meteor-v2-vue:local" />
         <option name="buildArgs">
           <list>
             <DockerEnvVarImpl>
@@ -12,6 +12,35 @@
           </list>
         </option>
         <option name="containerName" value="" />
+        <option name="envVars">
+          <list>
+            <DockerEnvVarImpl>
+              <option name="name" value="MONGO_URL" />
+              <option name="value" value="mongodb://mongo" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="PORT" />
+              <option name="value" value="3000" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="ROOT_URL" />
+              <option name="value" value="http://localhost:3000" />
+            </DockerEnvVarImpl>
+            <DockerEnvVarImpl>
+              <option name="name" value="DEBUG" />
+              <option name="value" value="vite-bundler:*" />
+            </DockerEnvVarImpl>
+          </list>
+        </option>
+        <option name="portBindings">
+          <list>
+            <DockerPortBindingImpl>
+              <option name="containerPort" value="3000" />
+              <option name="hostPort" value="3000" />
+            </DockerPortBindingImpl>
+          </list>
+        </option>
+        <option name="commandLineOptions" value="--network development" />
         <option name="sourceFilePath" value="Dockerfile" />
       </settings>
     </deployment>
