@@ -177,9 +177,14 @@ link() {
 }
 
 production:install() {
-   cd "$BUILD_TARGET/bundle/programs/server" || exit 1
-   chmod +w npm-shrinkwrap.json
-   $npm install
+    cd "$BUILD_TARGET/bundle/programs/server" || exit 1
+
+    # Ensures the correct Meteor binaries are used
+    # when installing dependencies
+    cp -rf "$APP_DIR/.meteor" .meteor || exit 1
+
+    chmod +w npm-shrinkwrap.json
+    $npm install
 }
 
 production:app() {
@@ -199,5 +204,5 @@ for command in "meteor" "npm" "npx"; do
     fi
 done
 
-set -x
+set -xeuo pipefail
 "$action" "${@:3}" || exit 1
