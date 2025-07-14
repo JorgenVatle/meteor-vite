@@ -43,13 +43,13 @@ ENV METEOR_PACKAGES_FOLDER=/root/packages
 ENV NPM_PACKAGES_FOLDER=/root/npm-packages
 ENV METEOR_PACKAGE_DIRS=$METEOR_PACKAGES_FOLDER
 
-COPY ./packages $METEOR_PACKAGES_FOLDER
-COPY ./npm-packages $NPM_PACKAGES_FOLDER
-COPY ./test-packages/atmosphere/ $METEOR_PACKAGES_FOLDER/
-COPY ./package*.json /root
-
 # Prepare meteor-vite package for local reference when preparing npm dependencies.
+COPY ./npm-packages $NPM_PACKAGES_FOLDER
 RUN cd $NPM_PACKAGES_FOLDER/meteor-vite && meteor npm i && meteor npm link
+
+COPY ./package*.json /root
+COPY ./packages $METEOR_PACKAGES_FOLDER
+COPY ./test-packages/atmosphere/ $METEOR_PACKAGES_FOLDER/
 
 WORKDIR $APP_SOURCE_FOLDER
 
