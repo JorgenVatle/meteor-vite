@@ -18,7 +18,7 @@
     "start": "ts-node-dev src/bin/debug/watch-mocks.ts",
     "watch": "tsup --watch --dts --sourcemap",
     "build": "rm -rf ./dist && tsup-node",
-    "prepare": "npm run build",
+    "postprepare": "npm run build",
     "test": "vitest"
   },
   "tsup": [
@@ -74,15 +74,6 @@
     "simpleddp": "^2.2.4",
     "ws": "^8.18.0"
   },
-  "peerDependencies": {
-    "tsup": "^7.2.0",
-    "vite": ">=3.0.0"
-  },
-  "peerDependenciesMeta": {
-    "tsup": {
-      "optional": true
-    }
-  },
   "devDependencies": {
     "@babel/generator": "^7.23.6",
     "@babel/types": "^7.22.5",
@@ -94,6 +85,7 @@
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.1.6",
     "vite": "^4.5.5",
-    "vitest": "^0.32.2"
+    "vitest": "^0.32.2",
+    "tsup": "7.2.0"
   }
 }
