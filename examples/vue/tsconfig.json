@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     /* Basic Options */
-    "target": "es2018",
-    "module": "esNext",
+    "target": "es2022",
+    "module": "es2022",
     "lib": ["esnext", "dom"],
-    "allowJs": true,
+    "allowJs": false,
     "checkJs": false,
     "noEmit": true,
 
@@ -14,13 +14,9 @@
     "strictNullChecks": true,
 
     /* Module Resolution Options */
-    "baseUrl": ".",
     "paths": {
-      /* Support absolute /imports/* with a leading '/' */
       "/*": [
-        "./imports/*",
-        "./client/*",
-        "./server/*"
+        "./*"
       ],
       "meteor/*": [
         "node_modules/@types/meteor/*",
@@ -42,6 +38,7 @@
     "imports",
     "tests",
     "client",
+    "server",
     "vite.config.ts",
   ],
 }
