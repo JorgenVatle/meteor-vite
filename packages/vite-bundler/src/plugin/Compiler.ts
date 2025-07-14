@@ -45,8 +45,10 @@ export default class Compiler {
                 path: fileMeta.relativePath,
                 data: file.getContentsAsBuffer(),
                 sourcePath,
+                // @ts-expect-error Todo: This actually might not exist as an option
                 cacheable: true,
             });
+            // @ts-expect-error Todo: This actually might not exist as an option
             file.cacheable = true;
         })
     }
