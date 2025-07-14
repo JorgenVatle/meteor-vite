@@ -18,7 +18,7 @@
     "start": "ts-node-dev src/bin/debug/watch-mocks.ts",
     "watch": "tsup --watch --dts --sourcemap",
     "build": "rm -rf ./dist && tsup-node",
-    "postprepare": "npm run build",
+    "prepare": "npm run build",
     "test": "vitest"
   },
   "keywords": [
