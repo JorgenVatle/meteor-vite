@@ -204,5 +204,5 @@ for command in "meteor" "npm" "npx"; do
     fi
 done
 
-set -xeuo pipefail
+set -xeo pipefail
 "$action" "${@:3}" || exit 1
