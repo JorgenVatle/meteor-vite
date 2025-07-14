@@ -13,31 +13,39 @@ const worker = Meteor.isProduction ? new ViteProductionBoilerplate()
 Meteor.startup(() => {
     const viteBundlerLegacy = pc.blue('jorgenvatle:vite-bundler');
     const viteBundler = pc.underline(pc.blue('jorgenvatle:vite'));
+    const meteorV2 = pc.underline(pc.bold('Meteor v2'));
     const sh = pc.dim('$');
     const label = {
+        deprecated: 'Deprecated: ',
         upgrade: 'Upgrade: ',
         link: 'More info: ',
     }
     const padCount = Math.max(label.upgrade.length, label.link.length) + 6;
-    const padLabelEndCount = padCount - 4;
-    const padding = ' '.repeat(padCount);
+    const logSection = (label: string, lines: string[]) => {
+        Logger.warn(
+            label.padEnd(padCount - 4, ' '),
+            lines.join('\n' + ' '.repeat(padCount)) + '\n'
+        );
+    }
     
     const command = (command: string, params: string) => [((pc.cyan(command))), pc.bold(pc.cyan(params))].join(' ')
     if (Meteor.release.toLowerCase().startsWith('meteor@3')) {
-        Logger.warn(`You are using a Meteor v2 compatability release of ${viteBundlerLegacy}!`);
+        Logger.warn(`You are using a ${meteorV2} compatability release of ${viteBundlerLegacy}!`);
         Logger.warn(`This package has been deprecated in favor of ${viteBundler}\n`);
         
-        Logger.warn(label.upgrade.padEnd(padLabelEndCount, ' '), [
+        logSection(label.deprecated, [
+            `${viteBundlerLegacy}`,
+        ]);
+        
+        logSection(label.upgrade, [
             `${sh} ${command('meteor remove', 'jorgenvatle:vite-bundler')}`,
             `${sh} ${command('meteor add', 'jorgenvatle:vite')}`,
             `${sh} ${command('npm i', 'meteor-vite@latest')}`,
-            ''
-        ].join('\n' + padding));
+        ]);
         
-        Logger.warn(
-            label.link.padEnd(padLabelEndCount, ' '),
-            `https://github.com/JorgenVatle/meteor-vite?tab=readme-ov-file#meteor-v3\n`
-        )
+        logSection(label.link, [
+            `https://github.com/JorgenVatle/meteor-vite?tab=readme-ov-file#meteor-v3`
+        ])
     }
     
     if ('start' in worker) {
