@@ -30,8 +30,8 @@
       <excludeFolder url="file://$MODULE_DIR$/npm-packages/meteor-vite/test/__mocks/meteor-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/npm-packages/meteor-vite/test/__mocks/vite-output" />
       <excludeFolder url="file://$MODULE_DIR$/npm-packages/@meteor-vite/plugin-zodern-relay/dist" />
-        <excludeFolder url="file://$MODULE_DIR$/examples/meteor-v3-vue/server/bundle" />
-        <excludeFolder url="file://$MODULE_DIR$/examples/meteor-v3-vue/server/dist" />
+      <excludeFolder url="file://$MODULE_DIR$/examples/meteor-v3-vue/server/bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/examples/meteor-v3-vue/server/dist" />
       <excludeFolder url="file://$MODULE_DIR$/packages/vite/dist" />
       <excludeFolder url="file://$MODULE_DIR$/examples/vue-zodern-relay/.meteor" />
       <excludeFolder url="file://$MODULE_DIR$/examples/vue-zodern-relay/server/bundle" />
@@ -42,6 +42,10 @@
       <excludeFolder url="file://$MODULE_DIR$/npm-packages/@meteor-vite/toolkit/bin" />
       <excludeFolder url="file://$MODULE_DIR$/npm-packages/@meteor-vite/plugin-zodern-relay" />
       <excludeFolder url="file://$MODULE_DIR$/npm-packages/@meteor-vite/react-packages" />
+      <excludeFolder url="file://$MODULE_DIR$/examples/.example-template" />
+      <excludeFolder url="file://$MODULE_DIR$/npm-packages/@meteor-vite/toolkit" />
+      <excludeFolder url="file://$MODULE_DIR$/test-packages" />
+      <excludeFolder url="file://$MODULE_DIR$/tests" />
       <excludePattern pattern=".babel-cache" />
       <excludePattern pattern="local" />
       <excludePattern pattern="package-lock.json" />
