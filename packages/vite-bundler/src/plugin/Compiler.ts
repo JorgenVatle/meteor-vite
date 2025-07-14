@@ -26,7 +26,7 @@ export default class Compiler {
         return nameOrPath.replace(`.${BUNDLE_FILE_EXTENSION}`, '');
     }
     
-    protected processFilesForTarget(files: BuildPluginFile[]) {
+    public processFilesForTarget(files: BuildPluginFile[]) {
         files.forEach(file => {
             const fileMeta = {
                 _original: {
@@ -51,7 +51,7 @@ export default class Compiler {
         })
     }
     
-    protected afterLink () {
+    public afterLink () {
         Compiler.cleanupHandlers.forEach((handle, index) => {
             Logger.debug(`Processing cleanup handler #${index}`)
             handle();
