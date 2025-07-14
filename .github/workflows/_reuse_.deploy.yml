@@ -15,13 +15,13 @@ on:
         default: ghcr.io
       meteorBaseImage:
         type: string
-        default: geoffreybooth/meteor-base
+        required: false
         description: |
           Meteor base image for bundling. Useful to override if you need a Meteor release not officially
           supported yet by the original geoffreybooth image.
       nodeVersion:
         type: string
-        default: 14-alpine
+        required: false
         description: Node.js Docker image version to use for the final production build.
 
 env:
