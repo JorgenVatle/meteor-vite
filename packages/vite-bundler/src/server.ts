@@ -9,8 +9,7 @@ import { ViteProductionBoilerplate } from './vite-boilerplate/production';
 const worker = Meteor.isProduction ? new ViteProductionBoilerplate()
                                    : new ViteDevServerWorker();
 
-
-Meteor.startup(() => {
+function emitDeprecationNotice() {
     const viteBundlerLegacy = pc.blue('jorgenvatle:vite-bundler');
     const viteBundler = (pc.blue('jorgenvatle:vite'));
     const meteorVite = (pc.bold('Meteor-Vite'));
@@ -24,6 +23,7 @@ Meteor.startup(() => {
         link: 'More info: ',
     }
     const padCount = Math.max(...Object.keys(label).map((label => label.length))) + 6;
+    const command = (command: string, params: string) => [((pc.cyan(command))), pc.bold(pc.cyan(params))].join(' ')
     const logSection = (label: string, lines: string[], lineBreak = '\n') => {
         Logger.warn(
             label.padEnd(padCount - 4, ' '),
@@ -31,7 +31,6 @@ Meteor.startup(() => {
         );
     }
     
-    const command = (command: string, params: string) => [((pc.cyan(command))), pc.bold(pc.cyan(params))].join(' ')
     if (Meteor.release.toLowerCase().startsWith('meteor@3')) {
         Logger.warn(`This application is running ${meteorV3}!\n`);
         Logger.warn(`The ${viteBundlerLegacy} package is maintained for backwards compatability with ${meteorV2}!`);
@@ -57,6 +56,11 @@ Meteor.startup(() => {
             `https://github.com/JorgenVatle/meteor-vite?tab=readme-ov-file#meteor-v3`,
         ])
     }
+}
+
+
+Meteor.startup(() => {
+    emitDeprecationNotice();
     
     if ('start' in worker) {
         worker.start();
