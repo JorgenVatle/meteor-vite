@@ -14,9 +14,25 @@ declare global {
             extensions: string[];
             filenames: string[];
         }
-        type Compiler = { processFilesForTarget(): void };
+        type Compiler = { processFilesForTarget(files: BuildPluginFile[]): void };
         type FactoryFunction = () => Promise<Compiler> | Compiler;
         function registerCompiler(config: CompilerPluginConfig, compilerFactory: FactoryFunction): void;
+        type PluginFileBuffer = ArrayBufferLike;
+        interface BuildPluginFile {
+            getContentsAsString(): string;
+            getPathInPackage(): string;
+            getContentsAsBuffer(): PluginFileBuffer;
+            getBasename(): string;
+            addAsset(data: FileData): void;
+            addStylesheet(data: FileData): void;
+            addJavaScript(data: FileData): void;
+            getArch(): string;
+        }
+        interface FileData {
+            path: string;
+            data: string | PluginFileBuffer;
+            sourcePath?: string;
+        }
     }
     
     module Babel {
