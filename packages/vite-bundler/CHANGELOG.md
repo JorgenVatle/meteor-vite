@@ -1,5 +1,11 @@
 # vite-bundler
 
+## 3.0.1
+
+### Patch Changes
+
+- a2f015d: Added deprecation notice for apps running on Meteor v3
+
 ## 3.0.0
 
 ### Major Changes

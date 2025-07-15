@@ -1,5 +1,15 @@
 # meteor-vite
 
+## 2.1.0
+
+### Minor Changes
+
+- 600346d: Generate Stub IDs based on package ID instead of using random IDs #320
+
+### Patch Changes
+
+- 7e85f3c: Only load tsup if server builds are explicitly enabled. #312
+
 ## 2.0.0
 
 ### Major Changes
