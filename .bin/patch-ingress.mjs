@@ -18,11 +18,11 @@ function getEnv(keys) {
     return Object.fromEntries(entries)
 }
 
-const { KUBE_NAMESPACE, APP_NAME } = getEnv(['APP_NAME', 'KUBE_NAMESPACE']);
+const { APP_NAMESPACE, APP_NAME } = getEnv(['APP_NAME', 'APP_NAMESPACE']);
 const path = `/${APP_NAME}`;
 
 try {
-    const manifest = JSON.parse(execSync(`kubectl get ingress preview -n ${KUBE_NAMESPACE} -o json`, {
+    const manifest = JSON.parse(execSync(`kubectl get ingress preview -n ${APP_NAMESPACE} -o json`, {
         stdio: ['pipe', 'pipe', 'inherit']
     }).toString());
 
@@ -46,7 +46,7 @@ try {
 
     console.log(inspect(manifest.spec.rules, { colors: true, depth: 10 }));
 
-    execSync(`kubectl patch ingress preview -n ${KUBE_NAMESPACE} -p '${JSON.stringify(manifest)}'`, {
+    execSync(`kubectl patch ingress preview -n ${APP_NAMESPACE} -p '${JSON.stringify(manifest)}'`, {
         stdio: 'inherit'
     })
 } catch (error) {
