@@ -111,13 +111,13 @@ export class ResolvedModule implements ResolvedModulePaths {
             this.dirname = Path.dirname(importPath);
         }
         
+        this.id = this.importPath.replace(LOCAL_ROOT_DIR, './');
+        
         if (this.type === 'node-module') {
             this.packageRoot = this.path.replace(Path.join(LOCAL_ROOT_DIR, 'node_modules') + '/', '');
             this.id = `npm:${this.packageRoot}`;
         } else if (this.type === 'standard-library') {
             this.id = `node:${this.importPath}`;
-        } else {
-            this.id = this.importPath.replace(LOCAL_ROOT_DIR, './');
         }
         
         if (this.type === 'standard-library') {
@@ -225,6 +225,9 @@ export class ResolvedModule implements ResolvedModulePaths {
     }
     
     public getText() {
+        if (this.type === 'standard-library') {
+            return '';
+        }
         this.verifyModule();
         return FS.readFileSync(
             this.path,

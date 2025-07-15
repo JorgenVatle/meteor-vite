@@ -34,11 +34,14 @@ class EntryModule {
 export class NodeModule {
     protected readonly module: vm.SourceTextModule;
     protected readonly context = vm.createContext({});
+    protected readonly text: string;
     
     constructor(protected readonly resolved: ResolvedModule) {
         Logger.info(`Initialized NodeModule: ${resolved.importPath}`);
-        this.module = new vm.SourceTextModule(resolved.getText(), {
+        this.text = resolved.getText();
+        this.module = new vm.SourceTextModule(this.text, {
             context: this.context,
+            identifier: resolved.id,
         });
     }
     
@@ -47,23 +50,23 @@ export class NodeModule {
         if (resolved.loggable) {
             Logger.info(`Resolving ${specifier} (${resolved.type}) specifier from ${this.resolved.importPath}`, { specifier, referrer, extra });
         }
+        const nodeModule = new NodeModule(resolved);
         if (resolved.type === 'standard-library') {
-            return new vm.SourceTextModule(`export * from '${resolved.path}'`, {
-                context: this.context,
-                identifier: resolved.id,
-            });
+            return nodeModule.evaluate();
         }
-        return new vm.SourceTextModule(resolved.getText(), {
-            context: this.context,
-            identifier: resolved.id,
-        });
+        return nodeModule.evaluate();
     }
     
     public async evaluate() {
         Logger.info(`Linking module: ${this.resolved.importPath}`);
         await this.module.link(this.linker);
         Logger.info(`Evaluating module: ${this.resolved.importPath}`);
-        await this.module.evaluate();
+        try {
+            await this.module.evaluate();
+        } catch (error) {
+            console.log('\n'.repeat(5), this.resolved.id, '\n\n', this.text.slice(0, 300));
+            throw error;
+        }
         return this.module;
     }
     
