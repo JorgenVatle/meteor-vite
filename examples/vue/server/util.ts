@@ -1,5 +1,6 @@
 import FS from 'node:fs';
 import Path from 'node:path';
+import { inspect } from 'node:util';
 import pc from 'picocolors';
 
 const ROOT_DIR = '/home/jorgen/projects/meteor-vite/examples/vue';
@@ -28,6 +29,30 @@ function assertExists(path: string) {
         throw new FileNotFound(path);
     }
 }
+
+class LoggerInstance {
+    protected log(level: keyof Pick<typeof console, 'info' | 'warn' | 'error'>, args: any[]) {
+        console[level]?.apply({}, args.map((arg) => {
+            if (typeof arg === 'string') {
+                return arg;
+            }
+            return inspect(arg, { depth: 3, colors: true });
+        }));
+    }
+    public info(...args: any[]) {
+        this.log('info', args);
+    }
+    
+    public warn(...args: any[]) {
+        this.log('warn', args);
+    }
+    
+    public error(...args: any[]) {
+        this.log('error', args);
+    }
+}
+
+export const Logger = new LoggerInstance();
 
 class EntryModule {
     public readonly path: string;
