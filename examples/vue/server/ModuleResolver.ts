@@ -56,7 +56,7 @@ export class ResolvedModule implements ResolvedImport {
     public readonly path: string;
     protected readonly relativePath: string;
     public readonly isValid: boolean;
-    protected readonly logger: LoggerInstance;
+    readonly #logger: LoggerInstance;
     
     constructor(public readonly importPath: string) {
         const { path, type } = buildPath(importPath);
@@ -83,10 +83,10 @@ export class ResolvedModule implements ResolvedImport {
         try {
             this.verifyModule();
             this.isValid = true;
-            this.logger = initLogger('valid');
+            this.#logger = initLogger('valid');
         } catch (error) {
             this.isValid = false;
-            this.logger = initLogger('invalid');
+            this.#logger = initLogger('invalid');
         }
     }
     
