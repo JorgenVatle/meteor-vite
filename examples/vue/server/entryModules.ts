@@ -44,6 +44,9 @@ function importRaw(path: string) {
     if (path.startsWith('.')) {
         return FS.readFileSync(modulePath(path), 'utf-8');
     }
+    if (path.startsWith('/')) {
+        return FS.readFileSync(path, 'utf-8');
+    }
     return FS.readFileSync(modulePath('../node_modules', path), 'utf-8');
 }
 
