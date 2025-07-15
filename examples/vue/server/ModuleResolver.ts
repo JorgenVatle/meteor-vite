@@ -68,6 +68,31 @@ export class ResolvedModule implements ResolvedImport {
             'utf-8'
         )
     }
+    
+    public getPackageJson(): PackageJson {
+        const moduleRoot = this.importPath.split('/')[0];
+        const packageJson = resolve(Path.join(moduleRoot, 'package.json'));
+        return JSON.parse(packageJson.getText());
+    }
+}
+
+type PackageJson = {
+    name: string;
+    main?: string;
+    exports?: PackageExports;
+}
+
+type PackageExports = {
+    [key: string]: ExportField;
+}
+
+type ExportField = string | string[] | {
+    types?: string | string[],
+    import?: string,
+    require?: string,
+    node?: string,
+    browser?: string,
+    default?: string
 }
 
 export function resolve(importPath: string) {
