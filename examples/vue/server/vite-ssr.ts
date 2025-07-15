@@ -27,9 +27,7 @@ const script = new vm.Script(entryModules.serverVm.sourceText, {
             importAttributes,
             phase,
         });
-        const nodeModule = new NodeModule(specifier);
-        await nodeModule.evaluate();
-        return nodeModule.module;
+        return NodeModule.resolve(specifier);
     }
 });
 
