@@ -1,6 +1,6 @@
+import { formatErrorMeta } from '/server/util';
 import FS from 'node:fs';
 import Path from 'node:path';
-import pc from 'picocolors';
 
 const ROOT_DIR = '/home/jorgen/projects/meteor-vite/examples/vue';
 
@@ -33,14 +33,14 @@ function buildPath(path: string): ResolvedImport {
 
 class ModuleResolverError extends Error {
     constructor(message: string, module: ResolvedModule) {
-        super(`[${module.type}] ${message}`);
+        super(formatErrorMeta(`[${module.type}] ${message}`, module));
         this.name = 'ModuleResolverError';
     }
 }
 
 class FileNotFound extends ModuleResolverError {
     constructor(module: ResolvedModule) {
-        super(`${module.importPath} (${pc.dim(module.path)})`, module);
+        super(`${module.importPath}`, module);
         this.name = 'FileNotFound';
     }
 }

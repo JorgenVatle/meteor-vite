@@ -32,4 +32,8 @@ class LoggerInstance {
     }
 }
 
+export function formatErrorMeta(message: string, metadata: object) {
+    return [message, inspect(metadata, { colors: true })].join('\n');
+}
+
 export const Logger = new LoggerInstance();
