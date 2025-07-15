@@ -1,4 +1,4 @@
-import { entryModules } from '/server/util';
+import { entryModules } from '/server/entryModules';
 import { Script } from 'vm';
 
 const vm = new Script(entryModules.serverVm.sourceText, {
