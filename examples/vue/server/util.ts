@@ -2,10 +2,16 @@ import { inspect } from 'node:util';
 import pc from 'picocolors';
 
 class LoggerInstance {
-    protected log(level: keyof Pick<typeof console, 'info' | 'warn' | 'error'>, args: any[]) {
+    protected log(level: keyof Pick<typeof console, 'info' | 'warn' | 'error' | 'debug'>, args: any[]) {
+        let colorize = (value: string) => value;
+        
+        if (level === 'debug') {
+            colorize = pc.dim;
+        }
+        
         console[level]?.apply({}, args.map((arg) => {
             if (typeof arg === 'string') {
-                return arg;
+                return colorize(arg);
             }
             if (arg instanceof Error) {
                 return pc.white(arg.stack?.split(/[\r\n]/).map((line, index) => {
@@ -29,6 +35,10 @@ class LoggerInstance {
     
     public error(...args: any[]) {
         this.log('error', args);
+    }
+    
+    public debug(...args: any[]) {
+        this.log('debug', args);
     }
 }
 
