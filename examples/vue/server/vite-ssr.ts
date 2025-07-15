@@ -1,41 +1,45 @@
-import { entryModules, NodeModule } from '/server/entryModules';
-import { Logger } from '/server/util';
+import { entryModules } from '/server/entryModules';
+import { resolve } from '/server/ModuleResolver';
 import vm from 'node:vm';
 
 const context = vm.createContext({});
 
-function createLinker(): vm.ModuleLinker {
-    return (specifier, referrer, importAttributes) => {
-        Logger.info('Linking module', { specifier, referrer, importAttributes });
-        return Promise.resolve(simulated);
-    };
+const resolveVm: vm.ModuleLinker = async (specifier: string, ref): Promise<vm.Module> => {
+    console.log('Resolving module:', specifier);
+    const resolvedModule = resolve(specifier);
+    
+    if (resolvedModule.type === 'standard-library') {
+        const exports = require(resolvedModule.importPath);
+        exports.default = exports;
+        const module = new vm.SyntheticModule(Object.keys(exports), function() {
+            Object.entries(exports).forEach(([key, value]) => {
+                console.log({ key, value });
+                this.setExport(key, value);
+            });
+            this.setExport('default', exports);
+        }, {
+            context: ref.context,
+        });
+        await module.link(() => {
+            throw new Error('Tried to resolve modules within standard library')
+        });
+        
+        await module.evaluate();
+
+        return module;
+    }
+    
+    throw new Error(`Unknown module type: ${resolvedModule.type}`)
 }
 
-// language=javascript
-const simulated = new vm.SourceTextModule(`
-    export function createServer() {
-        console.log('Foo Bar!');
-    }
-`);
-
-const script = new vm.Script(entryModules.serverVm.sourceText, {
-    filename: '/home/jorgen/projects/meteor-vite/examples/vue/server/_vite-ssr.mts',
-    importModuleDynamically: async (specifier, referrer, importAttributes, phase) => {
-        Logger.info('Resolving dynamic import', {
-            module: specifier,
-            referrer,
-            importAttributes,
-            phase,
-        });
-        return NodeModule.resolve(specifier);
-    }
-});
-
 export async function init() {
-    const linker = createLinker();
-    await simulated.link(linker);
+    const module = new vm.SourceTextModule(entryModules.serverVm.sourceText, {
+        context,
+    });
     
-    return script.runInNewContext(context, {
-        displayErrors: true,
-    })();
+    await module.link(resolveVm);
+    
+    await module.evaluate();
+    
+    return module.namespace;
 }
