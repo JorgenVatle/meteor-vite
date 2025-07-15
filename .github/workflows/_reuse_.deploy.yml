@@ -28,6 +28,7 @@ env:
   APP_NAME: meteor-v2-${{ inputs.appBasename }}
   METEOR_RELEASE: ${{ inputs.meteorRelease }}
   APP_NAMESPACE: meteor-vite
+  ROOT_URL: https://meteor-vite-preview.wcaserver.com/meteor-v2-${{ inputs.appBasename }}/
 jobs:
   build:
     name: Build 🐋
@@ -44,11 +45,10 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: meteor-v2-${{ inputs.appBasename }}
-      url: https://meteor-vite-preview.wcaserver.com/${{ env.APP_NAME }}
+      url: ${{ env.ROOT_URL }}
     env:
       APP_VERSION: ${{ needs.build.outputs.imageVersion }}
       APP_IMAGE: ${{ needs.build.outputs.deploymentImage }}
-      ROOT_URL: ${{ jobs.deploy.environment_url }}
     needs:
       - build
     steps:
