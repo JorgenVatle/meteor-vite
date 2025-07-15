@@ -45,6 +45,9 @@ export class NodeModule {
         if (resolved.loggable) {
             Logger.info(`Resolving ${specifier} (${resolved.type}) specifier from ${this.resolved.importPath}`, { specifier, referrer, extra });
         }
+        if (resolved.type === 'standard-library') {
+            return new vm.SourceTextModule(`export * from '${resolved.path}'`, this.context);
+        }
         return new vm.SourceTextModule(resolved.getText(), this.context);
     }
     
