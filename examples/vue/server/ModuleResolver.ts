@@ -51,7 +51,6 @@ function resolvePaths(importPath: string, rootDir = LOCAL_ROOT_DIR): ResolvedMod
     return {
         type,
         path,
-        relativePath: Path.relative(rootDir, path),
         importPath,
         rootDir,
         parsedPath: Path.parse(path),
@@ -78,7 +77,6 @@ interface ModulePath {
 }
 
 interface ResolvedModulePaths extends ModulePath{
-    relativePath: string;
     rootDir: string;
     importPath: string;
     parsedPath: Path.ParsedPath;
@@ -91,7 +89,6 @@ export class ResolvedModule implements ResolvedModulePaths {
     public readonly isValid: boolean;
     public readonly rootDir: string;
     public readonly importPath: string;
-    public readonly relativePath: string;
     protected readonly packageRoot?: string;
     protected packageJsonData?: object;
     public readonly parsedPath: Path.ParsedPath;
@@ -99,10 +96,9 @@ export class ResolvedModule implements ResolvedModulePaths {
     public readonly importedBy?: ResolvedModule;
     
     constructor(
-        { path, relativePath, rootDir, importPath, type, parsedPath }: ResolvedModulePaths,
+        { path, rootDir, importPath, type, parsedPath }: ResolvedModulePaths,
         importedBy?: ResolvedModule,
     ) {
-        this.relativePath = relativePath;
         this.rootDir = rootDir;
         this.type = type;
         this.path = path;
@@ -207,7 +203,7 @@ export class ResolvedModule implements ResolvedModulePaths {
             throw new FileNotFound(this);
         }
         if (FS.statSync(this.path).isDirectory()) {
-            throw new ModuleResolverError(`Cannot read directory: ${this.relativePath}`, this);
+            throw new ModuleResolverError(`Cannot read directory: ${this.importPath}`, this);
         }
     }
     
