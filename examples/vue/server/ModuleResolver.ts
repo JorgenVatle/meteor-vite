@@ -24,6 +24,12 @@ function buildPath(path: string): ResolvedImport {
             path: path,
         };
     }
+    if (path.startsWith('node:')) {
+        return {
+            type: 'standard-library',
+            path: path.replace('node:', ''),
+        }
+    }
     return {
         type: 'node-module',
         path: Path.resolve(
@@ -49,7 +55,7 @@ class FileNotFound extends ModuleResolverError {
 }
 
 type ResolvedImport = {
-    type: 'local' | 'absolute' | 'node-module',
+    type: 'local' | 'absolute' | 'node-module' | 'standard-library',
     path: string
 };
 
