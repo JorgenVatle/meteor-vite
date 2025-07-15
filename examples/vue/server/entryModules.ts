@@ -54,6 +54,7 @@ export class NodeModule {
         }
         return new vm.SourceTextModule(resolved.getText(), {
             context: this.context,
+            // identifier: resolved.importPath,
         });
     }
     
