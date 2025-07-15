@@ -1,4 +1,4 @@
-import { entryModules } from '/server/entryModules';
+import { entryModules, NodeModule } from '/server/entryModules';
 import { Logger } from '/server/util';
 import vm from 'node:vm';
 
@@ -20,14 +20,16 @@ const simulated = new vm.SourceTextModule(`
 
 const script = new vm.Script(entryModules.serverVm.sourceText, {
     filename: '/home/jorgen/projects/meteor-vite/examples/vue/server/_vite-ssr.mts',
-    importModuleDynamically: (specifier, referrer, importAttributes, phase) => {
+    importModuleDynamically: async (specifier, referrer, importAttributes, phase) => {
         Logger.info('Resolving dynamic import', {
             module: specifier,
             referrer,
             importAttributes,
             phase,
         });
-        return Promise.resolve(simulated);
+        const nodeModule = new NodeModule(specifier);
+        await nodeModule.evaluate();
+        return nodeModule.module;
     }
 });
 
