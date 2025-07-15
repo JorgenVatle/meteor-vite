@@ -48,6 +48,7 @@ jobs:
     env:
       APP_VERSION: ${{ needs.build.outputs.imageVersion }}
       APP_IMAGE: ${{ needs.build.outputs.deploymentImage }}
+      ROOT_URL: ${{ job.environment_url }}
     needs:
       - build
     steps:
