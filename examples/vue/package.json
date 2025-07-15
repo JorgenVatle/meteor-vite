@@ -13,13 +13,17 @@
     "meteor-vite-internal:start": "npm run meteor-vite-internal:setup-env meteor npm start",
     "meteor-vite-internal:build": "npm run meteor-vite-internal:setup-env meteor npm run build"
   },
+  "type": "module",
   "dependencies": {
     "@babel/runtime": "^7.20.13",
     "@meteor-vite/test-externalization": "^1.0.0",
+    "bufferutil": "^4.0.9",
     "chalk": "^4.1.2",
+    "lightningcss": "^1.30.1",
     "meteor-node-stubs": "^1.2.5",
     "meteor-vite": "^2.1.0",
     "safe-json-stringify": "^1.2.0",
+    "utf-8-validate": "^6.0.5",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },
