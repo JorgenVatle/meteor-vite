@@ -1,6 +1,5 @@
 import FS from 'node:fs';
 import Path from 'node:path';
-import pc from 'picocolors';
 
 const ROOT_DIR = '/home/jorgen/projects/meteor-vite/examples/vue';
 
@@ -30,7 +29,8 @@ class EntryModule {
 
 class FileNotFound extends Error {
     constructor(path: string) {
-        super(`${pc.yellow(Path.relative(ROOT_DIR, path))}\n\n`);
+        super(Path.relative(ROOT_DIR, path));
+        this.name = 'FileNotFound';
     }
 }
 

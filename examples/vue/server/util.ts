@@ -1,4 +1,5 @@
 import { inspect } from 'node:util';
+import pc from 'picocolors';
 
 class LoggerInstance {
     protected log(level: keyof Pick<typeof console, 'info' | 'warn' | 'error'>, args: any[]) {
@@ -7,9 +8,16 @@ class LoggerInstance {
                 return arg;
             }
             if (arg instanceof Error) {
-                return arg;
+                arg.name = pc.bgRed(pc.white(arg.name));
+                arg.message = pc.red(arg.message);
+                return pc.white(arg.stack?.split(/[\r\n]/).map((line, index) => {
+                    if (index === 0) {
+                        return line;
+                    }
+                    return pc.white(line);
+                }).join('\n'));
             }
-            return inspect(arg, { depth: 3, colors: true });
+            return inspect(arg, { depth: 3, colors: true, getters: true });
         }));
     }
     public info(...args: any[]) {
