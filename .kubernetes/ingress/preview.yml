@@ -1,0 +1,22 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "preview"
+  labels:
+    app.kubernetes.io/name: meteor-vite-example
+    app.kubernetes.io/component: meteor
+    app.kubernetes.io/instance: "preview"
+    app.kubernetes.io/version: "1.0.0"
+spec:
+  rules:
+    - host: "meteor-vite-preview.wcaserver.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: /meteor-v2-vue
+            backend:
+              service:
+                name: "meteor-v2-vue"
+                port:
+                  number: 3000
