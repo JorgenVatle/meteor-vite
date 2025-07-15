@@ -32,15 +32,20 @@ class EntryModule {
 }
 
 export class NodeModule {
-    public readonly module: vm.Module;
+    protected readonly module: vm.SourceTextModule;
     protected readonly context = vm.createContext({});
     
     constructor(protected readonly resolved: ResolvedModule) {
-        this.module = new vm.SourceTextModule(this.resolved.getText(), this.context);
+        Logger.info(`Initialized NodeModule: ${resolved.importPath}`);
+        this.module = new vm.SourceTextModule(resolved.getText(), this.context);
     }
     
     protected readonly linker: vm.ModuleLinker = async (specifier, referrer, extra) => {
-        return NodeModule.resolve(specifier, referrer, extra);
+        const resolved = resolve(specifier);
+        if (resolved.loggable) {
+            Logger.info(`Resolving module link from ${this.resolved.importPath}`, { specifier, referrer, extra });
+        }
+        return new vm.SourceTextModule(resolved.getText(), this.context);
     }
     
     public async evaluate() {
@@ -51,18 +56,9 @@ export class NodeModule {
         return this.module;
     }
     
-    public static resolve(specifier: string, referrer?: vm.Module, extra?: {}): Promise<vm.Module> {
-        const resolved = resolve(specifier);
-        if (resolved.loggable) {
-            Logger.info('Resolving module link', { specifier, referrer, extra });
-        }
-        if (resolved.isValid) {
-            return new this(resolved).evaluate();
-        }
-        if (resolved.type === 'node-module') {
-            return new this(resolved.getMainExport()).evaluate();
-        }
-        throw new Error(`Module not found: ${specifier}`);
+    public static resolve(specifier: string) {
+        const module = new this(resolve(specifier));
+        return module.evaluate();
     }
 }
 

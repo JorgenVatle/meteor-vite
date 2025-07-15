@@ -196,5 +196,16 @@ type ExportField = string | string[] | {
 }
 
 export function resolve(importPath: string) {
-    return new ResolvedModule(importPath);
+    const module = new ResolvedModule(importPath);
+    
+    if (module.isValid) {
+        return module;
+    }
+    
+    if (module.type === 'node-module') {
+        return module.getMainExport();
+    }
+    
+    module.verifyModule();
+    return module;
 }
