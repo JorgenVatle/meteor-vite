@@ -1,16 +1,19 @@
+import { resolve, ResolvedModule } from '/server/ModuleResolver';
 import { Logger } from '/server/util';
 import FS from 'node:fs';
 import Path from 'node:path';
 import vm from 'node:vm';
 
-const ROOT_DIR = '/home/jorgen/projects/meteor-vite/examples/vue';
-
 class EntryModule {
-    public readonly path: string;
     public readonly sourceText: string;
+    protected readonly resolved: ResolvedModule;
     constructor(path: string) {
-        this.path = modulePath(path);
-        this.sourceText = importRaw(this.path);
+        this.resolved = resolve(path);
+        this.sourceText = this.resolved.getText();
+    }
+    
+    public get path() {
+        return this.resolved.path;
     }
     
     protected get sourceLines() {
@@ -29,41 +32,12 @@ class EntryModule {
     }
 }
 
-class FileNotFound extends Error {
-    constructor(path: string) {
-        super(Path.relative(ROOT_DIR, path));
-        this.name = 'FileNotFound';
-    }
-}
-
-function modulePath(...parts: string[]) {
-    const path = Path.join(ROOT_DIR, 'server', ...parts);
-    assertExists(path);
-    return path;
-}
-
-function importRaw(path: string) {
-    if (path.startsWith('.')) {
-        return FS.readFileSync(modulePath(path), 'utf-8');
-    }
-    if (path.startsWith('/')) {
-        return FS.readFileSync(path, 'utf-8');
-    }
-    return FS.readFileSync(modulePath('../node_modules', path), 'utf-8');
-}
-
-function assertExists(path: string) {
-    if (!FS.existsSync(path)) {
-        throw new FileNotFound(path);
-    }
-}
-
 export class NodeModule extends EntryModule {
     public readonly module: vm.Module;
     protected readonly context = vm.createContext({});
     
     constructor(protected readonly moduleName: string, exportName = 'index.js') {
-        super(modulePath(Path.join(moduleName, exportName)));
+        super(Path.join(moduleName, exportName));
         this.module = new vm.SourceTextModule(this.sourceText, this.context);
     }
     
