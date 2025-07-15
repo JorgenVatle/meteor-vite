@@ -40,7 +40,7 @@ class ModuleResolverError extends Error {
 
 class FileNotFound extends ModuleResolverError {
     constructor(module: ResolvedModule) {
-        super(`${module.importPath}`, module);
+        super(`${module.path}`, module);
         this.name = 'FileNotFound';
     }
 }
