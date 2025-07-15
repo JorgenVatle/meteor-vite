@@ -1,5 +1,6 @@
 import { formatErrorMeta, LoggerInstance } from '/server/util';
 import FS from 'node:fs';
+import { builtinModules } from 'node:module';
 import Path from 'node:path';
 import pc from 'picocolors';
 
@@ -29,6 +30,14 @@ function buildPath(path: string): ResolvedImport {
             path: path.replace('node:', ''),
         }
     }
+    
+    if (builtinModules.includes(path)) {
+        return {
+            type: 'standard-library',
+            path,
+        }
+    }
+    
     return {
         type: 'node-module',
         path: Path.resolve(
