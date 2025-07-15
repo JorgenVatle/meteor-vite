@@ -37,7 +37,9 @@ export class NodeModule {
     
     constructor(protected readonly resolved: ResolvedModule) {
         Logger.info(`Initialized NodeModule: ${resolved.importPath}`);
-        this.module = new vm.SourceTextModule(resolved.getText(), this.context);
+        this.module = new vm.SourceTextModule(resolved.getText(), {
+            context: this.context,
+        });
     }
     
     protected readonly linker: vm.ModuleLinker = async (specifier, referrer, extra) => {
@@ -46,9 +48,13 @@ export class NodeModule {
             Logger.info(`Resolving ${specifier} (${resolved.type}) specifier from ${this.resolved.importPath}`, { specifier, referrer, extra });
         }
         if (resolved.type === 'standard-library') {
-            return new vm.SourceTextModule(`export * from '${resolved.path}'`, this.context);
+            return new vm.SourceTextModule(`export * from '${resolved.path}'`, {
+                context: this.context,
+            });
         }
-        return new vm.SourceTextModule(resolved.getText(), this.context);
+        return new vm.SourceTextModule(resolved.getText(), {
+            context: this.context,
+        });
     }
     
     public async evaluate() {
