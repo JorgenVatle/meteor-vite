@@ -4,6 +4,7 @@ import Path from 'node:path';
 import pc from 'picocolors';
 
 const ROOT_DIR = '/home/jorgen/projects/meteor-vite/examples/vue';
+const NODE_MODULES = Path.join(ROOT_DIR, 'node_modules/');
 
 function buildPath(path: string): ResolvedImport {
     if (path.startsWith('.')) {
@@ -56,6 +57,7 @@ export class ResolvedModule implements ResolvedImport {
     public readonly path: string;
     protected readonly relativePath: string;
     public readonly isValid: boolean;
+    protected readonly packageRoot?: string;
     readonly #logger: LoggerInstance;
     
     constructor(public readonly importPath: string) {
@@ -63,6 +65,10 @@ export class ResolvedModule implements ResolvedImport {
         this.relativePath = Path.relative(ROOT_DIR, path);
         this.type = type;
         this.path = path;
+        
+        if (this.type === 'node-module') {
+            this.packageRoot = this.importPath.split(Path.sep)[0];
+        }
         
         const initLogger = (status: 'valid' | 'invalid') => {
             const color = {
@@ -79,7 +85,6 @@ export class ResolvedModule implements ResolvedImport {
             return logger;
         }
         
-        
         try {
             this.verifyModule();
             this.isValid = true;
@@ -90,6 +95,12 @@ export class ResolvedModule implements ResolvedImport {
         }
     }
     
+    protected get packageJson(): ResolvedModule | null {
+        if (!this.packageRoot) {
+            return null;
+        }
+        return new ResolvedModule(Path.join(this.packageRoot, 'package.json'));
+    }
     
     public getMainExport() {
         const { exports } = this.getPackageJson();
@@ -133,9 +144,10 @@ export class ResolvedModule implements ResolvedImport {
     }
     
     public getPackageJson(): PackageJson {
-        const moduleRoot = this.importPath.split('/')[0];
-        const packageJson = resolve(Path.join(moduleRoot, 'package.json'));
-        return JSON.parse(packageJson.getText());
+        if (!this.packageJson) {
+            throw new ModuleResolverError('No package.json path available!', this);
+        }
+        return JSON.parse(this.packageJson.getText());
     }
 }
 
