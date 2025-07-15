@@ -68,7 +68,7 @@ spec:
             periodSeconds: 5
             httpGet:
               port: 3000
-              path: /
+              path: "/${APP_NAME}"
 
 
 ---
