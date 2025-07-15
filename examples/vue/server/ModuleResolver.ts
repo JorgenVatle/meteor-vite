@@ -1,4 +1,3 @@
-import { Logger } from '/imports/api/logger';
 import { formatErrorMeta, LoggerInstance } from '/server/util';
 import FS from 'node:fs';
 import Path from 'node:path';
@@ -88,7 +87,9 @@ export class ResolvedModule implements ResolvedImport {
                 pc.dim(`[${pc.bold(this.type)}]`),
             ].join('')
             const logger = new LoggerInstance({ prefix, suffix: padding + statusLabel });
-            logger.debug(`${pc.reset(this.importPath)}`);
+            if (this.type !== 'standard-library') {
+                logger.debug(`${pc.reset(this.importPath)}`);
+            }
             return logger;
         }
         
@@ -190,6 +191,5 @@ type ExportField = string | string[] | {
 }
 
 export function resolve(importPath: string) {
-    Logger.debug(`Resolving import path: ${importPath}`);
     return new ResolvedModule(importPath);
 }
