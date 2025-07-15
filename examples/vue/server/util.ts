@@ -1,7 +1,14 @@
 import FS from 'node:fs';
 import Path from 'node:path';
+import pc from 'picocolors';
 
 const ROOT_DIR = '/home/jorgen/projects/meteor-vite/examples/vue';
+
+class FileNotFound extends Error {
+    constructor(path: string) {
+        super(`${pc.yellow(Path.relative(ROOT_DIR, path))}\n\n`);
+    }
+}
 
 function modulePath(...parts: string[]) {
     const path = Path.join(ROOT_DIR, 'server', ...parts);
@@ -18,7 +25,7 @@ function importRaw(path: string) {
 
 function assertExists(path: string) {
     if (!FS.existsSync(path)) {
-        throw new Error(`File not found: ${Path.relative(ROOT_DIR, path)}\n\n`);
+        throw new FileNotFound(path);
     }
 }
 
