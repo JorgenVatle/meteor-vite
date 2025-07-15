@@ -43,6 +43,9 @@ jobs:
   deploy:
     name: Deploy 🚀
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ inputs.appBasename }}
+
     environment:
       name: meteor-v2-${{ inputs.appBasename }}
       url: ${{ env.ROOT_URL }}
