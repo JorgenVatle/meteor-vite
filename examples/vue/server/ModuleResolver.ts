@@ -70,11 +70,12 @@ export class ResolvedModule implements ResolvedImport {
                 invalid: pc.red,
             }[status]
             const statusLabel = color(`(${status})`);
+            const padding = ' '.repeat(Math.max(1, 70 - this.importPath.length - status.length - this.type.length))
             const prefix = [
-                pc.dim(`[${pc.bold(this.type)}]`)
+                pc.dim(`[${pc.bold(this.type)}]`),
             ].join('')
-            const logger = new LoggerInstance({ prefix, suffix: statusLabel });
-            logger.debug(`${this.importPath}`);
+            const logger = new LoggerInstance({ prefix, suffix: padding + statusLabel });
+            logger.debug(`${pc.reset(this.importPath)}`);
             return logger;
         }
         
