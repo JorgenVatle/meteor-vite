@@ -2,7 +2,7 @@
   "name": "vue-example",
   "private": true,
   "scripts": {
-    "start": "FORCE_COLOR=1 meteor run --raw-logs",
+    "start": "FORCE_COLOR=1 SERVER_NODE_OPTIONS=--experimental-vm-modules meteor run --raw-logs",
     "build": "meteor build ../output/vue --directory",
     "start:production-build": "(cd ../output/vue/bundle && (cd programs/server && meteor npm install) && PORT=4040 ROOT_URL=http://localhost:4040 MONGO_URL=mongodb://127.0.0.1:3001/meteor meteor node main.js)",
     "start:new-build": "rm -rf ../output/vue && meteor npm run build && concurrently \"meteor npm run dev\" \"meteor npm run start\"",
