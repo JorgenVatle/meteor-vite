@@ -90,6 +90,9 @@ export class ResolvedModule implements ResolvedImport {
         if (!this.exists()) {
             throw new FileNotFound(this);
         }
+        if (FS.statSync(this.path).isDirectory()) {
+            throw new ModuleResolverError(`Cannot read directory: ${this.relativePath}`, this);
+        }
         return FS.readFileSync(
             this.path,
             'utf-8'
