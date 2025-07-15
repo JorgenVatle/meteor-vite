@@ -50,11 +50,12 @@ export class NodeModule {
         if (resolved.type === 'standard-library') {
             return new vm.SourceTextModule(`export * from '${resolved.path}'`, {
                 context: this.context,
+                identifier: resolved.id,
             });
         }
         return new vm.SourceTextModule(resolved.getText(), {
             context: this.context,
-            // identifier: resolved.importPath,
+            identifier: resolved.id,
         });
     }
     

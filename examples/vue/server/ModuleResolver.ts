@@ -95,6 +95,7 @@ export class ResolvedModule implements ResolvedModulePaths {
     public readonly parsedPath: Path.ParsedPath;
     readonly #logger: LoggerInstance
     public readonly importedBy?: ResolvedModule;
+    public readonly id: string;
     
     constructor(
         { path, rootDir, importPath, type, parsedPath }: ResolvedModulePaths,
@@ -112,6 +113,11 @@ export class ResolvedModule implements ResolvedModulePaths {
         
         if (this.type === 'node-module') {
             this.packageRoot = this.importPath.split(Path.sep)[0];
+            this.id = Path.join(this.packageRoot, this.importPath);
+        } else if (this.type === 'standard-library') {
+            this.id = `node:${this.importPath}`;
+        } else {
+            this.id = this.importPath.replace(LOCAL_ROOT_DIR, './');
         }
         
         if (this.type === 'standard-library') {
