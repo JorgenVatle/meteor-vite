@@ -7,7 +7,7 @@ import pc from 'picocolors';
 const ROOT_DIR = '/home/jorgen/projects/meteor-vite/examples/vue';
 const NODE_MODULES = Path.join(ROOT_DIR, 'node_modules/');
 
-function buildPath(path: string): ResolvedImport {
+function buildPath(path: string): ModulePath {
     if (path.startsWith('.')) {
         return {
             type: 'local',
@@ -48,6 +48,17 @@ function buildPath(path: string): ResolvedImport {
     }
 }
 
+function resolvePaths(importPath: string, rootDir = ROOT_DIR): ResolvedModulePaths {
+    const { path, type } = buildPath(importPath);
+    return {
+        type,
+        path,
+        relativePath: Path.relative(rootDir, path),
+        importPath,
+        rootDir,
+    }
+}
+
 class ModuleResolverError extends Error {
     constructor(message: string, module: ResolvedModule) {
         super(formatErrorMeta(`[${module.type}] ${message}`, module));
@@ -62,25 +73,34 @@ class FileNotFound extends ModuleResolverError {
     }
 }
 
-type ResolvedImport = {
+interface ModulePath {
     type: 'local' | 'absolute' | 'node-module' | 'standard-library',
-    path: string
-};
+    path: string;
+}
 
-export class ResolvedModule implements ResolvedImport {
-    public readonly type: ResolvedImport['type'];
+interface ResolvedModulePaths extends ModulePath{
+    relativePath: string;
+    rootDir: string;
+    importPath: string;
+}
+
+export class ResolvedModule implements ResolvedModulePaths {
+    public loggable = true;
+    public readonly type: ModulePath['type'];
     public readonly path: string;
-    protected readonly relativePath: string;
     public readonly isValid: boolean;
+    public readonly rootDir: string;
+    public readonly importPath: string;
+    public readonly relativePath: string;
     protected readonly packageRoot?: string;
     readonly #logger: LoggerInstance;
-    public loggable = true;
     
-    constructor(public readonly importPath: string) {
-        const { path, type } = buildPath(importPath);
-        this.relativePath = Path.relative(ROOT_DIR, path);
+    constructor({ path, relativePath, rootDir, importPath, type }: ResolvedModulePaths) {
+        this.relativePath = relativePath;
+        this.rootDir = rootDir;
         this.type = type;
         this.path = path;
+        this.importPath = importPath;
         
         if (this.type === 'node-module') {
             this.packageRoot = this.importPath.split(Path.sep)[0];
@@ -96,13 +116,13 @@ export class ResolvedModule implements ResolvedImport {
                 invalid: pc.red,
             }[status]
             const statusLabel = color(`(${status})`);
-            const padding = ' '.repeat(Math.max(1, 70 - this.importPath.length - status.length - this.type.length))
+            const padding = ' '.repeat(Math.max(1, 70 - importPath.length - status.length - this.type.length))
             const prefix = [
                 pc.dim(`[${pc.bold(this.type)}]`),
             ].join('')
             const logger = new LoggerInstance({ prefix });
             if (this.loggable) {
-                logger.debug(`${pc.reset(this.importPath)} ${padding + statusLabel}`);
+                logger.debug(`${pc.reset(importPath)} ${padding + statusLabel}`);
             }
             return logger;
         }
@@ -121,7 +141,7 @@ export class ResolvedModule implements ResolvedImport {
         if (!this.packageRoot) {
             return null;
         }
-        return new ResolvedModule(Path.join(this.packageRoot, 'package.json'));
+        return this.resolve('package.json');
     }
     
     public getMainExport() {
@@ -143,7 +163,7 @@ export class ResolvedModule implements ResolvedImport {
     protected resolve(path: string): ResolvedModule {
         const target = Path.join(this.path, path);
         const root = Path.dirname(this.path);
-        return new ResolvedModule(Path.relative(root, target));
+        return new ResolvedModule(resolve(Path.relative(root, target)));
     }
     
     public exists() {
@@ -204,8 +224,8 @@ type ExportField = string | string[] | {
     default?: string
 }
 
-export function resolve(importPath: string) {
-    const module = new ResolvedModule(importPath);
+export function resolve(importPath: string, rootDir?: string): ResolvedModule {
+    const module = new ResolvedModule(resolvePaths(importPath, rootDir));
     
     if (module.isValid) {
         return module;
