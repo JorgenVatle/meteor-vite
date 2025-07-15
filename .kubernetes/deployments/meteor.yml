@@ -45,7 +45,7 @@ spec:
             - name: PORT
               value: '3000'
             - name: ROOT_URL
-              value: '${ROOT_URL}'
+              value: "${ROOT_URL}"
             - name: MONGO_URL
               valueFrom:
                 secretKeyRef:
