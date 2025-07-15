@@ -1,3 +1,4 @@
+import { Logger } from '/imports/api/logger';
 import { formatErrorMeta, LoggerInstance } from '/server/util';
 import FS from 'node:fs';
 import Path from 'node:path';
@@ -181,5 +182,6 @@ type ExportField = string | string[] | {
 }
 
 export function resolve(importPath: string) {
+    Logger.debug(`Resolving import path: ${importPath}`);
     return new ResolvedModule(importPath);
 }
