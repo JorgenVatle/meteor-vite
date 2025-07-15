@@ -1,5 +1,7 @@
+import { Logger } from '/server/util';
 import FS from 'node:fs';
 import Path from 'node:path';
+import vm from 'node:vm';
 
 const ROOT_DIR = '/home/jorgen/projects/meteor-vite/examples/vue';
 
@@ -56,6 +58,27 @@ function assertExists(path: string) {
     }
 }
 
+export class NodeModule extends EntryModule {
+    public readonly module: vm.Module;
+    protected readonly context = vm.createContext({});
+    
+    constructor(protected readonly moduleName: string, exportName = 'index.js') {
+        super(modulePath(Path.join(moduleName, exportName)));
+        this.module = new vm.SourceTextModule(this.sourceText, this.context);
+    }
+    
+    protected readonly linker: vm.ModuleLinker = async (specifier, referrer, importAttributes) => {
+        Logger.info('Resolving module link', { specifier, referrer, importAttributes });
+        return new NodeModule(specifier).module;
+    }
+    
+    public async evaluate() {
+        Logger.info(`Linking module: ${this.moduleName}`);
+        await this.module.link(this.linker);
+        Logger.info(`Evaluating module: ${this.moduleName}`);
+        await this.module.evaluate();
+    }
+}
 
 export const entryModules = {
     meteorEntry: new EntryModule('./main.js'),
