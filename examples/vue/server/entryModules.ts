@@ -33,7 +33,7 @@ class EntryModule {
 
 export class NodeModule {
     protected readonly module: vm.SourceTextModule;
-    protected readonly context = vm.createContext({});
+    protected readonly context = vm.createContext({ module });
     protected readonly text: string;
     
     constructor(protected readonly resolved: ResolvedModule) {
