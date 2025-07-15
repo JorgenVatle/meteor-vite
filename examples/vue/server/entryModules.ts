@@ -54,7 +54,7 @@ export class NodeModule {
     
     public static resolve(specifier: string): Promise<vm.Module> {
         const resolved = resolve(specifier);
-        if (resolved.exists()) {
+        if (resolved.isValid) {
             return new this(resolved).evaluate();
         }
         if (resolved.type === 'node-module') {
