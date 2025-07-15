@@ -22,7 +22,7 @@ function buildPath(path: string, rootDir: string): ModulePath {
             path: path,
         };
     }
-    if (path.includes('node:')) {
+    if (path.startsWith('node:')) {
         return {
             type: 'standard-library',
             path: path.replace('node:', ''),
@@ -89,6 +89,7 @@ export class ResolvedModule implements ResolvedModulePaths {
     public readonly isValid: boolean;
     public readonly rootDir: string;
     public readonly importPath: string;
+    public readonly dirname: string;
     protected readonly packageRoot?: string;
     protected packageJsonData?: object;
     public readonly parsedPath: Path.ParsedPath;
@@ -104,6 +105,10 @@ export class ResolvedModule implements ResolvedModulePaths {
         this.path = path;
         this.importPath = importPath;
         this.parsedPath = parsedPath;
+        this.dirname = importPath;
+        if (parsedPath.ext) {
+            this.dirname = Path.dirname(importPath);
+        }
         
         if (this.type === 'node-module') {
             this.packageRoot = this.importPath.split(Path.sep)[0];
@@ -146,7 +151,7 @@ export class ResolvedModule implements ResolvedModulePaths {
         if (!this.packageRoot) {
             return null;
         }
-        return this.resolve(Path.join(this.packageRoot, './package.json'));
+        return this.resolve('./package.json');
     }
     
     public getMainExport() {
@@ -172,26 +177,29 @@ export class ResolvedModule implements ResolvedModulePaths {
     }
     
     public resolve(path: string): ResolvedModule {
-        const paths = resolvePaths(path);
-        const resolved = new ResolvedModule(paths, this);
+        const { type } = resolvePaths(path);
         
-        if (resolved.isValid) {
-            return resolved;
+        if (type === 'standard-library') {
+            return new ResolvedModule(resolvePaths(path), this);
         }
         
-        if (resolved.type === 'local') {
-            let target = Path.join(this.importPath, path);
-            if (this.parsedPath.ext) {
-                target = Path.join(Path.dirname(this.importPath), path)
+        if (type === 'node-module') {
+            const resolved = new ResolvedModule(resolvePaths(path), this);
+            
+            if (resolved.isValid) {
+                return resolved;
             }
-            return new ResolvedModule(resolvePaths(target), this);
+            
+            return resolved.getMainExport();
         }
         
-        if (resolved.parsedPath.ext) {
-            return resolved;
-        }
+        const resolved = new ResolvedModule(
+            resolvePaths(Path.join(this.dirname, path)),
+            this
+        );
         
-        return resolved.getMainExport();
+        
+        return resolved;
     }
     
     public exists() {
