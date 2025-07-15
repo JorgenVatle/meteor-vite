@@ -13,7 +13,6 @@ const resolveVm: vm.ModuleLinker = async (specifier: string, ref): Promise<vm.Mo
         exports.default = exports;
         const module = new vm.SyntheticModule(Object.keys(exports), function() {
             Object.entries(exports).forEach(([key, value]) => {
-                console.log({ key, value });
                 this.setExport(key, value);
             });
             this.setExport('default', exports);
@@ -28,6 +27,22 @@ const resolveVm: vm.ModuleLinker = async (specifier: string, ref): Promise<vm.Mo
 
         return module;
     }
+    
+    const module = new vm.SourceTextModule(resolvedModule.getText(), {
+        context: ref.context,
+    });
+    
+    await module.link(async (specifier, ref) => {
+        const resolved = resolvedModule.resolve(specifier);
+        const module = new vm.SourceTextModule(resolved.getText(), {
+            context: ref.context,
+        });
+        
+        await module.link(resolveVm);
+        await module.evaluate();
+        return module;
+    });
+    await module.evaluate();
     
     throw new Error(`Unknown module type: ${resolvedModule.type}`)
 }
