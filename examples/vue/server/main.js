@@ -7,7 +7,7 @@ console.log('\n'.repeat(3));
 Logger.info('ℹ️  Starting Meteor Vite Server\n');
 
 import('./vite-ssr.ts').then(async ({ init }) => {
-    await init();
+    console.log('Init result:', await init());
     Logger.info('All should be good');
 }).catch((error) => {
     Logger.error('\n', error);
