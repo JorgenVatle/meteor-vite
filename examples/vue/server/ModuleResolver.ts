@@ -4,15 +4,14 @@ import { builtinModules } from 'node:module';
 import Path from 'node:path';
 import pc from 'picocolors';
 
-const ROOT_DIR = '/home/jorgen/projects/meteor-vite/examples/vue';
-const NODE_MODULES = Path.join(ROOT_DIR, 'node_modules/');
+const LOCAL_ROOT_DIR = '/home/jorgen/projects/meteor-vite/examples/vue';
 
-function buildPath(path: string): ModulePath {
+function buildPath(path: string, rootDir: string): ModulePath {
     if (path.startsWith('.')) {
         return {
             type: 'local',
             path: Path.resolve(
-                ROOT_DIR,
+                rootDir,
                 'server',
                 path
             )
@@ -41,15 +40,15 @@ function buildPath(path: string): ModulePath {
     return {
         type: 'node-module',
         path: Path.resolve(
-            ROOT_DIR,
+            rootDir,
             'node_modules',
             path
         )
     }
 }
 
-function resolvePaths(importPath: string, rootDir = ROOT_DIR): ResolvedModulePaths {
-    const { path, type } = buildPath(importPath);
+function resolvePaths(importPath: string, rootDir = LOCAL_ROOT_DIR): ResolvedModulePaths {
+    const { path, type } = buildPath(importPath, rootDir);
     return {
         type,
         path,
@@ -68,7 +67,7 @@ class ModuleResolverError extends Error {
 
 class FileNotFound extends ModuleResolverError {
     constructor(module: ResolvedModule) {
-        super(`${module.path.replace(ROOT_DIR, pc.dim(ROOT_DIR))}`, module);
+        super(`${module.path.replace(LOCAL_ROOT_DIR, pc.dim(LOCAL_ROOT_DIR))}`, module);
         this.name = 'FileNotFound';
     }
 }
