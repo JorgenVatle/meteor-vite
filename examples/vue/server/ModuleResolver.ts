@@ -1,6 +1,7 @@
 import { formatErrorMeta } from '/server/util';
 import FS from 'node:fs';
 import Path from 'node:path';
+import pc from 'picocolors';
 
 const ROOT_DIR = '/home/jorgen/projects/meteor-vite/examples/vue';
 
@@ -40,7 +41,7 @@ class ModuleResolverError extends Error {
 
 class FileNotFound extends ModuleResolverError {
     constructor(module: ResolvedModule) {
-        super(`${module.path}`, module);
+        super(`${module.path.replace(ROOT_DIR, pc.dim(ROOT_DIR))}`, module);
         this.name = 'FileNotFound';
     }
 }
