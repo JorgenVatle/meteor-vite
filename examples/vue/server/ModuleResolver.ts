@@ -54,12 +54,20 @@ export class ResolvedModule implements ResolvedImport {
     public readonly type: ResolvedImport['type'];
     public readonly path: string;
     protected readonly relativePath: string;
+    public readonly isValid: boolean;
     
     constructor(public readonly importPath: string) {
         const { path, type } = buildPath(importPath);
         this.relativePath = Path.relative(ROOT_DIR, path);
         this.type = type;
         this.path = path;
+        
+        try {
+            this.verifyModule();
+            this.isValid = true;
+        } catch (error) {
+            this.isValid = false;
+        }
     }
     
     public getMainExport() {
@@ -86,13 +94,17 @@ export class ResolvedModule implements ResolvedImport {
         return FS.existsSync(this.path);
     }
     
-    public getText() {
+    public verifyModule() {
         if (!this.exists()) {
             throw new FileNotFound(this);
         }
         if (FS.statSync(this.path).isDirectory()) {
             throw new ModuleResolverError(`Cannot read directory: ${this.relativePath}`, this);
         }
+    }
+    
+    public getText() {
+        this.verifyModule();
         return FS.readFileSync(
             this.path,
             'utf-8'
