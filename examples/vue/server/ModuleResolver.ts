@@ -12,7 +12,6 @@ function buildPath(path: string, rootDir: string): ModulePath {
             type: 'local',
             path: Path.resolve(
                 rootDir,
-                'server',
                 path
             )
         };
@@ -23,7 +22,7 @@ function buildPath(path: string, rootDir: string): ModulePath {
             path: path,
         };
     }
-    if (path.startsWith('node:')) {
+    if (path.includes('node:')) {
         return {
             type: 'standard-library',
             path: path.replace('node:', ''),
@@ -40,7 +39,7 @@ function buildPath(path: string, rootDir: string): ModulePath {
     return {
         type: 'node-module',
         path: Path.resolve(
-            rootDir,
+            LOCAL_ROOT_DIR,
             'node_modules',
             path
         )
@@ -55,12 +54,13 @@ function resolvePaths(importPath: string, rootDir = LOCAL_ROOT_DIR): ResolvedMod
         relativePath: Path.relative(rootDir, path),
         importPath,
         rootDir,
+        parsedPath: Path.parse(path),
     }
 }
 
 class ModuleResolverError extends Error {
     constructor(message: string, module: ResolvedModule) {
-        super(formatErrorMeta(`[${module.type}] ${message}`, module));
+        super(formatErrorMeta([`[${module.type}]`, message,  `(${pc.yellow(module.importPath)} imported by ${module.importedBy?.importPath})`].join(' '), module));
         this.name = 'ModuleResolverError';
     }
 }
@@ -81,6 +81,7 @@ interface ResolvedModulePaths extends ModulePath{
     relativePath: string;
     rootDir: string;
     importPath: string;
+    parsedPath: Path.ParsedPath;
 }
 
 export class ResolvedModule implements ResolvedModulePaths {
@@ -92,14 +93,21 @@ export class ResolvedModule implements ResolvedModulePaths {
     public readonly importPath: string;
     public readonly relativePath: string;
     protected readonly packageRoot?: string;
-    readonly #logger: LoggerInstance;
+    protected packageJsonData?: object;
+    public readonly parsedPath: Path.ParsedPath;
+    readonly #logger: LoggerInstance
+    public readonly importedBy?: ResolvedModule;
     
-    constructor({ path, relativePath, rootDir, importPath, type }: ResolvedModulePaths) {
+    constructor(
+        { path, relativePath, rootDir, importPath, type, parsedPath }: ResolvedModulePaths,
+        importedBy?: ResolvedModule,
+    ) {
         this.relativePath = relativePath;
         this.rootDir = rootDir;
         this.type = type;
         this.path = path;
         this.importPath = importPath;
+        this.parsedPath = parsedPath;
         
         if (this.type === 'node-module') {
             this.packageRoot = this.importPath.split(Path.sep)[0];
@@ -134,35 +142,57 @@ export class ResolvedModule implements ResolvedModulePaths {
             this.isValid = false;
             this.#logger = initLogger('invalid');
         }
+        
+        this.importedBy = importedBy;
     }
     
     protected get packageJson(): ResolvedModule | null {
         if (!this.packageRoot) {
             return null;
         }
-        return this.resolve('package.json');
+        return this.resolve(Path.join(this.packageRoot, './package.json'));
     }
     
     public getMainExport() {
-        const { exports } = this.getPackageJson();
+        const { exports, main } = this.getPackageJson();
+        let exportPath = null;
         if (!exports) {
+            if (main) {
+                return this.resolve(Path.join(this.importPath, main));
+            }
             throw new ModuleResolverError('Missing exports field in package.json', this);
         }
-        let exportPath = null;
+        
         if (exports['.']) {
             exportPath = unwrapExportField(exports['.']);
         }
+        
         if (!exportPath) {
             throw new ModuleResolverError('Missing default export in package.json', this);
         }
+        
         this.#logger.debug('package.json export path:', { exportPath });
         return this.resolve(exportPath);
     }
     
-    protected resolve(path: string): ResolvedModule {
-        const target = Path.join(this.path, path);
-        const root = Path.dirname(this.path);
-        return new ResolvedModule(resolve(Path.relative(root, target)));
+    public resolve(path: string): ResolvedModule {
+        const paths = resolvePaths(path);
+        const resolved = new ResolvedModule(paths, this);
+        if (resolved.isValid) {
+            return resolved;
+        }
+        if (resolved.type === 'local') {
+            let target = Path.join(this.importPath, path);
+            if (this.parsedPath.ext) {
+                target = Path.join(Path.dirname(this.importPath), path)
+            }
+            return new ResolvedModule(resolvePaths(target), this);
+        }
+        if (resolved.parsedPath.ext) {
+            return resolved;
+        }
+        
+        return resolved.getMainExport();
     }
     
     public exists() {
@@ -190,7 +220,7 @@ export class ResolvedModule implements ResolvedModulePaths {
         if (!this.packageJson) {
             throw new ModuleResolverError('No package.json path available!', this);
         }
-        return JSON.parse(this.packageJson.getText());
+        return this.packageJsonData = JSON.parse(this.packageJson.getText());
     }
 }
 

@@ -41,9 +41,9 @@ export class NodeModule {
     }
     
     protected readonly linker: vm.ModuleLinker = async (specifier, referrer, extra) => {
-        const resolved = resolve(specifier);
+        const resolved = this.resolved.resolve(specifier);
         if (resolved.loggable) {
-            Logger.info(`Resolving module link from ${this.resolved.importPath}`, { specifier, referrer, extra });
+            Logger.info(`Resolving ${specifier} (${resolved.type}) specifier from ${this.resolved.importPath}`, { specifier, referrer, extra });
         }
         return new vm.SourceTextModule(resolved.getText(), this.context);
     }
@@ -63,6 +63,6 @@ export class NodeModule {
 }
 
 export const entryModules = {
-    meteorEntry: new EntryModule('./main.js'),
-    serverVm: new EntryModule('./server-vm.mjs'),
+    meteorEntry: new EntryModule('./server/main.js'),
+    serverVm: new EntryModule('./server/server-vm.mjs'),
 };
