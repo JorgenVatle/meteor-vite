@@ -8,11 +8,10 @@ class LoggerInstance {
                 return arg;
             }
             if (arg instanceof Error) {
-                arg.name = pc.bgRed(pc.white(arg.name));
-                arg.message = pc.red(arg.message);
                 return pc.white(arg.stack?.split(/[\r\n]/).map((line, index) => {
                     if (index === 0) {
-                        return line;
+                        const [name, ...message] = line.split(':');
+                        return [pc.bgRed(pc.white(name)), pc.red(message.join(' '))].join(' ');
                     }
                     return pc.white(line);
                 }).join('\n'));

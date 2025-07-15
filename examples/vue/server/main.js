@@ -7,6 +7,7 @@ import('./vite-ssr.ts').then(async ({ init }) => {
     await init();
     Logger.info('All should be good');
 }).catch((error) => {
-    Logger.error('\n\nWell so that didnt work\n\n', error);
-    console.log('\n'.repeat(2));
+    Logger.error('Well so that didnt work\n');
+    Logger.error(error);
+    setTimeout(() => console.log('\n'));
 });
