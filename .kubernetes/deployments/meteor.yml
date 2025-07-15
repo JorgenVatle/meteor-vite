@@ -90,26 +90,4 @@ spec:
     app.kubernetes.io/name: meteor-vite-example
     app.kubernetes.io/component: meteor
     app.kubernetes.io/instance: "${APP_NAME}"
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: "${APP_NAME}"
-  labels:
-    app.kubernetes.io/name: meteor-vite-example
-    app.kubernetes.io/component: meteor
-    app.kubernetes.io/instance: "${APP_NAME}"
-    app.kubernetes.io/version: "${APP_VERSION}"
-spec:
-  rules:
-    - host: "${APP_HOSTNAME}"
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: "${APP_NAME}"
-                port:
-                  number: 3000
 

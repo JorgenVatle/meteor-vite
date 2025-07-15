@@ -4,7 +4,7 @@
 ARG NODE_VERSION="14-alpine"
 
 # Meteor release (Needs to match the release in .meteor/release)
-ARG METEOR_RELEASE="2.12"
+ARG METEOR_RELEASE="2.16"
 
 # Meteor base image name
 ARG METEOR_BASE_IMAGE="geoffreybooth/meteor-base"
@@ -15,11 +15,11 @@ ARG APP_BASENAME
 
 # Node.js production runtime
 # This is the smallest possible image we can use to run the pre-built Meteor bundle.
-FROM node:$NODE_VERSION as nodejs-runtime
-ENV APP_BUNDLE_FOLDER /opt/bundle
-ENV SCRIPTS_FOLDER /docker
+FROM node:$NODE_VERSION AS nodejs-runtime
+ENV APP_BUNDLE_FOLDER=/opt/bundle
+ENV SCRIPTS_FOLDER=/docker
 ARG APP_BASENAME
-ENV APP_BASENAME $APP_BASENAME
+ENV APP_BASENAME=$APP_BASENAME
 
 # Runtime dependencies; (For node-sass, bcrypt etc.)
 RUN apk --no-cache add \
@@ -33,27 +33,28 @@ RUN apk --no-cache add \
 # Meteor.js Base Image
 # Has `meteor` installed for building the production server as well as running any
 # development/testing environments if that's more convenient to use.
-FROM $METEOR_BASE_IMAGE:$METEOR_RELEASE as meteor-base
+FROM $METEOR_BASE_IMAGE:$METEOR_RELEASE AS meteor-base
 ARG APP_BASENAME
 RUN test -n "$APP_BASENAME"
 
-ENV APP_BASENAME $APP_BASENAME
-ENV APP_DIR ./examples/$APP_BASENAME
-ENV METEOR_PACKAGES_FOLDER /root/packages
-ENV NPM_PACKAGES_FOLDER /root/npm-packages
-ENV METEOR_PACKAGE_DIRS $METEOR_PACKAGES_FOLDER
-
-COPY ./packages $METEOR_PACKAGES_FOLDER
-COPY ./npm-packages $NPM_PACKAGES_FOLDER
-COPY ./test-packages/atmosphere/ $METEOR_PACKAGES_FOLDER/
+ENV APP_BASENAME=$APP_BASENAME
+ENV APP_DIR=./examples/$APP_BASENAME
+ENV METEOR_PACKAGES_FOLDER=/root/packages
+ENV NPM_PACKAGES_FOLDER=/root/npm-packages
+ENV METEOR_PACKAGE_DIRS=$METEOR_PACKAGES_FOLDER
 
 # Prepare meteor-vite package for local reference when preparing npm dependencies.
-RUN cd $NPM_PACKAGES_FOLDER/meteor-vite && meteor npm ci && meteor npm link
+COPY ./package*.json /root
+COPY ./npm-packages $NPM_PACKAGES_FOLDER
+RUN cd $NPM_PACKAGES_FOLDER/meteor-vite && meteor npm i && meteor npm link
+
+COPY ./packages $METEOR_PACKAGES_FOLDER
+COPY ./test-packages/atmosphere/ $METEOR_PACKAGES_FOLDER/
 
 WORKDIR $APP_SOURCE_FOLDER
 
 # Meteor.js base image with pre-built npm and atmosphere dependencies
-FROM meteor-base as meteor-bundler
+FROM meteor-base AS meteor-bundler
 
 # Install local and external npm dependencies
 COPY $APP_DIR/package*.json $APP_SOURCE_FOLDER/
@@ -66,7 +67,7 @@ RUN bash $SCRIPTS_FOLDER/build-meteor-bundle.sh
 
 # Meteor Production Server
 # This is what we ship to production.
-FROM nodejs-runtime as production-server
+FROM nodejs-runtime AS production-server
 
 # Import entrypoint script and production bundle
 COPY --from=meteor-bundler $SCRIPTS_FOLDER $SCRIPTS_FOLDER/

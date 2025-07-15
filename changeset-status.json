@@ -7,19 +7,35 @@
           "type": "patch"
         }
       ],
-      "summary": "Update version compatability to prevent installs from Meteor v3 when they should use the 2.0 release. The API is the same, just the underlying bundle strategy that is incompatible.",
-      "id": "tender-kangaroos-report"
+      "summary": "Fix release process",
+      "id": "polite-wombats-decide"
     }
   ],
   "releases": [
     {
       "name": "vite-bundler",
       "type": "patch",
-      "oldVersion": "1.12.12",
+      "oldVersion": "3.0.0-next.4",
       "changesets": [
-        "tender-kangaroos-report"
+        "polite-wombats-decide"
       ],
-      "newVersion": "1.12.13"
+      "newVersion": "3.0.0-next.5"
     }
-  ]
+  ],
+  "preState": {
+    "mode": "pre",
+    "tag": "next",
+    "initialVersions": {
+      "meteor-vite": "1.10.3",
+      "@meteor-vite/plugin-zodern-relay": "1.0.2",
+      "vite-bundler": "2.0.1"
+    },
+    "changesets": [
+      "friendly-years-type",
+      "polite-wombats-decide",
+      "purple-carrots-drum",
+      "tasty-pumas-invent",
+      "two-dolphins-sing"
+    ]
+  }
 }

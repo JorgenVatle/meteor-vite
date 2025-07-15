@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "es2022",
+    "lib": ["es6", "es7"],
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "preserveSymlinks": true,
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "meteor-vite": [
+        "../../npm-packages/meteor-vite/index.d.ts",
+      ],
+      "meteor-vite/*": [
+        "../../npm-packages/meteor-vite/src/*",
+      ],
+    },
+    "skipLibCheck": true
+  },
+  "include": [
+    "vite-bundler/src",
+    "vite-bundler/loading"
+  ]
+}

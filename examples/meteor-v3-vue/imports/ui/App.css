@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.prose {
+    input {
+        @apply border py-1 px-2 rounded font-normal;
+    }
+
+    button {
+        @apply bg-emerald-400 inline-flex items-center justify-center text-white p-2 rounded outline-none border-none text-sm font-bold px-5 text-center;
+    }
+
+    label {
+        @apply font-medium;
+    }
+}

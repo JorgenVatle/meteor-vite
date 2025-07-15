@@ -1,26 +1,23 @@
-import { createErrorHandler } from '../error/ErrorHandler';
-import { validateIpcChannel } from '../meteor/IPC/interface';
-import IpcMethods, { WorkerMethod } from '../meteor/IPC/methods';
+import { DDPConnection } from '../meteor/IPC/DDP';
+import { NodeTransport } from '../meteor/IPC/transports/NodeTransport';
+import { IPC } from '../meteor/IPC/transports/Transport';
+import { DDPTransport } from '../meteor/IPC/transports/DDPTransport';
+import Logger from '../utilities/Logger';
 
-process.on('message', async (message: WorkerMethod) => {
-    if (!message || !message.method) {
-        console.error('Vite: Unrecognized worker IPC message', { message });
-        return;
-    }
-    
-    const callWorkerMethod = IpcMethods[message.method];
-    
-    if (typeof callWorkerMethod !== 'function') {
-        console.error(`Vite: The provided IPC method hasn't been defined yet!`, { message });
-    }
-    
-    await callWorkerMethod((response) => {
-        validateIpcChannel(process.send);
-        process.send(response);
-    }, ...message.params as [params: any]).catch(
-        createErrorHandler('Vite: worker process encountered an exception!')
-    );
-})
+Logger.info('Spawned new Meteor-Vite worker process');
 
+if (process.env.DDP_IPC) {
+    const ddp = new DDPTransport(DDPConnection.init());
+    IPC.addTransport(ddp);
+}
 
-validateIpcChannel(process.send);
+if (process.channel) {
+    const nodeIpc = new NodeTransport();
+    IPC.addTransport(nodeIpc);
+}
+
+IPC.listen().catch((error: unknown) => {
+    Logger.error(error);
+    process.exit(1);
+});
+

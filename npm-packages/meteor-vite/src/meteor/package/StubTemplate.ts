@@ -18,11 +18,11 @@ export function stubTemplate({ requestId, meteorPackage, importPath, stubValidat
     meteorPackage: MeteorPackage;
     importPath?: string;
 }) {
-    const stubId = getStubId();
     const { packageId } = meteorPackage;
     const submodule = meteorPackage.getModule({ importPath });
     const serializedPackage = meteorPackage.serialize({ importPath });
     const fullImportPath = submodule?.fullImportPath || packageId;
+    const stubId = fullImportPath.replace(/[\\\/:]/g, '_');
     
     const stubValidation = stubValidationTemplate({
         packageId,
@@ -35,6 +35,7 @@ export function stubTemplate({ requestId, meteorPackage, importPath, stubValidat
     return`
 // requestId: ${requestId}
 // packageId: ${packageId}
+// stubId: ${stubId}
 
 ${stubValidation.importString}
 const ${TEMPLATE_GLOBAL_KEY} = typeof window !== 'undefined' ? window : global;
@@ -127,13 +128,4 @@ function stubValidationTemplate({ settings, requestId, exportKeys, packageId }: 
         importString,
         validateStub,
     }
-}
-
-/**
- * Unique ID for the next stub.
- * @type {number}
- */
-let nextStubId = 0;
-function getStubId() {
-    return nextStubId++;
 }

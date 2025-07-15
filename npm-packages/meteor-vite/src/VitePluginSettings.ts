@@ -1,8 +1,10 @@
-import { OutputOptions } from 'rollup';
-import { ResolvedConfig } from 'vite';
-import { DeepPartial, MakeOptional, type MakeRequired } from './utilities/GenericTypes';
+import type { OutputOptions } from 'rollup';
+import type { ResolvedConfig } from 'vite';
+import type { DeepPartial, MakeOptional, MakeRequired } from './utilities/GenericTypes';
 
-export interface PluginSettings {
+export interface PluginSettings<
+    TChunkFileNames extends OutputOptions['chunkFileNames'] = undefined
+> {
     /**
      * Vite client entry into Meteor.
      * Not to be confused with your Meteor mainModule.
@@ -10,6 +12,38 @@ export interface PluginSettings {
      * {@link https://github.com/JorgenVatle/meteor-vite#readme}
      */
     clientEntry: string;
+    
+    /**
+     * Enter your Meteor server's entrypoint here to prebuild your Meteor server modules using Vite.
+     * This will not compile your Atmosphere packages, but will build all your app's server modules into
+     * a single file, greatly aiding Meteor in server reload performance during development.
+     *
+     * Not only does this come with improved performance, but also the flexibility of Vite's build system.
+     * The Meteor server is built using Vite SSR mode. To configure just the server builds see
+     * {@link https://vite.dev/config/#conditional-config Conditional Configuration docs}
+     *
+     * @experimental There's still some work left to be done before this is stable without additional configuration.
+     */
+    serverEntry?: string;
+    
+    /**
+     * Failsafe opt-in to prevent experimental features and configuration from taking effect.
+     */
+    enableExperimentalFeatures?: boolean;
+    
+    /**
+     * When building for production, Vite will normally serve static assets from the root of the current domain.
+     * If you have a CDN or use different subdomains for your app, it can be a good idea to set a base URL for
+     * your assets so that your assets are fetched from one consistent URL. This helps with caching and should
+     * reduce load on both your clients and server.
+     */
+    assetsBaseUrl?: string;
+    
+    /**
+     * Root directory to serve Vite assets from in production.
+     * Defaults to /vite-assets.
+     */
+    assetsDir?: string;
     
     /**
      * Skips bundling the provided npm packages if they are already provided by Meteor.
@@ -136,7 +170,7 @@ export interface PluginSettings {
      *
      * Only change this if you are sure you know what you're doing.
      */
-    chunkFileNames?: OutputOptions['chunkFileNames'];
+    chunkFileNames?: TChunkFileNames
 }
 
 export type StubValidationSettings = PluginSettings['stubValidation'];

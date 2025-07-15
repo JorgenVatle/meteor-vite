@@ -7,10 +7,10 @@ on:
         type: string
       meteorRelease:
         type: string
-        default: '2.12'
+        required: false
       nodeVersion:
         type: string
-        default: '14-alpine'
+        required: false
       push:
         type: boolean
         default: false
@@ -19,7 +19,7 @@ on:
         default: ghcr.io
       meteorBaseImage:
         type: string
-        default: geoffreybooth/meteor-base
+        required: false
     outputs:
       deploymentImage:
         value: ${{ jobs.docker.outputs.deploymentImage }}
@@ -27,6 +27,9 @@ on:
         value: ${{ jobs.docker.outputs.imageVersion }}
       meteorRelease:
         value: ${{ jobs.docker.outputs.meteorRelease }}
+
+env:
+  APP_NAME: meteor-v2-${{ inputs.appBasename }}
 
 jobs:
   ubuntu:
@@ -37,13 +40,22 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v3
+
+      - name: 'Setup Node (for building meteor-vite with modern tooling)'
+        uses: actions/setup-node@v4
+        with:
+            node-version: 22
+
       - name: 'Setup Meteor'
         uses: meteorengineer/setup-meteor@v1
         with:
-          meteor-release: ${{ inputs.meteorRelease }}
+          meteor-release: ${{ inputs.meteorRelease || '2.16' }}
 
       - name: 'Install dependencies'
-        run: meteor npm run example install ${{ inputs.appBasename }}
+        run: npm i
+
+      - name: 'Install and link dependencies for `examples/${{ inputs.appBasename }}`'
+        run: meteor npm run example prepare ${{ inputs.appBasename }}
 
       - name: 'Link meteor-vite package'
         run: meteor npm run link ${{ inputs.appBasename }}
@@ -73,7 +85,7 @@ jobs:
         # language="bashpro shell script"
         run: |
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
-          imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ inputs.appBasename }}"
+          imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ env.APP_NAME }}"
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
 
@@ -98,7 +110,7 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build & Push
+      - name: ${{ inputs.push && 'Build & Push' || 'Build' }}
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -110,8 +122,8 @@ jobs:
           cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
           cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
           build-args: |
+            ${{ steps.image.outputs.meteorRelease   &&   format('METEOR_RELEASE={0}', steps.image.outputs.meteorRelease) }}
+            ${{ inputs.meteorBaseImage              &&   format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)         }}
+            ${{ inputs.nodeVersion                  &&   format('NODE_VERSION={0}', inputs.nodeVersion)                  }}
             APP_BASENAME=${{ inputs.appBasename }}
-            METEOR_RELEASE=${{ steps.image.outputs.meteorRelease }}
-            METEOR_BASE_IMAGE=${{ inputs.meteorBaseImage }}
-            NODE_VERSION=${{ inputs.nodeVersion }}
-
+            

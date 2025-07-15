@@ -1,6 +1,6 @@
-import { IPCReply } from '../interface';
+import type { WorkerRuntimeConfig } from '../BackgroundWorker';
 import BuildWorker from './build';
-import ViteServerWorker from './vite-server';
+import ViteServerWorker, { type ViteRuntimeConfig } from './vite-server';
 
 const IpcMethods = {
     ...ViteServerWorker,
@@ -9,24 +9,38 @@ const IpcMethods = {
 
 export default IpcMethods;
 
-export type WorkerMethod = { [key in keyof IPCMethods]: [name: key, method: IPCMethods[key]]
-                           } extends {
-                               [key: string]: [infer Name, infer Method]
-                           } ? Name extends keyof IPCMethods
-                               ? { method: Name, params: Parameters<IPCMethods[Name]> extends [infer Reply, ...infer Params]
-                                                         ? Params
-                                                         : [] }
-                               : never
-                             : never;
+export interface WorkerReplies {
+    buildResult: {
+        payload:
+            | { success: false }
+            | {
+                  success: true;
+                  outDir: string;
+                  meteorViteConfig: any,
+                  output?: { name?: string, type: string, fileName: string }[]
+              };
+    }
+    viteConfig: ViteRuntimeConfig
+    refreshNeeded: void,
+    workerConfig: WorkerRuntimeConfig & { listening: boolean }
+    startSSRWatcher: { serverEntry: string }
+}
 
-export type WorkerResponse = WorkerReplies[keyof IPCMethods][1];
-type WorkerReplies = {
-    [key in keyof IPCMethods]: IPCMethods[key] extends (reply: IPCReply<infer Reply>, ...params: any) => any
-                               ? Reply extends { readonly kind: string, data: {} }
-                                 ? [Reply['kind'], Reply]
-                                 : never
-                               : never;
+export type WorkerResponse<TName extends WorkerReplyKind = WorkerReplyKind> = {
+    kind: TName,
+    data: WorkerReplies[TName]
 };
+
+export type WorkerMethod = {
+    [key in keyof IPCMethods]: {
+        id: string;
+        method: key;
+        params: Parameters<IPCMethods[key]>
+    }
+}[keyof IPCMethods];
+
+
+export type WorkerReplyKind = keyof WorkerReplies;
 
 export type IPCMethods = typeof IpcMethods;
 export type WorkerResponseData<Kind extends WorkerResponse['kind']> = Extract<WorkerResponse, { kind: Kind }>['data']

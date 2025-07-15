@@ -3,6 +3,8 @@ import { onPageLoad } from "meteor/server-render";
 import LinksCollection from '../imports/api/links/links.collection';
 import '../imports/api/links/links.methods';
 import '../imports/api/links/server/links.publications';
+import '../imports/api/relay/publications/chat';
+import '../imports/api/relay/methods/chat';
 
 Meteor.startup(async () => {
   // Code to run on server startup.

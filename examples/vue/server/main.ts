@@ -3,29 +3,29 @@ import { LinksCollection } from '/imports/api/links'
 import '/imports/api/logger';
 import '/imports/api/linksPub'
 
-function insertLink({ title, url }: { title: string, url: string }) {
-  LinksCollection.insert({title, url, createdAt: new Date()})
+async function insertLink({ title, url }: { title: string, url: string }) {
+  await LinksCollection.insertAsync({title, url, createdAt: new Date()})
 }
 
-Meteor.startup(() => {
+Meteor.startup(async () => {
   // If the Links collection is empty, add some data.
-  if (LinksCollection.find().count() === 0) {
-    insertLink({
+  if (await LinksCollection.find().countAsync() === 0) {
+    await insertLink({
       title: 'Do the Tutorial',
       url: 'https://www.meteor.com/tutorials/react/creating-an-app'
     })
 
-    insertLink({
+    await insertLink({
       title: 'Follow the Guide',
       url: 'http://guide.meteor.com'
     })
 
-    insertLink({
+    await insertLink({
       title: 'Read the Docs',
       url: 'https://docs.meteor.com'
     })
 
-    insertLink({
+    await insertLink({
       title: 'Discussions',
       url: 'https://forums.meteor.com'
     })

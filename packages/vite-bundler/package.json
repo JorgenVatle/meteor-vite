@@ -1,7 +1,7 @@
 {
   "name": "vite-bundler",
   "private": true,
-  "version": "1.12.13",
+  "version": "3.0.0",
   "scripts": {
     "publish": "VITE_METEOR_DISABLED=true meteor publish"
   }

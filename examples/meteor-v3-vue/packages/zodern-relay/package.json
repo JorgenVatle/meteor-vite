@@ -1,0 +1,16 @@
+{
+  "name": "relay",
+  "private": true,
+  "description": "",
+  "devDependencies": {
+    "@types/meteor": "^2.7.1",
+    "tsd": "^0.22.0",
+    "typescript": "^4.7.4",
+    "zod": "^3.18.0"
+  },
+  "scripts": {
+    "check-types": "npm install && tsc && tsd ./tests",
+    "postcheck-types": "npm prune --prod"
+  },
+  "license": "MIT"
+}

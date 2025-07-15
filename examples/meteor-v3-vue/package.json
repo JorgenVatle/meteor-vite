@@ -8,22 +8,34 @@
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
   "dependencies": {
+    "@babel/preset-typescript": "^7.24.7",
     "@babel/runtime": "^7.23.5",
+    "@faker-js/faker": "^9.0.3",
+    "@meteor-vite/plugin-zodern-relay": "^1.0.2",
+    "@zodern/babel-plugin-meteor-relay": "^1.1.4",
+    "date-fns": "^4.1.0",
     "meteor-node-stubs": "^1.2.7",
-    "meteor-vite": "^1.7.3",
-    "valibot": "^0.26.0"
+    "meteor-vite": "^2.0.0",
+    "picocolors": "^1.1.0",
+    "valibot": "^0.26.0",
+    "zod": "^3.23.8"
   },
   "meteor": {
     "mainModule": {
       "client": "client/main.js",
-      "server": "server/main.ts"
+      "server": "server/main.js"
     },
     "testModule": "tests/main.js"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
+    "@types/meteor": "^2.9.8",
     "@vitejs/plugin-vue": "^4.6.2",
-    "typescript": "^5.3.3",
-    "vite": "^4.5.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "typescript": "^5.6.2",
+    "vite": "^4.5.5",
     "vue": "^3.4.14"
   }
 }

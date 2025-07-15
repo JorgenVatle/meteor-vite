@@ -15,14 +15,20 @@ on:
         default: ghcr.io
       meteorBaseImage:
         type: string
-        default: geoffreybooth/meteor-base
+        required: false
         description: |
           Meteor base image for bundling. Useful to override if you need a Meteor release not officially
           supported yet by the original geoffreybooth image.
       nodeVersion:
         type: string
-        default: 14-alpine
+        required: false
         description: Node.js Docker image version to use for the final production build.
+
+env:
+  APP_NAME: meteor-v2-${{ inputs.appBasename }}
+  APP_HOSTNAME: ${{ inputs.appBasename }}--meteor-vite.wcaserver.com
+  METEOR_RELEASE: ${{ inputs.meteorRelease }}
+  APP_NAMESPACE: meteor-vite
 jobs:
   build:
     name: Build 🐋
@@ -34,20 +40,15 @@ jobs:
       meteorBaseImage: ${{ inputs.meteorBaseImage }}
       push: true
 
-
   deploy:
     name: Deploy 🚀
     runs-on: ubuntu-latest
     environment:
-      name: ${{ inputs.appBasename }}
+      name: ${{ env.APP_NAME }}
       url: https://${{ env.APP_HOSTNAME }}
     env:
-      APP_NAME: ${{ inputs.appBasename }}
       APP_VERSION: ${{ needs.build.outputs.imageVersion }}
       APP_IMAGE: ${{ needs.build.outputs.deploymentImage }}
-      APP_HOSTNAME: ${{ inputs.appBasename }}--meteor-vite.wcaserver.com
-      APP_NAMESPACE: meteor-vite
-      METEOR_RELEASE: ${{ inputs.meteorRelease }}
     needs:
       - build
     steps:
@@ -55,13 +56,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup kubectl
-        # language="bashpro shell script"
+        # language="bash"
         run: |
           mkdir -p ~/.kube
           echo '${{ secrets.KUBE_CONFIG_DATA }}' | base64 -d > ~/.kube/config
 
       - name: Apply manifest
-        # language="bashpro shell script"
+        # language="bash"
         run: |
           MANIFEST_STORE_PATH='/opt/manifests/deployments'
           DEPLOYMENT_FILE_PATH="$MANIFEST_STORE_PATH/meteor.yml"
@@ -87,6 +88,11 @@ jobs:
           kubectl apply -f "$DEPLOYMENT_FILE_PATH" -n "$APP_NAMESPACE"
 
       - name: Verify deployment
-        # language="bashpro shell script"
+        # language="bash"
         run: |
           kubectl rollout status deployment --watch --timeout 30s -n "$APP_NAMESPACE" "$APP_NAME"
+
+      - name: Update preview ingress
+        # language="bash"
+        run: |
+          node .bin/patch-ingress.mjs

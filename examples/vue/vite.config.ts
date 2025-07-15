@@ -7,6 +7,8 @@ export default defineConfig({
     vue(),
     meteor({
       clientEntry: 'imports/ui/main.ts',
+      serverEntry: 'server/main.ts',
+      enableExperimentalFeatures: true,
       externalizeNpmPackages: ['test-externalization'],
       stubValidation: {
         warnOnly: true,

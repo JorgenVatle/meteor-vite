@@ -1,0 +1,54 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es2018",
+    "module": "esNext",
+    "lib": ["esnext", "dom"],
+    "allowJs": true,
+    "checkJs": false,
+    "jsx": "preserve",
+    "incremental": true,
+    "noEmit": true,
+
+    /* Strict Type-Checking Options */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+
+    /* Additional Checks */
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
+
+    /* Module Resolution Options */
+    "baseUrl": ".",
+    "paths": {
+      /* Support absolute /imports/* with a leading '/' */
+      "/*": ["*"],
+      "meteor/*": [
+        "node_modules/@types/meteor/*",
+        ".meteor/local/types/packages.d.ts"
+      ],
+      "meteor-vite/plugin": ["../../npm-packages/meteor-vite/src/plugin/index.ts"],
+      "vite": ["../../npm-packages/meteor-vite/node_modules/vite/dist/node/index.d.ts"],
+    },
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "types": ["node", "mocha"],
+    "esModuleInterop": true,
+    "preserveSymlinks": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Vite setup */
+    "isolatedModules": true,
+  },
+  "include": [
+    "../../packages/vite-bundler/src/types/*.ts",
+    "./imports/**/*.ts",
+    "./server/**/*.ts",
+    "./client/**/*.ts",
+    "./*.ts"
+  ]
+}

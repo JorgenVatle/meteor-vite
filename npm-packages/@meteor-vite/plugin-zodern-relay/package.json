@@ -1,0 +1,54 @@
+{
+  "name": "@meteor-vite/plugin-zodern-relay",
+  "version": "1.0.6",
+  "description": "Vite compatability plugin for zodern:relay - typed Meteor methods and publications",
+  "main": "dist/Plugin.js",
+  "exports": {
+    ".": {
+      "require": "./dist/Plugin.js",
+      "import": "./dist/Plugin.mjs",
+      "types": "./dist/Plugin.d.ts"
+    },
+    "./stubs/*": [
+      "./stubs/*.js"
+    ]
+  },
+  "files": [
+    "dist",
+    "src",
+    "stubs"
+  ],
+  "scripts": {
+    "lint": "tsc --noEmit",
+    "test": "npm run lint",
+    "build": "tsup",
+    "prepack": "npm run build",
+    "prepare": "npm run build || echo 'Warning: Failed to prepare package!' && exit 0"
+  },
+  "keywords": [
+    "meteor-vite",
+    "meteor",
+    "zodern:relay",
+    "vite",
+    "typescript"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Jørgen Vatle <jorgen@wcaservices.net>",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/JorgenVatle/meteor-vite"
+  },
+  "devDependencies": {
+    "@babel/preset-typescript": "^7.24.7",
+    "@types/babel__core": "^7.20.5",
+    "tsup": "^7.2.0",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.6"
+  },
+  "peerDependencies": {
+    "@babel/core": "^7.0.0",
+    "vite": ">=3.0.0"
+  }
+}

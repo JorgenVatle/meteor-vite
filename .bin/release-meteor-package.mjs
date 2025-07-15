@@ -1,15 +1,17 @@
-import { execSync, spawn } from 'child_process';
+import { execFileSync, execSync, spawn } from 'child_process';
 import Path from 'path';
 import FS from 'fs/promises';
 
 // Assuming this is launched from the repository root for now.
 const repoPath = process.cwd();
 const PACKAGE_NAME_REGEX = /name:\s*'(?<packageName>(?<author>[\w\-._]+):(?<name>[\w\-._]+))'\s*,/;
-const PACKAGE_VERSION_REGEX = /version:\s*'(?<version>[\d\w.-]+)'\s*,/;
+const PACKAGE_VERSION_REGEX = /version:\s*'(?<version>[\d\w.+-]+)'\s*,/;
 const CHANGESET_STATUS_FILE = 'changeset-status.json';
 const meteorPackage = {
     releaseName: 'vite-bundler',
+    username: 'jorgenvatle',
     packageJsPath: Path.join(repoPath, './packages/vite-bundler/package.js'),
+    packageJsonPath: Path.join(repoPath, './packages/vite-bundler/package.json'),
 };
 const logger = {
     _history: [],
@@ -50,8 +52,12 @@ async function parsePackageJs(packageJsPath) {
     }
 }
 
+async function parsePackageJson() {
+    return JSON.parse(await FS.readFile(meteorPackage.packageJsonPath, 'utf-8'));
+}
+
 async function applyVersion() {
-    shell(`changeset status --output ${CHANGESET_STATUS_FILE}`);
+    await shell(`changeset status --output ${CHANGESET_STATUS_FILE}`);
 
     const { releases } = await FS.readFile(`${CHANGESET_STATUS_FILE}`, 'utf-8')
                                  .then((content) => JSON.parse(content));
@@ -65,29 +71,39 @@ async function applyVersion() {
 
     logger.info(`ℹ️  New version ${release.newVersion} for ${meteorPackage.releaseName} detected`);
 
+    await setVersion(release.newVersion);
+
+    await shell(`git add ${meteorPackage.packageJsPath}`);
+    await shell(`git commit -m 'Bump ${meteorPackage.releaseName} version to ${release.newVersion}'`);
+}
+
+async function setVersion(newVersion) {
     const { rawContent, version, name } = await parsePackageJs(meteorPackage.packageJsPath);
     if (!version) {
         throw new Error(`Unable to read version from ${meteorPackage.releaseName} package.js`);
     }
-    const patchedPackageJs = rawContent.replace(PACKAGE_VERSION_REGEX, `version: '${release.newVersion}',`);
+    const patchedPackageJs = rawContent.replace(PACKAGE_VERSION_REGEX, `version: '${newVersion}',`);
     await FS.writeFile(meteorPackage.packageJsPath, patchedPackageJs);
 
-    logger.info(`✅  Changed ${meteorPackage.releaseName} (${name}) version from v${version} to v${release.newVersion}\n`);
-
-    shell(`git add ${meteorPackage.packageJsPath}`);
-    shell(`git commit -m 'Bump ${meteorPackage.releaseName} version to ${release.newVersion}'`);
+    logger.info(`✅  Changed ${meteorPackage.releaseName} (${name}) version from v${version} to v${newVersion}\n`);
 }
 
 async function publish() {
+    const { version } = await parsePackageJson();
+
     logger.info(`⚡  Publishing ${meteorPackage.releaseName}...`);
 
-    let command = `meteor publish`;
-
-    if (process.env.METEOR_RELEASE) {
-        command += ` --release ${process.env.METEOR_RELEASE}`
+    if (await isPublished(version)) {
+        logger.info(`⚠️  Version ${version} is already published to Atmosphere. Skipping...`);
+        return;
     }
 
-    shell(command, {
+
+    const release = execSync('meteor --version').toString().trim();
+    logger.info(`✨  Publishing to Atmosphere with Meteor ${release} release...`);
+    await setVersion(version);
+
+    await shell(`meteor publish --release 2.16`, {
         async: true,
         cwd: Path.dirname(meteorPackage.packageJsPath),
         env: {
@@ -96,6 +112,9 @@ async function publish() {
             ...process.env,
         },
     });
+
+    logger.info(`🚀  Published to Atmosphere: `)
+    logger.info(` L ${meteorPackage.username}:${meteorPackage.releaseName}@${version}`)
 }
 
 function shell(command, options) {
@@ -105,10 +124,54 @@ function shell(command, options) {
         return;
     }
     const [bin, ...args] = command.split(' ');
-    spawn(bin, args, {
+    const childProcess = spawn(bin, args, {
         ...options,
         stdio: 'inherit',
     });
+
+    return new Promise((resolve, reject) => {
+        childProcess.on('close', (code) => {
+            if (code === 0) {
+                resolve();
+            } else {
+                reject(new Error(`Command "${command}" exited with code ${code}`));
+            }
+        });
+    })
+}
+
+/**
+ * Retrieve all published versions of the package from Atmosphere.
+ * @returns {Promise<{
+ *  versions: {
+ *   exports: unknown[];
+ *   implies: unknown[];
+ *   name: string;
+ *   version: string;
+ *   description: string;
+ *   summary: string;
+ *   git: string;
+ *   publishedBy: string;
+ *   publishedOn: {
+ *     $date: number;
+ *   };
+ *   installed: boolean;
+ *   architecturesOS: string[];
+ *   deprecated: boolean;
+ *  }[]
+ *  name: string;
+ *  maintainers: string[];
+ *  totalVersions: number;
+ * }>}
+ */
+async function getPublishedVersions() {
+    const json = execFileSync('meteor', ['show', `${meteorPackage.username}:${meteorPackage.releaseName}`, '--show-all', '--ejson']).toString();
+    return JSON.parse(json);
+}
+
+async function isPublished(version) {
+    const { versions } = await getPublishedVersions();
+    return versions.some((release) => release.version === version);
 }
 
 (async () => {
@@ -128,6 +191,7 @@ function shell(command, options) {
 
 })().catch((error) => {
     const { stdout, stderr } = error;
+    logger.error(error);
 
     if (stdout) {
         logger.info(stdout.toString());

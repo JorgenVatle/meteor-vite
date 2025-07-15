@@ -5,15 +5,18 @@ const RuntimeCollection = new Mongo.Collection<RuntimeDocument>('runtime');
 
 
 Meteor.methods({
-    'runtime.click': () => {
-        const clicks = RuntimeCollection.findOne({ _id: 'clicks' })?.value || 0;
-        RuntimeCollection.upsert({ _id: 'clicks' }, { $set: { value: clicks + 1 } });
+    'runtime.click': async () => {
+        const { value } = (await RuntimeCollection.findOneAsync({ _id: 'clicks' }) || { value: 0 }) as { value: number };
+        RuntimeCollection.upsertAsync({ _id: 'clicks' }, { $set: { _id: 'clicks', value: value + 1 } });
     }
 })
 
-export interface RuntimeDocument {
+export type RuntimeDocument = {
     _id: 'clicks';
     value: number;
+} | {
+    _id: 'time';
+    value: Date;
 }
 
 export default RuntimeCollection;
@@ -27,7 +30,7 @@ Meteor.startup(() => {
         return RuntimeCollection.find();
     });
     
-    Meteor.setInterval(() => {
-        RuntimeCollection.upsert({ _id: 'time' }, { $set: { value: new Date() } })
-    }, 2500);
+    Meteor.setInterval(async () => {
+        await RuntimeCollection.upsertAsync('time', { $set: { value: new Date() } })
+    }, 1000);
 })

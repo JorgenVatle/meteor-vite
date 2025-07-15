@@ -125,10 +125,11 @@ export default class MeteorPackage implements Omit<ParsedPackage, 'packageScopeE
         ] = this.mainModulePath.replace(/^\/+/g, '').split('/');
         
         const modulePath = filePath.join('/');
-        const exports = this.modules[modulePath];
+        let exports = this.modules[modulePath];
         
         if (!exports) {
-            throw new MeteorPackageError(`Could not locate '${this.mainModulePath}' in package!`, this);
+             Logger.warn(new MeteorPackageError(`Could not locate '${this.mainModulePath}' in package!`, this));
+             exports = []
         }
         
         return new PackageSubmodule({
