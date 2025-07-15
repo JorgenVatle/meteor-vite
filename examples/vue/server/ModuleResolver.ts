@@ -115,12 +115,14 @@ export class ResolvedModule implements ResolvedImport {
         if (!exportPath) {
             throw new ModuleResolverError('Missing default export in package.json', this);
         }
-        return resolve(
-            Path.join(
-                this.relativePath,
-                exportPath
-            )
-        )
+        this.#logger.debug('package.json export path:', { exportPath });
+        return this.resolve(exportPath);
+    }
+    
+    protected resolve(path: string): ResolvedModule {
+        const target = Path.join(this.path, path);
+        const root = Path.dirname(this.path);
+        return new ResolvedModule(Path.relative(root, target));
     }
     
     public exists() {
