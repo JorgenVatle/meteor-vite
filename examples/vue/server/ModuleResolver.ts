@@ -199,6 +199,9 @@ export class ResolvedModule implements ResolvedModulePaths {
     }
     
     public verifyModule() {
+        if (this.type === 'standard-library') {
+            return;
+        }
         if (!this.exists()) {
             throw new FileNotFound(this);
         }
