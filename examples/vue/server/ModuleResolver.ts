@@ -1,4 +1,4 @@
-import { formatErrorMeta, Logger } from '/server/util';
+import { formatErrorMeta, LoggerInstance } from '/server/util';
 import FS from 'node:fs';
 import Path from 'node:path';
 import pc from 'picocolors';
@@ -56,6 +56,7 @@ export class ResolvedModule implements ResolvedImport {
     public readonly path: string;
     protected readonly relativePath: string;
     public readonly isValid: boolean;
+    protected readonly logger: LoggerInstance;
     
     constructor(public readonly importPath: string) {
         const { path, type } = buildPath(importPath);
@@ -63,15 +64,31 @@ export class ResolvedModule implements ResolvedImport {
         this.type = type;
         this.path = path;
         
+        const initLogger = (status: 'valid' | 'invalid') => {
+            const color = {
+                valid: pc.green,
+                invalid: pc.red,
+            }[status]
+            const statusLabel = color(`(${status})`);
+            const prefix = [
+                pc.dim(`[${pc.bold(this.type)}]`)
+            ].join('')
+            const logger = new LoggerInstance({ prefix, suffix: statusLabel });
+            logger.debug(`${this.importPath}`);
+            return logger;
+        }
+        
+        
         try {
             this.verifyModule();
             this.isValid = true;
-            Logger.debug(`Resolved ${pc.green(pc.underline('valid'))} module: ${this.importPath}`)
+            this.logger = initLogger('valid');
         } catch (error) {
             this.isValid = false;
-            Logger.debug(`Resolved ${pc.red(pc.underline('invalid'))} module: ${this.importPath}`)
+            this.logger = initLogger('invalid');
         }
     }
+    
     
     public getMainExport() {
         const { exports } = this.getPackageJson();

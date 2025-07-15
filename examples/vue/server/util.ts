@@ -1,7 +1,11 @@
 import { inspect } from 'node:util';
 import pc from 'picocolors';
 
-class LoggerInstance {
+export class LoggerInstance {
+    
+    constructor(protected readonly options: { prefix?: string, suffix?: string } = {}) {
+    }
+    
     protected log(level: keyof Pick<typeof console, 'info' | 'warn' | 'error' | 'debug'>, args: any[]) {
         let colorize = (value: string) => value;
         
@@ -9,7 +13,7 @@ class LoggerInstance {
             colorize = pc.dim;
         }
         
-        console[level]?.apply({}, args.map((arg) => {
+        const formattedArgs = args.map((arg) => {
             if (typeof arg === 'string') {
                 return colorize(arg);
             }
@@ -23,8 +27,19 @@ class LoggerInstance {
                 }).join('\n'));
             }
             return inspect(arg, { depth: 3, colors: true, getters: true });
-        }));
+        });
+        
+        if (this.options.prefix) {
+            formattedArgs.unshift(this.options.prefix);
+        }
+        
+        if (this.options.suffix) {
+            formattedArgs.push(this.options.suffix);
+        }
+        
+        console[level]?.apply({}, formattedArgs);
     }
+    
     public info(...args: any[]) {
         this.log('info', args);
     }
