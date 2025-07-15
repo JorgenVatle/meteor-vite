@@ -30,12 +30,14 @@ const resolveVm: vm.ModuleLinker = async (specifier: string, ref): Promise<vm.Mo
     
     const module = new vm.SourceTextModule(resolvedModule.getText(), {
         context: ref.context,
+        identifier: resolvedModule.id,
     });
     
     await module.link(async (specifier, ref) => {
         const resolved = resolvedModule.resolve(specifier);
         const module = new vm.SourceTextModule(resolved.getText(), {
             context: ref.context,
+            identifier: resolved.id,
         });
         
         await module.link(resolveVm);
