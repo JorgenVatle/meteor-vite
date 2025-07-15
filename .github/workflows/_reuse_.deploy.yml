@@ -44,7 +44,7 @@ jobs:
     name: Deploy 🚀
     runs-on: ubuntu-latest
     environment:
-      name: ${{ env.APP_NAME }}
+      name: meteor-v2-${{ inputs.appBasename }}
       url: https://${{ env.APP_HOSTNAME }}
     env:
       APP_VERSION: ${{ needs.build.outputs.imageVersion }}
