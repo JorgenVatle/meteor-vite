@@ -93,7 +93,7 @@ jobs:
       - name: Verify deployment
         # language="bash"
         run: |
-          kubectl rollout status deployment --watch --timeout 30s -n "$APP_NAMESPACE" "$APP_NAME"
+          kubectl rollout status deployment --watch --timeout 60s -n "$APP_NAMESPACE" "$APP_NAME"
 
       - name: Update preview ingress
         # language="bash"
