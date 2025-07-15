@@ -10,7 +10,7 @@ function buildPath(path: string, rootDir: string): ModulePath {
     if (path.startsWith('.')) {
         return {
             type: 'local',
-            path: Path.resolve(
+            path: Path.join(
                 rootDir,
                 path
             )
@@ -38,7 +38,7 @@ function buildPath(path: string, rootDir: string): ModulePath {
     
     return {
         type: 'node-module',
-        path: Path.resolve(
+        path: Path.join(
             LOCAL_ROOT_DIR,
             'node_modules',
             path
@@ -226,7 +226,7 @@ export class ResolvedModule implements ResolvedModulePaths {
     
     public getText() {
         if (this.type === 'standard-library') {
-            return '';
+            throw new Error('Cannot read text from standard library module');
         }
         this.verifyModule();
         return FS.readFileSync(
@@ -273,7 +273,7 @@ type ExportField = string | string[] | {
 }
 
 export function resolve(importPath: string, rootDir?: string): ResolvedModule {
-    const module = new ResolvedModule(resolvePaths(importPath, rootDir));
+    const module = new ResolvedModule(resolvePaths(importPath));
     
     if (module.isValid) {
         return module;
