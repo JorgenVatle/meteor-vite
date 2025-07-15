@@ -22,10 +22,10 @@ static-html@1.3.2             # Define static page content in .html files
 ostrio:cookies
 zodern:types
 
-jorgenvatle:vite-bundler@3.0.0
+# jorgenvatle:vite-bundler@3.0.0
 
-test:lazy
-test:modules
-test:ts-modules
-test:stub-validation
-test:duplicate-npm-dependencies
+# test:lazy
+# test:modules
+# test:ts-modules
+# test:stub-validation
+# test:duplicate-npm-dependencies
