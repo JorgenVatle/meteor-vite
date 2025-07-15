@@ -178,9 +178,11 @@ export class ResolvedModule implements ResolvedModulePaths {
     public resolve(path: string): ResolvedModule {
         const paths = resolvePaths(path);
         const resolved = new ResolvedModule(paths, this);
+        
         if (resolved.isValid) {
             return resolved;
         }
+        
         if (resolved.type === 'local') {
             let target = Path.join(this.importPath, path);
             if (this.parsedPath.ext) {
@@ -188,6 +190,7 @@ export class ResolvedModule implements ResolvedModulePaths {
             }
             return new ResolvedModule(resolvePaths(target), this);
         }
+        
         if (resolved.parsedPath.ext) {
             return resolved;
         }
