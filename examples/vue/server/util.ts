@@ -1,13 +1,25 @@
 import FS from 'node:fs';
 import Path from 'node:path';
 
-const modulePath = (...path: string[]) => Path.join('/home/jorgen/projects/meteor-vite/examples/vue/server', ...path);
+const ROOT_DIR = '/home/jorgen/projects/meteor-vite/examples/vue';
+
+function modulePath(...parts: string[]) {
+    const path = Path.join(ROOT_DIR, 'server', ...parts);
+    assertExists(path);
+    return path;
+}
 
 function importRaw(path: string) {
     if (path.startsWith('.')) {
         return FS.readFileSync(modulePath(path), 'utf-8');
     }
     return FS.readFileSync(modulePath('../node_modules', path), 'utf-8');
+}
+
+function assertExists(path: string) {
+    if (!FS.existsSync(path)) {
+        throw new Error(`File not found: ${Path.relative(ROOT_DIR, path)}\n\n`);
+    }
 }
 
 class EntryModule {
