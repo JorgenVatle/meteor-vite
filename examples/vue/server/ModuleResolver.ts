@@ -1,4 +1,4 @@
-import { formatErrorMeta } from '/server/util';
+import { formatErrorMeta, Logger } from '/server/util';
 import FS from 'node:fs';
 import Path from 'node:path';
 import pc from 'picocolors';
@@ -66,8 +66,10 @@ export class ResolvedModule implements ResolvedImport {
         try {
             this.verifyModule();
             this.isValid = true;
+            Logger.debug(`Resolved ${pc.green(pc.underline('valid'))} module: ${this.importPath}`)
         } catch (error) {
             this.isValid = false;
+            Logger.debug(`Resolved ${pc.red(pc.underline('invalid'))} module: ${this.importPath}`)
         }
     }
     
