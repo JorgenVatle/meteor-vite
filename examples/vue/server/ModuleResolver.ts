@@ -100,9 +100,9 @@ export class ResolvedModule implements ResolvedImport {
             const prefix = [
                 pc.dim(`[${pc.bold(this.type)}]`),
             ].join('')
-            const logger = new LoggerInstance({ prefix, suffix: padding + statusLabel });
+            const logger = new LoggerInstance({ prefix });
             if (this.loggable) {
-                logger.debug(`${pc.reset(this.importPath)}`);
+                logger.debug(`${pc.reset(this.importPath)} ${padding + statusLabel}`);
             }
             return logger;
         }
