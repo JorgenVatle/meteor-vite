@@ -65,6 +65,7 @@ export class ResolvedModule implements ResolvedImport {
     public readonly isValid: boolean;
     protected readonly packageRoot?: string;
     readonly #logger: LoggerInstance;
+    public loggable = true;
     
     constructor(public readonly importPath: string) {
         const { path, type } = buildPath(importPath);
@@ -74,6 +75,10 @@ export class ResolvedModule implements ResolvedImport {
         
         if (this.type === 'node-module') {
             this.packageRoot = this.importPath.split(Path.sep)[0];
+        }
+        
+        if (this.type === 'standard-library') {
+            this.loggable = false;
         }
         
         const initLogger = (status: 'valid' | 'invalid') => {
@@ -87,7 +92,7 @@ export class ResolvedModule implements ResolvedImport {
                 pc.dim(`[${pc.bold(this.type)}]`),
             ].join('')
             const logger = new LoggerInstance({ prefix, suffix: padding + statusLabel });
-            if (this.type !== 'standard-library') {
+            if (this.loggable) {
                 logger.debug(`${pc.reset(this.importPath)}`);
             }
             return logger;

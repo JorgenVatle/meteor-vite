@@ -39,9 +39,8 @@ export class NodeModule {
         this.module = new vm.SourceTextModule(this.resolved.getText(), this.context);
     }
     
-    protected readonly linker: vm.ModuleLinker = async (specifier, referrer, importAttributes) => {
-        Logger.info('Resolving module link', { specifier, referrer, importAttributes });
-        return NodeModule.resolve(specifier);
+    protected readonly linker: vm.ModuleLinker = async (specifier, referrer, extra) => {
+        return NodeModule.resolve(specifier, referrer, extra);
     }
     
     public async evaluate() {
@@ -52,8 +51,11 @@ export class NodeModule {
         return this.module;
     }
     
-    public static resolve(specifier: string): Promise<vm.Module> {
+    public static resolve(specifier: string, referrer?: vm.Module, extra?: {}): Promise<vm.Module> {
         const resolved = resolve(specifier);
+        if (resolved.loggable) {
+            Logger.info('Resolving module link', { specifier, referrer, extra });
+        }
         if (resolved.isValid) {
             return new this(resolved).evaluate();
         }
