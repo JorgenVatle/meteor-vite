@@ -112,8 +112,8 @@ export class ResolvedModule implements ResolvedModulePaths {
         }
         
         if (this.type === 'node-module') {
-            this.packageRoot = this.importPath.split(Path.sep)[0];
-            this.id = Path.join(this.packageRoot, this.importPath);
+            this.packageRoot = this.path.replace(Path.join(LOCAL_ROOT_DIR, 'node_modules') + '/', '');
+            this.id = `npm:${this.packageRoot}`;
         } else if (this.type === 'standard-library') {
             this.id = `node:${this.importPath}`;
         } else {
