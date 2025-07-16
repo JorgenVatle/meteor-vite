@@ -1,5 +1,14 @@
 # meteor-vite
 
+> [!WARNING]
+> You are viewing the documentation for the **Meteor v2** support branch of Meteor-Vite. 
+> This version is a lot bulkier and can be unstable during development as it functions
+> a lot differently from the newer releases for Meteor v3. In production, the differences
+> are minimal, however.
+> 
+> If you are using Meteor v3+ - you should instead use [`jorgenvatle:vite`](https://packosphere.com/jorgenvatle/vite) 
+> and [`meteor-vite@3`](https://www.npmjs.com/package/meteor-vite) 
+
 Use [Vite](https://vitejs.dev) in your Meteor app! ⚡️
 
 ## Key features
@@ -33,10 +42,14 @@ Use [Vite](https://vitejs.dev) in your Meteor app! ⚡️
 
 ## Installation
 
+> [!IMPORTANT]
+> Meteor v2 is limited to Node.js 14, being the last Node release before Fibers were dropped. This limits us to Vite 
+> v4 which is the last version with support for Node 14.
+
 ```sh
 # Install Meteor-Vite and Vite with npm
-meteor npm i meteor-vite
-meteor npm i -D vite 
+meteor npm i meteor-vite@2
+meteor npm i -D vite@4
 
 # Add the Meteor-Vite build plugin to your Meteor dependencies.
 meteor add jorgenvatle:vite-bundler
