@@ -54,6 +54,7 @@ jobs:
     env:
       APP_VERSION: ${{ needs.build.outputs.imageVersion }}
       APP_IMAGE: ${{ needs.build.outputs.deploymentImage }}
+      METEOR_VERSION: ${{ needs.build.outputs.meteorRelease }}
     needs:
       - build
     steps:
