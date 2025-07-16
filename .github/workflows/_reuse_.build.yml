@@ -115,8 +115,8 @@ jobs:
           cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
           cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
           build-args: |
-            ${{ steps.image.outputs.meteorRelease   &&   format('METEOR_RELEASE={0}', steps.image.outputs.meteorRelease) }}
-            ${{ inputs.meteorBaseImage              &&   format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)         }}
-            ${{ inputs.nodeVersion                  &&   format('NODE_VERSION={0}', inputs.nodeVersion)                  }}
+            ${{ inputs.meteorBaseImage   && format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)   }}
+            ${{ inputs.nodeVersion       && format('NODE_VERSION={0}', inputs.nodeVersion)            }}
+            METEOR_RELEASE=${{ steps.image.outputs.meteorRelease }}
             APP_BASENAME=${{ inputs.appBasename }}
-
+            
