@@ -2,6 +2,7 @@ import { FatalMeteorViteError } from '@/internals/error/MeteorViteError';
 import type { PartialPluginConfig } from '@/plugin';
 import { mergeMeteorPluginSettings, mergeViteSettings } from '@/plugin/lib/MergeConfig';
 import { parseConfig } from '@/plugin/lib/ParseConfig';
+import { trimLeadingSlash } from '@/utilities/server';
 import { envOverride } from '@/utilities/server/EnvFlag';
 import Path from 'path';
 import pc from 'picocolors';
@@ -77,7 +78,7 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
             );
             const base = envOverride(
                 'METEOR_VITE_BASE_URL',
-                pluginSettings.assetsBaseUrl ?? userConfig.base ?? `/${pluginSettings.assetsDir}`
+                pluginSettings.assetsBaseUrl ?? userConfig.base ?? `/${trimLeadingSlash(pluginSettings.assetsDir)}`
             );
             
             const mergedUserConfig = mergeViteSettings(userConfig, {
