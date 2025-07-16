@@ -3,7 +3,7 @@ import type { PartialPluginConfig } from '@/plugin';
 import { mergeMeteorPluginSettings, mergeViteSettings } from '@/plugin/lib/MergeConfig';
 import { parseConfig } from '@/plugin/lib/ParseConfig';
 import { trimLeadingSlash } from '@/utilities/server';
-import { envOverride } from '@/utilities/server/EnvFlag';
+import { debugEnabled, envOverride } from '@/utilities/server/EnvFlag';
 import Path from 'path';
 import pc from 'picocolors';
 import type { Plugin } from 'vite';
@@ -53,7 +53,7 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
                         buildProgramsPath: Path.join(METEOR_LOCAL_DIR, 'build', 'programs'),
                         isopackPath: Path.join(METEOR_LOCAL_DIR, 'isopacks'),
                     },
-                    debug: !!process.env.METEOR_VITE_STUBS_DEBUG,
+                    debug: debugEnabled('meteor-vite', 'stubs'),
                 },
                 tempDir: Path.join(METEOR_LOCAL_DIR, 'vite'),
                 assetsDir: 'vite',
