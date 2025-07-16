@@ -17,7 +17,10 @@ export function envFlag<T extends keyof NodeJS.ProcessEnv>(flag: T, { defaultVal
     }
 }
 
-export function envOverride<T extends keyof NodeJS.ProcessEnv>(key: T, defaultValue: NodeJS.ProcessEnv[T]) {
+export function envOverride<
+    TKey extends keyof NodeJS.ProcessEnv,
+    TDefaultValue
+>(key: TKey, defaultValue: TDefaultValue) {
     const value = process.env[key];
     if (typeof value === 'undefined') {
         return defaultValue;
