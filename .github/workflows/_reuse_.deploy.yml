@@ -25,10 +25,10 @@ on:
         description: Node.js Docker image version to use for the final production build.
 
 env:
-  APP_NAME: meteor-v2-${{ inputs.appBasename }}
-  METEOR_RELEASE: ${{ inputs.meteorRelease }}
   APP_NAMESPACE: meteor-vite
-  ROOT_URL: https://meteor-vite-preview.wcaserver.com/meteor-v2-${{ inputs.appBasename }}/
+  METEOR_RELEASE: ${{ inputs.meteorRelease }}
+  APP_NAME: ${{ github.ref_name }}-${{ inputs.appBasename }}
+  ROOT_URL: https://meteor-vite-preview.wcaserver.com/${{ github.ref_name }}/${{ inputs.appBasename }}/
 jobs:
   build:
     name: Build 🐋
@@ -47,7 +47,7 @@ jobs:
       group: ${{ github.workflow }}-${{ inputs.appBasename }}
 
     environment:
-      name: meteor-v2-${{ inputs.appBasename }}
+      name: ${{ github.ref_name }}-${{ inputs.appBasename }}
       url: ${{ env.ROOT_URL }}
     env:
       APP_VERSION: ${{ needs.build.outputs.imageVersion }}
