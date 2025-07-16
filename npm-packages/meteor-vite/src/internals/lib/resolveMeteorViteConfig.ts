@@ -1,12 +1,10 @@
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
+import { resolveMainModules } from '@/internals/lib/EntryModule/helpers/resolve';
 import { parsePackageJson } from '@/internals/lib/parsePackageJson';
-import { setupClientMainModule } from '@/internals/scripts/setupClientMainModule';
-import { setupServerMainModule } from '@/internals/scripts/setupServerMainModule';
 
 import type { ResolvedViteConfig } from '@/plugin';
 
 import { meteorWorker } from '@/plugin/vite-plugins/meteorWorker';
-import Path from 'path';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
 import Instance from './MeteorViteRuntime';
 
@@ -76,6 +74,8 @@ export async function resolveMeteorViteConfig(
         Instance.logger.warn('See the readme for an example: https://github.com/JorgenVatle/meteor-vite?tab=readme-ov-file#vite-config')
     }
     
+    const mainModule = resolveMainModules({ packageJson, userConfig });
+    
     const config = {
         ...inlineConfig,
         meteor: userConfig.meteor,
@@ -106,7 +106,7 @@ export async function resolveMeteorViteConfig(
                 },
                 resolve: {
                     external: true,
-                    noExternal: ['meteor-vite', ...METEOR_VITE_RUNTIME_DEPENDENCIES]
+                    noExternal: command === 'build' ? METEOR_VITE_RUNTIME_DEPENDENCIES : [],
                 },
                 build: {
                     target: 'node21',
@@ -117,10 +117,7 @@ export async function resolveMeteorViteConfig(
                     rollupOptions: {
                         external: [/^meteor\//],
                         input: {
-                            main: setupServerMainModule({
-                                meteorMainModule: packageJson.meteor.mainModule.server,
-                                viteMainModule: viteServerMainModule,
-                            }),
+                            main: mainModule.vite.server.path,
                         },
                         output: {
                             // Unfortunately Meteor still doesn't support
@@ -135,23 +132,13 @@ export async function resolveMeteorViteConfig(
                 build: {
                     rollupOptions: {
                         input: {
-                            main: setupClientMainModule({
-                                viteMainModule: userConfig.meteor.clientEntry,
-                                modulePreload: inlineConfig.build?.modulePreload
-                            }),
+                            main: mainModule.vite.client.path,
                         },
                     }
                 }
             }
         },
     } satisfies InlineConfig & Pick<ResolvedViteConfig, 'meteor'>;
-    
-    const modules = {
-        clientEntry: Path.relative(projectRoot,
-            CurrentConfig.clientEntryModule || config.meteor.clientEntry /* <- Addresses older versions of jorgenvatle:vite */
-        ),
-        serverEntry: config.meteor?.serverEntry && Path.resolve(config.meteor.serverEntry),
-    }
     
     return {
         config,
@@ -160,7 +147,7 @@ export async function resolveMeteorViteConfig(
         assetsDir: userConfig.meteor.assetsDir,
         needsReactPreamble,
         viteServerMainModule,
-        modules,
+        mainModule,
         isSimulatedProduction,
     }
 }
@@ -176,6 +163,7 @@ const WRAP_ANSI_DEPS = [
 ]
 const METEOR_VITE_RUNTIME_DEPENDENCIES = [
     'picocolors',
+    'meteor-vite',
     ...WRAP_ANSI_DEPS,
 ]
 

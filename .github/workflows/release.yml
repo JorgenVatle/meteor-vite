@@ -43,13 +43,6 @@ jobs:
       - name: 'Install Dependencies'
         run: |
           meteor npm i
-          meteor npm run install:meteor-vite
-          npm i -w npm-packages/@meteor-vite/plugin-zodern-relay
-
-      - name: 'Build packages'
-        run: |
-          npm run build:jorgenvatle:vite
-          meteor npm run build:meteor-vite
 
       - name: 'Create Release'
         id: changesets

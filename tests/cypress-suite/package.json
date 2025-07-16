@@ -1,0 +1,17 @@
+{
+  "name": "cypress-suite",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "cypress": "^14.5.1",
+    "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup": "sh bin/setup.sh",
+    "start": "sh bin/start.sh"
+  },
+  "author": "Jørgen Vatle <Jorgen@WcAServices.net> (https://github.com/JorgenVatle)",
+  "license": "ISC",
+  "description": ""
+}

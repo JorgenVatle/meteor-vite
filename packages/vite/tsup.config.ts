@@ -1,6 +1,6 @@
-import { defineBuildConfig } from '../../build/defineBuildConfig';
+import { defineBuildConfig } from '../../npm-packages/@meteor-vite/toolkit/dist/index.mjs';
 
-export default defineBuildConfig(__dirname, {
+export default defineBuildConfig(import.meta.dirname, {
     name: 'jorgenvatle:vite',
     entry: [
         './src/entry/server-runtime.ts',

@@ -1,6 +1,6 @@
 {
   "name": "meteor-vite",
-  "version": "3.9.0-beta.0",
+  "version": "3.9.0-beta.1",
   "description": "Vite compatability plugin for Meteor v3",
   "files": [
     "dist"
@@ -12,12 +12,6 @@
       "import": "./dist/plugin.mjs",
       "require": "./dist/plugin.js",
       "default": "./dist/plugin.mjs"
-    },
-    "./utilities/*": {
-      "types": "./dist/utilities/*.d.mts",
-      "import": "./dist/utilities/*.mjs",
-      "require": "./dist/utilities/*.js",
-      "default": "./dist/utilities/*.mjs"
     },
     "./client": {
       "types": "./dist/client.d.mts",
@@ -38,8 +32,8 @@
   },
   "scripts": {
     "start": "ts-node-dev src/bin/debug/watch-mocks.ts",
-    "watch": "tsup --watch --dts --sourcemap",
-    "build": "tsup",
+    "watch": "npm run build -- --watch",
+    "build": "toolkit build",
     "clean": "rm -rf ./dist",
     "prepack": "npm run build",
     "test": "vitest",
@@ -65,16 +59,19 @@
     "p-limit": "^3.1.0",
     "picocolors": "^1.1.1",
     "semver": "^7.6.3",
+    "source-map-support": "^0.5.21",
     "wrap-ansi": "^9.0.0"
   },
   "devDependencies": {
     "@babel/generator": "^7.23.6",
     "@babel/types": "^7.22.5",
+    "@meteor-vite/toolkit": "^1.0.0",
     "@microsoft/api-extractor": "^7.52.8",
     "@types/babel__generator": "^7.6.8",
     "@types/meteor": "^2.9.8",
     "@types/node": "^20.3.3",
     "@types/semver": "^7.5.8",
+    "@types/source-map-support": "^0.5.10",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
     "vite": "^6.3.5",

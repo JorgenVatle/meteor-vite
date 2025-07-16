@@ -1,5 +1,9 @@
 /// <reference types="vite/client" />
+import Instance from '@/internals/lib/MeteorViteRuntime';
+import { resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import { ViteBundleLogger as Logger } from '@/utilities/server';
+import { WebApp } from 'meteor/webapp';
+import { createServer, createServerModuleRunner } from 'vite';
 
 export async function startDevServer() {
     /**
@@ -14,10 +18,34 @@ export async function startDevServer() {
         return;
     }
     
-    await import ('@/server-entry/development').catch((error) => {
-        Logger.warn('Failed to start Vite dev server!');
-        throw error;
-    });
+    const { config, mainModule } = await resolveMeteorViteConfig({
+        mode: 'development',
+    }, 'serve');
+    
+    const server = await createServer(config);
+    
+    await server.warmupRequest(mainModule.vite.client.path);
+    
+    // ⚡ [Server] Transform and load the Meteor main module using Vite.
+    if (mainModule.vite.server) {
+        const runner = createServerModuleRunner(server.environments.server);
+        Instance.logger.info(`Loading server entry: ${mainModule.vite.server.path}`);
+        
+        // HMR listener to clean up side-effects from things like
+        // Meteor.publish(), new Mongo.Collection(), etc. on server-side hot reload.
+        try {
+            await runner.import(mainModule.vite.server.path);
+        } catch (error) {
+            if (error instanceof Error) {
+                server.ssrFixStacktrace(error);
+            }
+            throw error;
+        }
+    }
+    
+    // ⚡ [Vite] Bind Vite to Meteor's Express app to serve modules and assets to clients.
+    WebApp.handlers.use(server.middlewares);
+    Instance.printUrls(config);
     
     Logger.success('Vite should be ready to go!');
 }

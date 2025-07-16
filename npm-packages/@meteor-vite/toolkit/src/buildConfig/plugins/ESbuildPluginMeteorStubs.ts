@@ -1,8 +1,6 @@
-import Path from 'node:path';
+import type { ESBuildPlugin } from '@/buildConfig';
 import pc from 'picocolors';
-import type { Options } from 'tsup';
-
-type Plugin = Required<Options>['esbuildPlugins'][number];
+import { log } from '../log';
 
 /**
  * Intercept Meteor imports and inject an ESBuild-compatible module that
@@ -20,41 +18,6 @@ export const EsbuildPluginMeteorStubs = meteorImportStubs({
 });
 
 
-const log = (...messages: unknown[]) => {
-    console.log(...messages.map((message) => {
-        if (typeof message === 'string') {
-            return pc.cyan(message);
-        }
-        return message;
-    }));
-}
-
-/**
- * Rewrite meteor-vite imports to enforce imports using ESM instead of
- * CommonJS.
- */
-export function fixBuildPluginCjsImports(): Plugin {
-    return {
-        name: 'fix-build-plugin-cjs-imports',
-        setup(build) {
-            build.onResolve({ filter: /^meteor-vite/ }, (args) => {
-                const parsed = Path.parse(args.path);
-                const packageRoot = parsed.dir;
-                const relativePath = Path.relative('meteor-vite', args.path);
-                
-                const newPath = Path.join('meteor-vite', 'dist', `${relativePath}.mjs`);
-                
-                log(`Rewriting external ${pc.yellow(packageRoot)} import for Meteor build plugin: ${pc.blue(args.path)} -> ${pc.green(newPath)}`);
-                
-                return {
-                    path: newPath,
-                    external: true,
-                }
-            })
-        }
-    } satisfies Plugin;
-}
-
 /**
  * Create stubs for Meteor imports paths.
  * Since ESBuild doesn't have access to the Meteor module graph, this can be
@@ -63,7 +26,7 @@ export function fixBuildPluginCjsImports(): Plugin {
  */
 function meteorImportStubs(packages: {
     [key in string]: (symbol: string) => string;
-}): Plugin {
+}): ESBuildPlugin {
     const filter = /^meteor\//;
     let stubId = 0;
     return {
@@ -92,5 +55,5 @@ function meteorImportStubs(packages: {
                 }
             })
         }
-    } satisfies Plugin;
+    } satisfies ESBuildPlugin;
 }

@@ -1,0 +1,18 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "module": "preserve",
+    "paths": {
+      "~/meteor-vite/*": [
+        "../../meteor-vite/src/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "src",
+    "tsup.config.ts"
+  ]
+}

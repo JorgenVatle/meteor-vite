@@ -1,0 +1,18 @@
+name: 'Test examples: Cypress'
+run-name: '✅ Test with cypress: ${{ github.event.head_commit.message || github.event.pull_request.title }}'
+
+on:
+  push:
+
+jobs:
+  vue:
+    name: 'Vue'
+    uses: ./.github/workflows/_reuse_.cypress-test.yml
+    with:
+      appBasename: 'vue'
+
+  react:
+    name: 'React'
+    uses: ./.github/workflows/_reuse_.cypress-test.yml
+    with:
+      appBasename: 'react'

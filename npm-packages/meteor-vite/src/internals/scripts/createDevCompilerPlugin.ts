@@ -3,7 +3,7 @@ import { MeteorViteCompilerPlugin } from '@/internals/lib/MeteorViteCompilerPlug
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
 
 export async function createDevCompilerPlugin() {
-    const { modules, needsReactPreamble, config } = await resolveMeteorViteConfig({
+    const { mainModule, needsReactPreamble, config } = await resolveMeteorViteConfig({
         mode: 'development',
     }, 'serve');
     
@@ -12,7 +12,7 @@ export async function createDevCompilerPlugin() {
         assetsDir: '',
         mode: CurrentConfig.mode,
         boilerplate: new ViteDevelopmentBoilerplate({
-            clientEntry: modules.clientEntry,
+            clientEntry: mainModule.vite.client.path,
             needsReactPreamble,
             baseUrl: config.base,
         }),

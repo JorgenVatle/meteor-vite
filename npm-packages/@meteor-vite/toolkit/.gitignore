@@ -1,0 +1,8 @@
+node_modules
+
+# Build output
+/bin
+/dist
+
+# This file is written by hand and should not be ignored
+!/bin/prepare.mjs

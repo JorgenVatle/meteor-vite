@@ -1,5 +1,6 @@
 import { ViteProductionBoilerplate } from '@/internals/boilerplate/Production';
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
+import { getInternalModules } from '@/internals/lib/EntryModule/helpers/get';
 import { MeteorViteCompilerPlugin } from '@/internals/lib/MeteorViteCompilerPlugin';
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { ProjectJson, ResolvedViteConfig, StubSettings } from '@/plugin';
@@ -20,6 +21,11 @@ import type { RollupOutput, RollupWatcher } from 'rollup';
 import { createBuilder, type InlineConfig, version } from 'vite';
 import Instance from '../lib/MeteorViteRuntime';
 
+type ContextKey = 'client' | 'server' | (string & {});
+type FileNames = {
+    [context in ContextKey]?: { filePath: string, originalFilePath: string, isEntry?: boolean }[]
+}
+
 export async function createProductionCompilerPlugin() {
     try {
         return await createCompiler();
@@ -30,7 +36,7 @@ export async function createProductionCompilerPlugin() {
 }
 
 async function createCompiler() {
-    const { config, outDir, packageJson, assetsDir } = await resolveMeteorViteConfig({ mode: 'production' }, 'build');
+    const { config, outDir, packageJson, assetsDir, mainModule } = await resolveMeteorViteConfig({ mode: 'production' }, 'build');
     const { logger } = Instance;
     logger.info(`Building with Vite v${version}...`);
     
@@ -47,7 +53,9 @@ async function createCompiler() {
     config.meteor.meteorStubs.meteor.isopackPath = CurrentConfig.packageAnalyzer.isopackPath;
     
     const builder = await createBuilder(config);
-    const fileNames: Partial<Record<string, { filePath: string, originalFilePath: string, isEntry?: boolean }[]>> = {};
+    const fileNames: FileNames = {};
+    const internalEntry = getInternalModules().buildOutput;
+    
     let clientManifest = {};
     
     for (const [context, environment] of Object.entries(builder.environments)) {
@@ -120,14 +128,23 @@ async function createCompiler() {
         if (!file.isEntry) {
             return;
         }
+        // Client assets are intentionally left available to the server bundle.
         if (file.filePath.includes('entry-client')) {
+            // Client entry modules don't need explicit imports as those are
+            // be handled entirely through links added to the app's HTML
+            // boilerplate
             return;
         }
         
-        const summary = addServerEntryImport(file);
-        logger.debug('Added import to server entry', summary);
+        internalEntry.server.addImport({
+            path: file.filePath,
+        })
+        logger.debug(`Added import for Vite server bundle to internal output entry module (${internalEntry.server.path})`, {
+            path: file.filePath,
+        });
     });
     
+    internalEntry.server.appendMissing();
     
     return new MeteorViteCompilerPlugin({
         outDir,
@@ -157,10 +174,10 @@ function normalizeBuildOutput(output:  RollupOutput | RollupOutput[] | RollupWat
 }
 
 
-function addServerEntryImport({ filePath }: {
+function addServerEntryImport({ filePath, serverEntryModule }: {
     filePath: string,
+    serverEntryModule: string,
 }) {
-    const { serverEntryModule } = CurrentConfig;
     const originalContent = FS.readFileSync(serverEntryModule, 'utf-8');
     const importPath = Path.relative(Path.dirname(serverEntryModule), filePath);
     

@@ -7,7 +7,7 @@ on:
         type: string
       meteorRelease:
         type: string
-        default: '3.2'
+        default: '3.3'
       nodeVersion:
         type: string
         default: '22-alpine'
@@ -20,6 +20,9 @@ on:
       meteorBaseImage:
         type: string
         default: jorgenvatle/meteor-base
+      target:
+        type: string
+        default: "universal"
     outputs:
       deploymentImage:
         value: ${{ jobs.docker.outputs.deploymentImage }}
@@ -32,7 +35,7 @@ jobs:
   ubuntu:
     name: 'Ubuntu 🐧'
     runs-on: ubuntu-latest
-    if: inputs.push != true
+    if: inputs.push != true && inputs.target != 'docker'
     timeout-minutes: 10
     steps:
       - name: 'Checkout'
@@ -54,6 +57,8 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     name: Docker 🐋
+    env:
+      APP_BASENAME: ${{ inputs.appBasename }}
     outputs:
       deploymentImage: ${{ steps.image.outputs.deploymentImage }}
       imageVersion: ${{ steps.image.outputs.imageVersion }}
@@ -77,7 +82,7 @@ jobs:
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
 
-          echo "cacheTag=$imageName:buildcache" >> $GITHUB_OUTPUT
+          echo "cacheTag=$imageName:$APP_BASENAME-buildcache" >> $GITHUB_OUTPUT
           echo "deploymentImage=$imageName:$imageVersion" >> $GITHUB_OUTPUT
 
           echo "imageName=$imageName" >> $GITHUB_OUTPUT
@@ -107,8 +112,8 @@ jobs:
             ${{ steps.image.outputs.deploymentImage }}
             ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
+          cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
           build-args: |
             APP_BASENAME=${{ inputs.appBasename }}
             METEOR_RELEASE=${{ steps.image.outputs.meteorRelease }}

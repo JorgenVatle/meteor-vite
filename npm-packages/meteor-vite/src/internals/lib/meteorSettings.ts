@@ -11,7 +11,7 @@ import { Meteor } from 'meteor/meteor';
  * to not attempt to initialize any Vite modules since they're already
  * included in the app at this point.
  */
-export const meteorSettings = {
+export const meteorSettings: MeteorPackageSettings = {
     base: process.env.METEOR_VITE_BASE_URL || import.meta.env.BASE_URL,
     assetsDir: __VITE_ASSETS_DIR__,
     env: import.meta.env as {
@@ -22,13 +22,28 @@ export const meteorSettings = {
         SSR: boolean
     },
     dynamicAssetBoilerplate: __VITE_DYNAMIC_ASSET_BOILERPLATE__,
-} as const;
+};
 
 /**
  * Runtime settings for the Vite bundle, assigned to Meteor's settings object.
  * {@link Meteor.settings}
  */
-export type MeteorPackageSettings = typeof meteorSettings;
+export interface MeteorPackageSettings {
+    base: string,
+    assetsDir: string,
+    dynamicAssetBoilerplate: boolean,
+    env: {
+        BASE_URL: string
+        MODE: string
+        DEV: boolean
+        PROD: boolean
+        SSR: boolean
+    }
+    package?: {
+        name: string,
+        version: string,
+    }
+}
 
 /**
  * Overrides defined by the peer project's settings.json file.

@@ -1,14 +1,6 @@
+import { defineBuildConfig } from '@meteor-vite/toolkit';
 import FS from 'fs';
 import Path from 'path';
-import { defineBuildConfig } from '../../build/defineBuildConfig';
-
-let clean = false;
-
-try {
-    clean = JSON.parse(process.env.TSUP_CLEAN || 'true')
-} catch (error) {
-    console.warn(error);
-}
 
 export default defineBuildConfig(__dirname, [
     // Internal entry points
@@ -20,22 +12,9 @@ export default defineBuildConfig(__dirname, [
             
             // Internal tooling for the Meteor build plugin.
             'internals': './src/internals/index.ts',
-            
-            // Server utility modules (logger, colorization, parsers)
-            'utilities/server': './src/utilities/server/index.ts',
-            
-            // Meteor Production/Development environment bootstrapper
-            // - Starts the vite dev server in development and loads server-side HMR hooks (if server builds are enabled)
-            // - Serves static files from the Vite bundle in production
-            'server-entry/development': './src/server-entry/development.ts',
-            'server-entry/production': './src/server-entry/production.ts',
-            
-            // Initializes HMR hooks for the Meteor-server. (Cleanup of side-effects from e.g. Meteor.publish(...))
-            'server-entry/hmr': './src/server-entry/hmr.ts',
         },
         format: ['esm'],
         platform: 'node',
-        clean,
         onSuccess: async () => {
             try {
                 const atmospherePackageOutDir = Path.join(__dirname, '..', '..', 'packages', 'vite', 'dist');
@@ -46,6 +25,15 @@ export default defineBuildConfig(__dirname, [
             }
         },
     },
+    // Server runtime entry-points
+    {
+        name: 'meteor-vite/server-entry',
+        entry: ['./src/server-entry/*.ts'],
+        outDir: './dist/server-entry',
+        format: ['esm'],
+        platform: 'node',
+    },
+    // Browser modules
     {
         name: 'meteor-vite/client',
         entry: {

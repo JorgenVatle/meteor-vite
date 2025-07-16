@@ -3,18 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "workspaces": [
-    "packages/vite",
-    "npm-packages/meteor-vite",
+    "npm-packages/@meteor-vite/toolkit",
     "npm-packages/@meteor-vite/plugin-zodern-relay",
-    "npm-packages/@meteor-vite/react-packages/packages/react-meteor-data"
+    "npm-packages/@meteor-vite/react-packages/packages/react-meteor-data",
+    "npm-packages/meteor-vite",
+    "packages/vite"
   ],
-  "dependencies": {
-    "@changesets/cli": "^2.28.1"
-  },
   "devDependencies": {
+    "@changesets/cli": "^2.29.5",
     "@types/meteor": "^2.9.8",
     "@types/node": "^22.9.0",
-    "concurrently": "^8.2.2",
+    "concurrently": "^9.2.0",
     "globby": "^14.1.0",
     "hasha": "^6.0.0",
     "tsup": "^8.3.5"
@@ -23,20 +22,15 @@
     "start": "npm run example start",
     "launch": "npm run example launch",
 
+    "check-changes": "toolkit check-changes",
+    "watch:packages": "toolkit build --concurrent npm-packages/meteor-vite packages/vite --watch",
+
+    "clean": "toolkit clean --ws",
     "build": "npm run example build",
-    "build:packages": "npm run build-if-changed npm-packages/meteor-vite && npm run build-if-changed packages/vite",
-    "build:meteor-vite": "cd npm-packages/meteor-vite && npm run build --",
-    "build:jorgenvatle:vite": "cd packages/vite && npm run build --",
-    "build:bin": "tsup-node ./build/bin --outDir .bin/dist --format esm",
-    "build-if-changed": "node .bin/dist/build-if-changed.mjs",
+    "build:packages": "npm run build -w npm-packages/@meteor-vite/toolkit -w npm-packages/meteor-vite -w packages/vite",
 
-    "prestart": "npm run build-if-changed packages/vite",
-    "prebuild:jorgenvatle:vite": "npm run build-if-changed npm-packages/meteor-vite",
+    "postprepare": "npm run build:packages",
 
-    "watch:packages": "TSUP_CLEAN=false concurrently -k -n atmosphere,npm 'npm:build:jorgenvatle:vite -- --watch' 'npm:build:meteor-vite -- --watch'",
-
-    "preprepare": "npm run build:bin",
-    "prepare": "npm run build:packages || exit 0",
     "link": "npm run example link",
     "release": "npm run publish:vite && changeset publish",
     "version": "npm run version:vite && changeset version",
@@ -55,6 +49,7 @@
     "start:react": "npm start react",
     "start:<example app>": "npm start <example app>",
 
-    "install:meteor-vite": "cd npm-packages/meteor-vite && meteor npm install"
+    "cypress:setup": "cd tests/cypress-suite && npm run setup",
+    "cypress:start": "cd tests/cypress-suite && npm run start"
   }
 }

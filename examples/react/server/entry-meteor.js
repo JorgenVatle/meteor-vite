@@ -5,7 +5,7 @@
  *
  * More info: https://github.com/JorgenVatle/meteor-vite#lazy-loaded-meteor-packages
  **/
-import '../_vite-bundle/server/_entry.mjs';
+import '../_vite-bundle/server/_entry-meteor.mjs';
 /** End of vite auto-imports **/
 /**
  * Import all your Meteor methods and publications.

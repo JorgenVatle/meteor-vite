@@ -10,7 +10,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "tsup",
+    "build": "toolkit build",
     "clean": "rm -rf ./dist",
     "postversion": "git add package.json && git commit -m 'Bump versions'",
     "postpublish": "git push --tags && git push",
@@ -45,6 +45,7 @@
     "react-dom": ">=18"
   },
   "devDependencies": {
+    "@meteor-vite/toolkit": "^1.0.0",
     "@types/lodash.isequal": "^4.5.4",
     "@types/lodash.remove": "^4.7.5",
     "@types/meteor": "^1.4.76",

@@ -1,12 +1,5 @@
-import { defineConfig } from 'tsup';
+import { defineBuildConfig } from '@meteor-vite/toolkit';
 
-export default defineConfig({
-    target: 'es2022',
-    outDir: 'dist',
+export default defineBuildConfig(import.meta.dirname, {
     entry: ['src/Plugin.ts'],
-    sourcemap: true,
-    dts: true,
-    format: ['cjs', 'esm'],
-    skipNodeModulesBundle: true,
-    clean: true,
 })
