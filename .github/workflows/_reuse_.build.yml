@@ -23,6 +23,9 @@ on:
       target:
         type: string
         default: "universal"
+      viteBaseUrl:
+        type: string
+        required: false
     outputs:
       deploymentImage:
         value: ${{ jobs.docker.outputs.deploymentImage }}
@@ -115,6 +118,7 @@ jobs:
           cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
           cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
           build-args: |
+            ${{ inputs.viteBaseUrl       && format('METEOR_VITE_BASE_URL={0}', inputs.viteBaseUrl)   }}
             ${{ inputs.meteorBaseImage   && format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)   }}
             ${{ inputs.nodeVersion       && format('NODE_VERSION={0}', inputs.nodeVersion)            }}
             METEOR_RELEASE=${{ steps.image.outputs.meteorRelease }}
