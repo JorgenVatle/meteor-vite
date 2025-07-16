@@ -7,10 +7,10 @@ on:
         type: string
       meteorRelease:
         type: string
-        default: '3.3'
+        required: false
       nodeVersion:
         type: string
-        default: '22-alpine'
+        required: false
       push:
         type: boolean
         default: false
@@ -19,7 +19,7 @@ on:
         default: ghcr.io
       meteorBaseImage:
         type: string
-        default: jorgenvatle/meteor-base
+        required: false
       target:
         type: string
         default: "universal"
@@ -115,8 +115,8 @@ jobs:
           cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
           cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
           build-args: |
+            ${{ steps.image.outputs.meteorRelease   &&   format('METEOR_RELEASE={0}', steps.image.outputs.meteorRelease) }}
+            ${{ inputs.meteorBaseImage              &&   format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)         }}
+            ${{ inputs.nodeVersion                  &&   format('NODE_VERSION={0}', inputs.nodeVersion)                  }}
             APP_BASENAME=${{ inputs.appBasename }}
-            METEOR_RELEASE=${{ steps.image.outputs.meteorRelease }}
-            METEOR_BASE_IMAGE=${{ inputs.meteorBaseImage }}
-            NODE_VERSION=${{ inputs.nodeVersion }}
 
