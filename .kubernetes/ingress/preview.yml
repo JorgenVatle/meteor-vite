@@ -15,7 +15,7 @@ spec:
       http:
         paths:
           - pathType: Prefix
-            path: /meteor-v2-vue
+            path: /meteor-v2/vue
             backend:
               service:
                 name: "meteor-v2-vue"
