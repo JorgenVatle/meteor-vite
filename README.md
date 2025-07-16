@@ -6,7 +6,7 @@
 > a lot differently from the newer releases for Meteor v3. In production, the differences
 > are minimal, however.
 > 
-> If you are using Meteor v3+ - you should instead use [`jorgenvatle:vite`](https://packosphere.com/jorgenvatle/vite) 
+> If you are using Meteor v3+ you should instead use [`jorgenvatle:vite`](https://packosphere.com/jorgenvatle/vite) 
 > and [`meteor-vite@3`](https://www.npmjs.com/package/meteor-vite) 
 
 Use [Vite](https://vitejs.dev) in your Meteor app! ⚡️
