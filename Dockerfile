@@ -13,10 +13,6 @@ ARG METEOR_BASE_IMAGE="jorgenvatle/meteor-base"
 # Ex: ./examples/vue
 ARG APP_BASENAME
 
-# Used for statically generated Vite HTML boilerplate
-ARG METEOR_VITE_BASE_URL
-ARG METEOR_VITE_ASSETS_DIR
-
 # Node.js production runtime
 # This is the smallest possible image we can use to run the pre-built Meteor bundle.
 FROM node:$NODE_VERSION AS nodejs-runtime
@@ -47,8 +43,6 @@ ENV ROOT_FOLDER=/root
 ENV METEOR_PACKAGES_FOLDER=$ROOT_FOLDER/packages
 ENV NPM_PACKAGES_FOLDER=$ROOT_FOLDER/npm-packages
 ENV METEOR_PACKAGE_DIRS=$METEOR_PACKAGES_FOLDER
-ENV METEOR_VITE_BASE_URL=$METEOR_VITE_BASE_URL
-ENV METEOR_VITE_ASSETS_DIR=$METEOR_VITE_ASSETS_DIR
 
 COPY --link ./packages $METEOR_PACKAGES_FOLDER
 COPY --link ./npm-packages $NPM_PACKAGES_FOLDER
@@ -74,6 +68,11 @@ RUN meteor npm link meteor-vite
 
 # Build for production
 COPY --link $APP_DIR $APP_SOURCE_FOLDER/
+
+# Optional overrides for statically generated Vite asset paths
+ARG METEOR_VITE_BASE_URL
+ARG METEOR_VITE_ASSETS_DIR
+
 RUN bash $SCRIPTS_FOLDER/meteor/build.sh
 
 # Meteor Production Server
