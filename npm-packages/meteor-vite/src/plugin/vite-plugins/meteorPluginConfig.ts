@@ -76,13 +76,13 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
                 'METEOR_VITE_ASSETS_DIR',
                 pluginSettings.assetsDir
             );
-            const base = envOverride(
+            
+            userConfig.base = envOverride(
                 'METEOR_VITE_BASE_URL',
                 pluginSettings.assetsBaseUrl ?? userConfig.base ?? `/${trimLeadingSlash(pluginSettings.assetsDir)}`
             );
             
             const mergedUserConfig = mergeViteSettings(userConfig, {
-                base,
                 define: {
                     __VITE_ASSETS_DIR__: JSON.stringify(pluginSettings.assetsDir),
                     __VITE_DYNAMIC_ASSET_BOILERPLATE__: JSON.stringify(pluginSettings.dynamicAssetBoilerplate),
@@ -92,7 +92,6 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
                 },
             });
             
-            userConfig.base = mergedUserConfig.base;
             userConfig.define = mergedUserConfig.define;
             userConfig.optimizeDeps = mergedUserConfig.optimizeDeps;
         },
