@@ -4,14 +4,14 @@ import { mergeMeteorPluginSettings, mergeViteSettings } from '@/plugin/lib/Merge
 import { parseConfig } from '@/plugin/lib/ParseConfig';
 import Path from 'path';
 import pc from 'picocolors';
-import type { Plugin, PluginOption } from 'vite';
+import type { Plugin } from 'vite';
 import PackageJSON from '../../../package.json';
 
 /**
  * Internal worker plugin. Merges the user's config with necessary overrides for the Meteor compiler and loads the
  * MeteorStubs plugin.
  */
-export function meteorPluginConfig(config: PartialPluginConfig): PluginOption {
+export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
     const METEOR_LOCAL_DIR = process.env.METEOR_LOCAL_DIR || Path.join('.meteor', 'local');
     let enforce: 'pre' | undefined;
     let resolveId: Plugin['resolveId'];
