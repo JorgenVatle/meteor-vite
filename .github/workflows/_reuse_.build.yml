@@ -127,7 +127,7 @@ jobs:
             ${{ inputs.viteBaseUrl       && format('METEOR_VITE_BASE_URL={0}', inputs.viteBaseUrl)         }}
             ${{ inputs.meteorBaseImage   && format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)        }}
             ${{ inputs.nodeVersion       && format('NODE_VERSION={0}', inputs.nodeVersion)                 }}
+            METEOR_VITE_ASSETS_DIR=${{ inputs.viteAssetDir || env.METEOR_VITE_ASSETS_DIR }}
             METEOR_RELEASE=${{ steps.image.outputs.meteorRelease }}
             APP_BASENAME=${{ inputs.appBasename }}
-            METEOR_VITE_ASSETS_DIR=${{ inputs.viteAssetDir || env.METEOR_VITE_ASSETS_DIR }}
             
