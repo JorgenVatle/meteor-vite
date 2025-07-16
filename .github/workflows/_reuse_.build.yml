@@ -87,7 +87,7 @@ jobs:
       - name: Format image name
         id: image
         env:
-          METEOR_VITE_ASSETS_DIR: ${{ github.ref_name }}/${{ inputs.appBasename }}
+          METEOR_VITE_ASSETS_DIR: ${{ github.ref_name }}/${{ inputs.appBasename }}/vite
         # language="bashsupport pro shell script"
         run: |
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
