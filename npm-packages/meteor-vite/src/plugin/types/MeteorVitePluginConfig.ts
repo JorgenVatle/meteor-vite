@@ -47,6 +47,8 @@ export interface MeteorVitePluginConfig {
      * your assets so that your assets are fetched from one consistent URL. This helps with caching and should
      * reduce load on both your clients and server.
      * @default /vite
+     * @deprecated Use the {@link https://vite.dev/config/shared-options.html#base `base`} shared configuration field
+     * from Vite instead. This field has the same effect.
      */
     assetsBaseUrl?: string;
     
