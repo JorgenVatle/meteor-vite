@@ -87,14 +87,15 @@ jobs:
       - name: Format image name
         id: image
         env:
-          METEOR_VITE_ASSETS_DIR: ${{ github.ref_name }}/${{ inputs.appBasename }}/vite
+          METEOR_VITE_BASE_URL: /${{ github.ref_name }}/${{ inputs.appBasename }}
         # language="bashsupport pro shell script"
         run: |
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
           imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ github.ref_name }}/${{ inputs.appBasename }}"
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
-          viteAssetDir=${{ inputs.viteAssetDir || env.METEOR_VITE_ASSETS_DIR }}
+          viteBaseUrl=${{ inputs.viteBaseUrl || env.METEOR_VITE_BASE_URL }}
+          viteAssetDir=${{ inputs.viteAssetDir }}
 
           echo "cacheTag=$imageName:buildcache" >> $GITHUB_OUTPUT
           echo "deploymentImage=$imageName:$imageVersion" >> $GITHUB_OUTPUT
@@ -103,6 +104,7 @@ jobs:
           echo "imageVersion=$imageVersion" >> $GITHUB_OUTPUT
           echo "meteorRelease=$meteorRelease" >> $GITHUB_OUTPUT
           echo "viteAssetDir=$viteAssetDir" >> $GITHUB_OUTPUT
+          echo "viteBaseUrl=$viteBaseUrl" >> $GITHUB_OUTPUT
 
       - name: Prepare metadata
         uses: docker/metadata-action@v5
@@ -130,9 +132,9 @@ jobs:
           cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
           cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
           build-args: |
-            ${{ inputs.viteBaseUrl       && format('METEOR_VITE_BASE_URL={0}', inputs.viteBaseUrl)         }}
             ${{ inputs.meteorBaseImage   && format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)        }}
             ${{ inputs.nodeVersion       && format('NODE_VERSION={0}', inputs.nodeVersion)                 }}
+            METEOR_VITE_BASE_URL${{ steps.image.outputs.viteBaseUrl }}
             METEOR_VITE_ASSETS_DIR=${{ steps.image.outputs.viteAssetDir }}
             METEOR_RELEASE=${{ steps.image.outputs.meteorRelease }}
             APP_BASENAME=${{ inputs.appBasename }}
