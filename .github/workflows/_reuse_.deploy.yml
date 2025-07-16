@@ -23,6 +23,12 @@ on:
         type: string
         required: false
         description: Node.js Docker image version to use for the final production build.
+      viteBaseUrl:
+        type: string
+        required: false
+      viteAssetDir:
+        type: string
+        required: false
 
 env:
   APP_NAME: ${{ inputs.appBasename }}
@@ -40,7 +46,8 @@ jobs:
       appBasename: ${{ inputs.appBasename }}
       nodeVersion: ${{ inputs.nodeVersion }}
       meteorBaseImage: ${{ inputs.meteorBaseImage }}
-      viteBaseUrl: /${{ github.ref_name }}/${{ inputs.appBasename }}/vite
+      viteBaseUrl: ${{ inputs.viteBaseUrl }}
+      viteAssetDir: ${{ inputs.viteAssetDir }}
       push: true
 
   deploy:
