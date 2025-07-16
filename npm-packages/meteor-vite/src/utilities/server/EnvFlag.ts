@@ -29,8 +29,11 @@ export function envOverride<
 }
 
 export function debugEnabled(namespace: string, filter = '*') {
-    const debugEnv = process.env.DEBUG || 'false';
-    return !!debugEnv.trim().split(/[\s,]+/).find((field) => {
+    const debugEnv = (process.env.DEBUG || 'false').trim();
+    if (debugEnv === 'true') {
+        return true;
+    }
+    return !!debugEnv.split(/[\s,]+/).find((field) => {
         if (filter !== '*') {
             return field.trim() === `${namespace}:${filter}`;
         }
