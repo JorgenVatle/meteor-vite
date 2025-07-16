@@ -40,6 +40,7 @@ jobs:
       appBasename: ${{ inputs.appBasename }}
       nodeVersion: ${{ inputs.nodeVersion }}
       meteorBaseImage: ${{ inputs.meteorBaseImage }}
+      viteBaseUrl: ${{ env.BASE_PATH }}/vite
       push: true
 
   deploy:
