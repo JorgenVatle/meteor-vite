@@ -49,6 +49,7 @@ export class MeteorViteCompilerPlugin {
                 return;
             }
             
+            Logger.debug(`Added ${Colorize.fileType('Asset')} to internal Meteor assets: ${Colorize.filepath(fileMeta.path)} (${Colorize.arch(fileMeta.arch) || 'no arch'})`)
             file.addAsset({
                 path: fileMeta.path,
                 data: file.getContentsAsBuffer(),
