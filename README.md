@@ -55,12 +55,6 @@ meteor npm i -D vite@4
 meteor add jorgenvatle:vite-bundler
 ```
 
-If you are using Meteor v2, you need to make sure you install Vite v4 instead.
-
-```sh
-meteor npm i -D vite@4
-```
-
 #### Application structure
 You can structure your app just like you would with a typical Meteor application. The key difference is the addition of 
 a Vite entry file for your Meteor client and server. These will become the primary entrypoints for your app.
