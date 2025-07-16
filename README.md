@@ -1,5 +1,3 @@
-# meteor-vite
-
 > [!WARNING]
 > You are viewing the documentation for the **Meteor v2** support branch of Meteor-Vite. 
 > This version is a lot bulkier and can be unstable during development as it functions
@@ -7,7 +5,9 @@
 > are minimal, however.
 > 
 > If you are using Meteor v3+ you should instead use [`jorgenvatle:vite`](https://packosphere.com/jorgenvatle/vite) 
-> and [`meteor-vite@3`](https://www.npmjs.com/package/meteor-vite) 
+> and [`meteor-vite@3`](https://www.npmjs.com/package/meteor-vite)
+
+# meteor-vite
 
 Use [Vite](https://vitejs.dev) in your Meteor app! ⚡️
 
