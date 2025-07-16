@@ -25,9 +25,11 @@ on:
         description: Node.js Docker image version to use for the final production build.
 
 env:
+  APP_NAME: ${{ inputs.appBasename }}
   APP_NAMESPACE: meteor-vite
   METEOR_RELEASE: ${{ inputs.meteorRelease }}
-  APP_NAME: ${{ github.ref_name }}-${{ inputs.appBasename }}
+  DEPLOYMENT_NAME: ${{ github.ref_name }}-${{ inputs.appBasename }}
+  BASE_PATH: /${{ github.ref_name }}/${{ inputs.appBasename }}
   ROOT_URL: https://meteor-vite-preview.wcaserver.com/${{ github.ref_name }}/${{ inputs.appBasename }}/
 jobs:
   build:
@@ -93,7 +95,7 @@ jobs:
       - name: Verify deployment
         # language="bash"
         run: |
-          kubectl rollout status deployment --watch --timeout 60s -n "$APP_NAMESPACE" "$APP_NAME"
+          kubectl rollout status deployment --watch --timeout 60s -n "$APP_NAMESPACE" "$DEPLOYMENT_NAME"
 
       - name: Update preview ingress
         # language="bash"

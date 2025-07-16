@@ -13,19 +13,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "${APP_NAME}"
+  name: "${DEPLOYMENT_NAME}"
   labels:
     app.kubernetes.io/name: meteor-vite-example
     app.kubernetes.io/component: meteor
     app.kubernetes.io/instance: "${APP_NAME}"
     app.kubernetes.io/version: "${APP_VERSION}"
     app.kubernetes.io/meteor-version: "${METEOR_RELEASE}"
+    app.kubernetes.io/git-branch: "${GITHUB_REF_NAME}"
 spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: meteor-vite-example
       app.kubernetes.io/component: meteor
       app.kubernetes.io/instance: "${APP_NAME}"
+      app.kubernetes.io/git-branch: "${GITHUB_REF_NAME}"
   template:
     metadata:
       labels:
@@ -34,6 +36,7 @@ spec:
         app.kubernetes.io/instance: "${APP_NAME}"
         app.kubernetes.io/version: "${APP_VERSION}"
         app.kubernetes.io/meteor-version: "${METEOR_RELEASE}"
+        app.kubernetes.io/git-branch: "${GITHUB_REF_NAME}"
     spec:
       containers:
         - name: meteor
@@ -68,19 +71,20 @@ spec:
             periodSeconds: 5
             httpGet:
               port: 3000
-              path: "/${APP_NAME}"
+              path: "/${GITHUB_REF_NAME}/${APP_NAME}"
 
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: "${APP_NAME}"
+  name: "${DEPLOYMENT_NAME}"
   labels:
     app.kubernetes.io/name: meteor-vite-example
     app.kubernetes.io/component: meteor
     app.kubernetes.io/instance: "${APP_NAME}"
     app.kubernetes.io/version: "${APP_VERSION}"
+    app.kubernetes.io/git-branch: "${GITHUB_REF_NAME}"
 spec:
   type: ClusterIP
   ports:
@@ -90,4 +94,5 @@ spec:
     app.kubernetes.io/name: meteor-vite-example
     app.kubernetes.io/component: meteor
     app.kubernetes.io/instance: "${APP_NAME}"
+    app.kubernetes.io/git-branch: "${GITHUB_REF_NAME}"
 
