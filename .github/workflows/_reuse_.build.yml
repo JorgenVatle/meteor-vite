@@ -26,6 +26,11 @@ on:
       viteBaseUrl:
         type: string
         required: false
+        description: Base path or URL that will be used for serving Vite assets. Primarily for serving assets through an external CDN.
+      viteAssetDir:
+        type: string
+        required: false
+        description: Sets the path from where Meteor will serve assets built by Vite.
     outputs:
       deploymentImage:
         value: ${{ jobs.docker.outputs.deploymentImage }}
@@ -118,7 +123,8 @@ jobs:
           cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
           cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
           build-args: |
-            ${{ inputs.viteBaseUrl       && format('METEOR_VITE_BASE_URL={0}', inputs.viteBaseUrl)   }}
+            ${{ env.viteAssetsDir        && format('METEOR_VITE_ASSETS_DIR={0}', env.viteAssetsDir)   }}
+            ${{ inputs.viteBaseUrl       && format('METEOR_VITE_BASE_URL={0}', inputs.viteBaseUrl)    }}
             ${{ inputs.meteorBaseImage   && format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)   }}
             ${{ inputs.nodeVersion       && format('NODE_VERSION={0}', inputs.nodeVersion)            }}
             METEOR_RELEASE=${{ steps.image.outputs.meteorRelease }}
