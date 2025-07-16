@@ -16,3 +16,11 @@ export function envFlag<T extends keyof NodeJS.ProcessEnv>(flag: T, { defaultVal
         return defaultValue;
     }
 }
+
+export function defaultEnv<T extends keyof NodeJS.ProcessEnv>(key: T, defaultValue: NodeJS.ProcessEnv[T]) {
+    const value = process.env[key];
+    if (typeof value === 'undefined') {
+        return defaultValue;
+    }
+    return value;
+}
