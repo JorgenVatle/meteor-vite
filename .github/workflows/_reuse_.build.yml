@@ -67,6 +67,7 @@ jobs:
     name: Docker 🐋
     env:
       APP_BASENAME: ${{ inputs.appBasename }}
+      METEOR_VITE_ASSETS_DIR: ${{ github.ref_name }}/${{ inputs.appBasename }}
     outputs:
       deploymentImage: ${{ steps.image.outputs.deploymentImage }}
       imageVersion: ${{ steps.image.outputs.imageVersion }}
@@ -90,7 +91,7 @@ jobs:
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
 
-          echo "cacheTag=$imageName${{ inputs.viteBaseUrl }}:buildcache" >> $GITHUB_OUTPUT
+          echo "cacheTag=$imageName:buildcache" >> $GITHUB_OUTPUT
           echo "deploymentImage=$imageName:$imageVersion" >> $GITHUB_OUTPUT
 
           echo "imageName=$imageName" >> $GITHUB_OUTPUT
@@ -123,10 +124,10 @@ jobs:
           cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
           cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
           build-args: |
-            ${{ env.viteAssetsDir        && format('METEOR_VITE_ASSETS_DIR={0}', env.viteAssetsDir)   }}
-            ${{ inputs.viteBaseUrl       && format('METEOR_VITE_BASE_URL={0}', inputs.viteBaseUrl)    }}
-            ${{ inputs.meteorBaseImage   && format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)   }}
-            ${{ inputs.nodeVersion       && format('NODE_VERSION={0}', inputs.nodeVersion)            }}
+            ${{ inputs.viteBaseUrl       && format('METEOR_VITE_BASE_URL={0}', inputs.viteBaseUrl)         }}
+            ${{ inputs.meteorBaseImage   && format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)        }}
+            ${{ inputs.nodeVersion       && format('NODE_VERSION={0}', inputs.nodeVersion)                 }}
             METEOR_RELEASE=${{ steps.image.outputs.meteorRelease }}
             APP_BASENAME=${{ inputs.appBasename }}
+            METEOR_VITE_ASSETS_DIR=${{ inputs.viteAssetDir || env.METEOR_VITE_ASSETS_DIR }}
             
