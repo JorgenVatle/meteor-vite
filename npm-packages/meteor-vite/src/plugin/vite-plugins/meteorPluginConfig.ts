@@ -77,7 +77,7 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
             );
             const base = envOverride(
                 'METEOR_VITE_BASE_URL',
-                pluginSettings.assetsBaseUrl ?? userConfig.base ?? '/vite'
+                pluginSettings.assetsBaseUrl ?? userConfig.base ?? `/${pluginSettings.assetsDir}`
             );
             
             const mergedUserConfig = mergeViteSettings(userConfig, {
