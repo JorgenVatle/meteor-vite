@@ -78,7 +78,7 @@ jobs:
         # language="bashsupport pro shell script"
         run: |
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
-          imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ inputs.appBasename }}"
+          imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ github.ref_name }}/${{ inputs.appBasename }}"
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
 
