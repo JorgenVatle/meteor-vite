@@ -85,7 +85,7 @@ jobs:
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
 
-          echo "cacheTag=$imageName:buildcache" >> $GITHUB_OUTPUT
+          echo "cacheTag=$imageName${{ inputs.viteBaseUrl }}:buildcache" >> $GITHUB_OUTPUT
           echo "deploymentImage=$imageName:$imageVersion" >> $GITHUB_OUTPUT
 
           echo "imageName=$imageName" >> $GITHUB_OUTPUT
