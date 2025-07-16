@@ -55,7 +55,7 @@ export function meteorPluginConfig(config: PartialPluginConfig): PluginOption {
                 },
                 tempDir: Path.join(METEOR_LOCAL_DIR, 'vite'),
                 assetsDir: 'vite',
-                dynamicAssetBoilerplate: false,
+                dynamicAssetBoilerplate: true,
                 stubValidation: {
                     warnOnly: process.env.NODE_ENV === 'production',
                     disabled: false,
