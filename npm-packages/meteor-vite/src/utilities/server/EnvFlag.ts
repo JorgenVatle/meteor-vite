@@ -27,3 +27,13 @@ export function envOverride<
     }
     return value;
 }
+
+export function debugEnabled(namespace: string, filter = '*') {
+    const debugEnv = process.env.DEBUG || 'false';
+    return !!debugEnv.trim().split(/[\s,]+/).find((field) => {
+        if (filter !== '*') {
+            return field.trim() === `${namespace}:${filter}`;
+        }
+        return field.startsWith(`${namespace}:`);
+    });
+}
