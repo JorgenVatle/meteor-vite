@@ -71,7 +71,7 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
                 },
             }, config);
             
-            const assetDir = envOverride(
+            pluginSettings.assetsDir = envOverride(
                 'METEOR_VITE_ASSETS_DIR',
                 pluginSettings.assetsDir
             );
@@ -83,7 +83,7 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
             const mergedUserConfig = mergeViteSettings(userConfig, {
                 base,
                 define: {
-                    __VITE_ASSETS_DIR__: JSON.stringify(assetDir),
+                    __VITE_ASSETS_DIR__: JSON.stringify(pluginSettings.assetsDir),
                     __VITE_DYNAMIC_ASSET_BOILERPLATE__: JSON.stringify(pluginSettings.dynamicAssetBoilerplate),
                 },
                 optimizeDeps: {
