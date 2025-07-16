@@ -187,6 +187,15 @@ export class ProjectCompiler {
     }
     
     public async clean() {
+        const path = Path.join(this.rootDir, 'dist');
+        if (!await FS.lstat(path).catch(() => false)) {
+            console.log(pc.bgBlackBright(pc.whiteBright(' No dist directory found ')));
+            return;
+        }
+        console.log(pc.bgYellow(pc.whiteBright(' Cleaning dist directory ')));
+        console.log(pc.gray(
+            `Removing ${pc.yellow(pc.bold(path))}`
+        ))
         await FS.rm(Path.join(this.rootDir, 'dist'), { recursive: true });
     }
     
