@@ -22,22 +22,22 @@ Use [Vite](https://vitejs.dev) in your Meteor app! ⚡️
 ## Starter templates
   - [**Vue 3**](https://vuejs.org/)
     - [Example Project](/examples/vue) 
-    - [Preview](https://meteor-vite-preview.wcaserver.com/meteor-v2-vue) 
+    - [Preview](https://meteor-vite-preview.wcaserver.com/meteor-v2/vue) 
   - [**Svelte**](https://svelte.dev/)
     - [Example Project](/examples/svelte)
-    - [Preview](https://meteor-vite-preview.wcaserver.com/meteor-v2-svelte)
+    - [Preview](https://meteor-vite-preview.wcaserver.com/meteor-v2/svelte)
   - [**React**](https://react.dev/)
     - [Example Project](/examples/react)
-    - [Preview](https://meteor-vite-preview.wcaserver.com/meteor-v2-react)
+    - [Preview](https://meteor-vite-preview.wcaserver.com/meteor-v2/react)
   - [**Solid.js**](https://www.solidjs.com/)
     - [Example Project](/examples/solid)
-    - [Preview](https://meteor-vite-preview.wcaserver.com/meteor-v2-solid)
+    - [Preview](https://meteor-vite-preview.wcaserver.com/meteor-v2/solid)
   - [**Meteor v3**](https://v3-migration-docs.meteor.com/)
     - [Example Project](/examples/meteor-v3-vue)
-    - [Preview](https://meteor-vite-preview.wcaserver.com/meteor-v2-meteor-v3-vue)
+    - [Preview](https://meteor-vite-preview.wcaserver.com/meteor-v2/meteor-v3-vue)
   - [**Vue 3 + SSR**](https://vuejs.org/)
     - [Example Project](/examples/vue-ssr)
-    - [Preview](https://meteor-vite-preview.wcaserver.com/meteor-v2-vue-ssr)
+    - [Preview](https://meteor-vite-preview.wcaserver.com/meteor-v2/vue-ssr)
 
 
 ## Installation
