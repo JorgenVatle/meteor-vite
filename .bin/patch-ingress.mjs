@@ -18,8 +18,7 @@ function getEnv(keys) {
     return Object.fromEntries(entries)
 }
 
-const { APP_NAMESPACE, APP_NAME } = getEnv(['APP_NAME', 'APP_NAMESPACE']);
-const path = `/${APP_NAME}`;
+const { APP_NAMESPACE, BASE_PATH, DEPLOYMENT_NAME } = getEnv(['APP_NAMESPACE', 'DEPLOYMENT_NAME', 'BASE_PATH']);
 
 try {
     const manifest = JSON.parse(execSync(`kubectl get ingress preview -n ${APP_NAMESPACE} -o json`, {
@@ -28,15 +27,15 @@ try {
 
     const http = manifest.spec.rules[0].http
     http.paths = http.paths.filter((rule) => {
-        return rule.path !== path;
+        return rule.path !== BASE_PATH;
     });
 
     http.paths.push({
-        path,
+        path: BASE_PATH,
         pathType: "Prefix",
         backend: {
             service: {
-                name: APP_NAME,
+                name: DEPLOYMENT_NAME,
                 port: {
                     number: 3000
                 }
