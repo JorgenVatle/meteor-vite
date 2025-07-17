@@ -31,7 +31,7 @@ jobs:
       APP_BASENAME: ${{ inputs.appBasename }}
       MONGO_URL: mongodb://mongo:${{ inputs.mongoPort }}
       PORT: ${{ inputs.port }}
-      ROOT_URL: http://localhost:${{ inputs.port }}/
+      ROOT_URL: http://localhost:${{ inputs.port }}/${{ github.ref_name }}/${{ inputs.appBasename }}
       MONGO_PORT: ${{ inputs.mongoPort }}
     steps:
       - name: Checkout
