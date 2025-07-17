@@ -40,6 +40,8 @@ on:
         value: ${{ jobs.docker.outputs.meteorRelease }}
       viteAssetDir:
         value: ${{ jobs.docker.outputs.viteAssetDir }}
+      viteBaseUrl:
+        value: ${{ jobs.docker.outputs.viteBaseUrl }}
 
 jobs:
   ubuntu:
@@ -74,6 +76,7 @@ jobs:
       imageVersion: ${{ steps.image.outputs.imageVersion }}
       meteorRelease: ${{ steps.image.outputs.meteorRelease }}
       viteAssetDir: ${{ steps.image.outputs.viteAssetDir }}
+      viteBaseUrl: ${{ steps.image.outputs.viteBaseUrl }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
