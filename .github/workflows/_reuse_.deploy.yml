@@ -65,7 +65,7 @@ jobs:
       METEOR_VERSION: ${{ needs.build.outputs.meteorRelease }}
       ROOT_URL: https://meteor-vite-preview.wcaserver.com/${{ needs.build.outputs.basePath }}
       BASE_PATH: ${{ needs.build.outputs.basePath }}
-      DEPLOYMENT_NAME: ${{ needs.build.outputs.refTag }}-${{ inputs.appBasename }}
+      DEPLOYMENT_NAME: ${{ inputs.appBasename }}-${{ needs.build.outputs.refTag }}
       METEOR_RELEASE: ${{ needs.build.outputs.meteorRelease }}
     needs:
       - build
