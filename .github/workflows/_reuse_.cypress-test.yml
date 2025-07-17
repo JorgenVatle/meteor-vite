@@ -44,7 +44,7 @@ jobs:
         with:
           name: cypress-screenshots
           path: tests/cypress-suite/cypress/screenshots
-          if-no-files-found: ignore
+          if-no-files-found: error
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
