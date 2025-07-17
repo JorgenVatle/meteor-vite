@@ -55,6 +55,7 @@ export default [
                 defaultValue: process.env.BASE_PATH,
                 optional: !!process.env.BASE_PATH,
             },
+            
         },
         handler: async (options) => {
             const gitRef = options['git-ref'].replaceAll('/', '-');
@@ -83,7 +84,9 @@ export default [
                 })
             }
             
-            await FS.appendFile(process.env.GITHUB_STEP_SUMMARY!, summary('Kubernetes manifests', codeBlock('json', JSON.stringify(manifests, null, 2))));
+            if (process.env.GITHUB_STEP_SUMMARY) {
+                await FS.appendFile(process.env.GITHUB_STEP_SUMMARY, summary('Kubernetes manifests', codeBlock('json', JSON.stringify(manifests, null, 2))));
+            }
             
             console.log(inspect(manifests, { colors: true, depth: 10 }));
         }
