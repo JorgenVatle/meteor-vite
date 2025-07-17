@@ -92,7 +92,7 @@ metadata:
     app.kubernetes.io/component: meteor
     app.kubernetes.io/instance: "${APP_NAME}"
     app.kubernetes.io/version: "${APP_VERSION}"
-    app.kubernetes.io/git-branch: "${GIT_REF}"
+    app.kubernetes.io/git-ref: "${GIT_REF}"
   annotations:
     deployment-preview/base-path: "${BASE_PATH}"
     deployment-preview/remove-after: "${REMOVE_AFTER}"
@@ -105,5 +105,5 @@ spec:
     app.kubernetes.io/name: meteor-vite-example
     app.kubernetes.io/component: meteor
     app.kubernetes.io/instance: "${APP_NAME}"
-    app.kubernetes.io/git-branch: "${GIT_REF}"
+    app.kubernetes.io/git-ref: "${GIT_REF}"
 
