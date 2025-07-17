@@ -29,14 +29,15 @@ export function envOverride<
 }
 
 export function debugEnabled(namespace: string, filter = '*') {
+    const key = namespace.toLowerCase().replace(/\s+/, '-');
     const debugEnv = (process.env.DEBUG || 'false').trim();
     if (debugEnv === 'true') {
         return true;
     }
     return !!debugEnv.split(/[\s,]+/).find((field) => {
         if (filter !== '*') {
-            return field.trim() === `${namespace}:${filter}`;
+            return field.trim() === `${key}:${filter}`;
         }
-        return field.startsWith(`${namespace}:`);
+        return field.startsWith(`${key}:`);
     });
 }
