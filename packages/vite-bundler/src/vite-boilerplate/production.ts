@@ -9,7 +9,7 @@ import { type Boilerplate, ViteBoilerplate } from './common';
 
 export class ViteProductionBoilerplate extends ViteBoilerplate {
     
-    protected readonly baseUrl: string;
+    public readonly baseUrl: string;
     
     constructor() {
         super();
