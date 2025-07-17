@@ -87,14 +87,14 @@ jobs:
       - name: Format image name
         id: image
         env:
-          DEFAULT_BASE_URL: /${{ github.ref_name }}/${{ inputs.appBasename }}
+          DEFAULT_VITE_BASE_URL: /${{ github.ref_name }}/${{ inputs.appBasename }}/vite
         # language="bashsupport pro shell script"
         run: |
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
           imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ github.ref_name }}/${{ inputs.appBasename }}"
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
-          viteBaseUrl=${{ inputs.viteBaseUrl || env.DEFAULT_BASE_URL }}
+          viteBaseUrl=${{ inputs.viteBaseUrl || env.DEFAULT_VITE_BASE_URL }}
           viteAssetDir=${{ inputs.viteAssetDir }}
 
           echo "cacheTag=$imageName:buildcache" >> $GITHUB_OUTPUT
