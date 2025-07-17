@@ -49,6 +49,8 @@ spec:
               value: '3000'
             - name: ROOT_URL
               value: "${ROOT_URL}"
+            - name: DEBUG
+              value: html-boilerplate:*
             - name: MONGO_URL
               valueFrom:
                 secretKeyRef:
