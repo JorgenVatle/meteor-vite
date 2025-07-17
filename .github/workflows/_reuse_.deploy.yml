@@ -32,6 +32,9 @@ on:
       branchId:
         type: string
         default: ${{ github.ref_name }}
+      removeAfter:
+        type: string
+        required: false
 
 env:
   APP_NAME: ${{ inputs.appBasename }}
@@ -40,6 +43,7 @@ env:
   DEPLOYMENT_NAME: ${{ inputs.branchId }}-${{ inputs.appBasename }}
   BASE_PATH: /${{ inputs.branchId }}/${{ inputs.appBasename }}
   ROOT_URL: https://meteor-vite-preview.wcaserver.com/${{ inputs.branchId }}/${{ inputs.appBasename }}/
+  REMOVE_AFTER: ${{ inputs.removeAfter }}
 jobs:
   build:
     name: Build 🐋
