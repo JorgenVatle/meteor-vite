@@ -35,7 +35,7 @@ on:
         description: Name of the event that triggered this workflow
       branchId:
         type: string
-        default: ${{ (inputs.eventName == 'pull_request' && 'tmp-preview') || github.ref_name  }}
+        default: ${{ (inputs.eventName == 'pull_request' && 'pr-preview') || github.ref_name  }}
       removeAfter:
         type: string
         required: false
