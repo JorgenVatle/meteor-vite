@@ -53,4 +53,4 @@ jobs:
         with:
           name: cypress-screenshots
           path: tests/cypress-suite/cypress/screenshots
-          if-no-files-found: error
+          if-no-files-found: ${{ (success() && 'warn') || 'error' }}
