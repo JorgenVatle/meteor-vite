@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Docker 🐋
     concurrency:
-      group: docker-image-${{ inputs.appBasename }}-${{ github.sha }}
+      group: docker-image-${{ inputs.appBasename }}-${{ github.sha }}-${{ inputs.push }}
       cancel-in-progress: false
     env:
       APP_BASENAME: ${{ inputs.appBasename }}
