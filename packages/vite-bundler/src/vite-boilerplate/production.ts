@@ -18,7 +18,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         // Use Meteor's absoluteUrl for non-URL Vite base paths
         // Ensures consistent mapping to Vite assets with non-root app paths.
         if (!this.baseUrl.match(/^\w+:\/\/./)) {
-            Meteor.absoluteUrl(this.baseUrl);
+            Meteor.absoluteUrl(this.baseUrl.replace(/^\/+/, ''));
         }
     }
     
