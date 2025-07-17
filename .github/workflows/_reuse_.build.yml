@@ -133,7 +133,7 @@ jobs:
           cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
           cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
           build-args: |
-            ${{ inputs.viteAssetsDir     && format('METEOR_VITE_ASSETS_DIR={0}', inputs.viteAssetsDir)     }}
+            ${{ inputs.viteAssetDir      && format('METEOR_VITE_ASSETS_DIR={0}', inputs.viteAssetDir)      }}
             ${{ inputs.meteorBaseImage   && format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)        }}
             ${{ inputs.nodeVersion       && format('NODE_VERSION={0}', inputs.nodeVersion)                 }}
             METEOR_VITE_BASE_URL${{ steps.image.outputs.viteBaseUrl }}
