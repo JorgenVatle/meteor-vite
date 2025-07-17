@@ -21,8 +21,8 @@ metadata:
     app.kubernetes.io/version: "${APP_VERSION}"
     app.kubernetes.io/meteor-version: "${METEOR_RELEASE}"
     app.kubernetes.io/git-ref: "${GIT_REF}"
-    app.kubernetes.io/base-path: "${BASE_PATH}"
   annotations:
+    deployment-preview/base-path: "${BASE_PATH}"
     deployment-preview/remove-after: "${REMOVE_AFTER}"
 spec:
   selector:
@@ -40,8 +40,8 @@ spec:
         app.kubernetes.io/version: "${APP_VERSION}"
         app.kubernetes.io/meteor-version: "${METEOR_RELEASE}"
         app.kubernetes.io/git-ref: "${GIT_REF}"
-        app.kubernetes.io/base-path: "${BASE_PATH}"
       annotations:
+        deployment-preview/base-path: "${BASE_PATH}"
         deployment-preview/remove-after: "${REMOVE_AFTER}"
     spec:
       containers:
@@ -93,8 +93,8 @@ metadata:
     app.kubernetes.io/instance: "${APP_NAME}"
     app.kubernetes.io/version: "${APP_VERSION}"
     app.kubernetes.io/git-branch: "${GIT_REF}"
-    app.kubernetes.io/base-path: "${BASE_PATH}"
   annotations:
+    deployment-preview/base-path: "${BASE_PATH}"
     deployment-preview/remove-after: "${REMOVE_AFTER}"
 spec:
   type: ClusterIP
