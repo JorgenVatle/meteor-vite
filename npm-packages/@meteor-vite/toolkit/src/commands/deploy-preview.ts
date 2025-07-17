@@ -1,6 +1,8 @@
 import { CommandDefinition } from '@/lib/CommandDefinition';
 import FS from 'fs/promises';
-import { execSync } from 'node:child_process';
+import { execSync, spawn } from 'node:child_process';
+import { inspect } from 'node:util';
+import { parse } from 'yaml';
 
 export default [
     new CommandDefinition('kube-deploy', {
@@ -41,7 +43,7 @@ export default [
         handler: async (options) => {
             const manifestInput = FS.readFile(options.manifest, 'base64');
             
-            const substitutedManifest = execSync(`echo '${manifestInput}' | base64 -d -w 0 | envsubst`, {
+            const substitutedManifest = parse(execSync(`echo '${manifestInput}' | base64 -d -w 0 | envsubst`, {
                 env: {
                     KUBE_NAMESPACE: options.namespace,
                     GIT_REF: options['git-ref'],
@@ -49,14 +51,28 @@ export default [
                     APP_VERSION: options.version,
                     ...process.env,
                 }
-            }).toString('utf8');
+            }).toString('utf8'));
             
             await FS.appendFile(process.env.GITHUB_STEP_SUMMARY!, summary('Deployment manifest', codeBlock('yaml', substitutedManifest)))
             
-            console.log(substitutedManifest);
+            await sh(['echo', substitutedManifest, '|', 'kubectl', 'apply', '-f', '-']);
+            
+            console.log(inspect(substitutedManifest, { colors: true, depth: 10 }));
         }
     })
 ]
+
+async function sh([command, ...params]: string[]) {
+    return spawn(command, params, {
+        stdio: 'inherit',
+    });
+}
+
+async function kubectl(params: string[]) {
+    return execSync(`kubectl ${params.join(' ')}`, {
+        stdio: 'inherit',
+    });
+}
 
 function codeBlock(language: string, content: string) {
     return [
