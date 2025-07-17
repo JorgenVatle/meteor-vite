@@ -113,7 +113,7 @@ async function parseManifest(filePath: string, envsubst: Record<string, any>): P
             ...envsubst,
             ...process.env,
         }
-    }).pipe`base64 -d -w 0`.pipe`envsubst`;
+    }).pipe`envsubst`;
     
     let jsonResult = parse(result.stdout);
     
