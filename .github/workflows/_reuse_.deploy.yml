@@ -67,6 +67,7 @@ jobs:
       BASE_PATH: ${{ needs.build.outputs.basePath }}
       DEPLOYMENT_NAME: ${{ inputs.appBasename }}-${{ needs.build.outputs.refTag }}
       METEOR_RELEASE: ${{ needs.build.outputs.meteorRelease }}
+      GIT_REF: ${{ needs.build.outputs.refTag }}
     needs:
       - build
     steps:
