@@ -109,9 +109,40 @@ export default [
             },
         },
         handler: async (options) => {
-            const services = await getServices({ namespace: options.namespace, label: {} })
+            const services = await getServices({ namespace: options.namespace, label: {} });
+            const paths: HttpPath[] = [];
             
-            console.log({ services: services.items });
+            for (const service of services.items) {
+                const annotations = service.metadata.annotations;
+                if (!annotations) {
+                    continue;
+                }
+                
+                const basePath = annotations['toolbox.meteor-vite.io/base-path'];
+                if (!basePath) {
+                    continue;
+                }
+                
+                const port = service.spec?.ports[0];
+                if (!port) {
+                    continue;
+                }
+                
+                paths.push({
+                    path: basePath,
+                    pathType: 'Prefix',
+                    backend: {
+                        service: {
+                            name: service.metadata.name,
+                            port: {
+                                number: service.spec.ports[0].port,
+                            }
+                        }
+                    }
+                })
+            }
+            
+            console.log(inspect(services, { colors: true, depth: 10 }));
         }
     })
 ]
@@ -141,7 +172,13 @@ type IngressResult = KubeManifest<{
 }>;
 
 type ServiceResult = {
-    items: KubeManifest[];
+    items: KubeManifest<{
+        ports: {
+            port: number;
+            targetPort: number;
+            name?: string;
+        }[]
+    }>[];
 }
 
 type HttpPath = {
