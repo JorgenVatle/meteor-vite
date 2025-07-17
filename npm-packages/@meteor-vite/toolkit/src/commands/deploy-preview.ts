@@ -109,16 +109,9 @@ export default [
             },
         },
         handler: async (options) => {
-            const services = await kubectl([
-                'get',
-                'services',
-                '-n',
-                options.namespace,
-                // '-l',
-                // 'app.kubernetes.io/managed-by=@meteor-vite/toolkit',
-            ]);
+            const services = await getServices({ namespace: options.namespace, label: {} })
             
-            console.log({ services });
+            console.log({ services: services.items });
         }
     })
 ]
@@ -129,7 +122,42 @@ async function kubectl(params: string[]) {
     return JSON.parse(result.stdout);
 }
 
-type KubeManifest = {
+function getServices(services: { namespace: string, label: Record<string, string> }): Promise<ServiceResult> {
+    return kubectl([
+        'get',
+        'services',
+        '-n',
+        services.namespace,
+        // todo: apply label selector
+    ]);
+}
+
+type IngressResult = KubeManifest<{
+    rules: [
+        http: {
+            paths: HttpPath[]
+        }
+    ]
+}>;
+
+type ServiceResult = {
+    items: KubeManifest[];
+}
+
+type HttpPath = {
+    path: string;
+    pathType: string;
+    backend: {
+        service: {
+            name: string;
+            port: {
+                number: number;
+            }
+        }
+    }
+}
+
+type KubeManifest<Spec = undefined> = {
     apiVersion: string;
     kind: string;
     metadata: {
@@ -138,6 +166,7 @@ type KubeManifest = {
         labels?: Record<string, string>
         annotations?: Record<string, string>
     };
+    spec: Spec;
 }
 
 async function parseManifest(filePath: string, envsubst: Record<string, any>): Promise<KubeManifest[]> {
