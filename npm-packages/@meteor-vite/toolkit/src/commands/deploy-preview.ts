@@ -74,6 +74,7 @@ export default [
                     namespace: options.namespace,
                     labels: Object.assign({
                         'app.kubernetes.io/version': options.version,
+                        'app.kubernetes.io/managed-by': '@meteor-vite/toolkit',
                         'toolbox.meteor-vite.io/app-name': options['app-name'],
                         'toolbox.meteor-vite.io/git-ref': gitRef,
                     }, manifest.metadata.labels),
@@ -90,13 +91,42 @@ export default [
             
             console.log(inspect(manifests, { colors: true, depth: 10 }));
         }
+    }),
+    
+    new CommandDefinition('kube-sync-ingress', {
+        title: 'Patch ingress with current deployments',
+        description: 'Updates the provided ingress with paths from annotated preview deployments.',
+        fields: {
+            ingress: {
+                type: String,
+                description: 'Name of the ingress to update',
+            },
+            namespace: {
+                type: String,
+                description: 'Kubernetes namespace to deploy to',
+                defaultValue: process.env.KUBE_NAMESPACE!,
+                optional: !!process.env.KUBE_NAMESPACE,
+            },
+        },
+        handler: async (options) => {
+            const services = await kubectl([
+                'get',
+                'services',
+                '-n',
+                options.namespace,
+                // '-l',
+                // 'app.kubernetes.io/managed-by=@meteor-vite/toolkit',
+            ]);
+            
+            console.log({ services });
+        }
     })
 ]
 
 async function kubectl(params: string[]) {
-    return execa(`kubectl`, params, {
-        stdio: 'inherit',
-    });
+    const result = await execa(`kubectl`, [...params, '-o', 'json']);
+    
+    return JSON.parse(result.stdout);
 }
 
 type KubeManifest = {
