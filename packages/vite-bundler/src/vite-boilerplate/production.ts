@@ -9,16 +9,21 @@ import { type Boilerplate, ViteBoilerplate } from './common';
 
 export class ViteProductionBoilerplate extends ViteBoilerplate {
     
+    protected readonly baseUrl: string;
+    
     constructor() {
         super();
+        this.baseUrl = this.viteManifest.base;
+        
+        // Use Meteor's absoluteUrl for non-URL Vite base paths
+        // Ensures consistent mapping to Vite assets with non-root app paths.
+        if (!this.baseUrl.match(/^\w+:\/\/./)) {
+            Meteor.absoluteUrl(this.baseUrl);
+        }
     }
     
     public get assetDir() {
         return '/' + this.viteManifest.assetsDir.replace(/^\/+/, '');
-    }
-    
-    public get baseUrl() {
-        return this.viteManifest.base;
     }
     
     protected filePath(file: string) {
