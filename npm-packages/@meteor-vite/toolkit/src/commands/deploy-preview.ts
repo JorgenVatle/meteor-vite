@@ -114,6 +114,7 @@ export default [
                 'services',
                 '-n',
                 options.namespace,
+                options.ingress,
                 // '-l',
                 // 'app.kubernetes.io/managed-by=@meteor-vite/toolkit',
             ]);
