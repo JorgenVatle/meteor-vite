@@ -21,6 +21,11 @@ function getEnv(keys) {
 function patch(manifest) {
     console.log(inspect(manifest.spec.rules, { colors: true, depth: 10 }));
 
+    if (process.env.DRY_RUN) {
+        console.log('DRY_RUN: Skipping patch');
+        return;
+    }
+
     execSync(`kubectl patch ingress preview -n ${APP_NAMESPACE} -p '${JSON.stringify(manifest)}'`, {
         stdio: 'inherit'
     })
