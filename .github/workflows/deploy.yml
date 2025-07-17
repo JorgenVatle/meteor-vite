@@ -11,11 +11,6 @@ on:
     branches:
       - release
 
-env:
-  REMOVE_AFTER: ${{ (github.event_name == 'pull_request' && '1m') }}
-  BRANCH_ID: ${{ (github.event_name == 'pull_request' && 'tmp-preview') || github.ref_name }}
-
-
 jobs:
   vue:
     name: 'Vue'
@@ -23,8 +18,7 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'vue'
-      removeAfter: ${{ env.REMOVE_AFTER }}
-      branchId: '${{ env.BRANCH_ID }}'
+      eventName: ${{ github.event_name }}
 
   svelte:
     name: 'Svelte'
@@ -32,8 +26,7 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'svelte'
-      removeAfter: ${{ env.REMOVE_AFTER }}
-      branchId: '${{ env.BRANCH_ID }}'
+      eventName: ${{ github.event_name }}
 
   react:
     name: 'React'
@@ -41,8 +34,7 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'react'
-      removeAfter: ${{ env.REMOVE_AFTER }}
-      branchId: '${{ env.BRANCH_ID }}'
+      eventName: ${{ github.event_name }}
 
   solid:
     name: 'Solid'
@@ -50,8 +42,7 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'solid'
-      removeAfter: ${{ env.REMOVE_AFTER }}
-      branchId: '${{ env.BRANCH_ID }}'
+      eventName: ${{ github.event_name }}
 
   vue-zodern-relay:
     name: 'Vue + zodern:relay'
@@ -59,8 +50,7 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'vue-zodern-relay'
-      removeAfter: ${{ env.REMOVE_AFTER }}
-      branchId: '${{ env.BRANCH_ID }}'
+      eventName: ${{ github.event_name }}
 
   vue-ssr:
     name: 'Vue + SSR'
@@ -68,5 +58,4 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'vue-ssr'
-      removeAfter: ${{ env.REMOVE_AFTER }}
-      branchId: '${{ env.BRANCH_ID }}'
+      eventName: ${{ github.event_name }}
