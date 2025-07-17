@@ -106,7 +106,7 @@ jobs:
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
           refTag="$(echo ${{ github.ref_name }} | tr / -)"
-          basePath="$refTag/$appName"
+          basePath="/$refTag/$appName"
           viteBaseUrl=${{ inputs.viteBaseUrl || '"$basePath/vite"' }}
 
           echo "cacheTag=$imageName:buildcache" >> $GITHUB_OUTPUT
