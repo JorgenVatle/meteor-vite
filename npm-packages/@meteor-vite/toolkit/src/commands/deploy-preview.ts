@@ -1,6 +1,6 @@
 import { CommandDefinition } from '@/lib/CommandDefinition';
+import { execa } from 'execa';
 import FS from 'fs/promises';
-import { execSync, spawn } from 'node:child_process';
 import { inspect } from 'node:util';
 import { parse } from 'yaml';
 
@@ -9,10 +9,15 @@ export default [
         title: 'Deploy a preview to Kubernetes',
         description: 'Creates a temporary deployment to a Kubernetes cluster for previewing changes from pull requests or branches.',
         fields: {
+            'app-name': {
+                type: String,
+                description: 'Name of the application. Used to identify the deployment and associated resources.',
+                defaultValue: process.env.APP_NAME,
+            },
             'git-ref': {
                 type: String,
                 description: 'Branch or pull request ID. Uniquely identifies the deployment. Will be inferred from the current environment.',
-                defaultValue: process.env.GITHUB_REF_NAME,
+                defaultValue: process.env.GITHUB_REF_NAME!,
             },
             namespace: {
                 type: String,
@@ -39,39 +44,77 @@ export default [
                 description: 'Docker image tag to use for the deployment.',
                 defaultValue: process.env.APP_VERSION || (process.env.GITHUB_SHA && `sha-${process.env.GITHUB_SHA?.slice(0, 7)}`),
             },
+            'base-path': {
+                type: String,
+                description: 'Base path to use for the deployment. This will be used to configure the ingress.',
+                defaultValue: process.env.BASE_PATH,
+            },
         },
         handler: async (options) => {
-            const manifestInput = FS.readFile(options.manifest, 'base64');
+            const gitRef = options['git-ref'].replaceAll('/', '-');
+            const manifests = await parseManifest(options.manifest, {
+                KUBE_NAMESPACE: options.namespace,
+                GIT_REF: options['git-ref'],
+                DOCKER_IMAGE: options.image,
+                APP_VERSION: options.version,
+                ...process.env,
+            });
             
-            const substitutedManifest = parse(execSync(`echo '${manifestInput}' | base64 -d -w 0 | envsubst`, {
-                env: {
-                    KUBE_NAMESPACE: options.namespace,
-                    GIT_REF: options['git-ref'],
-                    DOCKER_IMAGE: options.image,
-                    APP_VERSION: options.version,
-                    ...process.env,
-                }
-            }).toString('utf8'));
+            for (const manifest of manifests) {
+                Object.assign(manifest.metadata, {
+                    name: `${options['app-name']}-${gitRef}`,
+                    namespace: options.namespace,
+                    labels: Object.assign({
+                        'toolbox.meteor-vite.io/app-name': options['app-name'],
+                        'toolbox.meteor-vite.io/git-ref': gitRef,
+                    }, manifest.metadata.labels),
+                    annotations: Object.assign({
+                        'toolbox.meteor-vite.io/delete-after-duration': options['delete-after-duration'],
+                        'toolbox.meteor-vite.io/base-path': options['base-path'],
+                    }, manifest.metadata.annotations),
+                })
+            }
             
-            await FS.appendFile(process.env.GITHUB_STEP_SUMMARY!, summary('Deployment manifest', codeBlock('yaml', substitutedManifest)))
+            await FS.appendFile(process.env.GITHUB_STEP_SUMMARY!, summary('Kubernetes manifests', codeBlock('json', JSON.stringify(manifests, null, 2))));
             
-            await sh(['echo', substitutedManifest, '|', 'kubectl', 'apply', '-f', '-']);
-            
-            console.log(inspect(substitutedManifest, { colors: true, depth: 10 }));
+            console.log(inspect(manifests, { colors: true, depth: 10 }));
         }
     })
 ]
 
-async function sh([command, ...params]: string[]) {
-    return spawn(command, params, {
+async function kubectl(params: string[]) {
+    return execa(`kubectl`, params, {
         stdio: 'inherit',
     });
 }
 
-async function kubectl(params: string[]) {
-    return execSync(`kubectl ${params.join(' ')}`, {
-        stdio: 'inherit',
-    });
+type KubeManifest = {
+    apiVersion: string;
+    kind: string;
+    metadata: {
+        name: string;
+        namespace?: string;
+        labels?: Record<string, string>
+        annotations?: Record<string, string>
+    };
+}
+
+async function parseManifest(filePath: string, envsubst: Record<string, any>): Promise<KubeManifest[]> {
+    const manifestInput = await FS.readFile(filePath, 'utf8');
+    const result = await execa('echo', [manifestInput], {
+        env: {
+            ...envsubst,
+            ...process.env,
+        }
+    }).pipe`base64 -d -w 0`.pipe`envsubst`;
+    
+    let jsonResult = parse(result.stdout);
+    
+    if (!Array.isArray(jsonResult)) {
+        jsonResult = [jsonResult];
+    }
+    
+    return jsonResult;
 }
 
 function codeBlock(language: string, content: string) {
