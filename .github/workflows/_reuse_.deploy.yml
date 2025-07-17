@@ -29,14 +29,17 @@ on:
       viteAssetDir:
         type: string
         required: false
+      branchId:
+        type: string
+        default: ${{ github.ref_name }}
 
 env:
   APP_NAME: ${{ inputs.appBasename }}
   APP_NAMESPACE: meteor-vite
   METEOR_RELEASE: ${{ inputs.meteorRelease }}
-  DEPLOYMENT_NAME: ${{ github.ref_name }}-${{ inputs.appBasename }}
-  BASE_PATH: /${{ github.ref_name }}/${{ inputs.appBasename }}
-  ROOT_URL: https://meteor-vite-preview.wcaserver.com/${{ github.ref_name }}/${{ inputs.appBasename }}/
+  DEPLOYMENT_NAME: ${{ inputs.branchId }}-${{ inputs.appBasename }}
+  BASE_PATH: /${{ inputs.branchId }}/${{ inputs.appBasename }}
+  ROOT_URL: https://meteor-vite-preview.wcaserver.com/${{ inputs.branchId }}/${{ inputs.appBasename }}/
 jobs:
   build:
     name: Build 🐋
@@ -48,6 +51,7 @@ jobs:
       meteorBaseImage: ${{ inputs.meteorBaseImage }}
       viteBaseUrl: ${{ inputs.viteBaseUrl }}
       viteAssetDir: ${{ inputs.viteAssetDir }}
+      branchId: ${{ inputs.branchId }}
       push: true
 
   deploy:
@@ -57,7 +61,7 @@ jobs:
       group: ${{ github.workflow }}-${{ inputs.appBasename }}
 
     environment:
-      name: ${{ github.ref_name }}-${{ inputs.appBasename }}
+      name: ${{ inputs.branchId }}-${{ inputs.appBasename }}
       url: ${{ env.ROOT_URL }}
     env:
       APP_VERSION: ${{ needs.build.outputs.imageVersion }}

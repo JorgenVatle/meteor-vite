@@ -31,6 +31,9 @@ on:
         type: string
         required: false
         description: Sets the path from where Meteor will serve assets built by Vite.
+      branchId:
+        type: string
+        default: ${{ github.ref_name }}
     outputs:
       deploymentImage:
         value: ${{ jobs.docker.outputs.deploymentImage }}
@@ -93,11 +96,11 @@ jobs:
       - name: Format image name
         id: image
         env:
-          DEFAULT_VITE_BASE_URL: /${{ github.ref_name }}/${{ inputs.appBasename }}/vite
+          DEFAULT_VITE_BASE_URL: /${{ inputs.branchId }}/${{ inputs.appBasename }}/vite
         # language="bashsupport pro shell script"
         run: |
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
-          imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ github.ref_name }}/${{ inputs.appBasename }}"
+          imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ inputs.branchId }}/${{ inputs.appBasename }}"
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
           viteBaseUrl=${{ inputs.viteBaseUrl || env.DEFAULT_VITE_BASE_URL }}
