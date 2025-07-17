@@ -49,6 +49,7 @@ jobs:
           working-directory: tests/cypress-suite
           spec: cypress/e2e/examples/${{ inputs.appBasename }}/**
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: cypress-screenshots
           path: tests/cypress-suite/cypress/screenshots
