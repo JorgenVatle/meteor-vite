@@ -69,6 +69,8 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     name: Docker 🐋
+    concurrency:
+      group: ${{ github.sha }}-${{ inputs.appBasename }}
     env:
       APP_BASENAME: ${{ inputs.appBasename }}
     outputs:
