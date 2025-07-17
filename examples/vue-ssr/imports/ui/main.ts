@@ -6,11 +6,11 @@ import App from './App.vue';
 import { routes } from './router';
 
 export function createApp() {
-  const base = Meteor.absoluteUrl('');
-  let history = createMemoryHistory(base);
+  const { pathname } = new URL(Meteor.absoluteUrl(''));
+  let history = createMemoryHistory(pathname);
   
   if (Meteor.isClient) {
-    history = createWebHistory(base);
+    history = createWebHistory(pathname);
   }
   
   const app = createSSRApp(App);
