@@ -70,7 +70,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Docker 🐋
     concurrency:
-      group: ${{ github.sha }}-${{ inputs.appBasename }}
+      group: docker-image-${{ inputs.appBasename }}-${{ github.sha }}
     env:
       APP_BASENAME: ${{ inputs.appBasename }}
     outputs:
