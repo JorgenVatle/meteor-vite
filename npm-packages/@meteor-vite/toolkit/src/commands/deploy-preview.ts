@@ -65,6 +65,7 @@ export default [
                     name: `${options['app-name']}-${gitRef}`,
                     namespace: options.namespace,
                     labels: Object.assign({
+                        'app.kubernetes.io/version': options.version,
                         'toolbox.meteor-vite.io/app-name': options['app-name'],
                         'toolbox.meteor-vite.io/git-ref': gitRef,
                     }, manifest.metadata.labels),
