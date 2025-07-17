@@ -35,6 +35,7 @@ on:
       removeAfter:
         type: string
         required: false
+        default: never
 
 env:
   APP_NAME: ${{ inputs.appBasename }}
