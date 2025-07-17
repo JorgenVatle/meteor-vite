@@ -55,7 +55,12 @@ export default [
                 defaultValue: process.env.BASE_PATH,
                 optional: !!process.env.BASE_PATH,
             },
-            
+           port: {
+                type: String,
+                description: 'Port to use for the deployment. This will be used to configure the ingress.',
+                defaultValue: process.env.PORT,
+                optional: !!process.env.PORT,
+           }
         },
         handler: async (options) => {
             const gitRef = options['git-ref'].replaceAll('/', '-');
@@ -81,6 +86,7 @@ export default [
                     annotations: Object.assign({
                         'toolbox.meteor-vite.io/delete-after-duration': options['delete-after-duration'],
                         'toolbox.meteor-vite.io/base-path': options['base-path'],
+                        'toolbox.meteor-vite.io/port': options.port,
                     }, manifest.metadata.annotations),
                 })
             }
