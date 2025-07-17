@@ -66,6 +66,7 @@ export default [
                 ...process.env,
             });
             
+            console.log(manifests);
             for (const manifest of manifests) {
                 Object.assign(manifest.metadata, {
                     name: `${options['app-name']}-${gitRef}`,
@@ -115,13 +116,7 @@ async function parseManifest(filePath: string, envsubst: Record<string, any>): P
         }
     }).pipe`envsubst`;
     
-    let jsonResult = parse(result.stdout);
-    
-    if (!Array.isArray(jsonResult)) {
-        jsonResult = [jsonResult];
-    }
-    
-    return jsonResult;
+    return result.stdout.split('---').map((block) => parse(block)).filter(Boolean);
 }
 
 function codeBlock(language: string, content: string) {
