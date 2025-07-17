@@ -100,10 +100,11 @@ jobs:
         # language="bashsupport pro shell script"
         run: |
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
-          imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ github.ref_name }}/${{ inputs.appBasename }}"
+          imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ inputs.appBasename }}"
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
           viteBaseUrl=${{ inputs.viteBaseUrl || env.DEFAULT_VITE_BASE_URL }}
+          refTag="$(echo ${{ github.ref_name }} | tr / -)"
 
           echo "cacheTag=$imageName:buildcache" >> $GITHUB_OUTPUT
           echo "deploymentImage=$imageName:$imageVersion" >> $GITHUB_OUTPUT
@@ -112,6 +113,7 @@ jobs:
           echo "imageVersion=$imageVersion" >> $GITHUB_OUTPUT
           echo "meteorRelease=$meteorRelease" >> $GITHUB_OUTPUT
           echo "viteBaseUrl=$viteBaseUrl" >> $GITHUB_OUTPUT
+          echo "refTag=$refTag" >> $GITHUB_OUTPUT
 
       - name: Prepare metadata
         uses: docker/metadata-action@v5
@@ -136,8 +138,12 @@ jobs:
             ${{ steps.image.outputs.deploymentImage }}
             ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
-          cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
+          cache-from: | 
+            type=registry,ref=${{ steps.image.outputs.cacheTag }}
+            type=registry,ref=${{ steps.image.outputs.cacheTag }}-${{ steps.image.outputs.refTag }}
+          cache-to: | 
+            type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
+            type=registry,ref=${{ steps.image.outputs.cacheTag }}-${{ steps.image.outputs.refTag }},mode=max
           build-args: |
             ${{ inputs.viteAssetDir      && format('METEOR_VITE_ASSETS_DIR={0}', inputs.viteAssetDir)      }}
             ${{ inputs.meteorBaseImage   && format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)        }}
