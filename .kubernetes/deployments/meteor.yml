@@ -75,7 +75,7 @@ spec:
             periodSeconds: 5
             httpGet:
               port: 3000
-              path: "/${GITHUB_REF_NAME}/${APP_NAME}"
+              path: "${BASE_PATH}"
 
 
 ---
