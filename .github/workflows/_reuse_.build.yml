@@ -71,6 +71,7 @@ jobs:
     name: Docker 🐋
     concurrency:
       group: docker-image-${{ inputs.appBasename }}-${{ github.sha }}
+      cancel-in-progress: false
     env:
       APP_BASENAME: ${{ inputs.appBasename }}
     outputs:
