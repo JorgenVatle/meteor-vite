@@ -44,6 +44,8 @@ on:
         value: ${{ jobs.docker.outputs.viteBaseUrl }}
       refTag:
         value: ${{ jobs.docker.outputs.refTag }}
+      basePath:
+        value: ${{ jobs.docker.outputs.basePath }}
 
 jobs:
   ubuntu:
@@ -83,6 +85,7 @@ jobs:
       viteBaseUrl: ${{ steps.image.outputs.viteBaseUrl }}
       viteAssetDir: ${{ inputs.viteAssetDir }}
       refTag: ${{ steps.image.outputs.refTag }}
+      basePath: ${{ steps.image.outputs.basePath }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -97,12 +100,14 @@ jobs:
         id: image
         # language="bashsupport pro shell script"
         run: |
+          appName="${{ inputs.appBasename }}"
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
           imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ inputs.appBasename }}"
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
           refTag="$(echo ${{ github.ref_name }} | tr / -)"
-          viteBaseUrl=${{ inputs.viteBaseUrl || '"$refTag/$appName/vite"' }}
+          basePath="$refTag/$appName"
+          viteBaseUrl=${{ inputs.viteBaseUrl || '"$basePath/vite"' }}
 
           echo "cacheTag=$imageName:buildcache" >> $GITHUB_OUTPUT
           echo "deploymentImage=$imageName:$imageVersion" >> $GITHUB_OUTPUT
@@ -112,6 +117,7 @@ jobs:
           echo "meteorRelease=$meteorRelease" >> $GITHUB_OUTPUT
           echo "viteBaseUrl=$viteBaseUrl" >> $GITHUB_OUTPUT
           echo "refTag=$refTag" >> $GITHUB_OUTPUT
+          echo "basePath=$basePath" >> $GITHUB_OUTPUT
 
       - name: Prepare metadata
         uses: docker/metadata-action@v5
