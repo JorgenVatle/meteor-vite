@@ -73,7 +73,7 @@ export default [
             summaryFile: {
                 type: String,
                 description: 'Path to a file to write a summary of the deployment to.',
-                defaultValue: process.env.GITHUB_STEP_SUMMARY || '.logs/kube-deploy.log',
+                defaultValue: process.env.GITHUB_STEP_SUMMARY || '.logs/kube-deploy-summary.md',
             }
         },
         handler: async (options) => {
