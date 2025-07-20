@@ -13,19 +13,16 @@ export default [
                 type: String,
                 description: 'Name of the application. Used to identify the deployment and associated resources.',
                 defaultValue: process.env.APP_NAME,
-                optional: !!process.env.APP_NAME,
             },
             'git-ref': {
                 type: String,
                 description: 'Branch or pull request ID. Uniquely identifies the deployment. Will be inferred from the current environment.',
                 defaultValue: process.env.GITHUB_REF_NAME!,
-                optional: !!process.env.GITHUB_REF_NAME!,
             },
             namespace: {
                 type: String,
                 description: 'Kubernetes namespace to deploy to',
                 defaultValue: process.env.KUBE_NAMESPACE,
-                optional: !!process.env.KUBE_NAMESPACE,
             },
             manifest: {
                 type: String,
@@ -41,25 +38,21 @@ export default [
                 type: String,
                 description: 'Docker image to use for the deployment.',
                 defaultValue: process.env.DOCKER_IMAGE,
-                optional: !!process.env.DOCKER_IMAGE,
             },
             version: {
                 type: String,
                 description: 'Docker image tag to use for the deployment.',
                 defaultValue: process.env.APP_VERSION || (process.env.GITHUB_SHA && `sha-${process.env.GITHUB_SHA?.slice(0, 7)}`),
-                optional: !!process.env.APP_VERSION || (process.env.GITHUB_SHA && `sha-${process.env.GITHUB_SHA?.slice(0, 7)}`) || process.env.VERSION,
             },
             'base-path': {
                 type: String,
                 description: 'Base path to use for the deployment. This will be used to configure the ingress.',
                 defaultValue: process.env.BASE_PATH,
-                optional: !!process.env.BASE_PATH,
             },
            port: {
                 type: String,
                 description: 'Port to use for the deployment. This will be used to configure the ingress.',
                 defaultValue: process.env.PORT,
-                optional: !!process.env.PORT,
            }
         },
         handler: async (options) => {
@@ -111,7 +104,6 @@ export default [
                 type: String,
                 description: 'Kubernetes namespace to deploy to',
                 defaultValue: process.env.KUBE_NAMESPACE!,
-                optional: !!process.env.KUBE_NAMESPACE,
             },
         },
         handler: async (options) => {
