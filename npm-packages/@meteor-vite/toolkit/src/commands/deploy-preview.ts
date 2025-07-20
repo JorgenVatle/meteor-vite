@@ -99,12 +99,13 @@ export default [
                     namespace: options.namespace,
                     labels: Object.assign({
                         'app.kubernetes.io/name': options['app-name'],
-                        'app.kubernetes.io/instance': instance,
-                        'app.kubernetes.io/version': options.version,
                         'app.kubernetes.io/managed-by': '@meteor-vite/toolkit',
                         'toolbox.meteor-vite.io/repository': process.env.GITHUB_REPOSITORY,
                         'toolbox.meteor-vite.io/ingress': options.ingress,
-                    }, selectorLabels, manifest.metadata.labels),
+                    }, selectorLabels, manifest.metadata.labels, {
+                        'app.kubernetes.io/instance': instance,
+                        'app.kubernetes.io/version': options.version,
+                    }),
                     annotations: Object.assign({
                         'toolbox.meteor-vite.io/delete-after-duration': options['delete-after-duration'],
                         'toolbox.meteor-vite.io/base-path': options['base-path'],
