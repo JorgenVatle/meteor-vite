@@ -60,6 +60,7 @@ jobs:
       KUBE_APP_VERSION: ${{ needs.build.outputs.imageVersion }}
       KUBE_REMOVE_AFTER: ${{ (inputs.eventName == 'pull_request' && '1m') || 'never'  }}
       KUBE_INGRESS_BASE_PATH: ${{ needs.build.outputs.basePath }}
+      KUBE_INGRESS_NAME: preview
       KUBE_DEPLOYMENT_TIMEOUT: 30s
       KUBE_NAMESPACE: meteor-vite
       KUBE_CONTAINER_PORT: 3000
@@ -92,12 +93,12 @@ jobs:
 
       - name: Apply manifest
         # language="bash"
-        run: npm exec toolkit kube-deploy -- -f .kubernetes/deployments/meteor.yml --ingress preview
+        run: npm exec toolkit kube-deploy -- -f .kubernetes/deployments/meteor.yml
 
       - name: Verify successful deployment
         # language="bash"
-        run: npm exec toolkit kube-verify-deployment -- --ingress preview
+        run: npm exec toolkit kube-verify-deployment
 
       - name: Update preview ingress
         # language="bash"
-        run: npm exec toolkit kube-sync-ingress -- --ingress preview
+        run: npm exec toolkit kube-sync-ingress
