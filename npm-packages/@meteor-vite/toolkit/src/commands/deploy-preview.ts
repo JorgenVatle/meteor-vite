@@ -171,7 +171,7 @@ export default [
             
             console.log(inspect(manifests, { colors: true, depth: 10 }));
             for (const manifest of manifests) {
-                await kubectl.apply(manifest);
+                await kubectl.apply(manifest, { namespace: options.namespace });
             }
         },
     }),

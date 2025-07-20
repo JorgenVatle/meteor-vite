@@ -54,8 +54,8 @@ class KubectlCli {
         return this.kubectl('get', [resource, ...args], options);
     }
     
-    public apply(manifest: KubeResource): Promise<unknown> {
-        return this.kubectl('apply', ['-f', '-'], {}, JSON.stringify(manifest));
+    public apply(manifest: KubeResource, options: CommandOptions): Promise<unknown> {
+        return this.kubectl('apply', ['-f', '-'], options, JSON.stringify(manifest));
     }
     
     public waitForDeploymentSuccess(deployment: string, timeout: string, options: UniversalOptions): Promise<unknown> {
