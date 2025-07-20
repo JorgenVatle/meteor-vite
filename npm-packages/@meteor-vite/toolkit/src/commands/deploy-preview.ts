@@ -31,6 +31,7 @@ export default [
                 type: String,
                 description: 'Kubernetes namespace to deploy to',
                 defaultValue: process.env.KUBE_NAMESPACE,
+                alias: 'n',
             },
             manifest: {
                 type: String,
@@ -119,6 +120,7 @@ export default [
             namespace: {
                 type: String,
                 description: 'Kubernetes namespace to deploy to',
+                alias: 'n',
                 defaultValue: process.env.KUBE_NAMESPACE!,
             },
         },
