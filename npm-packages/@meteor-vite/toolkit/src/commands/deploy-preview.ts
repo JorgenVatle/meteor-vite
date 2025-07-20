@@ -74,6 +74,11 @@ export default [
                 type: String,
                 description: 'Path to a file to write a summary of the deployment to.',
                 defaultValue: process.env.GITHUB_STEP_SUMMARY || '.logs/kube-deploy-summary.md',
+            },
+            githubOutput: {
+                type: String,
+                description: 'File path to write output variables to. Used for GitHub Actions output',
+                defaultValue: process.env.GITHUB_OUTPUT || '.logs/kube-deploy-manifests.yaml',
             }
         },
         handler: async (options) => {
@@ -87,6 +92,9 @@ export default [
             });
             
             const instance = `${options['app-name']}-${gitRef}`;
+            const githubOutput = {
+                deploymentName: instance;
+            }
             
             console.log(manifests, { options });
             for (const manifest of manifests) {
@@ -137,6 +145,14 @@ export default [
                 await FS.appendFile(
                     options.summaryFile,
                     summary('Kubernetes manifests', codeBlock('json', JSON.stringify(manifests, null, 2))),
+                );
+            }
+            
+            if (options.githubOutput) {
+                await FS.mkdir(Path.dirname(options.githubOutput), { recursive: true });
+                await FS.writeFile(
+                    options.githubOutput,
+                    Object.entries(githubOutput).map(([key, value]) => `${key}='${value}'`).join('\n'),
                 );
             }
             
