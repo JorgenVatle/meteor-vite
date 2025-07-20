@@ -58,7 +58,7 @@ function echoCommand(result: unknown) {
     if (!('command' in result) || typeof result.command !== 'string') {
         return;
     }
-    console.log(['$', pc.dim(result.command)])
+    console.log(pc.dim([pc.bold('$'), pc.cyan(result.command)].join(' ')));
 }
 
 interface UniversalOptions {
