@@ -54,11 +54,11 @@ export default [
                 description: 'Base path to use for the deployment. This will be used to configure the ingress.',
                 defaultValue: process.env.BASE_PATH,
             },
-           port: {
+            port: {
                 type: String,
                 description: 'Port to use for the deployment. This will be used to configure the ingress.',
                 defaultValue: process.env.PORT,
-           }
+            },
         },
         handler: async (options) => {
             const gitRef = options['git-ref'].replaceAll('/', '-');
@@ -86,15 +86,18 @@ export default [
                         'toolbox.meteor-vite.io/base-path': options['base-path'],
                         'toolbox.meteor-vite.io/port': options.port,
                     }, manifest.metadata.annotations),
-                })
+                });
             }
             
             if (process.env.GITHUB_STEP_SUMMARY) {
-                await FS.appendFile(process.env.GITHUB_STEP_SUMMARY, summary('Kubernetes manifests', codeBlock('json', JSON.stringify(manifests, null, 2))));
+                await FS.appendFile(
+                    process.env.GITHUB_STEP_SUMMARY,
+                    summary('Kubernetes manifests', codeBlock('json', JSON.stringify(manifests, null, 2))),
+                );
             }
             
             console.log(inspect(manifests, { colors: true, depth: 10 }));
-        }
+        },
     }),
     
     new CommandDefinition('kube-sync-ingress', {
@@ -139,16 +142,16 @@ export default [
                             name: service.metadata.name,
                             port: {
                                 number: service.spec.ports[0].port,
-                            }
-                        }
-                    }
-                })
+                            },
+                        },
+                    },
+                });
             }
             
             console.log(inspect(services, { colors: true, depth: 10 }));
-        }
-    })
-]
+        },
+    }),
+];
 
 async function kubectl(params: string[]) {
     const result = await execa(`kubectl`, [...params, '-o', 'json']);
@@ -215,7 +218,7 @@ async function parseManifest(filePath: string, envsubst: Record<string, any>): P
         env: {
             ...envsubst,
             ...process.env,
-        }
+        },
     }).pipe`envsubst`;
     
     return result.stdout.split('---').map((block) => parse(block)).filter(Boolean);
@@ -225,8 +228,8 @@ function codeBlock(language: string, content: string) {
     return [
         '```' + language,
         content,
-        '```'
-    ].join('\n')
+        '```',
+    ].join('\n');
 }
 
 function summary(title: string, content: string) {
@@ -236,5 +239,5 @@ function summary(title: string, content: string) {
 
 ${content}
 </details>
-`
+`;
 }
