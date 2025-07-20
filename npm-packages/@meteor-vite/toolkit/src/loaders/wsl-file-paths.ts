@@ -52,7 +52,7 @@ function filePathToUrl(name: string) {
 }
 
 function getPathFromStackLine(line: string): string | undefined {
-    const { path } = line.match(/^\s+at\s+\S+\s\((?<path>.*):\d+:\d+\)$/gm)?.groups || {};
+    const { path } = line.match(/^\s+at\s+\S+\s\((?<path>.*):\d+:\d+\)$/)?.groups || {};
     
     return path;
 }
