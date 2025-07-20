@@ -9,3 +9,12 @@ export type KubeManifest<Spec = undefined> = {
     };
     spec: Spec;
 }
+
+export type KubeResourceList<TManifest = KubeManifest> = {
+    kind: 'List';
+    apiVersion: 'v1';
+    metadata: {
+        resourceVersion: string;
+    };
+    items: TManifest[];
+}
