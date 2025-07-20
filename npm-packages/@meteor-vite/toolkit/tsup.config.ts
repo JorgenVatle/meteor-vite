@@ -14,7 +14,7 @@ export default defineBuildConfig(import.meta.dirname, [
         dts: false,
         sourcemap: 'inline',
         banner: {
-            js: '#!/usr/bin/env node',
+            js: '#!/usr/bin/env -S node --enable-source-maps',
         },
     }
 ]);
