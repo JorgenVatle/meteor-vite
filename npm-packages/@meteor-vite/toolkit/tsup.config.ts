@@ -12,6 +12,7 @@ export default defineBuildConfig(import.meta.dirname, [
         outDir: 'dist/bin',
         format: ['esm'],
         dts: false,
+        sourcemap: 'inline',
         banner: {
             js: '#!/usr/bin/env node',
         },
