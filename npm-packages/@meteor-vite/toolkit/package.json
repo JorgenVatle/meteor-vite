@@ -25,6 +25,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "toolkit build || npm run prepare -- --force",
+    "start": "toolkit",
     "build": "toolkit build .",
     "prepare": "node ./bin/prepare.mjs",
     "postprepare": "npm run build",
