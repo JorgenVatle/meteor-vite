@@ -13,11 +13,36 @@ const SHORT_SHA = process.env.GITHUB_SHA
                   ? `sha-${process.env.GITHUB_SHA.slice(0, 7)}`
                   : null;
 
+const COMMON_FIELDS = {
+    namespace: {
+        type: String,
+        description: 'Kubernetes namespace to deploy to',
+        defaultValue: process.env.KUBE_NAMESPACE,
+        alias: 'n',
+    },
+    ingress: {
+        type: String,
+        description: 'Name of the ingress to associate the deployment with.',
+        defaultValue: process.env.INGRESS_NAME!,
+    },
+    summaryFile: {
+        type: String,
+        description: 'Path to a file to write a summary of the deployment to.',
+        defaultValue: process.env.GITHUB_STEP_SUMMARY || '.logs/kube-deploy-summary.md',
+    },
+    githubOutput: {
+        type: String,
+        description: 'File path to write output variables to. Used for GitHub Actions output',
+        defaultValue: process.env.GITHUB_OUTPUT || '.logs/kube-deploy-manifests.yaml',
+    },
+}
+
 export default [
     new CommandDefinition('kube-deploy', {
         title: 'Deploy a preview to Kubernetes',
         description: 'Creates a temporary deployment to a Kubernetes cluster for previewing changes from pull requests or branches.',
         fields: {
+            ...COMMON_FIELDS,
             'app-name': {
                 type: String,
                 description: 'Name of the application. Used to identify the deployment and associated resources.',
@@ -27,12 +52,6 @@ export default [
                 type: String,
                 description: 'Branch or pull request ID. Uniquely identifies the deployment. Will be inferred from the current environment.',
                 defaultValue: process.env.GITHUB_REF_NAME!,
-            },
-            namespace: {
-                type: String,
-                description: 'Kubernetes namespace to deploy to',
-                defaultValue: process.env.KUBE_NAMESPACE,
-                alias: 'n',
             },
             manifest: {
                 type: String,
@@ -63,22 +82,6 @@ export default [
                 type: String,
                 description: 'Port to use for the deployment. This will be used to configure the ingress.',
                 defaultValue: process.env.PORT || '3000',
-            },
-            ingress: {
-                type: String,
-                description: 'Name of the ingress to associate the deployment with.',
-                defaultValue: process.env.INGRESS_NAME,
-                optional: true,
-            },
-            summaryFile: {
-                type: String,
-                description: 'Path to a file to write a summary of the deployment to.',
-                defaultValue: process.env.GITHUB_STEP_SUMMARY || '.logs/kube-deploy-summary.md',
-            },
-            githubOutput: {
-                type: String,
-                description: 'File path to write output variables to. Used for GitHub Actions output',
-                defaultValue: process.env.GITHUB_OUTPUT || '.logs/kube-deploy-manifests.yaml',
             },
             deploymentTimeout: {
                 type: String,
@@ -173,16 +176,7 @@ export default [
         title: 'Patch ingress with current deployments',
         description: 'Updates the provided ingress with paths from annotated preview deployments.',
         fields: {
-            ingress: {
-                type: String,
-                description: 'Name of the ingress to update',
-            },
-            namespace: {
-                type: String,
-                description: 'Kubernetes namespace to deploy to',
-                alias: 'n',
-                defaultValue: process.env.KUBE_NAMESPACE!,
-            },
+            ...COMMON_FIELDS,
         },
         handler: async ({ namespace, ingress }) => {
             const services = await kubectl.get('service', {
