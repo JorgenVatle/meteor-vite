@@ -63,6 +63,12 @@ export default [
                 description: 'Port to use for the deployment. This will be used to configure the ingress.',
                 defaultValue: process.env.PORT || '3000',
             },
+            ingress: {
+                type: String,
+                description: 'Name of the ingress to associate the deployment with.',
+                defaultValue: process.env.INGRESS_NAME,
+                optional: true,
+            }
         },
         handler: async (options) => {
             const gitRef = options['git-ref'].replaceAll('/', '-');
@@ -89,6 +95,7 @@ export default [
                         'toolbox.meteor-vite.io/app-name': options['app-name'],
                         'toolbox.meteor-vite.io/git-ref': gitRef,
                         'toolbox.meteor-vite.io/repository': process.env.GITHUB_REPOSITORY,
+                        'toolbox.meteor-vite.io/ingress': options.ingress,
                     }, manifest.metadata.labels),
                     annotations: Object.assign({
                         'toolbox.meteor-vite.io/delete-after-duration': options['delete-after-duration'],
@@ -125,7 +132,12 @@ export default [
             },
         },
         handler: async (options) => {
-            const services = await kubectl.get('service', { namespace: options.namespace, label: {} });
+            const services = await kubectl.get('service', {
+                namespace: options.namespace,
+                label: {
+                    'toolbox.meteor-vite.io/ingress': options.ingress,
+                }
+            });
             const paths: IngressHttpPath[] = [];
             
             for (const service of services.items) {
