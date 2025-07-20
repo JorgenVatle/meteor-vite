@@ -94,6 +94,10 @@ jobs:
         # language="bash"
         run: npm exec toolkit kube-deploy -- -f .kubernetes/deployments/meteor.yml --ingress preview
 
+      - name: Verify successful deployment
+        # language="bash"
+        run: npm exec toolkit kube-verify-deployment -- --ingress preview
+
       - name: Update preview ingress
         # language="bash"
         run: npm exec toolkit kube-sync-ingress -- --ingress preview
