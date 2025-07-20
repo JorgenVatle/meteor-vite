@@ -99,13 +99,14 @@ export default [
                     'app.kubernetes.io/instance': instance,
                 }
                 
+                Object.assign(labels, selectorLabels);
+                
                 Object.entries({
                     'app.kubernetes.io/managed-by': '@meteor-vite/toolkit',
                     'app.kubernetes.io/version': options.version,
                     'app.kubernetes.io/git-ref': 'preview',
                     'toolkit.meteor-vite.io/repository': process.env.GITHUB_REPOSITORY,
                     'toolkit.meteor-vite.io/ingress': options.ingress,
-                    ...selectorLabels,
                 }).forEach(([key, value]) => {
                     labels[key] = labels[key] || value || 'n/a';
                 });
