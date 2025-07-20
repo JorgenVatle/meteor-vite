@@ -86,11 +86,11 @@ jobs:
           echo '${{ secrets.KUBE_CONFIG_DATA }}' | base64 -d > ~/.kube/config
 
       - name: Install dependencies
-        run: npm i
+        run: npm ci
 
       - name: Apply manifest
         # language="bash"
-        run: toolkit kube-deploy -f .kubernetes/deployments/meteor.yml
+        run: npm exec toolkit kube-deploy -f .kubernetes/deployments/meteor.yml
 
       - name: Verify deployment
         # language="bash"
@@ -99,4 +99,4 @@ jobs:
 
       - name: Update preview ingress
         # language="bash"
-        run: toolkit kube-sync-ingress --ingress preview
+        run: npm exec toolkit kube-sync-ingress --ingress preview
