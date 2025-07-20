@@ -15,5 +15,11 @@ export default defineBuildConfig(import.meta.dirname, [
         banner: {
             js: '#!/usr/bin/env -S node --enable-source-maps',
         },
+    },
+    {
+        name: '@meteor-vite/toolkit: loaders',
+        entry: ['src/loaders'],
+        outDir: 'dist/loaders',
+        format: ['esm', 'cjs'],
     }
 ]);
