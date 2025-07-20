@@ -20,7 +20,6 @@ metadata:
     app.kubernetes.io/instance: "${APP_NAME}"
     app.kubernetes.io/version: "${APP_VERSION}"
     app.kubernetes.io/meteor-version: "${METEOR_RELEASE}"
-    app.kubernetes.io/git-ref: "${GIT_REF}"
   annotations:
     deployment-preview/base-path: "${BASE_PATH}"
     deployment-preview/remove-after: "${REMOVE_AFTER}"
@@ -30,7 +29,6 @@ spec:
       app.kubernetes.io/name: meteor-vite-example
       app.kubernetes.io/component: meteor
       app.kubernetes.io/instance: "${APP_NAME}"
-      app.kubernetes.io/git-ref: "${GIT_REF}"
   template:
     metadata:
       labels:
@@ -39,7 +37,6 @@ spec:
         app.kubernetes.io/instance: "${APP_NAME}"
         app.kubernetes.io/version: "${APP_VERSION}"
         app.kubernetes.io/meteor-version: "${METEOR_RELEASE}"
-        app.kubernetes.io/git-ref: "${GIT_REF}"
       annotations:
         deployment-preview/base-path: "${BASE_PATH}"
         deployment-preview/remove-after: "${REMOVE_AFTER}"
@@ -92,7 +89,6 @@ metadata:
     app.kubernetes.io/component: meteor
     app.kubernetes.io/instance: "${APP_NAME}"
     app.kubernetes.io/version: "${APP_VERSION}"
-    app.kubernetes.io/git-ref: "${GIT_REF}"
   annotations:
     deployment-preview/base-path: "${BASE_PATH}"
     deployment-preview/remove-after: "${REMOVE_AFTER}"
@@ -105,5 +101,4 @@ spec:
     app.kubernetes.io/name: meteor-vite-example
     app.kubernetes.io/component: meteor
     app.kubernetes.io/instance: "${APP_NAME}"
-    app.kubernetes.io/git-ref: "${GIT_REF}"
 
