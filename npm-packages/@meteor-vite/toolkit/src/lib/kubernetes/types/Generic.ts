@@ -18,3 +18,5 @@ export type KubeResourceList<TManifest = KubeManifest> = {
     };
     items: TManifest[];
 }
+
+export type MetadataLabels = Record<string, string>;

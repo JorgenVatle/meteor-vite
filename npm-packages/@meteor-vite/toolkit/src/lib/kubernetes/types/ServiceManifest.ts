@@ -1,7 +1,8 @@
-import type { KubeManifest } from '@/lib/kubernetes/types/Generic';
+import type { KubeManifest, MetadataLabels } from '@/lib/kubernetes/types/Generic';
 
 export type ServiceManifest = KubeManifest<'Service', {
     ports: ServicePort[];
+    selector: MetadataLabels;
 }>
 
 type ServicePort = {
