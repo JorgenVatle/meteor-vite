@@ -86,7 +86,7 @@ jobs:
           echo '${{ secrets.KUBE_CONFIG_DATA }}' | base64 -d > ~/.kube/config
 
       - name: Install dependencies
-        run: npm ci
+        run: npm i
 
       - name: Apply manifest
         # language="bash"
