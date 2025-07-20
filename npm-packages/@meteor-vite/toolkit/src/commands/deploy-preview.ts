@@ -72,7 +72,7 @@ export default [
             
             const instance = `${options['app-name']}-${gitRef}`;
             
-            console.log(manifests);
+            console.log(manifests, { options });
             for (const manifest of manifests) {
                 Object.assign(manifest.metadata, {
                     name: instance,
