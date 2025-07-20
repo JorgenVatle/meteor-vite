@@ -1,24 +1,44 @@
 import { fileURLToPath } from 'node:url';
+import pc from 'picocolors';
 
 const WSL_ROOT = {
     windows: process.env.WSL_ROOT_WINDOWS || '//wsl.localhost/Ubuntu/',
     wsl: '/',
 };
 
+const prepareStackTrace = Error.prepareStackTrace;
+
 Error.prepareStackTrace = (err, structuredStackTrace) => {
-    return [
-        `${err.name}: ${err.message}`,
-        ...structuredStackTrace.map(callSite => {
-            const fileName = callSite.getFileName();
-            const line = callSite.getLineNumber();
-            const col = callSite.getColumnNumber();
-            const func = callSite.getFunctionName() || '<anonymous>';
-            
-            const { url } = wslPath(fileName);
-            
-            return `    at ${func} (${url}:${line}:${col})`;
-        })
-    ].join('\n');
+    if (!prepareStackTrace) {
+        return [
+            `${err.name}: ${err.message}`,
+            ...structuredStackTrace.map(callSite => {
+                const fileName = callSite.getFileName();
+                const line = callSite.getLineNumber();
+                const col = callSite.getColumnNumber();
+                const func = callSite.getFunctionName() || '<anonymous>';
+                const { url } = wslPath(fileName);
+                
+                return `    at ${func} (${url}:${line}:${col})`;
+            })
+        ].join('\n');
+    }
+    const stack = prepareStackTrace(err, structuredStackTrace);
+    if (typeof stack !== 'string') {
+        console.error('Unexpected stack trace type', { stack });
+        return stack;
+    }
+    
+    return stack.split(/[\r\n]/).map((line) => {
+        const path = getPathFromStackLine(line);
+        if (!path) {
+            return line + pc.yellow(' (Failed to extract path)');
+        }
+        
+        const { url } = wslPath(path);
+        
+        return line.replace(path, url);
+    }).join('\n');
 };
 
 function filePathToUrl(name: string) {
@@ -29,6 +49,12 @@ function filePathToUrl(name: string) {
         return name;
     }
     return `file://${name}`;
+}
+
+function getPathFromStackLine(line: string): string | undefined {
+    const { path } = line.match(/^\s+at\s+\S+\s\((?<path>.*):\d+:\d+\)$/gm)?.groups || {};
+    
+    return path;
 }
 
 function wslPath(fileName: string | undefined) {
