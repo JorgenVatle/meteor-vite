@@ -90,7 +90,7 @@ jobs:
 
       - name: Apply manifest
         # language="bash"
-        run: npm exec toolkit kube-deploy -f .kubernetes/deployments/meteor.yml
+        run: npm exec toolkit kube-deploy -- -f .kubernetes/deployments/meteor.yml
 
       - name: Verify deployment
         # language="bash"
@@ -99,4 +99,4 @@ jobs:
 
       - name: Update preview ingress
         # language="bash"
-        run: npm exec toolkit kube-sync-ingress --ingress preview
+        run: npm exec toolkit kube-sync-ingress
