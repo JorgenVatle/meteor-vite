@@ -3,7 +3,7 @@ import type { KubeResource, KubeResourceType } from '@/lib/kubernetes/types/Reso
 import { execa } from 'execa';
 import pc from 'picocolors';
 
-type Verb = 'get' | 'create' | 'delete' | 'apply';
+type Verb = 'get' | 'patch' | 'create' | 'delete' | 'apply';
 
 class KubectlCli {
     protected async kubectl<
@@ -43,6 +43,10 @@ class KubectlCli {
     
     public apply(manifest: KubeResource): Promise<unknown> {
         return this.kubectl('apply', ['-f', '-', JSON.stringify(manifest)], {});
+    }
+    
+    public patch(resource: KubeResourceType, name: string, patch: KubeResource, options: UniversalOptions): Promise<unknown> {
+        return this.kubectl('patch', [resource, name, '-p', JSON.stringify(patch)], options);
     }
 }
 
