@@ -214,6 +214,7 @@ export class ProjectCompiler {
             fileContent: [
                 Path.join(this.rootDir, 'src'),
                 Path.join(this.rootDir, 'tsconfig.json'),
+                Path.join(this.rootDir, 'tsup.config.ts'),
             ],
             // Used to trigger a re-build if the dist directory is deleted or
             // partially built.
