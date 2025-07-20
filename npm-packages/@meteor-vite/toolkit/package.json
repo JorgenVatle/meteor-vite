@@ -2,8 +2,8 @@
   "name": "@meteor-vite/toolkit",
   "version": "1.0.0",
   "bin": {
-    "toolkit": "./bin/entrypoint.mjs",
-    "rewrite-file-urls": "./bin/rewrite-file-urls.mjs"
+    "toolkit": "./dist/bin/entrypoint.mjs",
+    "rewrite-file-urls": "./dist/bin/rewrite-file-urls.mjs"
   },
   "description": "Internal toolkit for managing building and publishing meteor-vite's npm and Atmosphere packages.",
   "author": "Jørgen Vatle <Jorgen@WcAServices.net> (https://github.com/JorgenVatle)",
