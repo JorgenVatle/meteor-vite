@@ -124,7 +124,7 @@ export default [
                     'toolkit.meteor-vite.io/repository': process.env.GITHUB_REPOSITORY,
                     'toolkit.meteor-vite.io/ingress': options.ingress,
                 }).forEach(([key, value]) => {
-                    labels[key] = labels[key] || value || 'n/a';
+                    labels[key] = labels[key] || value || 'not-defined';
                 });
                 
                 Object.assign(manifest.metadata, {
