@@ -104,6 +104,10 @@ export class ProjectCompiler {
             process.chdir(this.rootDir);
             const { build } = await import('tsup');
             
+            // Clean up chunks from prior builds
+            // Todo: this might need to have an opt-out flag.
+            await this.clean();
+            
             await build({
                 watch: this.options.watch,
             });
