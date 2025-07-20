@@ -81,6 +81,7 @@ export default [
                         'app.kubernetes.io/part-of': options['app-name'],
                         'toolbox.meteor-vite.io/app-name': options['app-name'],
                         'toolbox.meteor-vite.io/git-ref': gitRef,
+                        'toolbox.meteor-vite.io/repository': process.env.GITHUB_REPOSITORY,
                     }, manifest.metadata.labels),
                     annotations: Object.assign({
                         'toolbox.meteor-vite.io/delete-after-duration': options['delete-after-duration'],
