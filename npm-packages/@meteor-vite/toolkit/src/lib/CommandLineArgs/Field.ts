@@ -1,6 +1,7 @@
 import type TsCliArgs from 'ts-command-line-args';
 
 export type Field<T = any> = OptionalField<T> | MultiField<T> | BaseField<T> | OptionalMultiField<T>;
+export type GenericField<T = unknown> = Partial<OptionalField<T> & MultiField<T> & BaseField<T> & OptionalMultiField<T>> & BasePropertyOptions;
 
 export type OptionalField<T = unknown> = {
     optional: true;
