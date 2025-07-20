@@ -159,6 +159,7 @@ export default [
             }
             
             console.log(inspect(services, { colors: true, depth: 10 }));
+            console.log(inspect(paths, { colors: true, depth: 10 }));
         },
     }),
 ];
