@@ -79,6 +79,11 @@ export default [
                 type: String,
                 description: 'File path to write output variables to. Used for GitHub Actions output',
                 defaultValue: process.env.GITHUB_OUTPUT || '.logs/kube-deploy-manifests.yaml',
+            },
+            deploymentTimeout: {
+                type: String,
+                description: 'Duration to wait for pods to become ready and consider the deployment successful. Ex. 30s, 1m, 1h.',
+                defaultValue: '30s',
             }
         },
         handler: async (options) => {
@@ -157,6 +162,7 @@ export default [
             }
             
             console.log(inspect(manifests, { colors: true, depth: 10 }));
+            await kubectl.waitForDeploymentSuccess(githubOutput.deploymentName, options.deploymentTimeout, { namespace: options.namespace })
         },
     }),
     

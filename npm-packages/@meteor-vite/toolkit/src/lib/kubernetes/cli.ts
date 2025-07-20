@@ -5,7 +5,7 @@ import pc from 'picocolors';
 import type { DeepPartial } from '~/meteor-vite/internals/lib/UtilityTypes';
 import { envOverride } from '~/meteor-vite/utilities/server/EnvFlag';
 
-type Verb = 'get' | 'patch' | 'create' | 'delete' | 'apply';
+type Verb = 'get' | 'patch' | 'create' | 'delete' | 'apply' | 'rollout';
 const DRY_RUN = !!JSON.parse(envOverride('DRY_RUN', 'true'));
 
 class KubectlCli {
@@ -50,6 +50,10 @@ class KubectlCli {
     
     public apply(manifest: KubeResource): Promise<unknown> {
         return this.kubectl('apply', ['-f', '-', JSON.stringify(manifest)], {});
+    }
+    
+    public waitForDeploymentSuccess(deployment: string, timeout: string, options: UniversalOptions): Promise<unknown> {
+        return this.kubectl('rollout', ['status', 'deployment', deployment, '--watch', '--timeout', timeout], options);
     }
     
     public patch<TType extends KubeResourceType>(
