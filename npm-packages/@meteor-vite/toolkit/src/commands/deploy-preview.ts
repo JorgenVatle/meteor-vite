@@ -172,6 +172,10 @@ export default [
             
             console.log(inspect({ services, paths }, { colors: true, depth: 10 }));
             
+            if (!paths.length) {
+                throw new Error(`No matching services found for ingress: ${ingress}`);
+            }
+            
             await kubectl.patch('ingress', ingress, {
                     spec: {
                         rules: [
