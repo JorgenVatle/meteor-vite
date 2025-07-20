@@ -29,7 +29,7 @@ export function parseArgs<
         }
         
         // Mark fields where a default has been assigned as optional.
-        if (typeof field.optional !== 'boolean') {
+        if (typeof field.optional !== 'boolean' && field.defaultValue) {
             field.optional = true;
         }
         
