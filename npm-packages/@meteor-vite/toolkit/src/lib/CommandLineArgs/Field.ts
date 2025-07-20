@@ -15,13 +15,17 @@ export type MultiField<T = unknown> = {
     multiple: true;
 } & BaseField<T>;
 
-export type BaseField<T = unknown> = {
+export type BaseField<T = unknown> = ({
+    defaultValue?: T;
     type: {
         (value?: unknown): T;
     },
 } | {
     defaultValue: T;
-};
+    type?: {
+        (value?: unknown): T;
+    };
+}) & {};
 
 export type InferFieldType<
     TField,
