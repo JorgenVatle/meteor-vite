@@ -27,7 +27,11 @@ class KubectlCli {
             args.push('--dry-run=server');
         }
         
-        const result = await execa('kubectl', [verb, ...args, '-o', 'json']).catch((error: unknown) => {
+        if (!['rollout'].includes(verb)) {
+            args.push( '-o', 'json');
+        }
+        
+        const result = await execa('kubectl', [verb, ...args]).catch((error: unknown) => {
             echoCommand(error);
             throw error;
         });
