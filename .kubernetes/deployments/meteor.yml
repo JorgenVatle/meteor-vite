@@ -32,13 +32,13 @@ spec:
     spec:
       containers:
         - name: meteor
-          image: "${APP_IMAGE}"
+          image: "${KUBE_CONTAINER_IMAGE}"
           ports:
-            - containerPort: ${PORT}
+            - containerPort: ${KUBE_CONTAINER_PORT}
               name: meteor
           env:
             - name: PORT
-              value: "${PORT}"
+              value: "${KUBE_CONTAINER_PORT}"
             - name: ROOT_URL
               value: "${ROOT_URL}"
             - name: DEBUG
@@ -65,7 +65,7 @@ spec:
             periodSeconds: 5
             httpGet:
               port: 3000
-              path: "${BASE_PATH}"
+              path: "${KUBE_INGRESS_BASE_PATH}"
 
 
 ---
@@ -79,7 +79,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: ${PORT}
+    - port: ${KUBE_CONTAINER_PORT}
       name: meteor
   selector:
     app.kubernetes.io/component: meteor
