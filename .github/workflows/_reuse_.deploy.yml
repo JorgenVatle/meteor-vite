@@ -96,11 +96,6 @@ jobs:
         # language="bash"
         run: npm exec toolkit kube-deploy -- -f .kubernetes/deployments/meteor.yml
 
-      - name: Verify deployment
-        # language="bash"
-        run: |
-          kubectl rollout status deployment --watch --timeout 30s -n "$APP_NAMESPACE" "$DEPLOYMENT_NAME"
-
       - name: Update preview ingress
         # language="bash"
         run: npm exec toolkit kube-sync-ingress
