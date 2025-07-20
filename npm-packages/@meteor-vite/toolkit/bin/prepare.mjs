@@ -6,7 +6,7 @@ import packageJson from '../package.json' with { type: 'json' };
 
 const dirname = Path.dirname(fileURLToPath(import.meta.url));
 const rootDir = Path.join(dirname, '..');
-const entrypoint = Path.join(rootDir, packageJson.directories.bin, 'toolkit.mjs');
+const entrypoint = Path.join(rootDir, 'dist', packageJson.bin.toolkit);
 
 if (!FS.existsSync(entrypoint) || process.argv.includes('--force')) {
     console.log([
