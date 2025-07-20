@@ -37,6 +37,12 @@ export function parseArgs<
         if (!('type' in field)) {
             field.type = getPrimitiveConstructor(field.defaultValue);
         }
+        
+        // Ensure custom type transform functions also gets applied to default values.
+        if (typeof field.type === 'function') {
+            field.defaultValue = field.type(field.defaultValue);
+        }
+        
     })
     
     return TSCliArgs.parse(args as any, options);

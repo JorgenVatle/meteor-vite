@@ -18,12 +18,12 @@ export type MultiField<T = unknown> = {
 export type BaseField<T = unknown> = ({
     defaultValue?: T;
     type: {
-        (value?: unknown): T;
+        (value?: any): T;
     },
 } | {
     defaultValue: T;
     type?: {
-        (value?: unknown): T;
+        (value?: any): T;
     };
 }) & {};
 
