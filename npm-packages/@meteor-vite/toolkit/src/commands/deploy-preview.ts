@@ -78,6 +78,7 @@ export default [
                     labels: Object.assign({
                         'app.kubernetes.io/version': options.version,
                         'app.kubernetes.io/managed-by': '@meteor-vite/toolkit',
+                        'app.kubernetes.io/part-of': options['app-name'],
                         'toolbox.meteor-vite.io/app-name': options['app-name'],
                         'toolbox.meteor-vite.io/git-ref': gitRef,
                     }, manifest.metadata.labels),
