@@ -239,12 +239,12 @@ export default [
 
 async function parseManifest(filePath: string, envsubst: Record<string, any>): Promise<KubeResource[]> {
     const manifestInput = await FS.readFile(filePath, 'utf8');
-    const result = await execa('echo', [manifestInput], {
+    const result = await execa('echo', [manifestInput]).pipe(`envsubst`, [], {
         env: {
             ...process.env,
             ...envsubst,
         },
-    }).pipe`envsubst`;
+    });
     
     return result.stdout.split('---').map((block) => parse(block)).filter(Boolean);
 }
