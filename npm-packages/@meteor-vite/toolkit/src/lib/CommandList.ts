@@ -1,4 +1,4 @@
-import { CommandNotFound } from '@/errors/CommandFailure';
+import { CommandFailure, CommandNotFound } from '@/errors/CommandFailure';
 import type { CommandSpec } from '@/lib/CommandDefinition';
 import { Parser } from '@/lib/CommandLineArgs/defineParser';
 import { GlobalConfig } from '@/lib/GlobalConfig';
@@ -73,11 +73,20 @@ export class CommandList<
     }
     
     public async run<TName extends TCommand>(commandName: TName, argv: string[], options?: TOptions[TName]) {
-        if (GlobalConfig.debug) {
-            console.log({ commandName, argv, trace: new Error(), proc: process.argv });
+        try {
+            if (GlobalConfig.debug) {
+                console.log({ commandName, argv, trace: new Error(), proc: process.argv });
+            }
+            const command = this.get(commandName);
+            await command.run(argv, options);
+        } catch (error) {
+            if (!(error instanceof CommandFailure)) {
+                throw error;
+            }
+            
+            process.exitCode = 1;
+            console.error(error.message);
         }
-        const command = this.get(commandName);
-        await command.run(argv, options);
     }
     
     protected get<TName extends TCommand>(commandName: TName) {
