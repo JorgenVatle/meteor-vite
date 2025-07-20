@@ -89,6 +89,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Build packages
+        run: npm run build:packages
+
       - name: Apply manifest
         # language="bash"
         run: npm exec toolkit kube-deploy -- -f .kubernetes/deployments/meteor.yml
