@@ -1,13 +1,15 @@
 import type { KubeManifest } from '@/lib/kubernetes/types/Generic';
 
 export type IngressManifest = KubeManifest<{
-    rules: [
-        http: {
-            host: string;
-            paths: IngressHttpPath[]
-        }
-    ]
+    rules: IngressRule[]
 }>;
+
+type IngressRule = {
+    host: string;
+    http: {
+        paths: IngressHttpPath[];
+    }
+}
 
 export type IngressHttpPath = {
     path: string;
