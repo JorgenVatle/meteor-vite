@@ -137,7 +137,7 @@ export default [
                 labels: [
                     ['toolbox.meteor-vite.io/ingress', '==', options.ingress]
                 ]
-            };
+            });
             const paths: IngressHttpPath[] = [];
             
             for (const service of services.items) {
