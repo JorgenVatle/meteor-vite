@@ -23,7 +23,7 @@ const COMMON_FIELDS = {
     ingress: {
         type: String,
         description: 'Name of the ingress to associate the deployment with.',
-        defaultValue: process.env.INGRESS_NAME!,
+        defaultValue: process.env.KUBE_INGRESS_NAME!,
     },
     summaryFile: {
         type: String,
@@ -46,7 +46,7 @@ export default [
             'app-name': {
                 type: String,
                 description: 'Name of the application. Used to identify the deployment and associated resources.',
-                defaultValue: process.env.APP_NAME,
+                defaultValue: process.env.KUBE_APP_NAME,
             },
             'git-ref': {
                 type: String,
@@ -61,32 +61,32 @@ export default [
             'delete-after-duration': {
                 type: String,
                 description: 'Duration to wait before deleting the deployment and associated resources. Ex. 10m, 1h, 1d.',
-                defaultValue: envOverride('REMOVE_AFTER', undefined),
+                defaultValue: envOverride('KUBE_REMOVE_AFTER', undefined),
             },
             image: {
                 type: String,
                 description: 'Docker image to use for the deployment.',
-                defaultValue: process.env.DOCKER_IMAGE,
+                defaultValue: process.env.KUBE_DOCKER_IMAGE,
             },
             version: {
                 type: String,
                 description: 'Docker image tag to use for the deployment.',
-                defaultValue: envOverride('APP_VERSION', SHORT_SHA),
+                defaultValue: envOverride('KUBE_APP_VERSION', SHORT_SHA),
             },
             'base-path': {
                 type: String,
                 description: 'Base path to use for the deployment. This will be used to configure the ingress.',
-                defaultValue: process.env.BASE_PATH || '/',
+                defaultValue: process.env.KUBE_INGRESS_BASE_PATH || '/',
             },
             port: {
                 type: String,
                 description: 'Port to use for the deployment. This will be used to configure the ingress.',
-                defaultValue: process.env.PORT || '3000',
+                defaultValue: process.env.KUBE_CONTAINER_PORT || '3000',
             },
             deploymentTimeout: {
                 type: String,
                 description: 'Duration to wait for pods to become ready and consider the deployment successful. Ex. 30s, 1m, 1h.',
-                defaultValue: envOverride('DEPLOYMENT_TIMEOUT', '30s'),
+                defaultValue: envOverride('KUBE_DEPLOYMENT_TIMEOUT', '30s'),
             }
         },
         handler: async (options) => {
