@@ -12,7 +12,7 @@ class KubectlCli {
     protected async kubectl<
         TType extends KubeResourceType,
         TResource = KubeResource<TType>
-    >(verb: Verb, params: string[], options: UniversalOptions): Promise<KubeResourceList<TResource> | TResource> {
+    >(verb: Verb, params: string[], options: UniversalOptions, stdin?: string): Promise<KubeResourceList<TResource> | TResource> {
         const args: string[] = [...params || []];
         
         if (options.namespace) {
@@ -31,7 +31,9 @@ class KubectlCli {
             args.push( '-o', 'json');
         }
         
-        const result = await execa('kubectl', [verb, ...args]).catch((error: unknown) => {
+        const result = await execa('kubectl', [verb, ...args], {
+            input: stdin,
+        }).catch((error: unknown) => {
             echoCommand(error);
             throw error;
         });
@@ -53,7 +55,7 @@ class KubectlCli {
     }
     
     public apply(manifest: KubeResource): Promise<unknown> {
-        return this.kubectl('apply', ['-f', '-', JSON.stringify(manifest)], {});
+        return this.kubectl('apply', ['-f', '-'], {}, JSON.stringify(manifest));
     }
     
     public waitForDeploymentSuccess(deployment: string, timeout: string, options: UniversalOptions): Promise<unknown> {
