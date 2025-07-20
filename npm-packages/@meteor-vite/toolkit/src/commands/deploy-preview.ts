@@ -97,7 +97,6 @@ export default [
                 DOCKER_IMAGE: options.image,
                 APP_VERSION: options.version,
                 PORT: options.port,
-                ...process.env,
             });
             
             const instance = `${options['app-name']}-${gitRef}`;
@@ -242,8 +241,8 @@ async function parseManifest(filePath: string, envsubst: Record<string, any>): P
     const manifestInput = await FS.readFile(filePath, 'utf8');
     const result = await execa('echo', [manifestInput], {
         env: {
-            ...envsubst,
             ...process.env,
+            ...envsubst,
         },
     }).pipe`envsubst`;
     
