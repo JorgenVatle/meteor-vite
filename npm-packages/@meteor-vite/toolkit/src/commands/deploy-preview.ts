@@ -86,7 +86,7 @@ export default [
             deploymentTimeout: {
                 type: String,
                 description: 'Duration to wait for pods to become ready and consider the deployment successful. Ex. 30s, 1m, 1h.',
-                defaultValue: '30s',
+                defaultValue: envOverride('DEPLOYMENT_TIMEOUT', '30s'),
             }
         },
         handler: async (options) => {
