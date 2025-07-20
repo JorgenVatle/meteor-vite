@@ -18,7 +18,7 @@ class KubectlCli {
         
         if (options.label) {
             Object.entries(options.label).forEach(([key, value]) => {
-                args.push(`--label`, `${key}=${value}`);
+                args.push(`-l`, `${key}=${value}`);
             })
         }
         
