@@ -34,7 +34,7 @@ spec:
         - name: meteor
           image: "${APP_IMAGE}"
           ports:
-            - containerPort: 3000
+            - containerPort: ${PORT}
               name: meteor
           env:
             - name: PORT
@@ -79,7 +79,7 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: "${PORT}"
+    - port: ${PORT}
       name: meteor
   selector:
     app.kubernetes.io/component: meteor
