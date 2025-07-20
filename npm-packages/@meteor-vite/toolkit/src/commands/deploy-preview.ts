@@ -1,7 +1,7 @@
 import { CommandDefinition } from '@/lib/CommandDefinition';
 import { kubectl } from '@/lib/kubernetes/cli';
 import type { IngressHttpPath } from '@/lib/kubernetes/types';
-import type { KubeManifest } from '@/lib/kubernetes/types/Generic';
+import type { KubeResource } from '@/lib/kubernetes/types/ResourceTypes';
 import { execa } from 'execa';
 import FS from 'fs/promises';
 import { inspect } from 'node:util';
@@ -84,6 +84,10 @@ export default [
             
             console.log(manifests, { options });
             for (const manifest of manifests) {
+                const selectorLabels = {
+                    'toolbox.meteor-vite.io/app-name': options['app-name'],
+                    'toolbox.meteor-vite.io/git-ref': gitRef,
+                }
                 Object.assign(manifest.metadata, {
                     name: instance,
                     namespace: options.namespace,
@@ -92,17 +96,20 @@ export default [
                         'app.kubernetes.io/instance': instance,
                         'app.kubernetes.io/version': options.version,
                         'app.kubernetes.io/managed-by': '@meteor-vite/toolkit',
-                        'toolbox.meteor-vite.io/app-name': options['app-name'],
-                        'toolbox.meteor-vite.io/git-ref': gitRef,
                         'toolbox.meteor-vite.io/repository': process.env.GITHUB_REPOSITORY,
                         'toolbox.meteor-vite.io/ingress': options.ingress,
-                    }, manifest.metadata.labels),
+                    }, selectorLabels, manifest.metadata.labels),
                     annotations: Object.assign({
                         'toolbox.meteor-vite.io/delete-after-duration': options['delete-after-duration'],
                         'toolbox.meteor-vite.io/base-path': options['base-path'],
                         'toolbox.meteor-vite.io/port': options.port,
                     }, manifest.metadata.annotations),
                 });
+                
+                if (manifest.kind === 'Deployment') {
+                    manifest.spec.selector.matchLabels = Object.assign({}, selectorLabels, manifest.spec.selector.matchLabels);
+                    manifest.spec.template.metadata.labels = Object.assign({}, selectorLabels, manifest.spec.template.metadata.labels);
+                }
             }
             
             if (process.env.GITHUB_STEP_SUMMARY) {
@@ -190,7 +197,7 @@ export default [
     }),
 ];
 
-async function parseManifest(filePath: string, envsubst: Record<string, any>): Promise<KubeManifest[]> {
+async function parseManifest(filePath: string, envsubst: Record<string, any>): Promise<KubeResource[]> {
     const manifestInput = await FS.readFile(filePath, 'utf8');
     const result = await execa('echo', [manifestInput], {
         env: {
