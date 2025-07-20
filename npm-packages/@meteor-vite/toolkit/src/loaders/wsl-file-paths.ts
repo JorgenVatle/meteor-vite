@@ -38,7 +38,7 @@ function wslPath(fileName: string | undefined) {
     try {
         const fileUrl = filePathToUrl(fileName);
         const path = fileURLToPath(fileUrl).replace(/^\//, WSL_ROOT.windows);
-        const url = `file://${wslPath}`;
+        const url = `file://${path}`;
         return { path, url };
     } catch (error) {
         let errorMessage = 'Unexpected error type';
