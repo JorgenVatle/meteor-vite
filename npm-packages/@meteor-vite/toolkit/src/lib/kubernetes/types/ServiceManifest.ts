@@ -1,6 +1,6 @@
 import type { KubeManifest } from '@/lib/kubernetes/types/Generic';
 
-export type ServiceManifest = KubeManifest<{
+export type ServiceManifest = KubeManifest<'Service', {
     ports: ServicePort[];
 }>
 

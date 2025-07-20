@@ -1,6 +1,6 @@
-export type KubeManifest<Spec = undefined> = {
+export type KubeManifest<TKind extends string = string, Spec = undefined> = {
     apiVersion: string;
-    kind: string;
+    kind: TKind;
     metadata: {
         name: string;
         namespace?: string;

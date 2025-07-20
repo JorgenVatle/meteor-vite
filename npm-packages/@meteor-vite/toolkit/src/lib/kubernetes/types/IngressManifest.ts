@@ -1,6 +1,6 @@
 import type { KubeManifest } from '@/lib/kubernetes/types/Generic';
 
-export type IngressManifest = KubeManifest<{
+export type IngressManifest = KubeManifest<'Ingress', {
     rules: IngressRule[]
 }>;
 
