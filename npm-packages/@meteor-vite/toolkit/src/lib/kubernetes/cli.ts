@@ -16,11 +16,9 @@ class KubectlCli {
             args.push('-n', options.namespace);
         }
         
-        if (options.label) {
-            Object.entries(options.label).forEach(([key, value]) => {
-                args.push(`-l`, `${key}=${value}`);
-            })
-        }
+        options.labels?.forEach((selector) => {
+            args.push('-l', selector.join(''))
+        })
         
         const result = await execa('kubectl', [verb, ...args, '-o', 'json']).catch((error: unknown) => {
             echoCommand(error);
@@ -62,9 +60,13 @@ function echoCommand(result: unknown) {
 }
 
 interface UniversalOptions {
-    label?: Record<string, string>;
+    labels?: LabelSelector[];
     namespace?: string;
 }
+
+type LabelOperator = '=' | '!=' | '==';
+
+type LabelSelector = [string, LabelOperator, string];
 
 interface CommandOptions extends UniversalOptions {
     name?: string;

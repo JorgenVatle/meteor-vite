@@ -134,10 +134,10 @@ export default [
         handler: async (options) => {
             const services = await kubectl.get('service', {
                 namespace: options.namespace,
-                label: {
-                    'toolbox.meteor-vite.io/ingress': options.ingress,
-                }
-            });
+                labels: [
+                    ['toolbox.meteor-vite.io/ingress', '==', options.ingress]
+                ]
+            };
             const paths: IngressHttpPath[] = [];
             
             for (const service of services.items) {
