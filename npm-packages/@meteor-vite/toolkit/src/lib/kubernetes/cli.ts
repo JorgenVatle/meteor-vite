@@ -6,7 +6,7 @@ import type { DeepPartial } from '~/meteor-vite/internals/lib/UtilityTypes';
 import { envOverride } from '~/meteor-vite/utilities/server/EnvFlag';
 
 type Verb = 'get' | 'patch' | 'create' | 'delete' | 'apply' | 'rollout';
-const DRY_RUN = !!JSON.parse(envOverride('DRY_RUN', 'true'));
+const DRY_RUN = !!JSON.parse(envOverride('DRY_RUN', 'false'));
 
 class KubectlCli {
     protected async kubectl<
