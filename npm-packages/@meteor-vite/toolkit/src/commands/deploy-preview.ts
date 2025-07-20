@@ -95,15 +95,14 @@ export default [
                 });
                 
                 const selectorLabels = {
-                    'toolkit.meteor-vite.io/app-name': options['app-name'],
-                    'toolkit.meteor-vite.io/git-ref': gitRef,
+                    'app.kubernetes.io/name': options['app-name'],
+                    'app.kubernetes.io/instance': instance,
                 }
                 
                 Object.entries({
-                    'app.kubernetes.io/name': options['app-name'],
                     'app.kubernetes.io/managed-by': '@meteor-vite/toolkit',
-                    'app.kubernetes.io/instance': instance,
                     'app.kubernetes.io/version': options.version,
+                    'app.kubernetes.io/git-ref': 'preview',
                     'toolkit.meteor-vite.io/repository': process.env.GITHUB_REPOSITORY,
                     'toolkit.meteor-vite.io/ingress': options.ingress,
                     ...selectorLabels,
