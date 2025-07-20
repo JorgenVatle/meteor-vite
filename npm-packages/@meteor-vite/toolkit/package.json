@@ -21,6 +21,11 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
       "default": "./dist/index.mjs"
+    },
+    "./loaders/*": {
+      "types": ["./dist/loaders/*.d.ts", "./dist/loaders/d.mts"],
+      "import": ["./dist/loaders/*.mjs"],
+      "require": ["./dist/loaders/*.js"]
     }
   },
   "scripts": {
