@@ -4,6 +4,7 @@ import type { IngressHttpPath } from '@/lib/kubernetes/types';
 import type { KubeResource } from '@/lib/kubernetes/types/ResourceTypes';
 import { execa } from 'execa';
 import FS from 'fs/promises';
+import Path from 'node:path';
 import { inspect } from 'node:util';
 import { parse } from 'yaml';
 import { envOverride } from '~/meteor-vite/utilities/server/EnvFlag';
@@ -68,6 +69,11 @@ export default [
                 description: 'Name of the ingress to associate the deployment with.',
                 defaultValue: process.env.INGRESS_NAME,
                 optional: true,
+            },
+            summaryFile: {
+                type: String,
+                description: 'Path to a file to write a summary of the deployment to.',
+                defaultValue: process.env.GITHUB_STEP_SUMMARY || '.logs/kube-deploy.log',
             }
         },
         handler: async (options) => {
@@ -116,9 +122,10 @@ export default [
                 }
             }
             
-            if (process.env.GITHUB_STEP_SUMMARY) {
+            if (options.summaryFile) {
+                await FS.mkdir(Path.dirname(options.summaryFile), { recursive: true });
                 await FS.appendFile(
-                    process.env.GITHUB_STEP_SUMMARY,
+                    options.summaryFile,
                     summary('Kubernetes manifests', codeBlock('json', JSON.stringify(manifests, null, 2))),
                 );
             }
