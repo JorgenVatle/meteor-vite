@@ -3,6 +3,11 @@ import { execa } from 'execa';
 import FS from 'fs/promises';
 import { inspect } from 'node:util';
 import { parse } from 'yaml';
+import { envOverride } from '~/meteor-vite/utilities/server/EnvFlag';
+
+const SHORT_SHA = process.env.GITHUB_SHA
+                  ? `sha-${process.env.GITHUB_SHA.slice(0, 7)}`
+                  : null;
 
 export default [
     new CommandDefinition('kube-deploy', {
@@ -42,7 +47,7 @@ export default [
             version: {
                 type: String,
                 description: 'Docker image tag to use for the deployment.',
-                defaultValue: process.env.APP_VERSION || (process.env.GITHUB_SHA && `sha-${process.env.GITHUB_SHA?.slice(0, 7)}`),
+                defaultValue: envOverride('APP_VERSION', SHORT_SHA),
             },
             'base-path': {
                 type: String,
