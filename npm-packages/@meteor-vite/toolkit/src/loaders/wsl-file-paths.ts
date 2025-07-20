@@ -35,8 +35,20 @@ function wslPath(fileName: string | undefined) {
     if (!fileName) {
         return { path: '<unknown>', url: '<unknown>' };
     }
-    const fileUrl = filePathToUrl(fileName);
-    const path = fileURLToPath(fileUrl).replace(/^\//, WSL_ROOT.windows);
-    const url = `file://${wslPath}`;
-    return { path, url };
+    try {
+        const fileUrl = filePathToUrl(fileName);
+        const path = fileURLToPath(fileUrl).replace(/^\//, WSL_ROOT.windows);
+        const url = `file://${wslPath}`;
+        return { path, url };
+    } catch (error) {
+        let errorMessage = 'Unexpected error type';
+        if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+        const name = `<[[ error resolving WSL path: ${errorMessage} ]]>`;
+        return {
+            path: name,
+            url: name,
+        }
+    }
 }
