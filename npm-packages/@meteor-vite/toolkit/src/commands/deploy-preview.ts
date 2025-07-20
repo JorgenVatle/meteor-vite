@@ -110,6 +110,10 @@ export default [
                     manifest.spec.selector.matchLabels = Object.assign({}, selectorLabels, manifest.spec.selector.matchLabels);
                     manifest.spec.template.metadata.labels = Object.assign({}, selectorLabels, manifest.spec.template.metadata.labels);
                 }
+                
+                if (manifest.kind === 'Service') {
+                    manifest.spec.selector = Object.assign({}, selectorLabels, manifest.spec.selector);
+                }
             }
             
             if (process.env.GITHUB_STEP_SUMMARY) {
