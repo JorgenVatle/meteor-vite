@@ -17,7 +17,7 @@ const COMMON_FIELDS = {
     namespace: {
         type: String,
         description: 'Kubernetes namespace to deploy to',
-        defaultValue: process.env.KUBE_NAMESPACE,
+        defaultValue: process.env.KUBE_NAMESPACE!,
         alias: 'n',
     },
     ingress: {

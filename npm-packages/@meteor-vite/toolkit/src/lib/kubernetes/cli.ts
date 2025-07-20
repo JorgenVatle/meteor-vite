@@ -87,7 +87,7 @@ function echoCommand(result: unknown) {
 
 interface UniversalOptions {
     labels?: LabelSelector[];
-    namespace?: string;
+    namespace: string;
 }
 
 type LabelOperator = '=' | '!=' | '==';
