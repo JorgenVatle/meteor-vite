@@ -66,7 +66,7 @@ export default [
             image: {
                 type: String,
                 description: 'Docker image to use for the deployment.',
-                defaultValue: process.env.KUBE_DOCKER_IMAGE,
+                defaultValue: process.env.KUBE_CONTAINER_IMAGE,
             },
             version: {
                 type: String,

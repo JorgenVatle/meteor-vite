@@ -58,12 +58,12 @@ jobs:
     env:
       KUBE_APP_NAME: ${{ inputs.appBasename }}
       KUBE_APP_VERSION: ${{ needs.build.outputs.imageVersion }}
-      KUBE_DOCKER_IMAGE: ${{ needs.build.outputs.deploymentImage }}
       KUBE_REMOVE_AFTER: ${{ (inputs.eventName == 'pull_request' && '1m') || 'never'  }}
       KUBE_INGRESS_BASE_PATH: ${{ needs.build.outputs.basePath }}
       KUBE_DEPLOYMENT_TIMEOUT: 30s
       KUBE_NAMESPACE: meteor-vite
       KUBE_CONTAINER_PORT: 3000
+      KUBE_CONTAINER_IMAGE: ${{ needs.build.outputs.deploymentImage }}
       METEOR_VERSION: ${{ needs.build.outputs.meteorRelease }}
       ROOT_URL: https://meteor-vite-preview.wcaserver.com/${{ needs.build.outputs.basePath }}
       METEOR_RELEASE: ${{ needs.build.outputs.meteorRelease }}
