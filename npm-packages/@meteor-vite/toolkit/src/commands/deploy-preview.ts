@@ -70,15 +70,18 @@ export default [
                 ...process.env,
             });
             
+            const instance = `${options['app-name']}-${gitRef}`;
+            
             console.log(manifests);
             for (const manifest of manifests) {
                 Object.assign(manifest.metadata, {
-                    name: `${options['app-name']}-${gitRef}`,
+                    name: instance,
                     namespace: options.namespace,
                     labels: Object.assign({
+                        'app.kubernetes.io/name': options['app-name'],
+                        'app.kubernetes.io/instance': instance,
                         'app.kubernetes.io/version': options.version,
                         'app.kubernetes.io/managed-by': '@meteor-vite/toolkit',
-                        'app.kubernetes.io/part-of': options['app-name'],
                         'toolbox.meteor-vite.io/app-name': options['app-name'],
                         'toolbox.meteor-vite.io/git-ref': gitRef,
                         'toolbox.meteor-vite.io/repository': process.env.GITHUB_REPOSITORY,
