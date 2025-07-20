@@ -1,4 +1,6 @@
 import { CommandDefinition } from '@/lib/CommandDefinition';
+import type { IngressHttpPath, ServiceManifest } from '@/lib/kubernetes/types';
+import type { KubeManifest, KubeResourceList } from '@/lib/kubernetes/types/Generic';
 import { execa } from 'execa';
 import FS from 'fs/promises';
 import { inspect } from 'node:util';
@@ -121,7 +123,7 @@ export default [
         },
         handler: async (options) => {
             const services = await getServices({ namespace: options.namespace, label: {} });
-            const paths: HttpPath[] = [];
+            const paths: IngressHttpPath[] = [];
             
             for (const service of services.items) {
                 const annotations = service.metadata.annotations;
@@ -164,7 +166,7 @@ async function kubectl(params: string[]) {
     return JSON.parse(result.stdout);
 }
 
-function getServices(services: { namespace: string, label: Record<string, string> }): Promise<ServiceResult> {
+function getServices(services: { namespace: string, label: Record<string, string> }): Promise<KubeResourceList<ServiceManifest>> {
     return kubectl([
         'get',
         'services',
@@ -172,49 +174,6 @@ function getServices(services: { namespace: string, label: Record<string, string
         services.namespace,
         // todo: apply label selector
     ]);
-}
-
-type IngressResult = KubeManifest<{
-    rules: [
-        http: {
-            paths: HttpPath[]
-        }
-    ]
-}>;
-
-type ServiceResult = {
-    items: KubeManifest<{
-        ports: {
-            port: number;
-            targetPort: number;
-            name?: string;
-        }[]
-    }>[];
-}
-
-type HttpPath = {
-    path: string;
-    pathType: string;
-    backend: {
-        service: {
-            name: string;
-            port: {
-                number: number;
-            }
-        }
-    }
-}
-
-type KubeManifest<Spec = undefined> = {
-    apiVersion: string;
-    kind: string;
-    metadata: {
-        name: string;
-        namespace?: string;
-        labels?: Record<string, string>
-        annotations?: Record<string, string>
-    };
-    spec: Spec;
 }
 
 async function parseManifest(filePath: string, envsubst: Record<string, any>): Promise<KubeManifest[]> {
