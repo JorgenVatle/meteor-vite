@@ -15,31 +15,20 @@ kind: Deployment
 metadata:
   name: "${DEPLOYMENT_NAME}"
   labels:
-    app.kubernetes.io/name: meteor-vite-example
     app.kubernetes.io/component: meteor
-    app.kubernetes.io/instance: "${APP_NAME}"
-    app.kubernetes.io/version: "${APP_VERSION}"
+    app.kubernetes.io/part-of: meteor-vite-example-apps
     app.kubernetes.io/meteor-version: "${METEOR_RELEASE}"
-  annotations:
-    deployment-preview/base-path: "${BASE_PATH}"
-    deployment-preview/remove-after: "${REMOVE_AFTER}"
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: meteor-vite-example
       app.kubernetes.io/component: meteor
-      app.kubernetes.io/instance: "${APP_NAME}"
+      app.kubernetes.io/part-of: meteor-vite-example-apps
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: meteor-vite-example
         app.kubernetes.io/component: meteor
-        app.kubernetes.io/instance: "${APP_NAME}"
-        app.kubernetes.io/version: "${APP_VERSION}"
+        app.kubernetes.io/part-of: meteor-vite-example-apps
         app.kubernetes.io/meteor-version: "${METEOR_RELEASE}"
-      annotations:
-        deployment-preview/base-path: "${BASE_PATH}"
-        deployment-preview/remove-after: "${REMOVE_AFTER}"
     spec:
       containers:
         - name: meteor
@@ -85,20 +74,14 @@ kind: Service
 metadata:
   name: "${DEPLOYMENT_NAME}"
   labels:
-    app.kubernetes.io/name: meteor-vite-example
     app.kubernetes.io/component: meteor
-    app.kubernetes.io/instance: "${APP_NAME}"
-    app.kubernetes.io/version: "${APP_VERSION}"
-  annotations:
-    deployment-preview/base-path: "${BASE_PATH}"
-    deployment-preview/remove-after: "${REMOVE_AFTER}"
+    app.kubernetes.io/part-of: meteor-vite-example-apps
 spec:
   type: ClusterIP
   ports:
     - port: 3000
       name: meteor
   selector:
-    app.kubernetes.io/name: meteor-vite-example
     app.kubernetes.io/component: meteor
-    app.kubernetes.io/instance: "${APP_NAME}"
+    app.kubernetes.io/part-of: meteor-vite-example-apps
 
