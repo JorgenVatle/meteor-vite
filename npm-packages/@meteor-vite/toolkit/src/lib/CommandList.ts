@@ -69,7 +69,7 @@ export class CommandList<
             partial: true,
             argv,
         });
-        return await this.run(name as any, _unknown);
+        return await this.run(name as any, _unknown || []);
     }
     
     public async run<TName extends TCommand>(commandName: TName, argv?: string[], options?: TOptions[TName]) {
