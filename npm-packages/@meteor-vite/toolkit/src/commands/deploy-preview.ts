@@ -61,7 +61,7 @@ export default [
             'delete-after-duration': {
                 type: String,
                 description: 'Duration to wait before deleting the deployment and associated resources. Ex. 10m, 1h, 1d.',
-                defaultValue: '10m',
+                defaultValue: envOverride('REMOVE_AFTER', undefined),
             },
             image: {
                 type: String,
