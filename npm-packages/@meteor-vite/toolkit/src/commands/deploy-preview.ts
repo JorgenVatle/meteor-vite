@@ -138,6 +138,7 @@ export default [
                         'toolkit.meteor-vite.io/delete-after-duration': options['delete-after-duration'],
                         'toolkit.meteor-vite.io/base-path': options['base-path'],
                         'toolkit.meteor-vite.io/port': options.port,
+                        'toolkit.meteor-vite.io/repository-url': process.env.GITHUB_REPOSITORY_URL,
                     }, manifest.metadata.annotations),
                 });
                 
