@@ -2,6 +2,7 @@ import type { KubeResourceList } from '@/lib/kubernetes/types/Generic';
 import type { KubeResource, KubeResourceType } from '@/lib/kubernetes/types/ResourceTypes';
 import { execa } from 'execa';
 import pc from 'picocolors';
+import type { DeepPartial } from '~/meteor-vite/internals/lib/UtilityTypes';
 import { envOverride } from '~/meteor-vite/utilities/server/EnvFlag';
 
 type Verb = 'get' | 'patch' | 'create' | 'delete' | 'apply';
@@ -51,7 +52,12 @@ class KubectlCli {
         return this.kubectl('apply', ['-f', '-', JSON.stringify(manifest)], {});
     }
     
-    public patch(resource: KubeResourceType, name: string, patch: KubeResource, options: UniversalOptions): Promise<unknown> {
+    public patch<TType extends KubeResourceType>(
+        resource: TType,
+        name: string,
+        patch: DeepPartial<KubeResource<TType>>,
+        options: UniversalOptions
+    ): Promise<unknown> {
         return this.kubectl('patch', [resource, name, '-p', JSON.stringify(patch)], options);
     }
 }
