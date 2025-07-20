@@ -60,14 +60,15 @@ jobs:
       name: ${{ inputs.appBasename }}/${{ github.ref_name }}
       url: ${{ env.ROOT_URL }}
     env:
+      APP_NAME: ${{ inputs.appBasename }}
       APP_VERSION: ${{ needs.build.outputs.imageVersion }}
-      APP_IMAGE: ${{ needs.build.outputs.deploymentImage }}
+      DOCKER_IMAGE: ${{ needs.build.outputs.deploymentImage }}
       METEOR_VERSION: ${{ needs.build.outputs.meteorRelease }}
       ROOT_URL: https://meteor-vite-preview.wcaserver.com/${{ needs.build.outputs.basePath }}
       BASE_PATH: ${{ needs.build.outputs.basePath }}
-      DEPLOYMENT_NAME: ${{ inputs.appBasename }}-${{ needs.build.outputs.refTag }}
       METEOR_RELEASE: ${{ needs.build.outputs.meteorRelease }}
-      GIT_REF: ${{ needs.build.outputs.refTag }}
+      DEPLOYMENT_TIMEOUT: 30s
+      PORT: 3000
     needs:
       - build
     steps:
