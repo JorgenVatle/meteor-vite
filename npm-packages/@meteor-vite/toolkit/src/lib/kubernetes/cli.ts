@@ -14,8 +14,10 @@ class KubectlCli {
         return JSON.parse(result.stdout);
     }
     
-    public get<TType extends KubeResourceType>(resource: TType, options: { name?: string, params: string[] }): Promise<KubeResourceList<KubeResource<TType>> | KubeResource<TType>> {
-        const args: string[] = [...options.params];
+    public get<TType extends KubeResourceType>(resource: TType, options: Omit<CommandOptions, 'name'>): Promise<KubeResourceList<KubeResource<TType>>>
+    public get<TType extends KubeResourceType>(resource: TType, options: { name: string } & Omit<CommandOptions, 'name'>): Promise<KubeResource<TType>>
+    public get<TType extends KubeResourceType>(resource: TType, options: CommandOptions): Promise<KubeResourceList<KubeResource<TType>> | KubeResource<TType>> {
+        const args: string[] = [...options.params || []];
         if (options.name) {
             args.unshift(options.name);
         }
@@ -24,6 +26,13 @@ class KubectlCli {
     public apply(manifest: KubeResource): Promise<unknown> {
         return this.kubectl('apply', '-f', '-', JSON.stringify(manifest));
     }
+}
+
+type CommandOptions = {
+    name?: string;
+    namespace?: string;
+    params?: string[];
+    label?: Record<string, string>;
 }
 
 export const kubectl = new KubectlCli();
