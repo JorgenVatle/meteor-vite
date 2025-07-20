@@ -23,7 +23,7 @@ class KubectlCli {
             args.push('-l', selector.join(''))
         });
         
-        if (DRY_RUN && verb !== 'get') {
+        if (DRY_RUN && !['get', 'rollout'].includes(verb)) {
             args.push('--dry-run=server');
         }
         
