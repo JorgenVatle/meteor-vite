@@ -98,7 +98,7 @@ export default [
             
             const instance = `${options['app-name']}-${gitRef}`;
             const githubOutput = {
-                deploymentName: instance;
+                deploymentName: instance,
             }
             
             console.log(manifests, { options });
