@@ -37,22 +37,29 @@ const COMMON_FIELDS = {
     },
 }
 
+const COMMON_DEPLOYMENT_FIELDS = {
+    'app-name': {
+        type: String,
+        description: 'Name of the application. Used to identify the deployment and associated resources.',
+        defaultValue: process.env.KUBE_APP_NAME,
+    },
+    'git-ref': {
+        type: (value: string) => {
+            console.log({ value });
+            return value.replaceAll('/', '-');
+        },
+        description: 'Branch or pull request ID. Uniquely identifies the deployment. Will be inferred from the current environment.',
+        defaultValue: process.env.GITHUB_REF_NAME!,
+    },
+}
+
 export default [
     new CommandDefinition('kube-deploy', {
         title: 'Deploy a preview to Kubernetes',
         description: 'Creates a temporary deployment to a Kubernetes cluster for previewing changes from pull requests or branches.',
         fields: {
             ...COMMON_FIELDS,
-            'app-name': {
-                type: String,
-                description: 'Name of the application. Used to identify the deployment and associated resources.',
-                defaultValue: process.env.KUBE_APP_NAME,
-            },
-            'git-ref': {
-                type: String,
-                description: 'Branch or pull request ID. Uniquely identifies the deployment. Will be inferred from the current environment.',
-                defaultValue: process.env.GITHUB_REF_NAME!,
-            },
+            ...COMMON_DEPLOYMENT_FIELDS,
             manifest: {
                 type: String,
                 alias: 'f',
@@ -83,14 +90,8 @@ export default [
                 description: 'Port to use for the deployment. This will be used to configure the ingress.',
                 defaultValue: process.env.KUBE_CONTAINER_PORT || '3000',
             },
-            deploymentTimeout: {
-                type: String,
-                description: 'Duration to wait for pods to become ready and consider the deployment successful. Ex. 30s, 1m, 1h.',
-                defaultValue: envOverride('KUBE_DEPLOYMENT_TIMEOUT', '30s'),
-            }
         },
         handler: async (options) => {
-            const gitRef = options['git-ref'].replaceAll('/', '-');
             const manifests = await parseManifest(options.manifest, {
                 KUBE_NAMESPACE: options.namespace,
                 GIT_REF: options['git-ref'],
@@ -99,7 +100,7 @@ export default [
                 PORT: options.port,
             });
             
-            const instance = `${options['app-name']}-${gitRef}`;
+            const instance = `${options['app-name']}-${options['git-ref']}`;
             const githubOutput = {
                 deploymentName: instance,
             }
@@ -172,7 +173,25 @@ export default [
             for (const manifest of manifests) {
                 await kubectl.apply(manifest);
             }
-            await kubectl.waitForDeploymentSuccess(githubOutput.deploymentName, options.deploymentTimeout, { namespace: options.namespace })
+        },
+    }),
+    
+    new CommandDefinition('kube-verify-deployment', {
+        title: 'Verify deployment',
+        description: 'Verify that a deployment has been rolled out successfully.',
+        fields: {
+            ...COMMON_FIELDS,
+            ...COMMON_DEPLOYMENT_FIELDS,
+            deploymentTimeout: {
+                type: String,
+                description: 'Duration to wait for pods to become ready and consider the deployment successful. Ex. 30s, 1m, 1h.',
+                defaultValue: envOverride('KUBE_DEPLOYMENT_TIMEOUT', '30s'),
+            }
+        },
+        handler: async (options) => {
+            const instance = `${options['app-name']}-${options['git-ref']}`;
+            
+            await kubectl.waitForDeploymentSuccess(instance, options.deploymentTimeout, { namespace: options.namespace });
         },
     }),
     
