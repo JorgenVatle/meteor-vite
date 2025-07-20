@@ -8,8 +8,20 @@ class KubectlCli {
     protected async kubectl<
         TType extends KubeResourceType,
         TResource = KubeResource<TType>
-    >(verb: Verb, ...params: string[]): Promise<KubeResourceList<TResource> | TResource> {
-        const result = await execa('kubectl', [verb, ...params, '-o', 'json']);
+    >(verb: Verb, params: string[], options: UniversalOptions): Promise<KubeResourceList<TResource> | TResource> {
+        const args: string[] = [...params || []];
+        
+        if (options.namespace) {
+            args.push('-n', options.namespace);
+        }
+        
+        if (options.label) {
+            Object.entries(options.label).forEach(([key, value]) => {
+                args.push(`--label`, `${key}=${value}`);
+            })
+        }
+        
+        const result = await execa('kubectl', [verb, ...args, '-o', 'json']);
         
         return JSON.parse(result.stdout);
     }
@@ -21,26 +33,23 @@ class KubectlCli {
         if (options.name) {
             args.unshift(options.name);
         }
-        if (options.namespace) {
-            args.push('-n', options.namespace);
-        }
-        if (options.label) {
-            Object.entries(options.label).forEach(([key, value]) => {
-                args.push(`--label`, `${key}=${value}`);
-            })
-        }
-        return this.kubectl('get', resource, ...args);
+        
+        return this.kubectl('get', [resource, ...args], options);
     }
+    
     public apply(manifest: KubeResource): Promise<unknown> {
-        return this.kubectl('apply', '-f', '-', JSON.stringify(manifest));
+        return this.kubectl('apply', ['-f', '-', JSON.stringify(manifest)], {});
     }
 }
 
-type CommandOptions = {
-    name?: string;
-    namespace?: string;
-    params?: string[];
+interface UniversalOptions {
     label?: Record<string, string>;
+    namespace?: string;
+}
+
+interface CommandOptions extends UniversalOptions {
+    name?: string;
+    params?: string[];
 }
 
 export const kubectl = new KubectlCli();
