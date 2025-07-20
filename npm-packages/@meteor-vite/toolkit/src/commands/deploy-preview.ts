@@ -52,12 +52,12 @@ export default [
             'base-path': {
                 type: String,
                 description: 'Base path to use for the deployment. This will be used to configure the ingress.',
-                defaultValue: process.env.BASE_PATH,
+                defaultValue: process.env.BASE_PATH || '/',
             },
             port: {
                 type: String,
                 description: 'Port to use for the deployment. This will be used to configure the ingress.',
-                defaultValue: process.env.PORT,
+                defaultValue: process.env.PORT || '3000',
             },
         },
         handler: async (options) => {
