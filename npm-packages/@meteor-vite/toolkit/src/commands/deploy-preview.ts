@@ -131,11 +131,11 @@ export default [
                 defaultValue: process.env.KUBE_NAMESPACE!,
             },
         },
-        handler: async (options) => {
+        handler: async ({ namespace, ingress }) => {
             const services = await kubectl.get('service', {
-                namespace: options.namespace,
+                namespace: namespace,
                 labels: [
-                    ['toolbox.meteor-vite.io/ingress', '==', options.ingress]
+                    ['toolbox.meteor-vite.io/ingress', '==', ingress]
                 ]
             });
             const paths: IngressHttpPath[] = [];
@@ -172,7 +172,16 @@ export default [
             
             console.log(inspect({ services, paths }, { colors: true, depth: 10 }));
             
-            await kubectl.patch('ingress', options.ingress, { spec: { rules: [{ http: { paths } }] } }, {})
+            await kubectl.patch('ingress', ingress, {
+                    spec: {
+                        rules: [
+                            {
+                                http: { paths },
+                            },
+                        ],
+                    },
+                }, { namespace },
+            );
         },
     }),
 ];
