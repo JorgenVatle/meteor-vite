@@ -96,6 +96,7 @@ export default [
                 GIT_REF: options['git-ref'],
                 DOCKER_IMAGE: options.image,
                 APP_VERSION: options.version,
+                PORT: options.port,
                 ...process.env,
             });
             
