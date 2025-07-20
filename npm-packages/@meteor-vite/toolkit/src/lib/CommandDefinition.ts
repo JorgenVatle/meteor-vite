@@ -64,7 +64,7 @@ export class CommandDefinition<
 
 export type CommandSpec = {
     name: string;
-    run: (args: string[], options?: ParserInstanceOptions<{}>) => Promise<void>;
+    run: (args?: string[], options?: ParserInstanceOptions<{}>) => Promise<void>;
     config: {
         title?: string;
         description: string;

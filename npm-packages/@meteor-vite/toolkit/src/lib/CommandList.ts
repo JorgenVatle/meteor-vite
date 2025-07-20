@@ -72,7 +72,7 @@ export class CommandList<
         return await this.run(name as any, _unknown);
     }
     
-    public async run<TName extends TCommand>(commandName: TName, argv: string[], options?: TOptions[TName]) {
+    public async run<TName extends TCommand>(commandName: TName, argv?: string[], options?: TOptions[TName]) {
         try {
             if (GlobalConfig.debug) {
                 console.log({ commandName, argv, trace: new Error(), proc: process.argv });
