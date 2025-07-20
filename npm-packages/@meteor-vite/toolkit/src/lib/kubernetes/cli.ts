@@ -1,6 +1,7 @@
 import type { KubeResourceList } from '@/lib/kubernetes/types/Generic';
 import type { KubeResource, KubeResourceType } from '@/lib/kubernetes/types/ResourceTypes';
 import { execa } from 'execa';
+import pc from 'picocolors';
 
 type Verb = 'get' | 'create' | 'delete' | 'apply';
 
@@ -21,7 +22,12 @@ class KubectlCli {
             })
         }
         
-        const result = await execa('kubectl', [verb, ...args, '-o', 'json']);
+        const result = await execa('kubectl', [verb, ...args, '-o', 'json']).catch((error: unknown) => {
+            echoCommand(error);
+            throw error;
+        });
+        
+        echoCommand(result);
         
         return JSON.parse(result.stdout);
     }
@@ -40,6 +46,19 @@ class KubectlCli {
     public apply(manifest: KubeResource): Promise<unknown> {
         return this.kubectl('apply', ['-f', '-', JSON.stringify(manifest)], {});
     }
+}
+
+function echoCommand(result: unknown) {
+    if (!result) {
+        return;
+    }
+    if (typeof result !== 'object') {
+        return;
+    }
+    if (!('command' in result) || typeof result.command !== 'string') {
+        return;
+    }
+    console.log(['$', pc.dim(result.command)])
 }
 
 interface UniversalOptions {
