@@ -1,3 +1,4 @@
+import Path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import pc from 'picocolors';
 
@@ -5,6 +6,8 @@ const WSL_ROOT = {
     windows: process.env.WSL_ROOT_WINDOWS || '//wsl.localhost/Ubuntu/',
     wsl: '/',
 };
+
+const PROJECT_ROOT = process.env.PROJECT_ROOT || '';
 
 const prepareStackTrace = Error.prepareStackTrace;
 
@@ -63,7 +66,10 @@ function wslPath(fileName: string | undefined) {
     }
     try {
         const fileUrl = filePathToUrl(fileName);
-        const path = fileURLToPath(fileUrl).replace(/^\//, WSL_ROOT.windows);
+        let path = fileURLToPath(fileUrl).replace(/^\//, WSL_ROOT.windows);
+        if (PROJECT_ROOT) {
+            path =  Path.relative(Path.join(WSL_ROOT.windows, Path.resolve(PROJECT_ROOT)), path);
+        }
         const url = `file://${path}`;
         return { path, url };
     } catch (error) {
