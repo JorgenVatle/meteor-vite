@@ -2,8 +2,10 @@ import type { KubeResourceList } from '@/lib/kubernetes/types/Generic';
 import type { KubeResource, KubeResourceType } from '@/lib/kubernetes/types/ResourceTypes';
 import { execa } from 'execa';
 import pc from 'picocolors';
+import { envOverride } from '~/meteor-vite/utilities/server/EnvFlag';
 
 type Verb = 'get' | 'patch' | 'create' | 'delete' | 'apply';
+const DRY_RUN = !!JSON.parse(envOverride('DRY_RUN', 'true'));
 
 class KubectlCli {
     protected async kubectl<
@@ -18,7 +20,11 @@ class KubectlCli {
         
         options.labels?.forEach((selector) => {
             args.push('-l', selector.join(''))
-        })
+        });
+        
+        if (DRY_RUN && verb !== 'get') {
+            args.push('--dry-run=server');
+        }
         
         const result = await execa('kubectl', [verb, ...args, '-o', 'json']).catch((error: unknown) => {
             echoCommand(error);
