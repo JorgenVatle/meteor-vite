@@ -34,10 +34,6 @@ on:
         required: false
         description: Name of the event that triggered this workflow
 
-env:
-  APP_NAME: ${{ inputs.appBasename }}
-  KUBE_NAMESPACE: meteor-vite
-  REMOVE_AFTER: ${{ (inputs.eventName == 'pull_request' && '1m') || 'never'  }}
 jobs:
   build:
     name: Build 🐋
@@ -61,10 +57,12 @@ jobs:
       url: ${{ env.ROOT_URL }}
     env:
       APP_NAME: ${{ inputs.appBasename }}
+      KUBE_NAMESPACE: meteor-vite
       APP_VERSION: ${{ needs.build.outputs.imageVersion }}
       DOCKER_IMAGE: ${{ needs.build.outputs.deploymentImage }}
       METEOR_VERSION: ${{ needs.build.outputs.meteorRelease }}
       ROOT_URL: https://meteor-vite-preview.wcaserver.com/${{ needs.build.outputs.basePath }}
+      REMOVE_AFTER: ${{ (inputs.eventName == 'pull_request' && '1m') || 'never'  }}
       BASE_PATH: ${{ needs.build.outputs.basePath }}
       METEOR_RELEASE: ${{ needs.build.outputs.meteorRelease }}
       DEPLOYMENT_TIMEOUT: 30s
