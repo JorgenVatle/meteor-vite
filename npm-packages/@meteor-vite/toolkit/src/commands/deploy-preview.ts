@@ -95,8 +95,8 @@ export default [
                 });
                 
                 const selectorLabels = {
-                    'toolbox.meteor-vite.io/app-name': options['app-name'],
-                    'toolbox.meteor-vite.io/git-ref': gitRef,
+                    'toolkit.meteor-vite.io/app-name': options['app-name'],
+                    'toolkit.meteor-vite.io/git-ref': gitRef,
                 }
                 
                 Object.entries({
