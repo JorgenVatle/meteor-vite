@@ -21,6 +21,14 @@ class KubectlCli {
         if (options.name) {
             args.unshift(options.name);
         }
+        if (options.namespace) {
+            args.push('-n', options.namespace);
+        }
+        if (options.label) {
+            Object.entries(options.label).forEach(([key, value]) => {
+                args.push(`--label`, `${key}=${value}`);
+            })
+        }
         return this.kubectl('get', resource, ...args);
     }
     public apply(manifest: KubeResource): Promise<unknown> {
