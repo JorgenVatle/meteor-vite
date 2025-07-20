@@ -90,26 +90,35 @@ export default [
             
             console.log(manifests, { options });
             for (const manifest of manifests) {
+                const { labels } = Object.assign(manifest.metadata, {
+                    labels: manifest.metadata.labels || {}
+                });
+                
                 const selectorLabels = {
                     'toolbox.meteor-vite.io/app-name': options['app-name'],
                     'toolbox.meteor-vite.io/git-ref': gitRef,
                 }
+                
+                Object.entries({
+                    'app.kubernetes.io/name': options['app-name'],
+                    'app.kubernetes.io/managed-by': '@meteor-vite/toolkit',
+                    'app.kubernetes.io/instance': instance,
+                    'app.kubernetes.io/version': options.version,
+                    'toolkit.meteor-vite.io/repository': process.env.GITHUB_REPOSITORY,
+                    'toolkit.meteor-vite.io/ingress': options.ingress,
+                    ...selectorLabels,
+                }).forEach(([key, value]) => {
+                    labels[key] = labels[key] || value || 'n/a';
+                });
+                
                 Object.assign(manifest.metadata, {
                     name: instance,
                     namespace: options.namespace,
-                    labels: Object.assign({
-                        'app.kubernetes.io/name': options['app-name'],
-                        'app.kubernetes.io/managed-by': '@meteor-vite/toolkit',
-                        'toolbox.meteor-vite.io/repository': process.env.GITHUB_REPOSITORY,
-                        'toolbox.meteor-vite.io/ingress': options.ingress,
-                    }, selectorLabels, manifest.metadata.labels, {
-                        'app.kubernetes.io/instance': instance,
-                        'app.kubernetes.io/version': options.version,
-                    }),
+                    labels,
                     annotations: Object.assign({
-                        'toolbox.meteor-vite.io/delete-after-duration': options['delete-after-duration'],
-                        'toolbox.meteor-vite.io/base-path': options['base-path'],
-                        'toolbox.meteor-vite.io/port': options.port,
+                        'toolkit.meteor-vite.io/delete-after-duration': options['delete-after-duration'],
+                        'toolkit.meteor-vite.io/base-path': options['base-path'],
+                        'toolkit.meteor-vite.io/port': options.port,
                     }, manifest.metadata.annotations),
                 });
                 
