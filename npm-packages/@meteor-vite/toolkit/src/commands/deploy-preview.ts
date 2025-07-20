@@ -117,11 +117,14 @@ export default [
                 
                 Object.assign(labels, selectorLabels);
                 
+                const [repositoryOwner, repositoryName] = (process.env.GITHUB_REPOSITORY || 'unknown/unknown')?.split('/');
+                
                 Object.entries({
                     'app.kubernetes.io/managed-by': 'toolkit.meteor-vite.io',
                     'app.kubernetes.io/version': options.version,
                     'app.kubernetes.io/git-ref': 'preview',
-                    'toolkit.meteor-vite.io/repository': process.env.GITHUB_REPOSITORY,
+                    'toolkit.meteor-vite.io/repository-name': repositoryName,
+                    'toolkit.meteor-vite.io/repository-namespace': repositoryOwner,
                     'toolkit.meteor-vite.io/ingress': options.ingress,
                 }).forEach(([key, value]) => {
                     labels[key] = labels[key] || value || 'not-defined';
