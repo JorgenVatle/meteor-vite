@@ -1,6 +1,7 @@
 import { CommandDefinition } from '@/lib/CommandDefinition';
-import type { IngressHttpPath, ServiceManifest } from '@/lib/kubernetes/types';
-import type { KubeManifest, KubeResourceList } from '@/lib/kubernetes/types/Generic';
+import { kubectl } from '@/lib/kubernetes/cli';
+import type { IngressHttpPath } from '@/lib/kubernetes/types';
+import type { KubeManifest } from '@/lib/kubernetes/types/Generic';
 import { execa } from 'execa';
 import FS from 'fs/promises';
 import { inspect } from 'node:util';
@@ -122,7 +123,7 @@ export default [
             },
         },
         handler: async (options) => {
-            const services = await getServices({ namespace: options.namespace, label: {} });
+            const services = await kubectl.get('service', { namespace: options.namespace, label: {} });
             const paths: IngressHttpPath[] = [];
             
             for (const service of services.items) {
@@ -159,22 +160,6 @@ export default [
         },
     }),
 ];
-
-async function kubectl(params: string[]) {
-    const result = await execa(`kubectl`, [...params, '-o', 'json']);
-    
-    return JSON.parse(result.stdout);
-}
-
-function getServices(services: { namespace: string, label: Record<string, string> }): Promise<KubeResourceList<ServiceManifest>> {
-    return kubectl([
-        'get',
-        'services',
-        '-n',
-        services.namespace,
-        // todo: apply label selector
-    ]);
-}
 
 async function parseManifest(filePath: string, envsubst: Record<string, any>): Promise<KubeManifest[]> {
     const manifestInput = await FS.readFile(filePath, 'utf8');
