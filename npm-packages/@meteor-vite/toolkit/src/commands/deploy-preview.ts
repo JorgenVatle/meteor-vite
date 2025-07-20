@@ -118,7 +118,7 @@ export default [
                 Object.assign(labels, selectorLabels);
                 
                 Object.entries({
-                    'app.kubernetes.io/managed-by': '@meteor-vite/toolkit',
+                    'app.kubernetes.io/managed-by': 'toolkit.meteor-vite.io',
                     'app.kubernetes.io/version': options.version,
                     'app.kubernetes.io/git-ref': 'preview',
                     'toolkit.meteor-vite.io/repository': process.env.GITHUB_REPOSITORY,
