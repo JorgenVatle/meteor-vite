@@ -90,6 +90,12 @@ export default [
                 description: 'Port to use for the deployment. This will be used to configure the ingress.',
                 defaultValue: process.env.KUBE_CONTAINER_PORT || '3000',
             },
+            pullRequestId: {
+                type: String,
+                description: 'ID of the pull request to deploy. Used to apply a comment with the preview URL.',
+                defaultValue: process.env.PULL_REQUEST_ID,
+                optional: true,
+            }
         },
         handler: async (options) => {
             const manifests = await parseManifest(options.manifest, {
@@ -176,8 +182,14 @@ export default [
             }
             
             console.log(inspect(manifests, { colors: true, depth: 10 }));
+            
             for (const manifest of manifests) {
                 await kubectl.apply(manifest, { namespace: options.namespace });
+            }
+            
+            if (options.pullRequestId) {
+                const comment = `Preview deployed to ${process.env.ROOT_URL || options['base-path']}`;
+                await gh.prComment(options.pullRequestId, comment);
             }
         },
     }),
@@ -327,6 +339,22 @@ class DeletionAnnotation {
             timestamp: Date.now() + parseDuration(duration),
             duration,
         });
+    }
+}
+
+const gh = new class GithubCli {
+    public async prComment(id: string, body: string) {
+        return await execa('gh', [
+            'pr',
+            'comment',
+            '--edit-last',
+            '--create-if-none',
+            '--repo',
+            process.env.GITHUB_REPOSITORY!,
+            '--body',
+            body,
+            id,
+        ])
     }
 }
 
