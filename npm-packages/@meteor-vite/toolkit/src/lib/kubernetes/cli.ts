@@ -62,6 +62,10 @@ class KubectlCli {
         return this.kubectl('rollout', ['status', 'deployment', deployment, '--watch', '--timeout', timeout], options);
     }
     
+    public delete(resource: KubeResourceType[], name: string, options: UniversalOptions): Promise<unknown> {
+        return this.kubectl('delete', [resource.join(','), name], options);
+    }
+    
     public patch<TType extends KubeResourceType>(
         resource: TType,
         name: string,
