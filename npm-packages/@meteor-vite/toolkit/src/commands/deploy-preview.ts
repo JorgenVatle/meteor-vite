@@ -188,7 +188,7 @@ export default [
             }
             
             if (options.pullRequestId) {
-                const comment = `Preview deployed to ${process.env.ROOT_URL || options['base-path']}`;
+                const comment = `Preview for **${options['app-name']}** deployed to ${process.env.ROOT_URL || options['base-path']}`;
                 await gh.patchPrComment(options.pullRequestId, comment);
             }
         },
