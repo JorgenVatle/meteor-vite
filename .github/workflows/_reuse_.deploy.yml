@@ -68,6 +68,8 @@ jobs:
       METEOR_VERSION: ${{ needs.build.outputs.meteorRelease }}
       ROOT_URL: https://meteor-vite-preview.wcaserver.com${{ needs.build.outputs.basePath }}
       METEOR_RELEASE: ${{ needs.build.outputs.meteorRelease }}
+      PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
+      GH_TOKEN: ${{ github.token }}
     needs:
       - build
     steps:
@@ -94,6 +96,10 @@ jobs:
       - name: Apply manifest
         # language="bash"
         run: npm exec toolkit kube-deploy -- -f .kubernetes/deployments/meteor.yml
+
+      - name: Comment PR with preview links
+        # language="bash"
+        run: npm exec toolkit pr-comment-preview-url
 
       - name: Verify successful deployment
         # language="bash"

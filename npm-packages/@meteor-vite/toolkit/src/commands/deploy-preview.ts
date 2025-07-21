@@ -90,6 +90,12 @@ export default [
                 description: 'Port to use for the deployment. This will be used to configure the ingress.',
                 defaultValue: process.env.KUBE_CONTAINER_PORT || '3000',
             },
+            pullRequestId: {
+                type: String,
+                description: 'ID of the pull request to deploy. Used to apply a comment with the preview URL.',
+                defaultValue: process.env.PULL_REQUEST_ID,
+                optional: true,
+            }
         },
         handler: async (options) => {
             const manifests = await parseManifest(options.manifest, {
@@ -176,10 +182,32 @@ export default [
             }
             
             console.log(inspect(manifests, { colors: true, depth: 10 }));
+            
             for (const manifest of manifests) {
                 await kubectl.apply(manifest, { namespace: options.namespace });
             }
         },
+    }),
+    
+    new CommandDefinition('pr-comment-preview-url', {
+        title: 'Comment on pull request with preview URL',
+        description: 'Comment on a pull request with a link to the preview URL.',
+        fields: {
+            ...COMMON_DEPLOYMENT_FIELDS,
+            ...COMMON_FIELDS,
+            pullRequestId: {
+                type: String,
+                description: 'ID of the pull request to deploy. Used to apply a comment with the preview URL.',
+                defaultValue: process.env.PULL_REQUEST_ID,
+                optional: true,
+            }
+        },
+        handler: async (options) => {
+            if (options.pullRequestId) {
+                const comment = `Preview for **${options['app-name']}** deployed to ${process.env.ROOT_URL || '(missing ROOT_URL)'}`;
+                await gh.patchPrComment(options.pullRequestId, comment);
+            }
+        }
     }),
     
     new CommandDefinition('kube-verify-deployment', {
@@ -328,6 +356,72 @@ class DeletionAnnotation {
             duration,
         });
     }
+}
+
+const gh = new class GithubCli {
+    public async prComment(id: string, body: string) {
+        return await execa('gh', [
+            'pr',
+            'comment',
+            '--edit-last',
+            '--create-if-none',
+            '--repo',
+            process.env.GITHUB_REPOSITORY!,
+            '--body',
+            body,
+            id,
+        ])
+    }
+    
+    protected async getPrComments(id: string, user = 'github-actions') {
+        const result = await execa('gh', [
+            'pr',
+            'view',
+            '--json',
+            'comments',
+            '--repo',
+            process.env.GITHUB_REPOSITORY!,
+            id,
+        ]);
+        
+        const json: PrViewCommentsResult = JSON.parse(result.stdout);
+        
+        console.log('Retrieved comments:', inspect(json, { colors: true, depth: 10}));
+        
+        return json.comments.filter((comment) => {
+            return comment.author.login === user;
+        });
+    }
+    
+    public async patchPrComment(id: string, line: string) {
+        const comments = await this.getPrComments(id);
+        const lines = comments[0].body.split('\n').filter((commentLine: string) => {
+            return !commentLine.includes(line);
+        });
+        lines.push(line);
+        const body = lines.join('\n');
+        await this.prComment(id, body);
+    }
+}
+
+type PrViewCommentsResult = {
+    comments: PrCommentJson[]
+}
+
+type PrCommentJson = {
+    "id": string;
+    "author": {
+        "login": string;
+    },
+    "authorAssociation": string;
+    "body": string;
+    "createdAt": string;
+    "includesCreatedEdit": boolean,
+    "isMinimized": boolean,
+    "minimizedReason": string;
+    "reactionGroups": [],
+    "url": string;
+    "viewerDidAuthor": boolean
 }
 
 function parseDuration(duration: string): number {
