@@ -260,6 +260,30 @@ export default [
     }),
 ];
 
+function parseDuration(duration: string): number {
+    const durationMap = {
+        ms: 1,
+        s: 1000,
+        m: 60 * 1000,
+        h: 60 * 60 * 1000,
+        d: 24 * 60 * 60 * 1000,
+        w: 7 * 24 * 60 * 60 * 1000,
+        y: 365 * 24 * 60 * 60 * 1000,
+    }
+    
+    const [count, unit] = duration.match(/(\d+)([a-z]+)/i) || [];
+    
+    if (!(unit in durationMap)) {
+        throw new Error(`Invalid duration: ${duration}. Should be in the format of 10s, 1m, 1h, 1d, 1w, 1y`);
+    }
+    
+    if (!count) {
+        throw new Error(`Could not parse duration number: ${duration}. Try 10s`);
+    }
+    
+    return parseInt(count) * durationMap[unit as keyof typeof durationMap];
+}
+
 async function parseManifest(filePath: string, envsubst: Record<string, any>): Promise<KubeResource[]> {
     const manifestInput = await FS.readFile(filePath, 'utf8');
     const result = await execa('echo', [manifestInput]).pipe(`envsubst`, [], {
