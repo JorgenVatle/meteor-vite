@@ -386,6 +386,8 @@ const gh = new class GithubCli {
         
         const json: PrViewCommentsResult = JSON.parse(result.stdout);
         
+        console.log('Retrieved comments:', inspect(json, { colors: true, depth: 10}));
+        
         return json.comments.filter((comment) => {
             return comment.author.login === user;
         });
