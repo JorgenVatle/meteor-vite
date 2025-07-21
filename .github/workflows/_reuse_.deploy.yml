@@ -97,6 +97,10 @@ jobs:
         # language="bash"
         run: npm exec toolkit kube-deploy -- -f .kubernetes/deployments/meteor.yml
 
+      - name: Comment PR with preview links
+        # language="bash"
+        run: npm exec toolkit pr-comment-preview-url
+
       - name: Verify successful deployment
         # language="bash"
         run: npm exec toolkit kube-verify-deployment

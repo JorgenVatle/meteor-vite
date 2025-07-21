@@ -186,12 +186,28 @@ export default [
             for (const manifest of manifests) {
                 await kubectl.apply(manifest, { namespace: options.namespace });
             }
-            
-            if (options.pullRequestId) {
-                const comment = `Preview for **${options['app-name']}** deployed to ${process.env.ROOT_URL || options['base-path']}`;
-                await gh.patchPrComment(options.pullRequestId, comment);
+        },
+    }),
+    
+    new CommandDefinition('pr-comment-preview-url', {
+        title: 'Comment on pull request with preview URL',
+        description: 'Comment on a pull request with a link to the preview URL.',
+        fields: {
+            ...COMMON_DEPLOYMENT_FIELDS,
+            ...COMMON_FIELDS,
+            pullRequestId: {
+                type: String,
+                description: 'ID of the pull request to deploy. Used to apply a comment with the preview URL.',
+                defaultValue: process.env.PULL_REQUEST_ID,
+                optional: true,
             }
         },
+        handler: async (options) => {
+            if (options.pullRequestId) {
+                const comment = `Preview for **${options['app-name']}** deployed to ${process.env.ROOT_URL || '(missing ROOT_URL)'}`;
+                await gh.patchPrComment(options.pullRequestId, comment);
+            }
+        }
     }),
     
     new CommandDefinition('kube-verify-deployment', {
