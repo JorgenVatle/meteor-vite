@@ -189,7 +189,7 @@ export default [
             
             if (options.pullRequestId) {
                 const comment = `Preview deployed to ${process.env.ROOT_URL || options['base-path']}`;
-                await gh.prComment(options.pullRequestId, comment);
+                await gh.patchPrComment(options.pullRequestId, comment);
             }
         },
     }),
@@ -355,6 +355,25 @@ const gh = new class GithubCli {
             body,
             id,
         ])
+    }
+    
+    public async patchPrComment(id: string, line: string) {
+        const result = await execa('gh', [
+            'pr',
+            'view',
+            '--json',
+            'comments',
+            '--repo',
+            process.env.GITHUB_REPOSITORY!,
+            id,
+        ]);
+        const comments = JSON.parse(result.stdout);
+        const lines = comments[0].body.split('\n').filter(line, (commentLine: string) => {
+            return !commentLine.includes(line);
+        });
+        lines.push(line);
+        const body = lines.join('\n');
+        await this.prComment(id, body);
     }
 }
 
