@@ -373,7 +373,7 @@ const gh = new class GithubCli {
         ])
     }
     
-    public async patchPrComment(id: string, line: string) {
+    protected async getPrComments(id: string) {
         const result = await execa('gh', [
             'pr',
             'view',
@@ -383,14 +383,41 @@ const gh = new class GithubCli {
             process.env.GITHUB_REPOSITORY!,
             id,
         ]);
-        const comments = JSON.parse(result.stdout);
-        const lines = comments[0].body.split('\n').filter(line, (commentLine: string) => {
+        
+        const json: PrViewCommentsResult = JSON.parse(result.stdout);
+        
+        return json.comments;
+    }
+    
+    public async patchPrComment(id: string, line: string) {
+        const comments = await this.getPrComments(id);
+        const lines = comments[0].body.split('\n').filter((commentLine: string) => {
             return !commentLine.includes(line);
         });
         lines.push(line);
         const body = lines.join('\n');
         await this.prComment(id, body);
     }
+}
+
+type PrViewCommentsResult = {
+    comments: PrCommentJson[]
+}
+
+type PrCommentJson = {
+    "id": string;
+    "author": {
+        "login": string;
+    },
+    "authorAssociation": string;
+    "body": string;
+    "createdAt": string;
+    "includesCreatedEdit": boolean,
+    "isMinimized": boolean,
+    "minimizedReason": string;
+    "reactionGroups": [],
+    "url": string;
+    "viewerDidAuthor": boolean
 }
 
 function parseDuration(duration: string): number {
