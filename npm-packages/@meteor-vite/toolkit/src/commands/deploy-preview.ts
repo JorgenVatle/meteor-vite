@@ -159,7 +159,11 @@ export default [
                 await FS.mkdir(Path.dirname(options.summaryFile), { recursive: true });
                 await FS.appendFile(
                     options.summaryFile,
-                    summary('Kubernetes manifests', codeBlock('json', JSON.stringify(manifests, null, 2))),
+                    summary({
+                        title: 'Kubernetes manifests',
+                        content: codeBlock('json', JSON.stringify(manifests, null, 2)),
+                        url: process.env.ROOT_URL || options['base-path'],
+                    }),
                 );
             }
             
@@ -370,12 +374,13 @@ function codeBlock(language: string, content: string) {
     ].join('\n');
 }
 
-function summary(title: string, content: string) {
+function summary(summary: { title: string, content: string, url: string }) {
     return `
+Deployed to ${summary.url}
 <details>
-<summary>${title}</summary>
+<summary>${summary.title}</summary>
 
-${content}
+${summary.content}
 </details>
 `;
 }
