@@ -47,11 +47,6 @@ on:
       basePath:
         value: ${{ jobs.docker.outputs.basePath }}
 
-permissions:
-  packages: write
-  contents: read
-  attestations: write
-
 jobs:
   ubuntu:
     name: 'Ubuntu 🐧'
@@ -77,6 +72,10 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
     name: Docker 🐋
     concurrency:
       group: docker-image-${{ inputs.appBasename }}-${{ github.sha }}-${{ inputs.push }}
