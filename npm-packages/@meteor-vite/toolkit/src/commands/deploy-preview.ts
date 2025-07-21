@@ -264,7 +264,7 @@ export default [
     
     new CommandDefinition('kube-prune-temporary-deployments', {
         title: 'Prune temporary deployments',
-        description: 'Remove temporary/preview deployments that have exeeded their desired lifetime.',
+        description: 'Remove temporary/preview deployments that have exceeded their desired lifetime.',
         fields: {
             ...COMMON_FIELDS,
         },
