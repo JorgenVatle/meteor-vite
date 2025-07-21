@@ -47,6 +47,11 @@ on:
       basePath:
         value: ${{ jobs.docker.outputs.basePath }}
 
+permissions:
+  packages: write
+  contents: read
+  attestations: write
+
 jobs:
   ubuntu:
     name: 'Ubuntu 🐧'
