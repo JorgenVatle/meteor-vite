@@ -1,4 +1,4 @@
-import type { FieldConfig, InferFieldType } from '@/lib/CommandLineArgs/Field';
+import type { FieldConfig, GenericField, InferFieldType } from '@/lib/CommandLineArgs/Field';
 import * as TSCliArgs from 'ts-command-line-args';
 
 export function parseArgs<
@@ -13,7 +13,7 @@ export function parseArgs<
     },
     options: ParserOptions<TResult, TDefaults> = {},
 ): TResult {
-    const args: Record<string, { type?: any; defaultValue?: any } & FieldConfig> = {
+    const args: Record<string, GenericField> = {
         ...fields,
     }
     
@@ -21,17 +21,41 @@ export function parseArgs<
         args[key] = Object.assign({
             defaultValue: value,
         }, args[key]);
-    })
+    });
+    
     Object.entries(args).forEach(([key, field]) => {
-        if (field.type) {
+        if (!('defaultValue' in field)) {
             return;
         }
-        if (typeof field.defaultValue !== 'undefined') {
-            return field.type = field.defaultValue.constructor;
+        
+        // Mark fields where a default has been assigned as optional.
+        if (typeof field.optional !== 'boolean' && field.defaultValue) {
+            field.optional = true;
         }
+        
+        // Assign a primitive factory function for fields without an explicitly defined type
+        if (!('type' in field)) {
+            field.type = getPrimitiveConstructor(field.defaultValue);
+        }
+        
+        // Ensure custom type transform functions also gets applied to default values.
+        if (typeof field.type === 'function') {
+            field.defaultValue = field.type(field.defaultValue);
+        }
+        
     })
     
     return TSCliArgs.parse(args as any, options);
+}
+
+function getPrimitiveConstructor(value: any): { (value?: any): any } | undefined {
+    if (typeof value === 'undefined') {
+        return;
+    }
+    if (value === null) {
+        return;
+    }
+    return value.constructor;
 }
 
 export type ResolveFieldTypes<TFields extends Record<string, FieldConfig>> = {

@@ -16,6 +16,7 @@
 **/dist
 **/_vite-bundle
 **/.build
+**/.logs
 examples/output
 
 # Debugging output

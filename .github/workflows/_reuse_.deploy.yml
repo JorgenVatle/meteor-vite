@@ -33,22 +33,7 @@ on:
         type: string
         required: false
         description: Name of the event that triggered this workflow
-      branchId:
-        type: string
-        default: ${{ (inputs.eventName == 'pull_request' && 'tmp-preview') || github.ref_name  }}
-      removeAfter:
-        type: string
-        required: false
-        default: ${{ (inputs.eventName == 'pull_request' && '1m') || 'never'  }}
 
-env:
-  APP_NAME: ${{ inputs.appBasename }}
-  APP_NAMESPACE: meteor-vite
-  METEOR_RELEASE: ${{ inputs.meteorRelease }}
-  DEPLOYMENT_NAME: ${{ inputs.branchId }}-${{ inputs.appBasename }}
-  BASE_PATH: /${{ inputs.branchId }}/${{ inputs.appBasename }}
-  ROOT_URL: https://meteor-vite-preview.wcaserver.com/${{ inputs.branchId }}/${{ inputs.appBasename }}/
-  REMOVE_AFTER: ${{ inputs.removeAfter }}
 jobs:
   build:
     name: Build 🐋
@@ -60,7 +45,6 @@ jobs:
       meteorBaseImage: ${{ inputs.meteorBaseImage }}
       viteBaseUrl: ${{ inputs.viteBaseUrl }}
       viteAssetDir: ${{ inputs.viteAssetDir }}
-      branchId: ${{ inputs.branchId }}
       push: true
 
   deploy:
@@ -68,19 +52,32 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ inputs.appBasename }}
-
     environment:
-      name: ${{ inputs.branchId }}-${{ inputs.appBasename }}
+      name: ${{ inputs.appBasename }}/${{ github.ref_name }}
       url: ${{ env.ROOT_URL }}
     env:
-      APP_VERSION: ${{ needs.build.outputs.imageVersion }}
-      APP_IMAGE: ${{ needs.build.outputs.deploymentImage }}
+      KUBE_APP_NAME: ${{ inputs.appBasename }}
+      KUBE_APP_VERSION: ${{ needs.build.outputs.imageVersion }}
+      KUBE_REMOVE_AFTER: ${{ (inputs.eventName == 'pull_request' && '1m') || 'never'  }}
+      KUBE_INGRESS_BASE_PATH: ${{ needs.build.outputs.basePath }}
+      KUBE_INGRESS_NAME: preview
+      KUBE_DEPLOYMENT_TIMEOUT: 30s
+      KUBE_NAMESPACE: meteor-vite
+      KUBE_CONTAINER_PORT: 3000
+      KUBE_CONTAINER_IMAGE: ${{ needs.build.outputs.deploymentImage }}
       METEOR_VERSION: ${{ needs.build.outputs.meteorRelease }}
+      ROOT_URL: https://meteor-vite-preview.wcaserver.com${{ needs.build.outputs.basePath }}
+      METEOR_RELEASE: ${{ needs.build.outputs.meteorRelease }}
     needs:
       - build
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
       - name: Setup kubectl
         # language="bash"
@@ -88,38 +85,20 @@ jobs:
           mkdir -p ~/.kube
           echo '${{ secrets.KUBE_CONFIG_DATA }}' | base64 -d > ~/.kube/config
 
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build packages
+        run: npm run build:packages
+
       - name: Apply manifest
         # language="bash"
-        run: |
-          MANIFEST_STORE_PATH='/opt/manifests/deployments'
-          DEPLOYMENT_FILE_PATH="$MANIFEST_STORE_PATH/meteor.yml"
-          
-          # Populate environment variables in deployment manifest
-          mkdir -p "$MANIFEST_STORE_PATH"
-          cat .kubernetes/deployments/meteor.yml | envsubst > $DEPLOYMENT_FILE_PATH
-          
-          # Emit copy of final manifest to step summary
-          echo '
-          <details>
-          <summary>Deployment manifest</summary>
-          
-          ```yaml
-          ' >> $GITHUB_STEP_SUMMARY
-          cat $DEPLOYMENT_FILE_PATH >> $GITHUB_STEP_SUMMARY
-          echo '
-          ```
-          </details>
-          ' >> $GITHUB_STEP_SUMMARY
-          
-          # Deploy
-          kubectl apply -f "$DEPLOYMENT_FILE_PATH" -n "$APP_NAMESPACE"
+        run: npm exec toolkit kube-deploy -- -f .kubernetes/deployments/meteor.yml
 
-      - name: Verify deployment
+      - name: Verify successful deployment
         # language="bash"
-        run: |
-          kubectl rollout status deployment --watch --timeout 30s -n "$APP_NAMESPACE" "$DEPLOYMENT_NAME"
+        run: npm exec toolkit kube-verify-deployment
 
       - name: Update preview ingress
         # language="bash"
-        run: |
-          node .bin/patch-ingress.mjs
+        run: npm exec toolkit kube-sync-ingress

@@ -31,9 +31,6 @@ on:
         type: string
         required: false
         description: Sets the path from where Meteor will serve assets built by Vite.
-      branchId:
-        type: string
-        default: ${{ github.ref_name }}
     outputs:
       deploymentImage:
         value: ${{ jobs.docker.outputs.deploymentImage }}
@@ -45,6 +42,10 @@ on:
         value: ${{ jobs.docker.outputs.viteAssetDir }}
       viteBaseUrl:
         value: ${{ jobs.docker.outputs.viteBaseUrl }}
+      refTag:
+        value: ${{ jobs.docker.outputs.refTag }}
+      basePath:
+        value: ${{ jobs.docker.outputs.basePath }}
 
 jobs:
   ubuntu:
@@ -73,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Docker 🐋
     concurrency:
-      group: docker-image-${{ inputs.appBasename }}-${{ github.sha }}
+      group: docker-image-${{ inputs.appBasename }}-${{ github.sha }}-${{ inputs.push }}
       cancel-in-progress: false
     env:
       APP_BASENAME: ${{ inputs.appBasename }}
@@ -83,6 +84,8 @@ jobs:
       meteorRelease: ${{ steps.image.outputs.meteorRelease }}
       viteBaseUrl: ${{ steps.image.outputs.viteBaseUrl }}
       viteAssetDir: ${{ inputs.viteAssetDir }}
+      refTag: ${{ steps.image.outputs.refTag }}
+      basePath: ${{ steps.image.outputs.basePath }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -95,15 +98,16 @@ jobs:
 
       - name: Format image name
         id: image
-        env:
-          DEFAULT_VITE_BASE_URL: /${{ inputs.branchId }}/${{ inputs.appBasename }}/vite
         # language="bashsupport pro shell script"
         run: |
+          appName="${{ inputs.appBasename }}"
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
-          imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ inputs.branchId }}/${{ inputs.appBasename }}"
+          imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ inputs.appBasename }}"
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
           imageVersion="sha-${GITHUB_SHA:0:7}"
-          viteBaseUrl=${{ inputs.viteBaseUrl || env.DEFAULT_VITE_BASE_URL }}
+          refTag="$(echo ${{ github.ref_name }} | tr / -)"
+          basePath="/$refTag/$appName"
+          viteBaseUrl=${{ inputs.viteBaseUrl || '"$basePath/vite"' }}
 
           echo "cacheTag=$imageName:buildcache" >> $GITHUB_OUTPUT
           echo "deploymentImage=$imageName:$imageVersion" >> $GITHUB_OUTPUT
@@ -112,6 +116,8 @@ jobs:
           echo "imageVersion=$imageVersion" >> $GITHUB_OUTPUT
           echo "meteorRelease=$meteorRelease" >> $GITHUB_OUTPUT
           echo "viteBaseUrl=$viteBaseUrl" >> $GITHUB_OUTPUT
+          echo "refTag=$refTag" >> $GITHUB_OUTPUT
+          echo "basePath=$basePath" >> $GITHUB_OUTPUT
 
       - name: Prepare metadata
         uses: docker/metadata-action@v5
@@ -136,8 +142,12 @@ jobs:
             ${{ steps.image.outputs.deploymentImage }}
             ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
-          cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
+          cache-from: | 
+            type=registry,ref=${{ steps.image.outputs.cacheTag }}
+            type=registry,ref=${{ steps.image.outputs.cacheTag }}-${{ steps.image.outputs.refTag }}
+          cache-to: | 
+            type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
+            type=registry,ref=${{ steps.image.outputs.cacheTag }}-${{ steps.image.outputs.refTag }},mode=max
           build-args: |
             ${{ inputs.viteAssetDir      && format('METEOR_VITE_ASSETS_DIR={0}', inputs.viteAssetDir)      }}
             ${{ inputs.meteorBaseImage   && format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)        }}

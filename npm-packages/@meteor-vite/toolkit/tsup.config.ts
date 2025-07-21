@@ -10,13 +10,16 @@ export default defineBuildConfig(import.meta.dirname, [
         name: '@meteor-vite/toolkit: bin',
         entry: ['src/bin'],
         outDir: 'dist/bin',
-        copy: [
-            { from: 'dist/bin', to: 'bin', type: 'directory' }
-        ],
         format: ['esm'],
         dts: false,
         banner: {
-            js: '#!/usr/bin/env node',
+            js: '#!/usr/bin/env -S node --enable-source-maps',
         },
+    },
+    {
+        name: '@meteor-vite/toolkit: loaders',
+        entry: ['src/loaders'],
+        outDir: 'dist/loaders',
+        format: ['esm', 'cjs'],
     }
 ]);
