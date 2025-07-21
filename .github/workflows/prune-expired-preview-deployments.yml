@@ -11,6 +11,9 @@ jobs:
   prune:
     name: Expired deployments
     runs-on: ubuntu-latest
+    env:
+      KUBE_NAMESPACE: meteor-vite
+      KUBE_INGRESS_NAME: preview
     steps:
       - name: Checkout
         uses: actions/checkout@v4
