@@ -13,7 +13,7 @@ export default defineBuildConfig(import.meta.dirname, [
         format: ['esm'],
         dts: false,
         banner: {
-            js: '#!/usr/bin/env -S node --enable-source-maps',
+            js: '#!/usr/bin/env -S node --enable-source-maps --import @meteor-vite/toolkit/loaders/wsl-file-paths',
         },
     },
     {
