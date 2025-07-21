@@ -36,5 +36,6 @@ jobs:
         run: npm run build:packages
 
       - name: Prune temporary/expired deployments
+        # language="bash"
         run: npm exec toolkit kube-prune-temporary-deployments
 
