@@ -101,7 +101,7 @@ export default [
             });
             
             const instance = `${options['app-name']}-${options['git-ref']}`;
-            const deleteAt = options['delete-after-duration'] ? deletionAnnotation(options['delete-after-duration']) : null;
+            const deleteAt = options['delete-after-duration'] ? DeletionAnnotation.create(options['delete-after-duration']) : null;
             const githubOutput = {
                 deploymentName: instance,
             }
@@ -138,7 +138,7 @@ export default [
                     namespace: options.namespace,
                     labels,
                     annotations: Object.assign({
-                        'toolkit.meteor-vite.io/delete-at': deleteAt?.json,
+                        'toolkit.meteor-vite.io/delete-at': deleteAt?.toJSON(),
                         'toolkit.meteor-vite.io/base-path': options['base-path'],
                         'toolkit.meteor-vite.io/port': options.port,
                         'toolkit.meteor-vite.io/repository-url': process.env.GITHUB_REPOSITORY_URL,
@@ -275,7 +275,7 @@ export default [
             
             
             for (const deployment of deployments.items) {
-                const { timestamp, duration } = parseDeletionAnnotation(deployment);
+                const { timestamp, duration } = DeletionAnnotation.fromManifest(deployment);
                 
                 if (timestamp < Date.now()) {
                     continue;
@@ -287,24 +287,43 @@ export default [
     })
 ];
 
-function parseDeletionAnnotation(manifest: KubeResource): DeletionAnnotation {
-    const annotation = manifest.metadata?.annotations?.['toolbox.meteor-vite.io/delete-at'];
-    if (!annotation) {
-        return { timestamp: 0, duration: '0s', };
+class DeletionAnnotation {
+    public readonly timestamp: number;
+    public readonly duration: string;
+    
+    constructor(config: Pick<DeletionAnnotation, 'timestamp' | 'duration'>) {
+        this.timestamp = config.timestamp;
+        this.duration = config.duration;
     }
     
-    return JSON.parse(annotation);
-}
-
-function deletionAnnotation(duration: string): DeletionAnnotation & { json: string } {
-    const timestamp = Date.now() + parseDuration(duration);
-    const annotation: DeletionAnnotation = { timestamp, duration };
-    return { ...annotation, json: JSON.stringify(annotation) };
-}
-
-type DeletionAnnotation = {
-    timestamp: number,
-    duration: string,
+    public toJSON() {
+        return {
+            timestamp: this.timestamp,
+            duration: this.duration,
+        };
+    }
+    
+    public static fromJSON(json: string) {
+        const { timestamp, duration } = JSON.parse(json);
+        return new DeletionAnnotation({ timestamp, duration });
+    }
+    
+    public static fromManifest(manifest: KubeResource) {
+        const annotation = manifest.metadata?.annotations?.['toolbox.meteor-vite.io/delete-at'];
+        
+        if (!annotation) {
+            return new this({ timestamp: 0, duration: '0s' });
+        }
+        
+        return this.fromJSON(annotation);
+    }
+    
+    public static create(duration: string) {
+        return new this({
+            timestamp: Date.now() + parseDuration(duration),
+            duration,
+        });
+    }
 }
 
 function parseDuration(duration: string): number {
