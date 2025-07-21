@@ -101,6 +101,7 @@ export default [
             });
             
             const instance = `${options['app-name']}-${options['git-ref']}`;
+            const deleteAt = options['delete-after-duration'] ? Date.now() + parseDuration(options['delete-after-duration']) : null;
             const githubOutput = {
                 deploymentName: instance,
             }
@@ -127,6 +128,7 @@ export default [
                     'toolkit.meteor-vite.io/repository-name': repositoryName,
                     'toolkit.meteor-vite.io/repository-namespace': repositoryOwner,
                     'toolkit.meteor-vite.io/ingress': options.ingress,
+                    'toolkit.meteor-vite.io/deployment-type': deleteAt ? 'temporary' : 'permanent',
                 }).forEach(([key, value]) => {
                     labels[key] = labels[key] || value || 'not-defined';
                 });
@@ -137,6 +139,7 @@ export default [
                     labels,
                     annotations: Object.assign({
                         'toolkit.meteor-vite.io/delete-after-duration': options['delete-after-duration'],
+                        'toolkit.meteor-vite.io/delete-at': deleteAt,
                         'toolkit.meteor-vite.io/base-path': options['base-path'],
                         'toolkit.meteor-vite.io/port': options.port,
                         'toolkit.meteor-vite.io/repository-url': process.env.GITHUB_REPOSITORY_URL,
@@ -258,6 +261,31 @@ export default [
             );
         },
     }),
+    
+    new CommandDefinition('kube-prune-temporary-deployments', {
+        title: 'Prune temporary deployments',
+        description: 'Remove temporary/preview deployments that have exeeded their desired lifetime.',
+        fields: {
+            ...COMMON_FIELDS,
+        },
+        handler: async (options) => {
+            const deployments = await kubectl.get('deployment', {
+                namespace: options.namespace,
+                labels: [['toolbox.meteor-vite.io/deployment-type', '==', 'temporary']]
+            });
+            
+            
+            for (const deployment of deployments.items) {
+                const deleteAt = parseInt(deployment.metadata.annotations?.['toolbox.meteor-vite.io/delete-at'] || '0');
+                
+                if (deleteAt > Date.now()) {
+                    continue;
+                }
+             
+                await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace });
+            }
+        }
+    })
 ];
 
 function parseDuration(duration: string): number {
