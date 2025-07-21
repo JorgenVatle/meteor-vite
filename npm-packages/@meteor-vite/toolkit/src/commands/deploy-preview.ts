@@ -207,7 +207,7 @@ export default [
             const services = await kubectl.get('service', {
                 namespace: namespace,
                 labels: [
-                    ['toolbox.meteor-vite.io/ingress', '==', ingress]
+                    ['toolkit.meteor-vite.io/ingress', '==', ingress]
                 ]
             });
             const paths: IngressHttpPath[] = [];
@@ -218,7 +218,7 @@ export default [
                     continue;
                 }
                 
-                const basePath = annotations['toolbox.meteor-vite.io/base-path'];
+                const basePath = annotations['toolkit.meteor-vite.io/base-path'];
                 if (!basePath) {
                     continue;
                 }
@@ -270,7 +270,7 @@ export default [
         handler: async (options) => {
             const deployments = await kubectl.get('deployment', {
                 namespace: options.namespace,
-                labels: [['toolbox.meteor-vite.io/deployment-type', '==', 'temporary']]
+                labels: [['toolkit.meteor-vite.io/deployment-type', '==', 'temporary']]
             });
             
             
@@ -309,7 +309,7 @@ class DeletionAnnotation {
     }
     
     public static fromManifest(manifest: KubeResource) {
-        const annotation = manifest.metadata?.annotations?.['toolbox.meteor-vite.io/delete-at'];
+        const annotation = manifest.metadata?.annotations?.['toolkit.meteor-vite.io/delete-at'];
         
         if (!annotation) {
             return new this({ timestamp: 0, duration: '0s' });
