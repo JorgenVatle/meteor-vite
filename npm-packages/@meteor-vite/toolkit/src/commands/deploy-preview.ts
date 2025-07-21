@@ -299,7 +299,7 @@ function parseDuration(duration: string): number {
         y: 365 * 24 * 60 * 60 * 1000,
     }
     
-    const [count, unit] = duration.match(/(\d+)([a-z]+)/i) || [];
+    const [_, count, unit] = duration.match(/(\d+)([a-z]+)/i) || [];
     
     if (!(unit in durationMap)) {
         throw new Error(`Invalid duration unit: ${duration}. Should be in the format of 10s, 1m, 1h, 1d, 1w, 1y`);
