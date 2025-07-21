@@ -69,6 +69,7 @@ jobs:
       ROOT_URL: https://meteor-vite-preview.wcaserver.com${{ needs.build.outputs.basePath }}
       METEOR_RELEASE: ${{ needs.build.outputs.meteorRelease }}
       PULL_REQUEST_ID: ${{ github.event.pull_request.id }}
+      GH_TOKEN: ${{ github.token }}
     needs:
       - build
     steps:
