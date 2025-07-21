@@ -100,7 +100,7 @@ export default [
                 PORT: options.port,
             });
             
-            const instance = `${options['app-name']}-${options['git-ref']}`;
+            const instance = `${options['app-name']}.${options['git-ref']}`;
             const deleteAt = options['delete-after-duration'] ? DeletionAnnotation.create(options['delete-after-duration']) : null;
             const githubOutput = {
                 deploymentName: instance,
@@ -191,7 +191,7 @@ export default [
             }
         },
         handler: async (options) => {
-            const instance = `${options['app-name']}-${options['git-ref']}`;
+            const instance = `${options['app-name']}.${options['git-ref']}`;
             
             await kubectl.waitForDeploymentSuccess(instance, options.deploymentTimeout, { namespace: options.namespace });
         },
