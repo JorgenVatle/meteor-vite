@@ -313,7 +313,7 @@ export default [
                 const { timestamp, duration } = DeletionAnnotation.fromManifest(deployment);
                 
                 if (timestamp < Date.now()) {
-                    console.log(`Deployment ${deployment.metadata.name} is still valid until ${new Date(timestamp)}`);
+                    console.log(`Deployment ${deployment.metadata.name} is still valid until ${new Date(timestamp)} (${msToHumanDuration(timestamp - Date.now())})`);
                     continue;
                 }
              
@@ -323,6 +323,28 @@ export default [
         }
     })
 ];
+
+function msToHumanDuration(ms: number) {
+    const multipliers = {
+        days: 1000 * 60 * 60 * 24,
+        hours: 1000 * 60 * 60,
+        minutes: 1000 * 60,
+    }
+    
+    if (ms > multipliers.days) {
+        return `${Math.round(ms / multipliers.days)} days`;
+    }
+    
+    if (ms > multipliers.hours) {
+        return `${Math.round(ms / multipliers.hours)} hours`;
+    }
+    
+    if (ms > multipliers.minutes) {
+        return `${Math.round(ms / multipliers.minutes)} minutes`;
+    }
+    
+    return `${Math.round(ms / 1000)} seconds`;
+}
 
 class DeletionAnnotation {
     public readonly timestamp: number;
