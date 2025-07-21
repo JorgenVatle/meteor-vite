@@ -307,6 +307,7 @@ export default [
                 labels: [['toolkit.meteor-vite.io/deployment-type', '==', 'temporary']]
             });
             
+            console.log(`Fetched ${deployments.items.length} temporary deployments.`)
             
             for (const deployment of deployments.items) {
                 const { timestamp, duration } = DeletionAnnotation.fromManifest(deployment);
@@ -318,6 +319,7 @@ export default [
              
                 await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace });
             }
+            
         }
     })
 ];
