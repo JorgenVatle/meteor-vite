@@ -313,7 +313,7 @@ export default [
                 const { timestamp, duration } = DeletionAnnotation.fromManifest(deployment);
                 
                 if (timestamp < Date.now()) {
-                    console.log(`Deployment ${deployment.metadata.name} is still valid until ${new Date(timestamp)} (${msToHumanDuration(timestamp - Date.now())})`);
+                    console.log(`Deployment ${deployment.metadata.name} is still valid until ${new Date(timestamp)} (${msToHumanDuration(Date.now() - timestamp)})`);
                     continue;
                 }
              
