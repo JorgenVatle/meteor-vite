@@ -203,10 +203,12 @@ export default [
             }
         },
         handler: async (options) => {
-            if (options.pullRequestId) {
-                const comment = `Preview for **${options['app-name']}** deployed to ${process.env.ROOT_URL || '(missing ROOT_URL)'}`;
-                await gh.patchPrComment(options.pullRequestId, comment);
+            if (!options.pullRequestId) {
+                console.warn('No pull request ID provided. Skipping comment step.');
+                return;
             }
+            const comment = `Preview for **${options['app-name']}** deployed to ${process.env.ROOT_URL || '(missing ROOT_URL)'}`;
+            await gh.patchPrComment(options.pullRequestId, comment);
         }
     }),
     
