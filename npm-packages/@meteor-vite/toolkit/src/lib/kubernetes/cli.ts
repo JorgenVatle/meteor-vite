@@ -14,6 +14,7 @@ class KubectlCli {
         TResource = KubeResource<TType>
     >(verb: Verb, params: string[], options: UniversalOptions, stdin?: string): Promise<KubeResourceList<TResource> | TResource> {
         const args: string[] = [...params || []];
+        const formatAsJson = !['rollout'].includes(verb);
         
         if (options.namespace) {
             args.push('-n', options.namespace);
@@ -27,7 +28,7 @@ class KubectlCli {
             args.push('--dry-run=server');
         }
         
-        if (!['rollout'].includes(verb)) {
+        if (formatAsJson) {
             args.push( '-o', 'json');
         }
         
@@ -40,7 +41,12 @@ class KubectlCli {
         
         echoCommand(result);
         
-        return JSON.parse(result.stdout);
+        if (formatAsJson) {
+            return JSON.parse(result.stdout);
+        }
+        
+        // @ts-expect-error Unused plain text output
+        return result.stdout;
     }
     
     public get<TType extends KubeResourceType>(resource: TType, options: Omit<CommandOptions, 'name'>): Promise<KubeResourceList<KubeResource<TType>>>
