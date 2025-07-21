@@ -138,7 +138,7 @@ export default [
                     namespace: options.namespace,
                     labels,
                     annotations: Object.assign({
-                        'toolkit.meteor-vite.io/delete-after-duration': options['delete-after-duration'],
+                        'toolkit.meteor-vite.io/delete-after-duration': JSON.stringify(options['delete-after-duration']),
                         'toolkit.meteor-vite.io/delete-at': deleteAt,
                         'toolkit.meteor-vite.io/base-path': options['base-path'],
                         'toolkit.meteor-vite.io/port': options.port,
@@ -276,7 +276,7 @@ export default [
             
             
             for (const deployment of deployments.items) {
-                const deleteAt = parseInt(deployment.metadata.annotations?.['toolbox.meteor-vite.io/delete-at'] || '0');
+                const deleteAt = JSON.parse(deployment.metadata.annotations?.['toolbox.meteor-vite.io/delete-at'] || '0');
                 
                 if (deleteAt > Date.now()) {
                     continue;
