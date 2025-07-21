@@ -58,7 +58,7 @@ jobs:
     env:
       KUBE_APP_NAME: ${{ inputs.appBasename }}
       KUBE_APP_VERSION: ${{ needs.build.outputs.imageVersion }}
-      KUBE_REMOVE_AFTER: ${{ (inputs.eventName == 'pull_request' && '1m') || ''  }}
+      KUBE_REMOVE_AFTER: ${{ (inputs.eventName == 'pull_request' && '30d') || ''  }}
       KUBE_INGRESS_BASE_PATH: ${{ needs.build.outputs.basePath }}
       KUBE_INGRESS_NAME: preview
       KUBE_DEPLOYMENT_TIMEOUT: 30s
