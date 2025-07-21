@@ -373,7 +373,7 @@ const gh = new class GithubCli {
         ])
     }
     
-    protected async getPrComments(id: string) {
+    protected async getPrComments(id: string, user = 'github-actions') {
         const result = await execa('gh', [
             'pr',
             'view',
@@ -386,7 +386,9 @@ const gh = new class GithubCli {
         
         const json: PrViewCommentsResult = JSON.parse(result.stdout);
         
-        return json.comments;
+        return json.comments.filter((comment) => {
+            return comment.author.login === user;
+        });
     }
     
     public async patchPrComment(id: string, line: string) {
