@@ -101,7 +101,7 @@ export default [
             });
             
             const instance = `${options['app-name']}-${options['git-ref']}`;
-            const deleteAt = options['delete-after-duration'] ? Date.now() + parseDuration(options['delete-after-duration']) : null;
+            const deleteAt = options['delete-after-duration'] ? deletionAnnotation(options['delete-after-duration']) : null;
             const githubOutput = {
                 deploymentName: instance,
             }
@@ -138,8 +138,7 @@ export default [
                     namespace: options.namespace,
                     labels,
                     annotations: Object.assign({
-                        'toolkit.meteor-vite.io/delete-after-duration': JSON.stringify(options['delete-after-duration']),
-                        'toolkit.meteor-vite.io/delete-at': deleteAt,
+                        'toolkit.meteor-vite.io/delete-at': deleteAt?.json,
                         'toolkit.meteor-vite.io/base-path': options['base-path'],
                         'toolkit.meteor-vite.io/port': options.port,
                         'toolkit.meteor-vite.io/repository-url': process.env.GITHUB_REPOSITORY_URL,
@@ -276,9 +275,9 @@ export default [
             
             
             for (const deployment of deployments.items) {
-                const deleteAt = JSON.parse(deployment.metadata.annotations?.['toolbox.meteor-vite.io/delete-at'] || '0');
+                const { timestamp, duration } = parseDeletionAnnotation(deployment);
                 
-                if (deleteAt > Date.now()) {
+                if (timestamp < Date.now()) {
                     continue;
                 }
              
@@ -287,6 +286,26 @@ export default [
         }
     })
 ];
+
+function parseDeletionAnnotation(manifest: KubeResource): DeletionAnnotation {
+    const annotation = manifest.metadata?.annotations?.['toolbox.meteor-vite.io/delete-at'];
+    if (!annotation) {
+        return { timestamp: 0, duration: '0s', };
+    }
+    
+    return JSON.parse(annotation);
+}
+
+function deletionAnnotation(duration: string): DeletionAnnotation & { json: string } {
+    const timestamp = Date.now() + parseDuration(duration);
+    const annotation: DeletionAnnotation = { timestamp, duration };
+    return { ...annotation, json: JSON.stringify(annotation) };
+}
+
+type DeletionAnnotation = {
+    timestamp: number,
+    duration: string,
+}
 
 function parseDuration(duration: string): number {
     const durationMap = {
