@@ -274,7 +274,7 @@ function parseDuration(duration: string): number {
     const [count, unit] = duration.match(/(\d+)([a-z]+)/i) || [];
     
     if (!(unit in durationMap)) {
-        throw new Error(`Invalid duration: ${duration}. Should be in the format of 10s, 1m, 1h, 1d, 1w, 1y`);
+        throw new Error(`Invalid duration unit: ${duration}. Should be in the format of 10s, 1m, 1h, 1d, 1w, 1y`);
     }
     
     if (!count) {
