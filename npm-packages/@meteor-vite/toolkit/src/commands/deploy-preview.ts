@@ -297,10 +297,10 @@ class DeletionAnnotation {
     }
     
     public toJSON() {
-        return {
+        return JSON.stringify({
             timestamp: this.timestamp,
             duration: this.duration,
-        };
+        });
     }
     
     public static fromJSON(json: string) {
