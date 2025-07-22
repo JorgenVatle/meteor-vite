@@ -30,8 +30,12 @@
       "default": "./dist/server-entry/*.mjs"
     },
     "./utilities/*": {
-      "types": "./dist/utilities/*.d.mts",
+      "types": {
+        "import": "./dist/utilities/*.d.mts",
+        "require": "./dist/utilities/*.d.ts"
+      },
       "import": "./dist/utilities/*.mjs",
+      "require": "./dist/utilities/*.js",
       "default": "./dist/utilities/*.mjs"
     }
   },
