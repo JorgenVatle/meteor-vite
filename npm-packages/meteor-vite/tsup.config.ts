@@ -12,6 +12,9 @@ export default defineBuildConfig(__dirname, [
             
             // Internal tooling for the Meteor build plugin.
             'internals': './src/internals/index.ts',
+            
+            // Server-side utility modules; loggers, formatters, etc.
+            'utilities/server': './src/utilities/server/index.ts',
         },
         format: ['esm'],
         platform: 'node',
@@ -33,6 +36,7 @@ export default defineBuildConfig(__dirname, [
         entry: {
             // Stub validation module
             'client': './src/client/index.ts',
+            
             // Common utility modules; constants, package info, etc.
             'utilities/common': './src/utilities/common/index.ts',
         },
