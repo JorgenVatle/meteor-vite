@@ -88,24 +88,10 @@ exec:npx() {
   npx "$@"
 }
 
-# Initial setup for example apps - installs and links our local packages.
-prepare() {
-  (install) || exit 1
-  (link) || exit 1
-}
-
-prepare:npm-packages() {
-  for package in "${npmPackages[@]}"; do
-    (npmPackage "$package" install) || exit 1
-    log:success "Installed dependencies for $package"
-
-    (npmPackage "$package" run build) || exit 1
-    log:success "Built $package"
-  done
-}
 
 # Build an example app for production
 build() {
+    (npm i) || exit 1
     (link) || exit 1
     (cleanOutput) || exit 1
 
@@ -114,7 +100,6 @@ build() {
     if [ "$DEBUG" == "1" ]; then
       extraArgs="--debug"
     fi
-
 
     cd "$APP_DIR" || exit 1
     meteor build "$BUILD_TARGET" --directory "$@" $extraArgs
