@@ -13,7 +13,7 @@ import { Colorize } from '@/utilities/server';
 import Path from 'path';
 import pc from 'picocolors';
 
-export function resolveMainModules({ packageJson, userConfig, command }: { userConfig: UserViteConfig, packageJson: ProjectJson, command: ResolvedViteConfig['command'] }) {
+export function resolveMainModules({ packageJson, userConfig, command }: { userConfig: UserViteConfig | ResolvedViteConfig, packageJson: ProjectJson, command: ResolvedViteConfig['command'] }) {
     const mainModulePath = packageJson.meteor.mainModule;
     const rootDir = CurrentConfig.projectRoot;
     

@@ -68,7 +68,7 @@ export async function resolveMeteorViteConfig(
             })
         }
         
-        const mainModule = resolveMainModules({ packageJson, userConfig });
+        const mainModule = resolveMainModules({ packageJson, userConfig, command });
         
         const config = {
             ...inlineConfig,
