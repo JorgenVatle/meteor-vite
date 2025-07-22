@@ -1,3 +1,5 @@
+// noinspection ExceptionCaughtLocallyJS
+
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { resolveMainModules } from '@/internals/lib/EntryModule/helpers/resolve';
 import { parsePackageJson } from '@/internals/lib/parsePackageJson';
@@ -74,8 +76,9 @@ export async function resolveMeteorViteConfig(
         }
         
         if (!userConfig.meteor._configSource) {
-            Instance.logger.warn('Make sure you configure Meteor-Vite using the Vite plugin, not the old top-level `meteor` config property.')
-            Instance.logger.warn('See the readme for an example: https://github.com/JorgenVatle/meteor-vite?tab=readme-ov-file#vite-config')
+            throw new MeteorViteError('Use of top-level `meteor` config property in Vite config is deprecated. Make sure you configure Meteor-Vite using the Vite plugin instead of the top-level `meteor` config property!', {
+                subtitle: `See the readme for an example: ${documentationLink('vite-config')}`
+            })
         }
         
         const mainModule = resolveMainModules({ packageJson, userConfig });
