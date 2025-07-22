@@ -6,6 +6,7 @@ import { execa } from 'execa';
 import FS from 'fs/promises';
 import Path from 'node:path';
 import { inspect } from 'node:util';
+import pc from 'picocolors';
 import { parse } from 'yaml';
 import { envOverride } from '~/meteor-vite/utilities/server/EnvFlag';
 
@@ -313,7 +314,7 @@ export default [
                 const { timestamp, duration } = DeletionAnnotation.fromManifest(deployment);
                 
                 if (timestamp < Date.now()) {
-                    console.log(`Deployment ${deployment.metadata.name} is still valid until ${new Date(timestamp)} (${msToHumanDuration(Date.now() - timestamp)})`);
+                    console.log(`Deployment ${deployment.metadata.name} is still valid for another ${pc.yellow(msToHumanDuration(Date.now() - timestamp))} (${new Date(timestamp)})`);
                     continue;
                 }
              
