@@ -55,9 +55,6 @@ COPY --link ./tsconfig*.json $ROOT_FOLDER/
 # Prepare repository root-level npm dependencies
 RUN cd $ROOT_FOLDER && meteor npm ci && meteor npm run build:packages
 
-# Prepare example app's npm dependencies
-RUN cd $NPM_PACKAGES_FOLDER/meteor-vite && meteor npm link
-
 WORKDIR $APP_SOURCE_FOLDER
 
 # Meteor.js base image with pre-built npm and atmosphere dependencies
@@ -65,9 +62,8 @@ FROM meteor-base AS meteor-bundler
 
 # Install local and external npm dependencies
 COPY --link $APP_DIR/package*.json $APP_SOURCE_FOLDER/
-RUN meteor npm link meteor-vite
+RUN meteor npm i $NPM_PACKAGES_FOLDER/meteor-vite $NPM_PACKAGES_FOLDER/@meteor-vite/plugin-zodern-relay
 RUN bash $SCRIPTS_FOLDER/meteor/npm-install.sh
-RUN meteor npm link meteor-vite
 
 # Build for production
 COPY --link $APP_DIR $APP_SOURCE_FOLDER/
