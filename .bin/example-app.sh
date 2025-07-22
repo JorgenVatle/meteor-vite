@@ -31,8 +31,8 @@ export SERVER_NODE_OPTIONS="--enable-source-maps"
 export METEOR_PACKAGE_DIRS="$PWD/packages:$PWD/test-packages/atmosphere"
 export METEOR_VITE_TSUP_BUILD_WATCHER="${METEOR_VITE_TSUP_BUILD_WATCHER:-true}"
 
-npmPackages=("meteor-vite" "@meteor-vite/plugin-zodern-relay")
 npmPackagesDir="$PWD/npm-packages"
+npmPackages=("$npmPackagesDir/meteor-vite" "$npmPackagesDir/@meteor-vite/plugin-zodern-relay")
 
 if [ "$USE_METEOR_BINARIES" == "0" ]; then
   npm="npm"
@@ -105,12 +105,6 @@ build() {
     meteor build "$BUILD_TARGET" --directory "$@" $extraArgs
 }
 
-npmPackage() {
-  local name="$1"
-  cd "$npmPackagesDir/$name" || exit 1
-  $npm "${@:2}"
-}
-
 update() {
   cd "$APP_DIR" || exit 1
   meteor update --release "$@"
@@ -148,13 +142,6 @@ start:mongo() {
 
 cleanOutput() {
   rm -rf "$BUILD_TARGET"
-}
-
-link:prepare() {
-  for package in "${npmPackages[@]}"; do
-    (npmPackage "$package" link --ws false) || exit 1
-    log:success "Added npm link for $package"
-  done
 }
 
 link() {
