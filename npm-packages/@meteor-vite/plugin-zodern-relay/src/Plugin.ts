@@ -1,6 +1,6 @@
 import { transformAsync } from '@babel/core';
 import FS from 'fs';
-import { ViteEnvironmentName } from 'meteor-vite/src/utilities/common';
+import { ViteEnvironmentName } from 'meteor-vite/utilities/common';
 import Path from 'path';
 import { type Plugin } from 'vite';
 
