@@ -1,3 +1,4 @@
+import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 
 import type { ProjectJson, ResolvedViteConfig } from '@/plugin';
@@ -11,7 +12,17 @@ import { version as viteVersion } from 'vite';
 
 const startTime = performance.now();
 // The global Meteor instance may not initially be defined within the plugin context during builds.
-const { isDevelopment, release } = Meteor || {};
+let { isDevelopment, release } = Meteor || {
+    release: 'METEOR@unknown'
+};
+
+if (!Meteor.release) {
+    try {
+        release = FS.readFileSync(Path.join(CurrentConfig.projectRoot, '.meteor', 'release'), 'utf8').trim();
+    } catch (error: unknown) {
+        Logger.error(new MeteorViteError('Failed to read Meteor release file', { cause: error }));
+    }
+}
 
 export default new class MeteorViteRuntime {
     public readonly logger = isDevelopment
