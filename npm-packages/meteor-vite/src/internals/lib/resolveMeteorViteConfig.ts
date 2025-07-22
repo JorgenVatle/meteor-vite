@@ -5,10 +5,8 @@ import { resolveMainModules } from '@/internals/lib/EntryModule/helpers/resolve'
 import { parsePackageJson } from '@/internals/lib/parsePackageJson';
 
 import type { ResolvedViteConfig } from '@/plugin';
-
-import { meteorWorker } from '@/plugin/vite-plugins/meteorWorker';
-import { documentationLink, ViteEnvironmentName } from '@/utilities/common';
-import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
+import { documentationLink } from '@/utilities/common';
+import { type InlineConfig, resolveConfig } from 'vite';
 import Instance from './MeteorViteRuntime';
 
 export const CurrentConfig = globalThis.MeteorViteRuntimeConfig;
@@ -71,64 +69,6 @@ export async function resolveMeteorViteConfig(
             ...inlineConfig,
             meteor: userConfig.meteor,
             base: userConfig.base,
-            appType: 'custom',
-            server: { middlewareMode: true, },
-            configFile: userConfig.configFile,
-            plugins: [
-                meteorWorker({
-                    meteorStubs: { packageJson }
-                })
-            ],
-            build: {
-                outDir,
-                emptyOutDir: false,
-                ssrManifest: `ssr.manifest.json`,
-                manifest: `client.manifest.json`,
-                rollupOptions: {
-                    output: fileNameTemplates('client'),
-                }
-            },
-            environments: {
-                [ViteEnvironmentName.server]: {
-                    dev: {
-                        createEnvironment(name, config) {
-                            return createRunnableDevEnvironment(name, config);
-                        }
-                    },
-                    resolve: {
-                        external: true,
-                        noExternal: command === 'build' ? METEOR_VITE_RUNTIME_DEPENDENCIES : [],
-                    },
-                    build: {
-                        target: 'node21',
-                        manifest: false,
-                        ssrManifest: false,
-                        minify: false,
-                        sourcemap: true,
-                        rollupOptions: {
-                            external: [/^meteor\//],
-                            input: {
-                                main: mainModule.vite.server.path,
-                            },
-                            output: {
-                                // Unfortunately Meteor still doesn't support
-                                // ESM within the final server bundle.
-                                format: 'module',
-                                ...fileNameTemplates('server'),
-                            }
-                        },
-                    },
-                },
-                [ViteEnvironmentName.client]: {
-                    build: {
-                        rollupOptions: {
-                            input: {
-                                main: mainModule.vite.client.path,
-                            },
-                        }
-                    }
-                }
-            },
         } satisfies InlineConfig & Pick<ResolvedViteConfig, 'meteor'>;
         
         return {
@@ -149,35 +89,3 @@ export async function resolveMeteorViteConfig(
         throw error;
     }
 }
-
-function fileNameTemplates(env: 'server' | 'client') {
-    const template = {
-        assetFileNames: `assets/[name]-[hash][extname]`,
-        chunkFileNames: `chunk/[name]-[hash].js`,
-        entryFileNames: `entry-${env}/[name]-[hash].entry.js`,
-    }
-    
-    if (env === 'server') {
-        template.assetFileNames.replace('[name]', 'server/[name]');
-        template.chunkFileNames.replace('[name]', 'server/[name]');
-        template.entryFileNames.replace('entry-server', 'entry/server');
-    }
-    
-    return template;
-}
-
-const WRAP_ANSI_DEPS = [
-    'wrap-ansi',
-    'strip-ansi',
-    'ansi-regex',
-    'emoji-regex',
-    'string-width',
-    'get-east-asian-width',
-    'eastasianwidth',
-]
-const METEOR_VITE_RUNTIME_DEPENDENCIES = [
-    'picocolors',
-    'meteor-vite',
-    ...WRAP_ANSI_DEPS,
-]
-

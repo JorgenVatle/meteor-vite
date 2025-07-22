@@ -1,12 +1,16 @@
 import { FatalMeteorViteError } from '@/internals/error/MeteorViteError';
+import { resolveMainModules } from '@/internals/lib/EntryModule/helpers/resolve';
+import { parsePackageJson } from '@/internals/lib/parsePackageJson';
+import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { PartialPluginConfig } from '@/plugin';
-import { mergeMeteorPluginSettings, mergeViteSettings } from '@/plugin/lib/MergeConfig';
+import { mergeMeteorPluginSettings } from '@/plugin/lib/MergeConfig';
 import { parseConfig } from '@/plugin/lib/ParseConfig';
+import { ViteEnvironmentName } from '@/utilities/common';
 import { trimLeadingSlash } from '@/utilities/server';
 import { debugEnabled, envOverride } from '@/utilities/server/EnvFlag';
 import Path from 'path';
 import pc from 'picocolors';
-import type { Plugin } from 'vite';
+import { createRunnableDevEnvironment, type Plugin, type UserConfig } from 'vite';
 import PackageJSON from '../../../package.json';
 
 /**
@@ -38,7 +42,7 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
         name: 'meteor-vite:config',
         enforce,
         resolveId,
-        config: (userConfig) => {
+        config: (userConfig, { command }): UserConfig => {
             const pluginSettings = mergeMeteorPluginSettings(userConfig, {
                 _configSource: 'plugin',
                 meteorStubs: {
@@ -77,12 +81,31 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
                 pluginSettings.assetsDir
             );
             
-            userConfig.base = envOverride(
-                'METEOR_VITE_BASE_URL',
-                pluginSettings.assetsBaseUrl ?? userConfig.base ?? `/${trimLeadingSlash(pluginSettings.assetsDir)}`
-            );
+            const packageJson = parsePackageJson();
+            const mainModule = resolveMainModules({
+                packageJson,
+                // @ts-expect-error Mismatch between hook's config type and expected input type
+                userConfig
+            });
             
-            const mergedUserConfig = mergeViteSettings(userConfig, {
+            return {
+                appType: 'custom',
+                server: {
+                    middlewareMode: true,
+                },
+                base: envOverride(
+                    'METEOR_VITE_BASE_URL',
+                    pluginSettings.assetsBaseUrl ?? userConfig.base ?? `/${trimLeadingSlash(pluginSettings.assetsDir)}`
+                ),
+                build: {
+                    outDir: CurrentConfig.outDir,
+                    emptyOutDir: false,
+                    ssrManifest: `ssr.manifest.json`,
+                    manifest: `client.manifest.json`,
+                    rollupOptions: {
+                        output: fileNameTemplates('client'),
+                    }
+                },
                 define: {
                     __VITE_ASSETS_DIR__: JSON.stringify(pluginSettings.assetsDir),
                     __VITE_DYNAMIC_ASSET_BOILERPLATE__: JSON.stringify(pluginSettings.dynamicAssetBoilerplate),
@@ -90,10 +113,48 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
                 optimizeDeps: {
                     entries: [pluginSettings.clientEntry],
                 },
-            });
-            
-            userConfig.define = mergedUserConfig.define;
-            userConfig.optimizeDeps = mergedUserConfig.optimizeDeps;
+                environments: {
+                    [ViteEnvironmentName.server]: {
+                        dev: {
+                            createEnvironment(name, config) {
+                                return createRunnableDevEnvironment(name, config);
+                            }
+                        },
+                        resolve: {
+                            external: true,
+                            noExternal: command === 'build' ? METEOR_VITE_RUNTIME_DEPENDENCIES : [],
+                        },
+                        build: {
+                            target: 'node21',
+                            manifest: false,
+                            ssrManifest: false,
+                            minify: false,
+                            sourcemap: true,
+                            rollupOptions: {
+                                external: [/^meteor\//],
+                                input: {
+                                    main: mainModule.vite.server.path,
+                                },
+                                output: {
+                                    // Unfortunately Meteor still doesn't support
+                                    // ESM within the final server bundle.
+                                    format: 'module',
+                                    ...fileNameTemplates('server'),
+                                }
+                            },
+                        },
+                    },
+                    [ViteEnvironmentName.client]: {
+                        build: {
+                            rollupOptions: {
+                                input: {
+                                    main: mainModule.vite.client.path,
+                                },
+                            }
+                        }
+                    }
+                }
+            }
         },
         configResolved(resolvedConfig) {
             const config = parseConfig(resolvedConfig);
@@ -114,3 +175,34 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
         },
     };
 }
+
+function fileNameTemplates(env: 'server' | 'client') {
+    const template = {
+        assetFileNames: `assets/[name]-[hash][extname]`,
+        chunkFileNames: `chunk/[name]-[hash].js`,
+        entryFileNames: `entry-${env}/[name]-[hash].entry.js`,
+    }
+    
+    if (env === 'server') {
+        template.assetFileNames.replace('[name]', 'server/[name]');
+        template.chunkFileNames.replace('[name]', 'server/[name]');
+        template.entryFileNames.replace('entry-server', 'entry/server');
+    }
+    
+    return template;
+}
+
+const WRAP_ANSI_DEPS = [
+    'wrap-ansi',
+    'strip-ansi',
+    'ansi-regex',
+    'emoji-regex',
+    'string-width',
+    'get-east-asian-width',
+    'eastasianwidth',
+]
+const METEOR_VITE_RUNTIME_DEPENDENCIES = [
+    'picocolors',
+    'meteor-vite',
+    ...WRAP_ANSI_DEPS,
+]
