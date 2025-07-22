@@ -75,7 +75,7 @@ export default new class MeteorViteRuntime {
         if (packageJson.type !== 'module' && nonEsmConfigFile) {
             const mts = Colorize.fileType('.mts');
             const mjs = Colorize.fileType('.mjs');
-            Logger.warnOnce({ id: '.viteignore' }, formatLogBlock(
+            Logger.warnOnce({ id: 'viteignore' }, formatLogBlock(
                 `Vite config without ${mts} or ${mjs} extension detected.`,
                 [
                     'This will likely prevent Meteor from starting when trying to resolve your config.',
