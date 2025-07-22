@@ -38,6 +38,11 @@ export async function resolveMeteorViteConfig(
         
         const userConfig: ResolvedViteConfig = await resolveConfig(Object.assign({
             configFile: packageJson.meteor.vite?.configFile,
+            meteor: {
+                meteorStubs: {
+                    packageJson,
+                }
+            }
         }, inlineConfig), command);
         
         if (!userConfig.meteor?.clientEntry) {
