@@ -12,11 +12,9 @@ import { version as viteVersion } from 'vite';
 
 const startTime = performance.now();
 // The global Meteor instance may not initially be defined within the plugin context during builds.
-let { isDevelopment, release } = Meteor || {
-    release: 'METEOR@unknown'
-};
+let { isDevelopment, release } = Meteor || {};
 
-if (!Meteor.release) {
+if (!release) {
     try {
         release = FS.readFileSync(Path.join(CurrentConfig.projectRoot, '.meteor', 'release'), 'utf8').trim();
     } catch (error: unknown) {
