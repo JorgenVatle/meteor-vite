@@ -337,7 +337,7 @@ export default [
                 
                 if (deployment.spec.replicas === 0) {
                     console.log(`Deployment ${nameLabel} is hibernated and will be deleted in ${pc.yellow(deletion.distanceToNow.delete)} (${deletion.date.delete})`);
-                    summary.logs.push(`Deployment \`${deployment.metadata.name}\` is hibernated and will be deleted in ${deletion.distanceToNow.delete} (${deletion.date.delete})`);
+                    summary.logs.push(`Deployment \`${deployment.metadata.name}\` is hibernated and will be deleted ${deletion.distanceToNow.delete} (${deletion.date.delete})`);
                     continue;
                 }
                 
