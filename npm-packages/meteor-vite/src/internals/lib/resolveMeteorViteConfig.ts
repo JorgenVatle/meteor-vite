@@ -48,22 +48,6 @@ export async function resolveMeteorViteConfig(
             });
         }
         
-        function fileNameTemplates(env: 'server' | 'client') {
-            const template = {
-                assetFileNames: `assets/[name]-[hash][extname]`,
-                chunkFileNames: `chunk/[name]-[hash].js`,
-                entryFileNames: `entry-${env}/[name]-[hash].entry.js`,
-            }
-            
-            if (env === 'server') {
-                template.assetFileNames.replace('[name]', 'server/[name]');
-                template.chunkFileNames.replace('[name]', 'server/[name]');
-                template.entryFileNames.replace('entry-server', 'entry/server');
-            }
-            
-            return template;
-        }
-        
         if (userConfig.meteor.serverEntry) {
             if (userConfig.meteor.enableExperimentalFeatures) {
                 viteServerMainModule = userConfig.meteor.serverEntry;
@@ -164,6 +148,22 @@ export async function resolveMeteorViteConfig(
         }
         throw error;
     }
+}
+
+function fileNameTemplates(env: 'server' | 'client') {
+    const template = {
+        assetFileNames: `assets/[name]-[hash][extname]`,
+        chunkFileNames: `chunk/[name]-[hash].js`,
+        entryFileNames: `entry-${env}/[name]-[hash].entry.js`,
+    }
+    
+    if (env === 'server') {
+        template.assetFileNames.replace('[name]', 'server/[name]');
+        template.chunkFileNames.replace('[name]', 'server/[name]');
+        template.entryFileNames.replace('entry-server', 'entry/server');
+    }
+    
+    return template;
 }
 
 const WRAP_ANSI_DEPS = [
