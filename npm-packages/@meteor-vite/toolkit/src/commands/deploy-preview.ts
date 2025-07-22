@@ -319,7 +319,10 @@ export default [
                     continue;
                 }
                 
-                console.log(`Deployment ${deployment.metadata.name} has expired ${pc.yellow(msToHumanDuration(-remainingValidityMs) + ' ago')} (${new Date(timestamp)})`);
+                const relativeExpiry = msToHumanDuration(-remainingValidityMs) + ' ago';
+                console.log(`Deployment ${deployment.metadata.name} has expired ${pc.yellow(relativeExpiry)} (${new Date(timestamp)})`);
+                
+                await FS.appendFile(options.summaryFile, '\n' + `- Pruned deployment that expired ${relativeExpiry}: ${deployment.metadata.name} (${new Date(timestamp)})`)
              
                 await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace });
             }
