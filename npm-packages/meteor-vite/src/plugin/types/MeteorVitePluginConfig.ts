@@ -1,6 +1,6 @@
 import type { DeepPartial, MakeRequired } from '@/internals/lib/UtilityTypes';
 import type { ProjectJson } from '@/plugin/types/ProjectJson';
-import type { ResolvedConfig } from 'vite';
+import type { ResolvedConfig, UserConfig } from 'vite';
 
 /**
  * The full configuration object for meteor-vite after defaults and other
@@ -233,5 +233,9 @@ export type MeteorVitePluginOptions = MakeRequired<PartialPluginConfig, 'clientE
  * A resolved Vite config, after our workers has merged it with default settings and overrides from the Meteor instance.
  */
 export interface ResolvedViteConfig extends ResolvedConfig {
+    meteor?: MeteorVitePluginConfig;
+}
+
+export interface UserViteConfig extends UserConfig {
     meteor?: MeteorVitePluginConfig;
 }
