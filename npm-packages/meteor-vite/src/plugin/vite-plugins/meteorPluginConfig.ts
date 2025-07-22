@@ -81,7 +81,7 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
                 pluginSettings.assetsDir
             );
             
-            const packageJson = parsePackageJson();
+            const packageJson = pluginSettings.meteorStubs.packageJson || parsePackageJson();
             const mainModule = resolveMainModules({
                 packageJson,
                 // @ts-expect-error Mismatch between hook's config type and expected input type
