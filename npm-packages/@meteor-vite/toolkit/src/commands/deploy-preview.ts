@@ -2,7 +2,7 @@ import { CommandDefinition } from '@/lib/CommandDefinition';
 import { kubectl } from '@/lib/kubernetes/cli';
 import type { IngressHttpPath } from '@/lib/kubernetes/types';
 import type { KubeResource } from '@/lib/kubernetes/types/ResourceTypes';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format, formatDistanceToNow, isFuture } from 'date-fns';
 import { execa } from 'execa';
 import FS from 'fs/promises';
 import Path from 'node:path';
@@ -317,12 +317,11 @@ export default [
             
             for (const deployment of deployments.items) {
                 const { timestamp, duration } = DeletionAnnotation.fromManifest(deployment);
-                const remainingValidityMs = timestamp - Date.now();
                 const nameLabel = pc.cyan(deployment.metadata.name);
                 const date = format(timestamp, 'PPpp');
                 const relativeValidity = formatDistanceToNow(timestamp, { addSuffix: true });
                 
-                if (remainingValidityMs > 0) {
+                if (isFuture(timestamp)) {
                     console.log(`Deployment ${nameLabel} is still valid for another ${pc.yellow(relativeValidity)} (${date})`);
                     summary.stillValid.push(`- Deployment still valid for ${relativeValidity}: \`${deployment.metadata.name}\` (${date})`);
                     continue;
@@ -330,7 +329,6 @@ export default [
                 
                 console.log(`Deployment ${nameLabel} has expired ${pc.yellow(relativeValidity)} (${new Date(timestamp)})`);
                 summary.pruned.push(`- Pruned deployment that expired ${relativeValidity}: \`${deployment.metadata.name}\` (${date})`);
-                
              
                 await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace });
             }
