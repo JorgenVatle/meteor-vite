@@ -312,11 +312,14 @@ export default [
             
             for (const deployment of deployments.items) {
                 const { timestamp, duration } = DeletionAnnotation.fromManifest(deployment);
+                const remainingValidityMs = Date.now() - timestamp;
                 
-                if (timestamp < Date.now()) {
-                    console.log(`Deployment ${deployment.metadata.name} is still valid for another ${pc.yellow(msToHumanDuration(Date.now() - timestamp))} (${new Date(timestamp)})`);
+                if (remainingValidityMs > 0) {
+                    console.log(`Deployment ${deployment.metadata.name} is still valid for another ${pc.yellow(msToHumanDuration(remainingValidityMs))} (${new Date(timestamp)})`);
                     continue;
                 }
+                
+                console.log(`Deployment ${deployment.metadata.name} has expired ${pc.yellow(msToHumanDuration(-remainingValidityMs) + ' ago')} (${new Date(timestamp)})`);
              
                 await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace });
             }
