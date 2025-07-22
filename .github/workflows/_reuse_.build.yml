@@ -126,7 +126,7 @@ jobs:
           refTag="$(echo ${{ github.ref_name }} | tr / -)"
           
           # Docker production image version tag 
-          imageVersion="${{ github.run_number }}.$refTag.${GITHUB_SHA:0:7}"
+          imageVersion="$refTag.${{ github.run_number }}.${GITHUB_SHA:0:7}"
           
           # Path prefix for deployed preview apps
           basePath="/$refTag/$appName"
