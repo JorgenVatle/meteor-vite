@@ -344,7 +344,7 @@ export default [
                 console.log(`Hibernating deployment that expired ${deletion.distanceToNow.hibernate}: ${nameLabel} (${deletion.date.hibernate})`);
                 summary.pruned.push(`- Hibernated deployment that expired ${deletion.distanceToNow.hibernate}: \`${deployment.metadata.name}\` (${deletion.date.hibernate})`);
                 const result = await kubectl.patch('deployment', deployment.metadata.name, { spec: { replicas: 0 } }, { namespace: options.namespace });
-                summary.logs.push(inspect(result, { colors: true, depth: 10 }));
+                summary.logs.push(inspect(result, { colors: false, depth: 10 }));
             }
             
             const summaryLines: string[] = [];
