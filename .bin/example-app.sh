@@ -90,7 +90,6 @@ exec:npx() {
 
 # Initial setup for example apps - installs and links our local packages.
 prepare() {
-  (prepare:npm-packages) || exit 1
   (install) || exit 1
   (link) || exit 1
 }
@@ -107,7 +106,6 @@ prepare:npm-packages() {
 
 # Build an example app for production
 build() {
-    (prepare:npm-packages) || exit 1
     (link) || exit 1
     (cleanOutput) || exit 1
 
@@ -167,12 +165,14 @@ cleanOutput() {
   rm -rf "$BUILD_TARGET"
 }
 
-link() {
+link:prepare() {
   for package in "${npmPackages[@]}"; do
     (npmPackage "$package" link --ws false) || exit 1
     log:success "Added npm link for $package"
   done
+}
 
+link() {
   (cd "$APP_DIR" && npm link "${npmPackages[@]}") || exit 1
 
   log:success "Linked ${npmPackages[*]} to $app"

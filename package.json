@@ -29,7 +29,8 @@
     "build": "npm run example build",
     "build:packages": "npm run build -w npm-packages/@meteor-vite/toolkit -w npm-packages/meteor-vite -w packages/vite",
 
-    "postprepare": "npm run build:packages",
+    "postprepare": "npm run build:packages && npm run prepare:links",
+    "prepare:links": "npm run example link:prepare vue",
 
     "link": "npm run example link",
     "release": "npm run publish:vite && changeset publish",
