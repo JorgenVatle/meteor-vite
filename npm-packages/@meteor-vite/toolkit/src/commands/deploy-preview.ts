@@ -322,7 +322,7 @@ export default [
                 
                 if (deletion.shouldDelete) {
                     console.log(`Deployment ${nameLabel} has expired ${pc.yellow(deletion.distanceToNow.delete)} (${deletion.date.delete})`);
-                    summary.pruned.push(`- Pruned deployment that expired ${deletion.distanceToNow.delete}: \`${deployment.metadata.name}\` (${deletion.date.delete})`);
+                    summary.pruned.push(`- Deleted \`${deployment.metadata.name}\` which had been hibernated since ${deletion.distanceToNow.hibernate}: (${deletion.date.hibernate})`);
                  
                     const result = await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace })
                     summary.logs.push(result);
@@ -331,18 +331,18 @@ export default [
                 
                 if (!deletion.shouldHibernate) {
                     console.log(`Deployment ${nameLabel} is still valid for another ${pc.yellow(deletion.distanceToNow.hibernate)} (${deletion.date.hibernate})`);
-                    summary.stillValid.push(`- Deployment still valid for ${deletion.distanceToNow.hibernate}: \`${deployment.metadata.name}\` (${deletion.date.hibernate})`);
+                    summary.stillValid.push(`- Deployment \`${deployment.metadata.name}\` still valid for another ${deletion.distanceToNow.hibernate} (${deletion.date.hibernate})`);
                     continue;
                 }
                 
                 if (deployment.spec.replicas === 0) {
                     console.log(`Deployment ${nameLabel} is hibernated and will be deleted in ${pc.yellow(deletion.distanceToNow.delete)} (${deletion.date.delete})`);
-                    summary.logs.push(`Deployment is hibernated and will be deleted in ${deletion.distanceToNow.delete}: \`${deployment.metadata.name}\` (${deletion.date.delete})`);
+                    summary.logs.push(`Deployment \`${deployment.metadata.name}\` is hibernated and will be deleted in ${deletion.distanceToNow.delete} (${deletion.date.delete})`);
                     continue;
                 }
                 
                 console.log(`Hibernating deployment that expired ${deletion.distanceToNow.hibernate}: ${nameLabel} (${deletion.date.hibernate})`);
-                summary.pruned.push(`- Hibernated deployment that expired ${deletion.distanceToNow.hibernate}: \`${deployment.metadata.name}\` (${deletion.date.hibernate})`);
+                summary.pruned.push(`- Hibernated \`${deployment.metadata.name}\` which expired ${deletion.distanceToNow.hibernate} (${deletion.date.hibernate})`);
                 const result = await kubectl.patch('deployment', deployment.metadata.name, { spec: { replicas: 0 } }, { namespace: options.namespace });
                 summary.logs.push(inspect(result, { colors: false, depth: 10 }));
             }
