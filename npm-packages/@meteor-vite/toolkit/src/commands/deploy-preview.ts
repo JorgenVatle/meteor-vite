@@ -330,13 +330,13 @@ export default [
                 }
                 
                 if (!deletion.shouldHibernate) {
-                    console.log(`Deployment ${nameLabel} is still valid for another ${pc.yellow(deletion.distanceToNow.hibernate)} (${deletion.date.hibernate})`);
-                    summary.stillValid.push(`- Deployment \`${deployment.metadata.name}\` still valid for another ${deletion.distanceToNow.hibernate} (${deletion.date.hibernate})`);
+                    console.log(`Deployment ${nameLabel} is still valid and will be hibernated ${pc.yellow(deletion.distanceToNow.hibernate)} (${deletion.date.hibernate})`);
+                    summary.stillValid.push(`- Deployment \`${deployment.metadata.name}\` is still valid and will be hibernated ${deletion.distanceToNow.hibernate} (${deletion.date.hibernate})`);
                     continue;
                 }
                 
                 if (deployment.spec.replicas === 0) {
-                    console.log(`Deployment ${nameLabel} is hibernated and will be deleted in ${pc.yellow(deletion.distanceToNow.delete)} (${deletion.date.delete})`);
+                    console.log(`Deployment ${nameLabel} is hibernated and will be deleted ${pc.yellow(deletion.distanceToNow.delete)} (${deletion.date.delete})`);
                     summary.logs.push(`Deployment \`${deployment.metadata.name}\` is hibernated and will be deleted ${deletion.distanceToNow.delete} (${deletion.date.delete})`);
                     continue;
                 }
@@ -395,7 +395,7 @@ class DeletionAnnotation {
         this.deleteAt = addDays(this.timestamp, 365 * 3);
         this.hibernateAt = new Date(this.timestamp);
         this.distanceToNow = {
-            hibernate: formatDistanceToNow(this.timestamp, { addSuffix: true }),
+            hibernate: formatDistanceToNow(this.timestamp, { addSuffix: true, }),
             delete: formatDistanceToNow(this.deleteAt, { addSuffix: true }),
         };
         this.date = {
