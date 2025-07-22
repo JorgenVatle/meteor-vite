@@ -134,7 +134,8 @@ jobs:
           # Base path prefix for Vite assets
           viteBaseUrl=${{ inputs.viteBaseUrl || '"$basePath/vite"' }}
           
-          echo "cacheTag=$imageName:buildcache"       >> $GITHUB_OUTPUT
+          echo "cacheTag=$imageName:buildcache"               >> $GITHUB_OUTPUT
+          echo "refCacheTag=$imageName:buildcache.$refTag"    >> $GITHUB_OUTPUT
           echo "deploymentImage=$imageName:$imageVersion"     >> $GITHUB_OUTPUT
           
           echo "imageName=$imageName"                         >> $GITHUB_OUTPUT
@@ -169,10 +170,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: | 
             type=registry,ref=${{ steps.image.outputs.cacheTag }}
-            type=registry,ref=${{ steps.image.outputs.cacheTag }}-${{ steps.image.outputs.refTag }}
+            type=registry,ref=${{ steps.image.outputs.refCacheTag }}
           cache-to: | 
             type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
-            type=registry,ref=${{ steps.image.outputs.cacheTag }}-${{ steps.image.outputs.refTag }},mode=max
+            type=registry,ref=${{ steps.image.outputs.refCacheTag }},mode=max
           build-args: |
             ${{ inputs.viteAssetDir      && format('METEOR_VITE_ASSETS_DIR={0}', inputs.viteAssetDir)      }}
             ${{ inputs.meteorBaseImage   && format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)        }}
