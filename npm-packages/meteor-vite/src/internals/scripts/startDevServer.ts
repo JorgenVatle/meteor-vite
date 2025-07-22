@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 import Instance from '@/internals/lib/MeteorViteRuntime';
 import { resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
+import { ViteEnvironmentName } from '@/utilities/common';
 import { Colorize, ViteBundleLogger as Logger } from '@/utilities/server';
 import { WebApp } from 'meteor/webapp';
 import { createServer, isRunnableDevEnvironment } from 'vite';
@@ -24,12 +25,12 @@ export async function startDevServer() {
     
     const server = await createServer(config);
     
-    const serverEnvironment = server.environments.server;
+    const meteorServer = server.environments[ViteEnvironmentName.server];
     await server.warmupRequest(mainModule.vite.client.path);
     
     // ⚡ [Server] Transform and load the Meteor main module using Vite.
     if (mainModule.vite.server) {
-        if (!isRunnableDevEnvironment(serverEnvironment)) {
+        if (!isRunnableDevEnvironment(meteorServer)) {
             throw new Error(`Vite server environment is not runnable. This likely means you haven't added 'meteor-vite/plugin' to your Vite config!`)
         }
         
@@ -42,12 +43,12 @@ export async function startDevServer() {
              * new Mongo.Collection(), etc. This also includes hooks for Meteor
              * known community packages.
              */
-            await serverEnvironment.runner.import('meteor-vite/server-entry/hmr')
+            await meteorServer.runner.import('meteor-vite/server-entry/hmr')
             
             /**
              * Internal main module that imports the user's Vite server entry.
              */
-            await serverEnvironment.runner.import(mainModule.vite.server.path);
+            await meteorServer.runner.import(mainModule.vite.server.path);
         } catch (error) {
             if (error instanceof Error) {
                 server.ssrFixStacktrace(error);

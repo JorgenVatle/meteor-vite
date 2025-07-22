@@ -4,6 +4,7 @@ import { getInternalModules } from '@/internals/lib/EntryModule/helpers/get';
 import { MeteorViteCompilerPlugin } from '@/internals/lib/MeteorViteCompilerPlugin';
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { ProjectJson, ResolvedViteConfig, StubSettings } from '@/plugin';
+import { ViteEnvironmentName } from '@/utilities/common';
 
 import {
     BuildLogger,
@@ -72,7 +73,7 @@ async function createCompiler() {
             );
             
             fileNames[context] = list;
-            if (environment.name === 'client') {
+            if (environment.name === ViteEnvironmentName.client) {
                 const baseAssetPath = `/${assetsDir.replace(/^\/+/g, '')}`;
                 const baseCdnPath = environment.config.base;
                 
@@ -92,7 +93,7 @@ async function createCompiler() {
                     const ext = `.${CurrentConfig.bundleFileExtension}`;
                     let filePath = originalFilePath + ext;
                     
-                    if (environment.name === 'server') {
+                    if (environment.name === ViteEnvironmentName.server) {
                         filePath = originalFilePath;
                     }
                     
@@ -121,7 +122,7 @@ async function createCompiler() {
         }
     }
     
-    fileNames['server']?.forEach((file) => {
+    fileNames[ViteEnvironmentName.server]?.forEach((file) => {
         if (!file.originalFilePath.endsWith('js')) {
             return;
         }

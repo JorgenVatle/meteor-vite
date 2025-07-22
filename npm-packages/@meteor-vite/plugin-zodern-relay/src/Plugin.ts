@@ -1,5 +1,6 @@
 import { transformAsync } from '@babel/core';
 import FS from 'fs';
+import { ViteEnvironmentName } from 'meteor-vite/src/utilities/common';
 import Path from 'path';
 import { type Plugin } from 'vite';
 
@@ -51,7 +52,7 @@ export default async function zodernRelay(options?: Options): Promise<Plugin> {
             
             let arch = 'web.browser.vite';
             
-            if (fileOptions?.ssr || this.environment.name === 'server') {
+            if (fileOptions?.ssr || [ViteEnvironmentName.server, 'server'].includes(this.environment.name)) {
                 arch = 'os.vite.ssr';
             }
             

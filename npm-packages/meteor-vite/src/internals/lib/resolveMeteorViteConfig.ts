@@ -5,6 +5,7 @@ import { parsePackageJson } from '@/internals/lib/parsePackageJson';
 import type { ResolvedViteConfig } from '@/plugin';
 
 import { meteorWorker } from '@/plugin/vite-plugins/meteorWorker';
+import { ViteEnvironmentName } from '@/utilities/common';
 import { createRunnableDevEnvironment, type InlineConfig, resolveConfig } from 'vite';
 import Instance from './MeteorViteRuntime';
 
@@ -98,7 +99,7 @@ export async function resolveMeteorViteConfig(
             }
         },
         environments: {
-            server: {
+            [ViteEnvironmentName.server]: {
                 dev: {
                     createEnvironment(name, config) {
                         return createRunnableDevEnvironment(name, config);
@@ -128,7 +129,7 @@ export async function resolveMeteorViteConfig(
                     },
                 },
             },
-            client: {
+            [ViteEnvironmentName.client]: {
                 build: {
                     rollupOptions: {
                         input: {

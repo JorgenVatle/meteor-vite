@@ -1,6 +1,7 @@
 import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { isSameModulePath } from '@/plugin/meteor/models/MeteorPackage';
 import type { MeteorVitePluginConfig } from '@/plugin/types/MeteorVitePluginConfig';
+import { ViteEnvironmentName } from '@/utilities/common';
 import { Colorize, createKeyValueDataLogger, KeyValueDataLogger } from '@/utilities/server';
 import NodeFS, { existsSync } from 'fs';
 import FS from 'fs/promises';
@@ -116,7 +117,7 @@ export default class ViteLoadRequest {
             manifestFile: 'web.browser.json',
         };
         
-        if (environment.name === 'server') {
+        if (environment.name === ViteEnvironmentName.server) {
             arch.manifestFile = 'os.json';
             arch.programsDir = 'server';
         }
@@ -229,7 +230,7 @@ export default class ViteLoadRequest {
     
     protected get _meteorMainModule(): string | undefined {
         const mainModule = this.context.pluginSettings.meteorStubs.packageJson!.meteor.mainModule;
-        if (this.context.environment.name === 'server') {
+        if (this.context.environment.name === ViteEnvironmentName.server) {
             return mainModule.server;
         }
         return mainModule.client;
