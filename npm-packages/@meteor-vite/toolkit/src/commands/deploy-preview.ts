@@ -327,7 +327,9 @@ export default [
                     console.log(`Deployment ${nameLabel} has expired ${pc.yellow(deletion.distanceToNow.delete)} (${deletion.date.delete})`);
                     summary.pruned.push(`- Deleted \`${deployment.metadata.name}\` which had been hibernated since ${deletion.distanceToNow.hibernate}: (${deletion.date.hibernate})`);
                  
-                    const result = await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace })
+                    const result = await kubectl.delete(['deployment', 'service'], '', {
+                        namespace: options.namespace,
+                        labels: [['app.kubernetes.io/instance', '==', deployment.metadata.labels!['app.kubernetes.io/instance'] || deployment.metadata.name]] })
                     summary.logs.push(result);
                     continue;
                 }
