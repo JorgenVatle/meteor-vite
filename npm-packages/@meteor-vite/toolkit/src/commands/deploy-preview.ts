@@ -308,9 +308,10 @@ export default [
                 namespace: options.namespace,
                 labels: [['toolkit.meteor-vite.io/deployment-type', '==', 'temporary']]
             });
-            const summary: { pruned: string[], stillValid: string[] } = {
+            const summary: { pruned: string[], stillValid: string[], logs: string[] } = {
                 pruned: [],
                 stillValid: [],
+                logs: [],
             }
             
             console.log(`Fetched ${deployments.items.length} temporary deployments.`);
@@ -330,7 +331,8 @@ export default [
                 console.log(`Deployment ${nameLabel} has expired ${pc.yellow(relativeValidity)} (${new Date(timestamp)})`);
                 summary.pruned.push(`- Pruned deployment that expired ${relativeValidity}: \`${deployment.metadata.name}\` (${date})`);
              
-                await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace });
+                const result = await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace })
+                summary.logs.push(result);
             }
             
             const summaryLines: string[] = [];
@@ -344,6 +346,12 @@ export default [
             if (summary.stillValid.length) {
                 summaryLines.push('## Remaining deployments');
                 summaryLines.push(...summary.stillValid);
+                summaryLines.push('');
+            }
+            
+            if (summary.logs.length) {
+                summaryLines.push('### Logs');
+                summaryLines.push(codeBlock('shell', summary.logs.join('\n')));
             }
             
             if (!summaryLines.length) {
