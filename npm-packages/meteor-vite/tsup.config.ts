@@ -11,7 +11,7 @@ export default defineBuildConfig(__dirname, [
             'plugin': './src/plugin/index.ts',
             
             // Internal tooling for the Meteor build plugin.
-            'internals': './src/internals/main.ts',
+            'internals': './src/internals/index.ts',
         },
         format: ['esm'],
         platform: 'node',
