@@ -34,18 +34,25 @@ on:
     outputs:
       deploymentImage:
         value: ${{ jobs.docker.outputs.deploymentImage }}
+        description: Full Docker image name and version tag that can be deployed to our app preview cluster.
       imageVersion:
         value: ${{ jobs.docker.outputs.imageVersion }}
+        description: Version tag for the Docker image that was built.
       meteorRelease:
         value: ${{ jobs.docker.outputs.meteorRelease }}
+        description: Meteor version that the example app utilizes. (Retrieved from .meteor/release)
       viteAssetDir:
         value: ${{ jobs.docker.outputs.viteAssetDir }}
+        description: Path to Vite's asset root directory within the Meteor bundle's internal assets filesystem. This is the exact same value that is provided as an input for this workflow.
       viteBaseUrl:
         value: ${{ jobs.docker.outputs.viteBaseUrl }}
+        description: Path relative to the deployed app's root URL to Vite's asset root directory. (defaults to /<basePath>/vite)
       refTag:
         value: ${{ jobs.docker.outputs.refTag }}
+        description: Formatted Git ref for the current branch/pull request. Replaces illegal characters so that the tag can be used in Kubernetes resource names.
       basePath:
         value: ${{ jobs.docker.outputs.basePath }}
+        description: The app's ROOT_URL without the protocol and domain name. (E.g. /example/release/vue). This is used for Ingress path prefixes.
 
 jobs:
   ubuntu:
