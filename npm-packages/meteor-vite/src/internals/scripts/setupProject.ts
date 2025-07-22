@@ -34,7 +34,7 @@ function validateVersions() {
     
     if (!satisfies(npmPackageVersion, `^${expectedVersion.npmPackage.raw}`)) {
         const { minor, major } = expectedVersion.npmPackage;
-        const command = pc.yellow(`npm i meteor-vite@${minor}.${major}`);
+        const command = pc.yellow(`npm i meteor-vite@${major}.${minor}`);
         logger.warn(`meteor-vite is out of date! Try updating it: ${command}`);
     }
     
