@@ -108,8 +108,8 @@ jobs:
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
           imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ inputs.appBasename }}"
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
-          imageVersion="sha-${GITHUB_SHA:0:7}"
           refTag="$(echo ${{ github.ref_name }} | tr / -)"
+          imageVersion="${{ github.run_number }}.$refTag.${GITHUB_SHA:0:7}"
           basePath="/$refTag/$appName"
           viteBaseUrl=${{ inputs.viteBaseUrl || '"$basePath/vite"' }}
 
