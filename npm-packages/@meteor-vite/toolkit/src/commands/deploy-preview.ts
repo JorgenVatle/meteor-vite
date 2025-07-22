@@ -132,7 +132,7 @@ export default [
                 Object.entries({
                     'app.kubernetes.io/managed-by': 'toolkit.meteor-vite.io',
                     'app.kubernetes.io/version': options.version,
-                    'app.kubernetes.io/git-ref': 'preview',
+                    'app.kubernetes.io/git-ref': options['git-ref'],
                     'toolkit.meteor-vite.io/repository-name': repositoryName,
                     'toolkit.meteor-vite.io/repository-namespace': repositoryOwner,
                     'toolkit.meteor-vite.io/ingress': options.ingress,
