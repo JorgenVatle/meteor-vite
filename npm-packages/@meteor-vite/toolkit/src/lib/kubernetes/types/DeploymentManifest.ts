@@ -1,6 +1,7 @@
 import type { KubeManifest } from '@/lib/kubernetes/types/Generic';
 
 export type DeploymentManifest = KubeManifest<'Deployment', {
+    replicas: number;
     selector: {
         matchLabels: Record<string, string>;
     }
