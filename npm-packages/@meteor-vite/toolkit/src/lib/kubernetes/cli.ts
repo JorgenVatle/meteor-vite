@@ -85,7 +85,7 @@ class KubectlCli {
         name: string,
         patch: DeepPartial<KubeResource<TType>>,
         options: UniversalOptions
-    ): Promise<unknown> {
+    ) {
         return this.kubectl('patch', [resource, name, '-p', JSON.stringify(patch)], options);
     }
 }
