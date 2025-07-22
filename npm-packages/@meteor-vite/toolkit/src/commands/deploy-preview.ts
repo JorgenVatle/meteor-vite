@@ -312,7 +312,7 @@ export default [
             
             for (const deployment of deployments.items) {
                 const { timestamp, duration } = DeletionAnnotation.fromManifest(deployment);
-                const remainingValidityMs = Date.now() - timestamp;
+                const remainingValidityMs = timestamp - Date.now();
                 const nameLabel = pc.cyan(deployment.metadata.name);
                 
                 if (remainingValidityMs > 0) {
