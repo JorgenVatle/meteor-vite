@@ -23,9 +23,16 @@
       "default": "./dist/index.mjs"
     },
     "./loaders/*": {
-      "types": ["./dist/loaders/*.d.ts", "./dist/loaders/d.mts"],
-      "import": ["./dist/loaders/*.mjs"],
-      "require": ["./dist/loaders/*.js"]
+      "types": [
+        "./dist/loaders/*.d.ts",
+        "./dist/loaders/d.mts"
+      ],
+      "import": [
+        "./dist/loaders/*.mjs"
+      ],
+      "require": [
+        "./dist/loaders/*.js"
+      ]
     }
   },
   "scripts": {
@@ -39,6 +46,7 @@
   },
   "dependencies": {
     "concurrently": "^9.2.0",
+    "date-fns": "^4.1.0",
     "execa": "^9.6.0",
     "globby": "^14.1.0",
     "hasha": "^6.0.0",
