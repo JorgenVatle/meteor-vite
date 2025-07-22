@@ -14,7 +14,7 @@ class KubectlCli {
         TResource = KubeResource<TType>
     >(verb: Verb, params: string[], options: UniversalOptions, stdin?: string): Promise<KubeResourceList<TResource> | TResource> {
         const args: string[] = [...params || []];
-        const formatAsJson = !['rollout'].includes(verb);
+        const formatAsJson = !['rollout', 'delete'].includes(verb);
         
         if (options.namespace) {
             args.push('-n', options.namespace);
