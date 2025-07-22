@@ -53,6 +53,8 @@ function forceMeteorWatcherReload(files: string[]) {
         return;
     }
     
+    console.log('Forcing Meteor file watcher reload');
+    
     for (const file of files) {
         const path = Path.join(atmospherePackageOutDir, file);
         
