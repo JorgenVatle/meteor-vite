@@ -2,7 +2,7 @@ import { CommandDefinition } from '@/lib/CommandDefinition';
 import { kubectl } from '@/lib/kubernetes/cli';
 import type { IngressHttpPath } from '@/lib/kubernetes/types';
 import type { KubeResource } from '@/lib/kubernetes/types/ResourceTypes';
-import { format, formatDistanceToNow, isFuture } from 'date-fns';
+import { formatDistanceToNow, isPast } from 'date-fns';
 import { execa } from 'execa';
 import FS from 'fs/promises';
 import Path from 'node:path';
@@ -317,19 +317,17 @@ export default [
             console.log(`Fetched ${deployments.items.length} temporary deployments.`);
             
             for (const deployment of deployments.items) {
-                const { timestamp, duration } = DeletionAnnotation.fromManifest(deployment);
+                const deletion = DeletionAnnotation.fromManifest(deployment);
                 const nameLabel = pc.cyan(deployment.metadata.name);
-                const date = format(timestamp, 'PPpp');
-                const relativeValidity = formatDistanceToNow(timestamp, { addSuffix: true });
                 
-                if (isFuture(timestamp)) {
-                    console.log(`Deployment ${nameLabel} is still valid for another ${pc.yellow(relativeValidity)} (${date})`);
-                    summary.stillValid.push(`- Deployment still valid for ${relativeValidity}: \`${deployment.metadata.name}\` (${date})`);
+                if (deletion.isPastDeletionDate) {
+                    console.log(`Deployment ${nameLabel} is still valid for another ${pc.yellow(deletion.distanceToNow)} (${deletion.date})`);
+                    summary.stillValid.push(`- Deployment still valid for ${deletion.distanceToNow}: \`${deployment.metadata.name}\` (${deletion.date})`);
                     continue;
                 }
                 
-                console.log(`Deployment ${nameLabel} has expired ${pc.yellow(relativeValidity)} (${new Date(timestamp)})`);
-                summary.pruned.push(`- Pruned deployment that expired ${relativeValidity}: \`${deployment.metadata.name}\` (${date})`);
+                console.log(`Deployment ${nameLabel} has expired ${pc.yellow(deletion.distanceToNow)} (${deletion.date})`);
+                summary.pruned.push(`- Pruned deployment that expired ${deletion.distanceToNow}: \`${deployment.metadata.name}\` (${deletion.date})`);
              
                 const result = await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace })
                 summary.logs.push(result);
@@ -366,10 +364,16 @@ export default [
 class DeletionAnnotation {
     public readonly timestamp: number;
     public readonly duration: string;
+    public readonly distanceToNow: string;
+    public readonly isPastDeletionDate: boolean;
+    public readonly date: Date;
     
     constructor(config: Pick<DeletionAnnotation, 'timestamp' | 'duration'>) {
         this.timestamp = config.timestamp;
         this.duration = config.duration;
+        this.distanceToNow = formatDistanceToNow(this.timestamp, { addSuffix: true });
+        this.isPastDeletionDate = isPast(this.timestamp);
+        this.date = new Date(this.timestamp);
     }
     
     public toJSON() {
