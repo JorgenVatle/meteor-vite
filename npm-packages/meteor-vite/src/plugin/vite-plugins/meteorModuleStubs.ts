@@ -15,7 +15,7 @@ import type { Environment, Plugin, ViteDevServer } from 'vite';
  */
 export const meteorModuleStubs: () => Promise<Plugin> = setupPlugin(async () => {
     return {
-        name: 'meteor-vite: stubs',
+        name: 'meteor-vite:stubs',
         resolveId: (id) => ViteLoadRequest.resolveId(id),
         shouldProcess: (viteId) => ViteLoadRequest.isStubRequest(viteId),
         async validateConfig({ meteorStubs }: MeteorVitePluginConfig) {
