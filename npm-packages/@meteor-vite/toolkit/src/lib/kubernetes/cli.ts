@@ -6,13 +6,22 @@ import type { DeepPartial } from '~/meteor-vite/internals/lib/UtilityTypes';
 import { envOverride } from '~/meteor-vite/utilities/server/EnvFlag';
 
 type Verb = 'get' | 'patch' | 'create' | 'delete' | 'apply' | 'rollout';
+type NonJsonVerbs = 'delete' | 'rollout';
 const DRY_RUN = !!JSON.parse(envOverride('DRY_RUN', 'false'));
 
 class KubectlCli {
     protected async kubectl<
         TType extends KubeResourceType,
         TResource = KubeResource<TType>
-    >(verb: Verb, params: string[], options: UniversalOptions, stdin?: string): Promise<KubeResourceList<TResource> | TResource> {
+    >(verb: NonJsonVerbs, params: string[], options: UniversalOptions, stdin?: string): Promise<string>
+    protected async kubectl<
+        TType extends KubeResourceType,
+        TResource = KubeResource<TType>
+    >(verb: Exclude<Verb, NonJsonVerbs>, params: string[], options: UniversalOptions, stdin?: string): Promise<KubeResourceList<TResource> | TResource>
+    protected async kubectl<
+        TType extends KubeResourceType,
+        TResource = KubeResource<TType>
+    >(verb: Verb, params: string[], options: UniversalOptions, stdin?: string): Promise<unknown> {
         const args: string[] = [...params || []];
         const formatAsJson = !['rollout', 'delete'].includes(verb);
         
@@ -45,7 +54,6 @@ class KubectlCli {
             return JSON.parse(result.stdout);
         }
         
-        // @ts-expect-error Unused plain text output
         return result.stdout;
     }
     
@@ -68,7 +76,7 @@ class KubectlCli {
         return this.kubectl('rollout', ['status', 'deployment', deployment, '--watch', '--timeout', timeout], options);
     }
     
-    public delete(resource: KubeResourceType[], name: string, options: UniversalOptions): Promise<unknown> {
+    public delete(resource: KubeResourceType[], name: string, options: UniversalOptions): Promise<string> {
         return this.kubectl('delete', [resource.join(','), name], options);
     }
     
