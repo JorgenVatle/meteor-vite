@@ -313,16 +313,17 @@ export default [
             for (const deployment of deployments.items) {
                 const { timestamp, duration } = DeletionAnnotation.fromManifest(deployment);
                 const remainingValidityMs = Date.now() - timestamp;
+                const nameLabel = pc.cyan(deployment.metadata.name);
                 
                 if (remainingValidityMs > 0) {
-                    console.log(`Deployment ${deployment.metadata.name} is still valid for another ${pc.yellow(msToHumanDuration(remainingValidityMs))} (${new Date(timestamp)})`);
+                    console.log(`Deployment ${nameLabel} is still valid for another ${pc.yellow(msToHumanDuration(remainingValidityMs))} (${new Date(timestamp)})`);
                     continue;
                 }
                 
                 const relativeExpiry = msToHumanDuration(-remainingValidityMs) + ' ago';
-                console.log(`Deployment ${deployment.metadata.name} has expired ${pc.yellow(relativeExpiry)} (${new Date(timestamp)})`);
+                console.log(`Deployment ${nameLabel} has expired ${pc.yellow(relativeExpiry)} (${new Date(timestamp)})`);
                 
-                await FS.appendFile(options.summaryFile, '\n' + `- Pruned deployment that expired ${relativeExpiry}: ${deployment.metadata.name} (${new Date(timestamp)})`)
+                await FS.appendFile(options.summaryFile, '\n' + `- Pruned deployment that expired ${relativeExpiry}: \`${deployment.metadata.name}\` (${new Date(timestamp)})`)
              
                 await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace });
             }
