@@ -35,9 +35,18 @@ export async function startDevServer() {
         
         Instance.logger.info(`Loading server entry: ${Colorize.filepath(mainModule.vite.server.path)}`);
         
-        // HMR listener to clean up side-effects from things like
-        // Meteor.publish(), new Mongo.Collection(), etc. on server-side hot reload.
         try {
+            /**
+             * The HMR server entry is a series of HMR hooks to clean up
+             * side-effects from common Meteor methods like Meteor.publish(),
+             * new Mongo.Collection(), etc. This also includes hooks for Meteor
+             * known community packages.
+             */
+            await serverEnvironment.runner.import('meteor-vite/server-entry/hmr')
+            
+            /**
+             * Internal main module that imports the user's Vite server entry.
+             */
             await serverEnvironment.runner.import(mainModule.vite.server.path);
         } catch (error) {
             if (error instanceof Error) {

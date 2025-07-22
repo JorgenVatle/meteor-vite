@@ -37,15 +37,10 @@ export function setupEntryModules(mainModule: { vite: ViteMainModule, meteor: Me
      * built by Vite statically instead of through Meteor's default build
      * system.
      *
-     * The HMR server entry is a series of HMR hooks to clean up side-effects
-     * from common Meteor packages. Things like resetting publications and
-     * defined collections. This is only used if server builds are enabled.
-     *
      * @location /_vite-bundle/server
      */
     {
         production.server.addImport({ path: 'meteor-vite/server-entry/production' });
-        development.server.addImport({ path: 'meteor-vite/server-entry/hmr' });
         
         if (mainModule.vite.server) {
             production.server.addImport({ path: mainModule.vite.server.path });
