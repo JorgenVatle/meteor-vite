@@ -2,7 +2,7 @@ import { CommandDefinition } from '@/lib/CommandDefinition';
 import { kubectl } from '@/lib/kubernetes/cli';
 import type { IngressHttpPath } from '@/lib/kubernetes/types';
 import type { KubeResource } from '@/lib/kubernetes/types/ResourceTypes';
-import { formatDistanceToNow, isPast } from 'date-fns';
+import { addDays, formatDistanceToNow, isPast } from 'date-fns';
 import { execa } from 'execa';
 import FS from 'fs/promises';
 import Path from 'node:path';
@@ -320,17 +320,31 @@ export default [
                 const deletion = DeletionAnnotation.fromManifest(deployment);
                 const nameLabel = pc.cyan(deployment.metadata.name);
                 
-                if (deletion.isPastDeletionDate) {
+                if (deletion.shouldDelete) {
+                    console.log(`Deployment ${nameLabel} has expired ${pc.yellow(deletion.distanceToNow)} (${deletion.date})`);
+                    summary.pruned.push(`- Pruned deployment that expired ${deletion.distanceToNow}: \`${deployment.metadata.name}\` (${deletion.date})`);
+                 
+                    const result = await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace })
+                    summary.logs.push(result);
+                    continue;
+                }
+                
+                if (!deletion.shouldHibernate) {
                     console.log(`Deployment ${nameLabel} is still valid for another ${pc.yellow(deletion.distanceToNow)} (${deletion.date})`);
                     summary.stillValid.push(`- Deployment still valid for ${deletion.distanceToNow}: \`${deployment.metadata.name}\` (${deletion.date})`);
                     continue;
                 }
                 
-                console.log(`Deployment ${nameLabel} has expired ${pc.yellow(deletion.distanceToNow)} (${deletion.date})`);
-                summary.pruned.push(`- Pruned deployment that expired ${deletion.distanceToNow}: \`${deployment.metadata.name}\` (${deletion.date})`);
-             
-                const result = await kubectl.delete(['deployment', 'service'], deployment.metadata.name, { namespace: options.namespace })
-                summary.logs.push(result);
+                if (deployment.spec.replicas === 0) {
+                    console.log(`Deployment ${nameLabel} is hibernated and will be deleted in ${pc.yellow(formatDistanceToNow(deletion.deleteAt))} (${deletion.deleteAt})`);
+                    summary.logs.push(`Deployment is hibernated and will be deleted in ${formatDistanceToNow(deletion.deleteAt)}: \`${deployment.metadata.name}\` (${deletion.date})`);
+                    continue;
+                }
+                
+                console.log(`Hibernating deployment that expired ${formatDistanceToNow(deletion.hibernateAt, { addSuffix: true })}: ${nameLabel} (${deletion.hibernateAt})`);
+                summary.pruned.push(`- Hibernated deployment that expired ${formatDistanceToNow(deletion.hibernateAt, { addSuffix: true })}: \`${deployment.metadata.name}\` (${deletion.hibernateAt})`);
+                const result = await kubectl.patch('deployment', deployment.metadata.name, { spec: { replicas: 0 } }, { namespace: options.namespace });
+                summary.logs.push(inspect(result, { colors: true, depth: 10 }));
             }
             
             const summaryLines: string[] = [];
@@ -365,15 +379,28 @@ class DeletionAnnotation {
     public readonly timestamp: number;
     public readonly duration: string;
     public readonly distanceToNow: string;
-    public readonly isPastDeletionDate: boolean;
     public readonly date: Date;
+    public readonly deleteAt: Date;
+    public readonly hibernateAt: Date;
     
     constructor(config: Pick<DeletionAnnotation, 'timestamp' | 'duration'>) {
         this.timestamp = config.timestamp;
         this.duration = config.duration;
         this.distanceToNow = formatDistanceToNow(this.timestamp, { addSuffix: true });
-        this.isPastDeletionDate = isPast(this.timestamp);
         this.date = new Date(this.timestamp);
+        this.deleteAt = addDays(this.date, 365 * 3);
+        this.hibernateAt = this.date;
+    }
+    
+    public get shouldDelete() {
+        return isPast(this.deleteAt);
+    }
+    
+    public get shouldHibernate() {
+        if (this.shouldDelete) {
+            return false;
+        }
+        return isPast(this.hibernateAt);
     }
     
     public toJSON() {
