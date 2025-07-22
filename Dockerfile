@@ -35,6 +35,8 @@ RUN apk --no-cache add \
 # development/testing environments if that's more convenient to use.
 FROM $METEOR_BASE_IMAGE:$METEOR_RELEASE AS meteor-base
 ARG APP_BASENAME
+
+# Assert that an app name is provided, otherwise exit.
 RUN test -n "$APP_BASENAME"
 
 ENV APP_BASENAME=$APP_BASENAME
