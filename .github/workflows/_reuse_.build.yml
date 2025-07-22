@@ -102,26 +102,40 @@ jobs:
 
       - name: Format image name
         id: image
-        # language="bashsupport pro shell script"
+        # language="bash"
         run: |
+          # Base name for the example app being built. (As found in /examples)
           appName="${{ inputs.appBasename }}"
+          
+          # Meteor version that the example app calls for. (/examples/<appName>/.meteor/release) 
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
+          
+          # Formatted Docker image ID, including repository prefix and example app name.  
           imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ inputs.appBasename }}"
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
+          
+          # Formatted Git ref for the current branch/pull request. 
+          # Used to differentiate version tags from different branches 
           refTag="$(echo ${{ github.ref_name }} | tr / -)"
+          
+          # Docker production image version tag 
           imageVersion="${{ github.run_number }}.$refTag.${GITHUB_SHA:0:7}"
+          
+          # Path prefix for deployed preview apps
           basePath="/$refTag/$appName"
+          
+          # Base path prefix for Vite assets
           viteBaseUrl=${{ inputs.viteBaseUrl || '"$basePath/vite"' }}
-
-          echo "cacheTag=$imageName:buildcache" >> $GITHUB_OUTPUT
-          echo "deploymentImage=$imageName:$imageVersion" >> $GITHUB_OUTPUT
-
-          echo "imageName=$imageName" >> $GITHUB_OUTPUT
-          echo "imageVersion=$imageVersion" >> $GITHUB_OUTPUT
-          echo "meteorRelease=$meteorRelease" >> $GITHUB_OUTPUT
-          echo "viteBaseUrl=$viteBaseUrl" >> $GITHUB_OUTPUT
-          echo "refTag=$refTag" >> $GITHUB_OUTPUT
-          echo "basePath=$basePath" >> $GITHUB_OUTPUT
+          
+          echo "cacheTag=$imageName:buildcache"       >> $GITHUB_OUTPUT
+          echo "deploymentImage=$imageName:$imageVersion"     >> $GITHUB_OUTPUT
+          
+          echo "imageName=$imageName"                         >> $GITHUB_OUTPUT
+          echo "imageVersion=$imageVersion"                   >> $GITHUB_OUTPUT
+          echo "meteorRelease=$meteorRelease"                 >> $GITHUB_OUTPUT
+          echo "viteBaseUrl=$viteBaseUrl"                     >> $GITHUB_OUTPUT
+          echo "refTag=$refTag"                               >> $GITHUB_OUTPUT
+          echo "basePath=$basePath"                           >> $GITHUB_OUTPUT
 
       - name: Prepare metadata
         uses: docker/metadata-action@v5
