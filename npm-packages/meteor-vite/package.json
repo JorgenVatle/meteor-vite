@@ -28,6 +28,11 @@
       "types": "./dist/server-entry/*.d.mts",
       "import": "./dist/server-entry/*.mjs",
       "default": "./dist/server-entry/*.mjs"
+    },
+    "./utilities/*": {
+      "types": "./dist/utilities/*.d.mts",
+      "import": "./dist/utilities/*.mjs",
+      "default": "./dist/utilities/*.mjs"
     }
   },
   "scripts": {
