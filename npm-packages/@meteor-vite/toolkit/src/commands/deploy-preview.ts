@@ -108,7 +108,7 @@ export default [
                 PORT: options.port,
             });
             
-            const instance = `${options['app-name']}-${options['git-ref']}`;
+            const instance = `${options['app-name']}.${options['git-ref']}`;
             const deleteAt = options['delete-after-duration'] ? DeletionAnnotation.create(options['delete-after-duration']) : null;
             const githubOutput = {
                 deploymentName: instance,
@@ -160,6 +160,9 @@ export default [
                 
                 if (manifest.kind === 'Service') {
                     manifest.spec.selector = Object.assign({}, selectorLabels, manifest.spec.selector);
+                    
+                    // Services don't allow '.' characters in its name, while deployments do.
+                    manifest.metadata.name = manifest.metadata.name.replaceAll('.', '-')
                 }
             }
             
