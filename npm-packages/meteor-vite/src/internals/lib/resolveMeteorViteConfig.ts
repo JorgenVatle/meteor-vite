@@ -36,7 +36,7 @@ export async function resolveMeteorViteConfig(
         const needsReactPreamble = Object.keys(packageJson?.devDependencies || {}).includes('@vitejs/plugin-react') || Object.keys(packageJson.dependencies || {}).includes('@vitejs/plugin-react');
         let viteServerMainModule: undefined | string = undefined;
         
-        const userConfig: ResolvedViteConfig = await resolveConfig(Object.assign({
+        const userConfig: Omit<ResolvedViteConfig, 'future'> = await resolveConfig(Object.assign({
             configFile: packageJson.meteor.vite?.configFile,
             meteor: {
                 meteorStubs: {
@@ -71,10 +71,10 @@ export async function resolveMeteorViteConfig(
         const mainModule = resolveMainModules({ packageJson, userConfig, command });
         
         const config = {
-            ...inlineConfig,
+            ...userConfig,
             meteor: userConfig.meteor,
             base: userConfig.base,
-        } satisfies InlineConfig & Pick<ResolvedViteConfig, 'meteor'>;
+        } satisfies Partial<ResolvedViteConfig>;
         
         return {
             config,
