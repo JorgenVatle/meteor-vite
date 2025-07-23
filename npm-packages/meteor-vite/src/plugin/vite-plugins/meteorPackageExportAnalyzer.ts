@@ -12,8 +12,9 @@ export function meteorPackageExportAnalyzer(): Plugin {
     return {
         name: 'meteor-vite:package-analyzer',
         apply: 'build',
+        enforce: 'pre',
         
-        async config({ meteor }: UserViteConfig) {
+        config({ meteor }: UserViteConfig) {
             const packageJson = meteor?.meteorStubs.packageJson;
             if (!meteor) {
                 throw new Error('Vite is missing Meteor configuration!')
@@ -21,6 +22,9 @@ export function meteorPackageExportAnalyzer(): Plugin {
             if (!packageJson) {
                 throw new Error(`Vite is missing Meteor's package.json configuration!`);
             }
+            
+            meteor.meteorStubs.meteor.buildProgramsPath = CurrentConfig.packageAnalyzer.buildProgramsDir;
+            meteor.meteorStubs.meteor.isopackPath = CurrentConfig.packageAnalyzer.isopackPath;
             
             if (built) {
                 return;
@@ -31,8 +35,6 @@ export function meteorPackageExportAnalyzer(): Plugin {
                 replacePackages: packageJson.meteor.vite?.replacePackages || [],
             });
             
-            meteor.meteorStubs.meteor.buildProgramsPath = CurrentConfig.packageAnalyzer.buildProgramsDir;
-            meteor.meteorStubs.meteor.isopackPath = CurrentConfig.packageAnalyzer.isopackPath;
             built = true;
         },
         
