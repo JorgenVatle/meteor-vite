@@ -18,7 +18,6 @@ import PackageJSON from '../../../package.json';
  * MeteorStubs plugin.
  */
 export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
-    const METEOR_LOCAL_DIR = process.env.METEOR_LOCAL_DIR || Path.join('.meteor', 'local');
     let enforce: 'pre' | undefined;
     let resolveId: Plugin['resolveId'];
     
@@ -43,6 +42,7 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
         enforce,
         resolveId,
         config: (userConfig, { command }): UserConfig => {
+            const METEOR_LOCAL_DIR = process.env.METEOR_LOCAL_DIR || Path.join(userConfig.root || CurrentConfig.projectRoot, '.meteor', 'local');
             const pluginSettings = mergeMeteorPluginSettings(userConfig, {
                 _configSource: 'plugin',
                 meteorStubs: {
