@@ -1,7 +1,7 @@
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { UserViteConfig } from '@/plugin';
 import { BuildLogger, Colorize, ViteBundleLogger as Logger } from '@/utilities/server';
-import { execa } from 'execa';
+import { execaSync } from 'execa';
 import FS from 'fs';
 import Path from 'path';
 import type { Plugin } from 'vite';
@@ -26,7 +26,7 @@ export function meteorPackageExportAnalyzer(): Plugin {
                 return;
             }
             
-            await preparePackagesForExportAnalyzer({
+            preparePackagesForExportAnalyzer({
                 mainModule: packageJson.meteor.mainModule,
                 replacePackages: packageJson.meteor.vite?.replacePackages || [],
             });
@@ -44,7 +44,7 @@ export function meteorPackageExportAnalyzer(): Plugin {
  * Build a temporary Meteor project to generate package source files that
  * can be analyzed for package export stubbing.
  */
-async function preparePackagesForExportAnalyzer({ mainModule, replacePackages = [] }: {
+function preparePackagesForExportAnalyzer({ mainModule, replacePackages = [] }: {
     mainModule: { client: string },
     replacePackages?: PackageReplacement[];
 }) {
@@ -164,7 +164,7 @@ async function preparePackagesForExportAnalyzer({ mainModule, replacePackages = 
         METEOR_PACKAGE_DIRS.push(Path.resolve(process.env.METEOR_PACKAGE_DIRS));
     }
     
-    await execa('meteor', [
+    execaSync('meteor', [
         'build',
         outDir,
         '--directory',
