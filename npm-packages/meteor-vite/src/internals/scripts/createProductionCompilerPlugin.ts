@@ -45,7 +45,7 @@ async function createCompiler() {
         throw new MeteorViteError('No client entrypoint specified in Vite config!')
     }
     
-    preparePackagesForExportAnalyzer({ 
+    preparePackagesForExportAnalyzer({
         mainModule: packageJson.meteor.mainModule,
         replacePackages: packageJson.meteor.vite?.replacePackages || [],
     });
@@ -53,7 +53,9 @@ async function createCompiler() {
     config.meteor.meteorStubs.meteor.buildProgramsPath = CurrentConfig.packageAnalyzer.buildProgramsDir;
     config.meteor.meteorStubs.meteor.isopackPath = CurrentConfig.packageAnalyzer.isopackPath;
     
-    const builder = await createBuilder(config);
+    const builder = await createBuilder({
+        configFile: config.configFile,
+    });
     const fileNames: FileNames = {};
     const internalEntry = getInternalModules().buildOutput;
     
