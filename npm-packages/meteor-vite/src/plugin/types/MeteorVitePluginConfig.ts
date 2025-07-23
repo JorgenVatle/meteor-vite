@@ -181,7 +181,7 @@ export interface MeteorPaths {
      * serving up the dev server.
      *
      * @example {@link /examples/vue/.meteor/local/build/programs/web.browser/packages}
-     * @deprecated
+     * @deprecated Use {@link buildProgramsPath} instead
      */
     packagePath: string;
     
