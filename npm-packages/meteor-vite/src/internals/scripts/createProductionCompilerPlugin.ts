@@ -3,15 +3,14 @@ import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { getInternalModules } from '@/internals/lib/EntryModule/helpers/get';
 import { MeteorViteCompilerPlugin } from '@/internals/lib/MeteorViteCompilerPlugin';
 import { CurrentConfig, resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
-import type { ProjectJson, ResolvedViteConfig, StubSettings } from '@/plugin';
 import { ViteEnvironmentName } from '@/utilities/common';
 
-import { BuildLogger, Colorize, hasModuleImport, isSamePath, moduleImport } from '@/utilities/server';
+import { BuildLogger, Colorize, isSamePath } from '@/utilities/server';
 import FS from 'fs';
 import Path from 'node:path';
 import pc from 'picocolors';
 import type { RollupOutput, RollupWatcher } from 'rollup';
-import { createBuilder, type InlineConfig, version } from 'vite';
+import { createBuilder, version } from 'vite';
 import Instance from '../lib/MeteorViteRuntime';
 
 type ContextKey = 'client' | 'server' | (string & {});
@@ -29,7 +28,7 @@ export async function createProductionCompilerPlugin() {
 }
 
 async function createCompiler() {
-    const { config, outDir, packageJson, assetsDir, mainModule } = await resolveMeteorViteConfig({ mode: 'production' }, 'build');
+    const { config, outDir, assetsDir } = await resolveMeteorViteConfig({ mode: 'production' }, 'build');
     const { logger } = Instance;
     logger.info(`Building with Vite v${version}...`);
     
@@ -161,37 +160,6 @@ function normalizeBuildOutput(output:  RollupOutput | RollupOutput[] | RollupWat
 }
 
 
-function addServerEntryImport({ filePath, serverEntryModule }: {
-    filePath: string,
-    serverEntryModule: string,
-}) {
-    const originalContent = FS.readFileSync(serverEntryModule, 'utf-8');
-    const importPath = Path.relative(Path.dirname(serverEntryModule), filePath);
-    
-    if (hasModuleImport({ content: originalContent, path: importPath })) {
-        return;
-    }
-    
-    FS.writeFileSync(serverEntryModule, [moduleImport(importPath), originalContent].join('\n'));
-    
-    return {
-        importPath,
-        filePath,
-        serverEntryModule,
-    }
-}
-
-export interface BuildOptions {
-    meteor: StubSettings['meteor'];
-    packageJson: ProjectJson;
-}
-
-export type BuildResultChunk = { name?: string, type: string, fileName: string };
-export type ParsedConfig = {
-    viteConfig: ResolvedViteConfig;
-    inlineBuildConfig: InlineConfig;
-    outDir: string;
-}
 export type TransformedViteManifest = {
     base: string;
     assetsDir: string;
