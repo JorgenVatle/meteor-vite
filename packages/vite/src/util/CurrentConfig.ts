@@ -1,5 +1,4 @@
 import FS from 'node:fs';
-import OS from 'node:os';
 import Path from 'path';
 import buildPluginPackageJson from '../../package.json';
 
@@ -38,20 +37,6 @@ export const CurrentConfig = {
     
     meteorPackagesFile: Path.join(projectRoot, '.meteor', 'packages'),
     
-    /**
-     * Output directory for a minimal temporary Meteor bundle that can be used for export
-     * analysis when building for production.
-     */
-    packageAnalyzer: {
-        inDir: Path.join(OS.tmpdir(), 'meteor-vite', 'in', Path.basename(projectRoot)),
-        outDir: Path.join(OS.tmpdir(), 'meteor-vite', 'out', Path.basename(projectRoot)),
-        get buildProgramsDir() {
-            return Path.join(this.outDir, 'bundle', 'programs');
-        },
-        get isopackPath() {
-            return Path.join(this.inDir, '.meteor', 'local', 'isopacks');
-        }
-    },
     readmeLink: (section: 'meteor-build-plugins') => `https://github.com/JorgenVatle/meteor-vite#${section}`
 } as const;
 

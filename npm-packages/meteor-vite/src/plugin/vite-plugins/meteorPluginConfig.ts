@@ -8,6 +8,7 @@ import { parseConfig } from '@/plugin/lib/ParseConfig';
 import { ViteEnvironmentName } from '@/utilities/common';
 import { trimLeadingSlash } from '@/utilities/server';
 import { debugEnabled, envOverride } from '@/utilities/server/EnvFlag';
+import OS from 'node:os';
 import Path from 'path';
 import pc from 'picocolors';
 import { createRunnableDevEnvironment, type Plugin, type UserConfig } from 'vite';
@@ -54,6 +55,20 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
                         
                         buildProgramsPath: Path.join(METEOR_LOCAL_DIR, 'build', 'programs'),
                         isopackPath: Path.join(METEOR_LOCAL_DIR, 'isopacks'),
+                        /**
+                         * Output directory for a minimal temporary Meteor bundle that can be used for export
+                         * analysis when building for production.
+                         */
+                        packageAnalyzer: {
+                            inDir: Path.join(OS.tmpdir(), 'meteor-vite', 'in', Path.basename(CurrentConfig.projectRoot)),
+                            outDir: Path.join(OS.tmpdir(), 'meteor-vite', 'out', Path.basename(CurrentConfig.projectRoot)),
+                            get buildProgramsDir() {
+                                return Path.join(this.outDir, 'bundle', 'programs');
+                            },
+                            get isopackPath() {
+                                return Path.join(this.inDir, '.meteor', 'local', 'isopacks');
+                            }
+                        },
                     },
                     debug: debugEnabled('meteor-vite', 'stubs'),
                 },
@@ -75,8 +90,9 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
             }, config);
             
             if (command === 'build') {
-                pluginSettings.meteorStubs.meteor.buildProgramsPath = CurrentConfig.packageAnalyzer.buildProgramsDir;
-                pluginSettings.meteorStubs.meteor.isopackPath = CurrentConfig.packageAnalyzer.isopackPath;
+                const packageAnalyzer = pluginSettings.meteorStubs.meteor.packageAnalyzer;
+                pluginSettings.meteorStubs.meteor.buildProgramsPath = packageAnalyzer.buildProgramsDir;
+                pluginSettings.meteorStubs.meteor.isopackPath = packageAnalyzer.isopackPath;
             }
             
             pluginSettings.assetsDir = envOverride(

@@ -215,6 +215,19 @@ export interface MeteorPaths {
      * /home/john/.meteor/packages/react-meteor-data/2.7.2/web.browser.json
      */
     globalMeteorPackagesDir?: string;
+    
+    packageAnalyzer: PackageAnalyzerPaths;
+}
+
+/**
+ * Output directory for a minimal temporary Meteor bundle that can be used for export
+ * analysis when building for production.
+ */
+export type PackageAnalyzerPaths = {
+    inDir: string;
+    outDir: string;
+    buildProgramsDir: string;
+    isopackPath: string;
 }
 
 /**
