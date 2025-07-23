@@ -6,6 +6,8 @@ import FS from 'fs';
 import Path from 'path';
 import type { Plugin } from 'vite';
 
+let built = false;
+
 export function meteorPackageExportAnalyzer(): Plugin {
     return {
         name: 'meteor-vite:package-analyzer',
@@ -20,6 +22,10 @@ export function meteorPackageExportAnalyzer(): Plugin {
                 throw new Error(`Vite is missing Meteor's package.json configuration!`);
             }
             
+            if (built) {
+                return;
+            }
+            
             await preparePackagesForExportAnalyzer({
                 mainModule: packageJson.meteor.mainModule,
                 replacePackages: packageJson.meteor.vite?.replacePackages || [],
@@ -27,6 +33,7 @@ export function meteorPackageExportAnalyzer(): Plugin {
             
             meteor.meteorStubs.meteor.buildProgramsPath = CurrentConfig.packageAnalyzer.buildProgramsDir;
             meteor.meteorStubs.meteor.isopackPath = CurrentConfig.packageAnalyzer.isopackPath;
+            built = true;
         }
     }
 }
