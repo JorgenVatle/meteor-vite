@@ -67,6 +67,7 @@ jobs:
       KUBE_CONTAINER_IMAGE: ${{ needs.build.outputs.deploymentImage }}
       METEOR_VERSION: ${{ needs.build.outputs.meteorRelease }}
       ROOT_URL: https://meteor-vite-preview.wcaserver.com${{ needs.build.outputs.basePath }}
+      REF_TAG: ${{ needs.build.outputs.refTag }}
       METEOR_RELEASE: ${{ needs.build.outputs.meteorRelease }}
       PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
       GH_TOKEN: ${{ github.token }}
