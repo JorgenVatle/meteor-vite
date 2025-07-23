@@ -51,7 +51,7 @@ const COMMON_DEPLOYMENT_FIELDS = {
             return value.replaceAll('/', '-');
         },
         description: 'Branch or pull request ID. Uniquely identifies the deployment. Will be inferred from the current environment.',
-        defaultValue: process.env.GITHUB_REF_NAME!,
+        defaultValue: process.env.REF_TAG || process.env.GITHUB_REF_NAME!,
     },
 }
 
