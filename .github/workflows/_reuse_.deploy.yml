@@ -53,7 +53,7 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ inputs.appBasename }}
     environment:
-      name: ${{ inputs.appBasename }}/${{ github.ref_name }}
+      name: ${{ inputs.appBasename }}/${{ needs.build.outputs.refTag }}
       url: ${{ env.ROOT_URL }}
     env:
       KUBE_APP_NAME: ${{ inputs.appBasename }}
