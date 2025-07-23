@@ -27,6 +27,9 @@ export function meteorPackageExportAnalyzer(): Plugin {
                 return;
             }
             
+            // Todo: we could probably create a checksum for this and only re-run the build if there have been changes
+            //  since last time. This should likely also address issues with missing changes when running with
+            //  meteor run --production
             preparePackagesForExportAnalyzer({
                 mainModule: packageJson.meteor.mainModule,
                 replacePackages: packageJson.meteor.vite?.replacePackages || [],
