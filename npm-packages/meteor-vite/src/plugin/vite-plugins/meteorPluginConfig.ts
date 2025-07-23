@@ -18,11 +18,9 @@ import PackageJSON from '../../../package.json';
  * MeteorStubs plugin.
  */
 export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
-    let enforce: 'pre' | undefined;
     let resolveId: Plugin['resolveId'];
     
     if (config.externalizeNpmPackages) {
-        enforce = 'pre';
         resolveId = function resolveId(id) {
             const [module, ...path] = id.split('/');
             const match = config.externalizeNpmPackages?.find((name) => {
@@ -39,7 +37,7 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
     
     return {
         name: 'meteor-vite:config',
-        enforce,
+        enforce: 'pre',
         resolveId,
         config: (userConfig, { command }): UserConfig => {
             const METEOR_LOCAL_DIR = process.env.METEOR_LOCAL_DIR || Path.join(userConfig.root || CurrentConfig.projectRoot, '.meteor', 'local');
@@ -81,7 +79,7 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
                 pluginSettings.assetsDir
             );
             
-            const packageJson = pluginSettings.meteorStubs.packageJson || parsePackageJson();
+            const packageJson = pluginSettings.meteorStubs.packageJson = pluginSettings.meteorStubs.packageJson || parsePackageJson();
             const mainModule = resolveMainModules({
                 packageJson,
                 userConfig,
