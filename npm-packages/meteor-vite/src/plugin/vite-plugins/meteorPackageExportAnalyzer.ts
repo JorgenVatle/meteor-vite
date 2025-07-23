@@ -34,7 +34,9 @@ export function meteorPackageExportAnalyzer(): Plugin {
             meteor.meteorStubs.meteor.buildProgramsPath = CurrentConfig.packageAnalyzer.buildProgramsDir;
             meteor.meteorStubs.meteor.isopackPath = CurrentConfig.packageAnalyzer.isopackPath;
             built = true;
-        }
+        },
+        
+        sharedDuringBuild: true,
     }
 }
 
