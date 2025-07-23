@@ -1,7 +1,7 @@
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { UserViteConfig } from '@/plugin';
 import { BuildLogger, Colorize, ViteBundleLogger as Logger } from '@/utilities/server';
-import { execaSync } from 'execa';
+import { execa } from 'execa';
 import FS from 'fs';
 import Path from 'path';
 import type { Plugin } from 'vite';
@@ -11,7 +11,7 @@ export function meteorPackageExportAnalyzer(): Plugin {
         name: 'meteor-vite:package-analyzer',
         apply: 'build',
         
-        config({ meteor }: UserViteConfig) {
+        async config({ meteor }: UserViteConfig) {
             const packageJson = meteor?.meteorStubs.packageJson;
             if (!meteor) {
                 throw new Error('Vite is missing Meteor configuration!')
@@ -20,7 +20,7 @@ export function meteorPackageExportAnalyzer(): Plugin {
                 throw new Error(`Vite is missing Meteor's package.json configuration!`);
             }
             
-            preparePackagesForExportAnalyzer({
+            await preparePackagesForExportAnalyzer({
                 mainModule: packageJson.meteor.mainModule,
                 replacePackages: packageJson.meteor.vite?.replacePackages || [],
             });
@@ -35,7 +35,7 @@ export function meteorPackageExportAnalyzer(): Plugin {
  * Build a temporary Meteor project to generate package source files that
  * can be analyzed for package export stubbing.
  */
-function preparePackagesForExportAnalyzer({ mainModule, replacePackages = [] }: {
+async function preparePackagesForExportAnalyzer({ mainModule, replacePackages = [] }: {
     mainModule: { client: string },
     replacePackages?: PackageReplacement[];
 }) {
@@ -155,7 +155,7 @@ function preparePackagesForExportAnalyzer({ mainModule, replacePackages = [] }: 
         METEOR_PACKAGE_DIRS.push(Path.resolve(process.env.METEOR_PACKAGE_DIRS));
     }
     
-    execaSync('meteor', [
+    await execa('meteor', [
         'build',
         outDir,
         '--directory',
