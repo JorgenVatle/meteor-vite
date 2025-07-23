@@ -74,6 +74,11 @@ export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
                 },
             }, config);
             
+            if (command === 'build') {
+                pluginSettings.meteorStubs.meteor.buildProgramsPath = CurrentConfig.packageAnalyzer.buildProgramsDir;
+                pluginSettings.meteorStubs.meteor.isopackPath = CurrentConfig.packageAnalyzer.isopackPath;
+            }
+            
             pluginSettings.assetsDir = envOverride(
                 'METEOR_VITE_ASSETS_DIR',
                 pluginSettings.assetsDir

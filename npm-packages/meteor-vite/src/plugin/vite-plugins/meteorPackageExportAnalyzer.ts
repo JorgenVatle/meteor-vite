@@ -23,9 +23,6 @@ export function meteorPackageExportAnalyzer(): Plugin {
                 throw new Error(`Vite is missing Meteor's package.json configuration!`);
             }
             
-            meteor.meteorStubs.meteor.buildProgramsPath = CurrentConfig.packageAnalyzer.buildProgramsDir;
-            meteor.meteorStubs.meteor.isopackPath = CurrentConfig.packageAnalyzer.isopackPath;
-            
             if (built) {
                 return;
             }
