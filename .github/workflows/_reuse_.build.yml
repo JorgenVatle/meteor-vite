@@ -109,6 +109,8 @@ jobs:
 
       - name: Format image name
         id: image
+        env:
+          REF_NAME: ${{ github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number) || github.ref_name }}
         # language="bash"
         run: |
           # Base name for the example app being built. (As found in /examples)
@@ -123,7 +125,7 @@ jobs:
           
           # Formatted Git ref for the current branch/pull request. 
           # Used to differentiate version tags from different branches 
-          refTag="$(echo ${{ github.ref_name }} | tr / -)"
+          refTag="$(echo $REF_NAME | tr / -)"
           
           # Docker production image version tag 
           imageVersion="$refTag.${{ github.run_number }}.${GITHUB_SHA:0:7}"

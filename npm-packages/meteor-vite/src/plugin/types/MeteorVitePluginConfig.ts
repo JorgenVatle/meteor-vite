@@ -1,6 +1,6 @@
 import type { DeepPartial, MakeRequired } from '@/internals/lib/UtilityTypes';
 import type { ProjectJson } from '@/plugin/types/ProjectJson';
-import type { ResolvedConfig } from 'vite';
+import type { ResolvedConfig, UserConfig } from 'vite';
 
 /**
  * The full configuration object for meteor-vite after defaults and other
@@ -181,7 +181,7 @@ export interface MeteorPaths {
      * serving up the dev server.
      *
      * @example {@link /examples/vue/.meteor/local/build/programs/web.browser/packages}
-     * @deprecated
+     * @deprecated Use {@link buildProgramsPath} instead
      */
     packagePath: string;
     
@@ -215,6 +215,19 @@ export interface MeteorPaths {
      * /home/john/.meteor/packages/react-meteor-data/2.7.2/web.browser.json
      */
     globalMeteorPackagesDir?: string;
+    
+    packageAnalyzer: PackageAnalyzerPaths;
+}
+
+/**
+ * Output directory for a minimal temporary Meteor bundle that can be used for export
+ * analysis when building for production.
+ */
+export type PackageAnalyzerPaths = {
+    inDir: string;
+    outDir: string;
+    buildProgramsDir: string;
+    isopackPath: string;
 }
 
 /**
@@ -233,5 +246,9 @@ export type MeteorVitePluginOptions = MakeRequired<PartialPluginConfig, 'clientE
  * A resolved Vite config, after our workers has merged it with default settings and overrides from the Meteor instance.
  */
 export interface ResolvedViteConfig extends ResolvedConfig {
+    meteor?: MeteorVitePluginConfig;
+}
+
+export interface UserViteConfig extends UserConfig {
     meteor?: MeteorVitePluginConfig;
 }

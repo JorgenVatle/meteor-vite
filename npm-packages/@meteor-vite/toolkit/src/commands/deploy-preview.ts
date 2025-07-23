@@ -51,7 +51,7 @@ const COMMON_DEPLOYMENT_FIELDS = {
             return value.replaceAll('/', '-');
         },
         description: 'Branch or pull request ID. Uniquely identifies the deployment. Will be inferred from the current environment.',
-        defaultValue: process.env.GITHUB_REF_NAME!,
+        defaultValue: process.env.REF_TAG || process.env.GITHUB_REF_NAME!,
     },
 }
 
@@ -230,7 +230,7 @@ export default [
             }
         },
         handler: async (options) => {
-            const instance = `${options['app-name']}-${options['git-ref']}`;
+            const instance = `${options['app-name']}.${options['git-ref']}`;
             
             await kubectl.waitForDeploymentSuccess(instance, options.deploymentTimeout, { namespace: options.namespace });
         },
@@ -487,8 +487,12 @@ const gh = new class GithubCli {
     
     public async patchPrComment(id: string, line: string) {
         const comments = await this.getPrComments(id);
-        const lines = comments[0].body.split('\n').filter((commentLine: string) => {
-            return !commentLine.includes(line);
+        const lines: string[] = [];
+        comments[0]?.body.split('\n').forEach((commentLine: string) => {
+            if (commentLine.includes(line)) {
+                return;
+            }
+            lines.push(commentLine);
         });
         lines.push(line);
         const body = lines.join('\n');

@@ -23,7 +23,9 @@ export async function startDevServer() {
         mode: 'development',
     }, 'serve');
     
-    const server = await createServer(config);
+    const server = await createServer({
+        configFile: config.configFile,
+    });
     
     const meteorServer = server.environments[ViteEnvironmentName.server];
     await server.warmupRequest(mainModule.vite.client.path);

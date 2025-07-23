@@ -53,7 +53,7 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ inputs.appBasename }}
     environment:
-      name: ${{ inputs.appBasename }}/${{ github.ref_name }}
+      name: ${{ inputs.appBasename }}/${{ needs.build.outputs.refTag }}
       url: ${{ env.ROOT_URL }}
     env:
       KUBE_APP_NAME: ${{ inputs.appBasename }}
@@ -67,6 +67,7 @@ jobs:
       KUBE_CONTAINER_IMAGE: ${{ needs.build.outputs.deploymentImage }}
       METEOR_VERSION: ${{ needs.build.outputs.meteorRelease }}
       ROOT_URL: https://meteor-vite-preview.wcaserver.com${{ needs.build.outputs.basePath }}
+      REF_TAG: ${{ needs.build.outputs.refTag }}
       METEOR_RELEASE: ${{ needs.build.outputs.meteorRelease }}
       PULL_REQUEST_ID: ${{ github.event.pull_request.number }}
       GH_TOKEN: ${{ github.token }}

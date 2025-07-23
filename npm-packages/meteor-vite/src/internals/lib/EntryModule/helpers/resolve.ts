@@ -7,13 +7,13 @@ import {
 } from '@/internals/lib/EntryModule';
 import { setupEntryModules } from '@/internals/lib/EntryModule/helpers/setup';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
-import type { ProjectJson, ResolvedViteConfig } from '@/plugin';
+import type { ProjectJson, ResolvedViteConfig, UserViteConfig } from '@/plugin';
 import { documentationLink } from '@/utilities/common/Constants';
 import { Colorize } from '@/utilities/server';
 import Path from 'path';
 import pc from 'picocolors';
 
-export function resolveMainModules({ packageJson, userConfig }: { userConfig: ResolvedViteConfig, packageJson: ProjectJson }) {
+export function resolveMainModules({ packageJson, userConfig, command }: { userConfig: UserViteConfig | ResolvedViteConfig, packageJson: ProjectJson, command: ResolvedViteConfig['command'] }) {
     const mainModulePath = packageJson.meteor.mainModule;
     const rootDir = CurrentConfig.projectRoot;
     
@@ -60,7 +60,7 @@ export function resolveMainModules({ packageJson, userConfig }: { userConfig: Re
         meteor,
     });
     
-    if (userConfig.command === 'build') {
+    if (command === 'build') {
         return {
             vite: mainModules.vite.production,
             meteor: mainModules.meteor,
