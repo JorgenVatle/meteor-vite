@@ -487,8 +487,12 @@ const gh = new class GithubCli {
     
     public async patchPrComment(id: string, line: string) {
         const comments = await this.getPrComments(id);
-        const lines = comments[0].body.split('\n').filter((commentLine: string) => {
-            return !commentLine.includes(line);
+        const lines: string[] = [];
+        comments[0]?.body.split('\n').forEach((commentLine: string) => {
+            if (commentLine.includes(line)) {
+                return;
+            }
+            lines.push(commentLine);
         });
         lines.push(line);
         const body = lines.join('\n');
