@@ -6,7 +6,7 @@ import buildPluginPackageJson from '../../package.json';
 /**
  * Attempt to guess the project root based on the current working directory.
  */
-function guessCwd() {
+function guessCwd(): string {
     let cwd = process.env.PWD ?? process.cwd();
     
     const [projectRoot] = cwd.split(/[/\\]\.meteor[/\\]/)
