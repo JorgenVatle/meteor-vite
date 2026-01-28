@@ -6,12 +6,14 @@
     "@meteor-vite/react-meteor-data": "1.1.0",
     "meteor-vite": "3.8.0",
     "jorgenvatle_vite": "1.5.4",
-    "@meteor-vite/toolkit": "1.0.0"
+    "@meteor-vite/toolkit": "1.0.0",
+    "jorgenvatle:vite": "1.6.0-beta.2"
   },
   "changesets": [
     "chilly-geese-begin",
     "cold-aliens-smell",
     "crazy-years-hammer",
+    "empty-ghosts-fetch",
     "good-lines-bathe",
     "rotten-cups-count",
     "sad-moles-wear",
