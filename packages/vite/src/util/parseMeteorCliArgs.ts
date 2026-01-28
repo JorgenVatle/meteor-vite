@@ -24,19 +24,19 @@ export function parseMeteorCliArgs() {
     
     let useBuildPlugin = false;
     
-    // $ meteor build
-    if (meteorArgs.includes('build')) {
-        useBuildPlugin = true;
-    }
-    
     // $ meteor [without args, which defaults to 'run']
     // $ meteor run
-    if (!meteorArgs.length || meteorArgs.includes('run')) {
+    if (!meteorArgs.length || meteorArgs.includes('run') || meteorArgs.filter((arg) => !arg.startsWith('-')).length) {
         useBuildPlugin = true;
     }
     
     // $ meteor --production
     if (meteorArgs.includes('--production')) {
+        useBuildPlugin = true;
+    }
+    
+    // $ meteor build
+    if (meteorArgs.includes('build')) {
         useBuildPlugin = true;
     }
     
