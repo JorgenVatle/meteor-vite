@@ -3,13 +3,15 @@ import OS from 'node:os';
 import Path from 'path';
 import buildPluginPackageJson from '../../package.json';
 
-function guessCwd () {
-    let cwd = process.env.PWD ?? process.cwd()
-    const index = cwd.indexOf('.meteor')
-    if (index !== -1) {
-        cwd = cwd.substring(0, index)
-    }
-    return cwd
+/**
+ * Attempt to guess the project root based on the current working directory.
+ */
+function guessCwd() {
+    let cwd = process.env.PWD ?? process.cwd();
+    
+    const [projectRoot] = cwd.split(/[/\\]\.meteor[/\\]/)
+    
+    return projectRoot;
 }
 
 const projectRootOriginal = guessCwd();
