@@ -6,7 +6,6 @@ on:
       - main
       - release
       - beta
-      - merge-release-into-beta
 
 env:
   METEOR_SESSION_FILE_PATH: /opt/meteor/.meteor_session.json
