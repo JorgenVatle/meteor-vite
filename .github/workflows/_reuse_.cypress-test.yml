@@ -31,7 +31,7 @@ jobs:
       APP_BASENAME: ${{ inputs.appBasename }}
       MONGO_URL: mongodb://mongo:${{ inputs.mongoPort }}
       PORT: ${{ inputs.port }}
-      ROOT_URL: http://localhost:${{ inputs.port }}/
+      ROOT_URL: http://localhost:${{ inputs.port }}/${{ github.ref_name }}/${{ inputs.appBasename }}
       MONGO_PORT: ${{ inputs.mongoPort }}
     steps:
       - name: Checkout
@@ -42,9 +42,16 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Cypress run
         uses: cypress-io/github-action@v6
+        id: test
         with:
           build: npm run setup ${{ env.APP_IMAGE }}
           start: npm run start
           wait-on: ${{ env.ROOT_URL }}
           working-directory: tests/cypress-suite
           spec: cypress/e2e/examples/${{ inputs.appBasename }}/**
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: cypress-screenshots
+          path: tests/cypress-suite/cypress/screenshots
+          if-no-files-found: ${{ (steps.test.outcome == 'failure' && 'error') || 'warn' }}

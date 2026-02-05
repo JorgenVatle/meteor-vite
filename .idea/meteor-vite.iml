@@ -44,6 +44,7 @@
       <excludePattern pattern="package-lock.json" />
       <excludePattern pattern="_vite-bundle" />
       <excludePattern pattern=".npm" />
+      <excludePattern pattern=".logs" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

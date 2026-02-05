@@ -1,6 +1,5 @@
 import type { MeteorVitePluginOptions } from '@/plugin';
 import { meteorWorker } from '@/plugin/vite-plugins/meteorWorker';
-import type { PluginOption } from 'vite';
 
 /**
  * Configure the Meteor-Vite compiler.
@@ -12,6 +11,6 @@ import type { PluginOption } from 'vite';
  *     ]
  * })
  */
-export function meteor(config: MeteorVitePluginOptions): PluginOption {
+export function meteor(config: MeteorVitePluginOptions) {
     return meteorWorker(config);
 }

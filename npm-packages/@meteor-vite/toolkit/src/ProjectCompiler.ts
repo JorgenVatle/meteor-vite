@@ -104,6 +104,10 @@ export class ProjectCompiler {
             process.chdir(this.rootDir);
             const { build } = await import('tsup');
             
+            // Clean up chunks from prior builds
+            // Todo: this might need to have an opt-out flag.
+            await this.clean();
+            
             await build({
                 watch: this.options.watch,
             });
@@ -187,6 +191,14 @@ export class ProjectCompiler {
     }
     
     public async clean() {
+        const path = Path.join(this.rootDir, 'dist');
+        
+        if (!await FS.lstat(path).catch(() => false)) {
+            console.log(pc.bgBlackBright(pc.whiteBright(` Nothing to clean `)), this.rootDir, '\n');
+            return;
+        }
+        
+        console.log(pc.bgYellow(pc.whiteBright(` Cleaning up `)), this.rootDir + pc.bold(pc.yellow('/dist')), '\n');
         await FS.rm(Path.join(this.rootDir, 'dist'), { recursive: true });
     }
     
@@ -202,6 +214,7 @@ export class ProjectCompiler {
             fileContent: [
                 Path.join(this.rootDir, 'src'),
                 Path.join(this.rootDir, 'tsconfig.json'),
+                Path.join(this.rootDir, 'tsup.config.ts'),
             ],
             // Used to trigger a re-build if the dist directory is deleted or
             // partially built.

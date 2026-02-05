@@ -2,8 +2,8 @@
   "name": "@meteor-vite/toolkit",
   "version": "1.0.0",
   "bin": {
-    "toolkit": "./bin/entrypoint.mjs",
-    "rewrite-file-urls": "./bin/rewrite-file-urls.mjs"
+    "toolkit": "./dist/bin/toolkit.mjs",
+    "rewrite-file-urls": "./dist/bin/rewrite-file-urls.mjs"
   },
   "description": "Internal toolkit for managing building and publishing meteor-vite's npm and Atmosphere packages.",
   "author": "Jørgen Vatle <Jorgen@WcAServices.net> (https://github.com/JorgenVatle)",
@@ -21,10 +21,24 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
       "default": "./dist/index.mjs"
+    },
+    "./loaders/*": {
+      "types": [
+        "./dist/loaders/*.d.ts",
+        "./dist/loaders/d.mts"
+      ],
+      "import": [
+        "./dist/loaders/*.mjs"
+      ],
+      "require": [
+        "./dist/loaders/*.js"
+      ]
     }
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "prestart": "toolkit build || npm run prepare -- --force",
+    "start": "toolkit",
     "build": "toolkit build .",
     "prepare": "node ./bin/prepare.mjs",
     "postprepare": "npm run build",
@@ -32,11 +46,14 @@
   },
   "dependencies": {
     "concurrently": "^9.2.0",
+    "date-fns": "^4.1.0",
+    "execa": "^9.6.0",
     "globby": "^14.1.0",
     "hasha": "^6.0.0",
     "picocolors": "^1.1.1",
     "ts-command-line-args": "^2.5.1",
-    "tsup": "^8.5.0"
+    "tsup": "^8.5.0",
+    "yaml": "^2.8.0"
   },
   "devDependencies": {
     "typescript": "^5.8.3"

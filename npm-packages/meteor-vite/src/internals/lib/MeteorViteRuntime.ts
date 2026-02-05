@@ -1,3 +1,4 @@
+import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 
 import type { ProjectJson, ResolvedViteConfig } from '@/plugin';
@@ -11,7 +12,7 @@ import { version as viteVersion } from 'vite';
 
 const startTime = performance.now();
 // The global Meteor instance may not initially be defined within the plugin context during builds.
-const { isDevelopment, release } = Meteor || {};
+let { isDevelopment, release } = Meteor || {};
 
 export default new class MeteorViteRuntime {
     public readonly logger = isDevelopment
@@ -19,6 +20,14 @@ export default new class MeteorViteRuntime {
                              : createSimpleLogger(pc.yellow(`[${process.env.NODE_ENV?.toUpperCase() || 'PROD'}]`));
     
     public printWelcomeMessage() {
+        if (!release) {
+            try {
+                release = FS.readFileSync(Path.join(CurrentConfig.projectRoot, '.meteor', 'release'), 'utf8').trim();
+            } catch (error: unknown) {
+                this.logger.error(new MeteorViteError('Failed to read Meteor release file', { cause: error }));
+            }
+        }
+        
         this.logger.success([
             `Vite ${pc.cyan(`v${viteVersion}`)}`,
             pc.dim(`(MeteorVite ${pc.cyan(`v${version}`)} - ${pc.cyan(release)})`)
@@ -64,7 +73,7 @@ export default new class MeteorViteRuntime {
         if (packageJson.type !== 'module' && nonEsmConfigFile) {
             const mts = Colorize.fileType('.mts');
             const mjs = Colorize.fileType('.mjs');
-            Logger.warnOnce({ id: '.viteignore' }, formatLogBlock(
+            Logger.warnOnce({ id: 'viteignore' }, formatLogBlock(
                 `Vite config without ${mts} or ${mjs} extension detected.`,
                 [
                     'This will likely prevent Meteor from starting when trying to resolve your config.',

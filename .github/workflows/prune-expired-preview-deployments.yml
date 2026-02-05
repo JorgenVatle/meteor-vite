@@ -1,0 +1,41 @@
+name: 'Prune'
+run-name: '🔨 Prune: expired deployments/previews'
+on:
+  push:
+    branches:
+      - release
+  schedule:
+    - cron:  0 0 1/7 * *
+
+jobs:
+  prune:
+    name: Expired deployments
+    runs-on: ubuntu-latest
+    env:
+      KUBE_NAMESPACE: meteor-vite
+      KUBE_INGRESS_NAME: preview
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: 'Setup Node.js'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Setup kubectl
+        # language="bash"
+        run: |
+          mkdir -p ~/.kube
+          echo '${{ secrets.KUBE_CONFIG_DATA }}' | base64 -d > ~/.kube/config
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build packages
+        run: npm run build:packages
+
+      - name: Prune temporary/expired deployments
+        # language="bash"
+        run: npm exec toolkit kube-prune-temporary-deployments
+

@@ -12,17 +12,14 @@ export default defineBuildConfig(__dirname, [
             
             // Internal tooling for the Meteor build plugin.
             'internals': './src/internals/index.ts',
+            
+            // Server-side utility modules; loggers, formatters, etc.
+            'utilities/server': './src/utilities/server/index.ts',
         },
         format: ['esm'],
         platform: 'node',
         onSuccess: async () => {
-            try {
-                const atmospherePackageOutDir = Path.join(__dirname, '..', '..', 'packages', 'vite', 'dist');
-                FS.appendFileSync(Path.join(atmospherePackageOutDir, 'server.mjs'), '\n // Forcing reload');
-                FS.appendFileSync(Path.join(atmospherePackageOutDir, 'server.js'), '\n // Forcing reload');
-            } catch (error) {
-                console.warn(error);
-            }
+            forceMeteorWatcherReload(['build-plugin.mjs']);
         },
     },
     // Server runtime entry-points
@@ -39,6 +36,7 @@ export default defineBuildConfig(__dirname, [
         entry: {
             // Stub validation module
             'client': './src/client/index.ts',
+            
             // Common utility modules; constants, package info, etc.
             'utilities/common': './src/utilities/common/index.ts',
         },
@@ -46,3 +44,38 @@ export default defineBuildConfig(__dirname, [
         platform: 'browser',
     },
 ]);
+
+/**
+ * Force any running Meteor server to do a full restart when Meteor-Vite changes.
+ */
+function forceMeteorWatcherReload(files: string[]) {
+    const atmospherePackageOutDir = Path.join(__dirname, '..', '..', 'packages', 'vite', 'dist');
+    const commentPrefix = '// Forcing file watcher reload';
+    
+    if (!FS.existsSync(atmospherePackageOutDir)) {
+        console.warn('\n\n', 'Missing output directory for Meteor build plugin package. Skipping forced reload.', '\n\n');
+        return;
+    }
+    
+    console.log('Forcing Meteor file watcher reload');
+    
+    for (const file of files) {
+        const path = Path.join(atmospherePackageOutDir, file);
+        
+        if (!FS.existsSync(path)) {
+            throw new Error(`Unable to run forced Meteor watcher reload. Build output file does not exist: ${path}`)
+        }
+        
+        const content = FS.readFileSync(path, 'utf-8');
+        const lines = content.split(/[\r\n]/).filter((line) => {
+            return !line.includes(commentPrefix);
+        });
+        
+        lines.push(`${commentPrefix} - ${new Date()}`);
+        
+        FS.writeFileSync(
+            Path.join(atmospherePackageOutDir, file),
+            lines.join('\n')
+        );
+    }
+}

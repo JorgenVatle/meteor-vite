@@ -28,6 +28,15 @@
       "types": "./dist/server-entry/*.d.mts",
       "import": "./dist/server-entry/*.mjs",
       "default": "./dist/server-entry/*.mjs"
+    },
+    "./utilities/*": {
+      "types": {
+        "import": "./dist/utilities/*.d.mts",
+        "require": "./dist/utilities/*.d.ts"
+      },
+      "import": "./dist/utilities/*.mjs",
+      "require": "./dist/utilities/*.js",
+      "default": "./dist/utilities/*.mjs"
     }
   },
   "scripts": {
@@ -74,10 +83,10 @@
     "@types/source-map-support": "^0.5.10",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
-    "vite": "^6.3.5",
+    "vite": "^7.0.5",
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "vite": "^6.0.0"
+    "vite": "^6 || ^7"
   }
 }

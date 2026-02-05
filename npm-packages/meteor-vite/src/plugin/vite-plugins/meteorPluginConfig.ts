@@ -1,23 +1,27 @@
 import { FatalMeteorViteError } from '@/internals/error/MeteorViteError';
+import { resolveMainModules } from '@/internals/lib/EntryModule/helpers/resolve';
+import { parsePackageJson } from '@/internals/lib/parsePackageJson';
+import { CurrentConfig } from '@/internals/lib/resolveMeteorViteConfig';
 import type { PartialPluginConfig } from '@/plugin';
-import { mergeMeteorPluginSettings, mergeViteSettings } from '@/plugin/lib/MergeConfig';
+import { mergeMeteorPluginSettings } from '@/plugin/lib/MergeConfig';
 import { parseConfig } from '@/plugin/lib/ParseConfig';
+import { ViteEnvironmentName } from '@/utilities/common';
+import { trimLeadingSlash } from '@/utilities/server';
+import { debugEnabled, envOverride } from '@/utilities/server/EnvFlag';
+import OS from 'node:os';
 import Path from 'path';
 import pc from 'picocolors';
-import type { Plugin, PluginOption } from 'vite';
+import { createRunnableDevEnvironment, type Plugin, type UserConfig } from 'vite';
 import PackageJSON from '../../../package.json';
 
 /**
  * Internal worker plugin. Merges the user's config with necessary overrides for the Meteor compiler and loads the
  * MeteorStubs plugin.
  */
-export function meteorPluginConfig(config: PartialPluginConfig): PluginOption {
-    const METEOR_LOCAL_DIR = process.env.METEOR_LOCAL_DIR || Path.join('.meteor', 'local');
-    let enforce: 'pre' | undefined;
+export function meteorPluginConfig(config: PartialPluginConfig): Plugin {
     let resolveId: Plugin['resolveId'];
     
     if (config.externalizeNpmPackages) {
-        enforce = 'pre';
         resolveId = function resolveId(id) {
             const [module, ...path] = id.split('/');
             const match = config.externalizeNpmPackages?.find((name) => {
@@ -34,9 +38,10 @@ export function meteorPluginConfig(config: PartialPluginConfig): PluginOption {
     
     return {
         name: 'meteor-vite:config',
-        enforce,
+        enforce: 'pre',
         resolveId,
-        config: (userConfig) => {
+        config: (userConfig, { command }): UserConfig => {
+            const METEOR_LOCAL_DIR = process.env.METEOR_LOCAL_DIR || Path.join(userConfig.root || CurrentConfig.projectRoot, '.meteor', 'local');
             const pluginSettings = mergeMeteorPluginSettings(userConfig, {
                 _configSource: 'plugin',
                 meteorStubs: {
@@ -50,8 +55,22 @@ export function meteorPluginConfig(config: PartialPluginConfig): PluginOption {
                         
                         buildProgramsPath: Path.join(METEOR_LOCAL_DIR, 'build', 'programs'),
                         isopackPath: Path.join(METEOR_LOCAL_DIR, 'isopacks'),
+                        /**
+                         * Output directory for a minimal temporary Meteor bundle that can be used for export
+                         * analysis when building for production.
+                         */
+                        packageAnalyzer: {
+                            inDir: Path.join(OS.tmpdir(), 'meteor-vite', 'in', Path.basename(CurrentConfig.projectRoot)),
+                            outDir: Path.join(OS.tmpdir(), 'meteor-vite', 'out', Path.basename(CurrentConfig.projectRoot)),
+                            get buildProgramsDir() {
+                                return Path.join(this.outDir, 'bundle', 'programs');
+                            },
+                            get isopackPath() {
+                                return Path.join(this.inDir, '.meteor', 'local', 'isopacks');
+                            }
+                        },
                     },
-                    debug: !!process.env.METEOR_VITE_STUBS_DEBUG,
+                    debug: debugEnabled('meteor-vite', 'stubs'),
                 },
                 tempDir: Path.join(METEOR_LOCAL_DIR, 'vite'),
                 assetsDir: 'vite',
@@ -70,9 +89,42 @@ export function meteorPluginConfig(config: PartialPluginConfig): PluginOption {
                 },
             }, config);
             
-            const base = process.env.METEOR_VITE_BASE_URL ?? pluginSettings.assetsBaseUrl ?? userConfig.base ?? '/vite';
-            const mergedUserConfig = mergeViteSettings(userConfig, {
-                base,
+            if (command === 'build') {
+                const packageAnalyzer = pluginSettings.meteorStubs.meteor.packageAnalyzer;
+                pluginSettings.meteorStubs.meteor.buildProgramsPath = packageAnalyzer.buildProgramsDir;
+                pluginSettings.meteorStubs.meteor.isopackPath = packageAnalyzer.isopackPath;
+            }
+            
+            pluginSettings.assetsDir = envOverride(
+                'METEOR_VITE_ASSETS_DIR',
+                pluginSettings.assetsDir
+            );
+            
+            const packageJson = pluginSettings.meteorStubs.packageJson = pluginSettings.meteorStubs.packageJson || parsePackageJson();
+            const mainModule = resolveMainModules({
+                packageJson,
+                userConfig,
+                command,
+            });
+            
+            return {
+                appType: 'custom',
+                server: {
+                    middlewareMode: true,
+                },
+                base: envOverride(
+                    'METEOR_VITE_BASE_URL',
+                    pluginSettings.assetsBaseUrl ?? userConfig.base ?? `/${trimLeadingSlash(pluginSettings.assetsDir)}`
+                ),
+                build: {
+                    outDir: CurrentConfig.outDir,
+                    emptyOutDir: false,
+                    ssrManifest: `ssr.manifest.json`,
+                    manifest: `client.manifest.json`,
+                    rollupOptions: {
+                        output: fileNameTemplates('client'),
+                    }
+                },
                 define: {
                     __VITE_ASSETS_DIR__: JSON.stringify(pluginSettings.assetsDir),
                     __VITE_DYNAMIC_ASSET_BOILERPLATE__: JSON.stringify(pluginSettings.dynamicAssetBoilerplate),
@@ -80,11 +132,48 @@ export function meteorPluginConfig(config: PartialPluginConfig): PluginOption {
                 optimizeDeps: {
                     entries: [pluginSettings.clientEntry],
                 },
-            });
-            
-            userConfig.base = mergedUserConfig.base;
-            userConfig.define = mergedUserConfig.define;
-            userConfig.optimizeDeps = mergedUserConfig.optimizeDeps;
+                environments: {
+                    [ViteEnvironmentName.server]: {
+                        dev: {
+                            createEnvironment(name, config) {
+                                return createRunnableDevEnvironment(name, config);
+                            }
+                        },
+                        resolve: {
+                            external: true,
+                            noExternal: command === 'build' ? METEOR_VITE_RUNTIME_DEPENDENCIES : [],
+                        },
+                        build: {
+                            target: 'node21',
+                            manifest: false,
+                            ssrManifest: false,
+                            minify: false,
+                            sourcemap: true,
+                            rollupOptions: {
+                                external: [/^meteor\//],
+                                input: {
+                                    main: mainModule.vite.server.path,
+                                },
+                                output: {
+                                    // Unfortunately Meteor still doesn't support
+                                    // ESM within the final server bundle.
+                                    format: 'module',
+                                    ...fileNameTemplates('server'),
+                                }
+                            },
+                        },
+                    },
+                    [ViteEnvironmentName.client]: {
+                        build: {
+                            rollupOptions: {
+                                input: {
+                                    main: mainModule.vite.client.path,
+                                },
+                            }
+                        }
+                    }
+                }
+            }
         },
         configResolved(resolvedConfig) {
             const config = parseConfig(resolvedConfig);
@@ -105,3 +194,34 @@ export function meteorPluginConfig(config: PartialPluginConfig): PluginOption {
         },
     };
 }
+
+function fileNameTemplates(env: 'server' | 'client') {
+    const template = {
+        assetFileNames: `assets/[name]-[hash][extname]`,
+        chunkFileNames: `chunk/[name]-[hash].js`,
+        entryFileNames: `entry-${env}/[name]-[hash].entry.js`,
+    }
+    
+    if (env === 'server') {
+        template.assetFileNames.replace('[name]', 'server/[name]');
+        template.chunkFileNames.replace('[name]', 'server/[name]');
+        template.entryFileNames.replace('entry-server', 'entry/server');
+    }
+    
+    return template;
+}
+
+const WRAP_ANSI_DEPS = [
+    'wrap-ansi',
+    'strip-ansi',
+    'ansi-regex',
+    'emoji-regex',
+    'string-width',
+    'get-east-asian-width',
+    'eastasianwidth',
+]
+const METEOR_VITE_RUNTIME_DEPENDENCIES = [
+    'picocolors',
+    'meteor-vite',
+    ...WRAP_ANSI_DEPS,
+]

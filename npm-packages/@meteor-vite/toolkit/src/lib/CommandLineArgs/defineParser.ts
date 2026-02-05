@@ -59,6 +59,7 @@ export class Parser<
         return parseArgs(this.fields, {
             ...this.options,
             ...options,
+            processExitCode: 1,
             // @ts-expect-error
             defaults,
         });

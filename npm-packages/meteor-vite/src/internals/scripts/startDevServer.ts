@@ -1,9 +1,10 @@
 /// <reference types="vite/client" />
 import Instance from '@/internals/lib/MeteorViteRuntime';
 import { resolveMeteorViteConfig } from '@/internals/lib/resolveMeteorViteConfig';
-import { ViteBundleLogger as Logger } from '@/utilities/server';
+import { ViteEnvironmentName } from '@/utilities/common';
+import { Colorize, ViteBundleLogger as Logger } from '@/utilities/server';
 import { WebApp } from 'meteor/webapp';
-import { createServer, createServerModuleRunner } from 'vite';
+import { createServer, isRunnableDevEnvironment } from 'vite';
 
 export async function startDevServer() {
     /**
@@ -22,19 +23,34 @@ export async function startDevServer() {
         mode: 'development',
     }, 'serve');
     
-    const server = await createServer(config);
+    const server = await createServer({
+        configFile: config.configFile,
+    });
     
+    const meteorServer = server.environments[ViteEnvironmentName.server];
     await server.warmupRequest(mainModule.vite.client.path);
     
     // ⚡ [Server] Transform and load the Meteor main module using Vite.
     if (mainModule.vite.server) {
-        const runner = createServerModuleRunner(server.environments.server);
-        Instance.logger.info(`Loading server entry: ${mainModule.vite.server.path}`);
+        if (!isRunnableDevEnvironment(meteorServer)) {
+            throw new Error(`Vite server environment is not runnable. This likely means you haven't added 'meteor-vite/plugin' to your Vite config!`)
+        }
         
-        // HMR listener to clean up side-effects from things like
-        // Meteor.publish(), new Mongo.Collection(), etc. on server-side hot reload.
+        Instance.logger.info(`Loading server entry: ${Colorize.filepath(mainModule.vite.server.path)}`);
+        
         try {
-            await runner.import(mainModule.vite.server.path);
+            /**
+             * The HMR server entry is a series of HMR hooks to clean up
+             * side-effects from common Meteor methods like Meteor.publish(),
+             * new Mongo.Collection(), etc. This also includes hooks for Meteor
+             * known community packages.
+             */
+            await meteorServer.runner.import('meteor-vite/server-entry/hmr')
+            
+            /**
+             * Internal main module that imports the user's Vite server entry.
+             */
+            await meteorServer.runner.import(mainModule.vite.server.path);
         } catch (error) {
             if (error instanceof Error) {
                 server.ssrFixStacktrace(error);

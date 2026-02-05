@@ -1,4 +1,5 @@
 import { Parser } from '@/lib/CommandLineArgs/defineParser';
+import { debugEnabled } from '~/meteor-vite/utilities/server/EnvFlag';
 
 class ConfigStore {
     public debug = false;
@@ -8,7 +9,7 @@ class ConfigStore {
             debug: {
                 type: Boolean,
                 description: 'Enable debug logging',
-                defaultValue: false,
+                defaultValue: debugEnabled('toolkit'),
                 typeLabel: 'true|false',
                 global: true,
             },

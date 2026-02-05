@@ -2,6 +2,7 @@ import { CommandConcurrency } from '@/lib/CommandConcurrency';
 import { CommandDefinition } from '@/lib/CommandDefinition';
 import { Highlight } from '@/lib/Highlight';
 import { ProjectCompiler } from '@/ProjectCompiler';
+import Path from 'path';
 
 export default [
     new CommandDefinition('check-changes', {
@@ -47,7 +48,8 @@ export default [
                     const [node, script] = process.argv;
                     concurrency.add({
                         command: node,
-                        args: [script, 'build', rootDir]
+                        args: [script, 'build'],
+                        cwd: Path.join(process.cwd(), rootDir),
                     })
                 })
             }

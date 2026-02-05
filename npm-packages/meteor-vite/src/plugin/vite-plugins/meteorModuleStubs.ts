@@ -4,7 +4,7 @@ import ViteLoadRequest from '@/plugin/lib/ViteLoadRequest';
 import MeteorPackage from '@/plugin/meteor/models/MeteorPackage';
 import { stubTemplate } from '@/plugin/meteor/StubTemplate';
 import type { MeteorVitePluginConfig, ResolvedViteConfig } from '@/plugin/types/MeteorVitePluginConfig';
-import { homepage } from '@/utilities/common';
+import { homepage, ViteEnvironmentName } from '@/utilities/common';
 import { Colorize } from '@/utilities/server';
 import FS from 'fs/promises';
 import Path from 'path';
@@ -15,7 +15,7 @@ import type { Environment, Plugin, ViteDevServer } from 'vite';
  */
 export const meteorModuleStubs: () => Promise<Plugin> = setupPlugin(async () => {
     return {
-        name: 'meteor-vite: stubs',
+        name: 'meteor-vite:stubs',
         resolveId: (id) => ViteLoadRequest.resolveId(id),
         shouldProcess: (viteId) => ViteLoadRequest.isStubRequest(viteId),
         async validateConfig({ meteorStubs }: MeteorVitePluginConfig) {
@@ -129,7 +129,7 @@ function setupPlugin<Context extends ViteLoadRequest>(setup: () => Promise<{
                 }
             },
             applyToEnvironment(environment) {
-                if (environment.name !== 'server') {
+                if (environment.name !== ViteEnvironmentName.server) {
                     return true;
                 }
                 if (environment.config.command === 'serve') {

@@ -30,4 +30,10 @@ type SectionId =
     | 'meteor-build-plugins'
     | 'compatability-with-zodernrelay'
     | 'package-details'
-    | 'roadmap'
+    | 'roadmap';
+
+
+export const ViteEnvironmentName = {
+    server: 'server',
+    client: 'client',
+} as const;

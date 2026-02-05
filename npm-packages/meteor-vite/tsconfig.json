@@ -12,6 +12,7 @@
       ]
     },
     "lib": ["es2018", "es2021", "es2022", "es2023", "dom"],
+    "baseUrl": ".",
     "declaration": true,
     "declarationMap": true,
     "isolatedDeclarations": false,

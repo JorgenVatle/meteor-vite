@@ -12,6 +12,7 @@ export default defineConfig({
       serverEntry: 'server/entry-vite.ts',
       enableExperimentalFeatures: true,
       externalizeNpmPackages: ['test-externalization'],
+      dynamicAssetBoilerplate: true,
       stubValidation: {
         warnOnly: true,
       },
