@@ -9,7 +9,7 @@
     "version": true,
     "tag": true
   },
-  "baseBranch": "release",
+  "baseBranch": "merge-release-into-beta",
   "updateInternalDependencies": "patch",
   "ignore": []
 }
