@@ -1,5 +1,19 @@
 # meteor-vite
 
+## 3.9.0-beta.2
+
+### Minor Changes
+
+- 7f46f02: Add option to override the internal Vite asset output directory through setting a `METEOR_VITE_ASSETS_DIR` environment variable when building for production.
+- 37d7510: Update peer dependency version requirement for Vite to also support Vite v7
+- 4f99214: Added deprecation note to the confusing `assetsBaseUrl` field in Meteor-Vite's plugin options.
+  The field has the same effect as setting a [`base`](https://vite.dev/config/shared-options.html#base) URI in Vite's official config options.
+- 8877164: Add package.json exports for internal utilities and constants. Exports Vite environment keys for the Meteor client and server environments.
+
+### Patch Changes
+
+- 5026894: Remove type definition for deprecated chunk filename configuration
+
 ## 3.9.0-beta.1
 
 ### Patch Changes

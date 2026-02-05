@@ -1,5 +1,5 @@
 ---
-"jorgenvatle_vite": minor
+"jorgenvatle:vite": minor
 ---
 
 Attempt to unwrap any symlinks in current project root path
