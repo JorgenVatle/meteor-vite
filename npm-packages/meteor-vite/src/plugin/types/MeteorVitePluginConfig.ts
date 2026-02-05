@@ -1,16 +1,13 @@
 import type { DeepPartial, MakeRequired } from '@/internals/lib/UtilityTypes';
 import type { ProjectJson } from '@/plugin/types/ProjectJson';
-import type { OutputOptions } from 'rollup';
-import type { ResolvedConfig } from 'vite';
+import type { ResolvedConfig, UserConfig } from 'vite';
 
 /**
  * The full configuration object for meteor-vite after defaults and other
  * internal configuration has been applied.
  * @see {@link https://github.com/JorgenVatle/meteor-vite#configuration}
  */
-export interface MeteorVitePluginConfig<
-    TChunkFileNames extends OutputOptions['chunkFileNames'] = undefined
-> {
+export interface MeteorVitePluginConfig {
     /**
      * Whether the plugin was configured using the Meteor Vite plugin.
      * Used to emit a warning message when the old configuration format is in use.
@@ -50,6 +47,8 @@ export interface MeteorVitePluginConfig<
      * your assets so that your assets are fetched from one consistent URL. This helps with caching and should
      * reduce load on both your clients and server.
      * @default /vite
+     * @deprecated Use the {@link https://vite.dev/config/shared-options.html#base `base`} shared configuration field
+     * from Vite instead. This field has the same effect.
      */
     assetsBaseUrl?: string;
     
@@ -114,18 +113,6 @@ export interface MeteorVitePluginConfig<
      * plugin do the work for you.
      */
     meteorStubs: StubSettings;
-    
-    /**
-     * Customize the chunk file name format for Rollup builds.
-     * Filename uniqueness is important as duplicate filenames for server and client modules may prevent your other
-     * build plugins from handling server code, leading to unstable server builds.
-     *
-     * Important: Filenames are not scoped by directory. So the chunk filenames need to be unique across the entirety
-     * of your project.
-     *
-     * Only change this if you are sure you know what you're doing.
-     */
-    chunkFileNames?: TChunkFileNames;
 }
 
 export interface StubValidationSettings {
@@ -194,7 +181,7 @@ export interface MeteorPaths {
      * serving up the dev server.
      *
      * @example {@link /examples/vue/.meteor/local/build/programs/web.browser/packages}
-     * @deprecated
+     * @deprecated Use {@link buildProgramsPath} instead
      */
     packagePath: string;
     
@@ -228,6 +215,19 @@ export interface MeteorPaths {
      * /home/john/.meteor/packages/react-meteor-data/2.7.2/web.browser.json
      */
     globalMeteorPackagesDir?: string;
+    
+    packageAnalyzer: PackageAnalyzerPaths;
+}
+
+/**
+ * Output directory for a minimal temporary Meteor bundle that can be used for export
+ * analysis when building for production.
+ */
+export type PackageAnalyzerPaths = {
+    inDir: string;
+    outDir: string;
+    buildProgramsDir: string;
+    isopackPath: string;
 }
 
 /**
@@ -246,5 +246,9 @@ export type MeteorVitePluginOptions = MakeRequired<PartialPluginConfig, 'clientE
  * A resolved Vite config, after our workers has merged it with default settings and overrides from the Meteor instance.
  */
 export interface ResolvedViteConfig extends ResolvedConfig {
+    meteor?: MeteorVitePluginConfig;
+}
+
+export interface UserViteConfig extends UserConfig {
     meteor?: MeteorVitePluginConfig;
 }

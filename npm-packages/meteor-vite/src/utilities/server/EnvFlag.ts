@@ -16,3 +16,28 @@ export function envFlag<T extends keyof NodeJS.ProcessEnv>(flag: T, { defaultVal
         return defaultValue;
     }
 }
+
+export function envOverride<
+    TKey extends keyof NodeJS.ProcessEnv,
+    TDefaultValue
+>(key: TKey, defaultValue: TDefaultValue) {
+    const value = process.env[key];
+    if (typeof value === 'undefined') {
+        return defaultValue;
+    }
+    return value;
+}
+
+export function debugEnabled(namespace: string, filter = '*') {
+    const key = namespace.toLowerCase().replace(/\s+/, '-');
+    const debugEnv = (process.env.DEBUG || 'false').trim();
+    if (debugEnv === 'true') {
+        return true;
+    }
+    return !!debugEnv.split(/[\s,]+/).find((field) => {
+        if (filter !== '*') {
+            return field.trim() === `${key}:${filter}`;
+        }
+        return field.startsWith(`${key}:`);
+    });
+}

@@ -1,13 +1,17 @@
 import FS from 'node:fs';
-import OS from 'node:os';
 import Path from 'path';
 import buildPluginPackageJson from '../../package.json';
 
 /**
  * Attempt to guess the project root based on the current working directory.
+ * The Meteor dev server may run with .meteor/local as the working directory.
+ *
+ * This will pick out the closest parent directory to .meteor, which generally
+ * will be the path to their Meteor project's app root directory.
+ * (where; node_modules, package-lock.json, imports, etc. Lives).
  */
 function guessCwd(): string {
-    let cwd = process.env.PWD ?? process.cwd();
+    const cwd = process.env.PWD ?? process.cwd();
     
     const [projectRoot] = cwd.split(/[/\\]\.meteor[/\\]/)
     
@@ -40,20 +44,6 @@ export const CurrentConfig = {
     
     meteorPackagesFile: Path.join(projectRoot, '.meteor', 'packages'),
     
-    /**
-     * Output directory for a minimal temporary Meteor bundle that can be used for export
-     * analysis when building for production.
-     */
-    packageAnalyzer: {
-        inDir: Path.join(OS.tmpdir(), 'meteor-vite', 'in', Path.basename(projectRoot)),
-        outDir: Path.join(OS.tmpdir(), 'meteor-vite', 'out', Path.basename(projectRoot)),
-        get buildProgramsDir() {
-            return Path.join(this.outDir, 'bundle', 'programs');
-        },
-        get isopackPath() {
-            return Path.join(this.inDir, '.meteor', 'local', 'isopacks');
-        }
-    },
     readmeLink: (section: 'meteor-build-plugins') => `https://github.com/JorgenVatle/meteor-vite#${section}`
 } as const;
 

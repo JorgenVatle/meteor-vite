@@ -2,7 +2,7 @@ import { MeteorViteError } from '@/internals/error/MeteorViteError';
 import { GithubActionsAnnotator } from '@/utilities/server/logger/GithubActionsAnnotator';
 import pc from 'picocolors';
 import { inspect } from 'util';
-import { envFlag } from '../EnvFlag';
+import { debugEnabled, envFlag } from '../EnvFlag';
 
 const ENABLE_DEBUG_LOGS = envFlag('ENABLE_DEBUG_LOGS');
 
@@ -19,12 +19,8 @@ export class LoggerInstance {
         label,
         colorizers,
     }: LoggerConfig) {
-        const debugEnv = process.env.DEBUG || 'false';
         this.debugKey = debugKey || label || 'meteor-vite';
-        const debugTriggers = [`${this.debugKey}:*`, 'true', '*'];
-        this.debugEnabled = ENABLE_DEBUG_LOGS || !!debugEnv.trim().split(/[\s,]+/).find((field) => {
-            return debugTriggers.includes(field.trim())
-        });
+        this.debugEnabled = ENABLE_DEBUG_LOGS || debugEnabled(this.debugKey);
         this.label = ['⚡  ', label].filter(Boolean).join('');
         this.colorizers = {
             info: (message) => pc.blue(message),

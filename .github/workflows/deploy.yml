@@ -6,6 +6,10 @@ on:
     branches:
       - main
       - release
+      - beta
+  pull_request:
+    branches:
+      - release
 
 jobs:
   vue:
@@ -14,6 +18,7 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'vue'
+      eventName: ${{ github.event_name }}
 
   svelte:
     name: 'Svelte'
@@ -21,6 +26,7 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'svelte'
+      eventName: ${{ github.event_name }}
 
   react:
     name: 'React'
@@ -28,6 +34,7 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'react'
+      eventName: ${{ github.event_name }}
 
   solid:
     name: 'Solid'
@@ -35,6 +42,7 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'solid'
+      eventName: ${{ github.event_name }}
 
   vue-zodern-relay:
     name: 'Vue + zodern:relay'
@@ -42,6 +50,7 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'vue-zodern-relay'
+      eventName: ${{ github.event_name }}
 
   vue-ssr:
     name: 'Vue + SSR'
@@ -49,3 +58,4 @@ jobs:
     secrets: inherit
     with:
       appBasename: 'vue-ssr'
+      eventName: ${{ github.event_name }}

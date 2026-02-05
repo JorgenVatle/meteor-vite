@@ -35,6 +35,8 @@ RUN apk --no-cache add \
 # development/testing environments if that's more convenient to use.
 FROM $METEOR_BASE_IMAGE:$METEOR_RELEASE AS meteor-base
 ARG APP_BASENAME
+
+# Assert that an app name is provided, otherwise exit.
 RUN test -n "$APP_BASENAME"
 
 ENV APP_BASENAME=$APP_BASENAME
@@ -53,9 +55,6 @@ COPY --link ./tsconfig*.json $ROOT_FOLDER/
 # Prepare repository root-level npm dependencies
 RUN cd $ROOT_FOLDER && meteor npm ci && meteor npm run build:packages
 
-# Prepare example app's npm dependencies
-RUN cd $NPM_PACKAGES_FOLDER/meteor-vite && meteor npm link
-
 WORKDIR $APP_SOURCE_FOLDER
 
 # Meteor.js base image with pre-built npm and atmosphere dependencies
@@ -63,11 +62,16 @@ FROM meteor-base AS meteor-bundler
 
 # Install local and external npm dependencies
 COPY --link $APP_DIR/package*.json $APP_SOURCE_FOLDER/
+RUN meteor npm i $NPM_PACKAGES_FOLDER/meteor-vite $NPM_PACKAGES_FOLDER/@meteor-vite/plugin-zodern-relay
 RUN bash $SCRIPTS_FOLDER/meteor/npm-install.sh
-RUN meteor npm link meteor-vite
 
 # Build for production
 COPY --link $APP_DIR $APP_SOURCE_FOLDER/
+
+# Optional overrides for statically generated Vite asset paths
+ARG METEOR_VITE_BASE_URL
+ARG METEOR_VITE_ASSETS_DIR
+
 RUN bash $SCRIPTS_FOLDER/meteor/build.sh
 
 # Meteor Production Server

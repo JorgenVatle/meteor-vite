@@ -1,8 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from './Home.vue'
+import { Meteor } from 'meteor/meteor';
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from './Home.vue';
+
+const { pathname } = new URL(Meteor.absoluteUrl(''));
+
 
 export const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(pathname),
   routes: [
     {
       path: '/',

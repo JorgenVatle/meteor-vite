@@ -1,1 +1,1 @@
-export { ModuleRunner } from '@/internals/lib/ModuleRunner';
+export { ModuleRunner } from './lib/ModuleRunner';

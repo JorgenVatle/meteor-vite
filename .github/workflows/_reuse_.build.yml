@@ -7,10 +7,10 @@ on:
         type: string
       meteorRelease:
         type: string
-        default: '3.3'
+        required: false
       nodeVersion:
         type: string
-        default: '22-alpine'
+        required: false
       push:
         type: boolean
         default: false
@@ -19,17 +19,40 @@ on:
         default: ghcr.io
       meteorBaseImage:
         type: string
-        default: jorgenvatle/meteor-base
+        required: false
       target:
         type: string
         default: "universal"
+      viteBaseUrl:
+        type: string
+        required: false
+        description: Base path or URL that will be used for serving Vite assets. Primarily for serving assets through an external CDN.
+      viteAssetDir:
+        type: string
+        required: false
+        description: Sets the path from where Meteor will serve assets built by Vite.
     outputs:
       deploymentImage:
         value: ${{ jobs.docker.outputs.deploymentImage }}
+        description: Full Docker image name and version tag that can be deployed to our app preview cluster.
       imageVersion:
         value: ${{ jobs.docker.outputs.imageVersion }}
+        description: Version tag for the Docker image that was built.
       meteorRelease:
         value: ${{ jobs.docker.outputs.meteorRelease }}
+        description: Meteor version that the example app utilizes. (Retrieved from .meteor/release)
+      viteAssetDir:
+        value: ${{ jobs.docker.outputs.viteAssetDir }}
+        description: Path to Vite's asset root directory within the Meteor bundle's internal assets filesystem. This is the exact same value that is provided as an input for this workflow.
+      viteBaseUrl:
+        value: ${{ jobs.docker.outputs.viteBaseUrl }}
+        description: Path relative to the deployed app's root URL to Vite's asset root directory. (defaults to /<basePath>/vite)
+      refTag:
+        value: ${{ jobs.docker.outputs.refTag }}
+        description: Formatted Git ref for the current branch/pull request. Replaces illegal characters so that the tag can be used in Kubernetes resource names.
+      basePath:
+        value: ${{ jobs.docker.outputs.basePath }}
+        description: The app's ROOT_URL without the protocol and domain name. (E.g. /example/release/vue). This is used for Ingress path prefixes.
 
 jobs:
   ubuntu:
@@ -56,13 +79,24 @@ jobs:
 
   docker:
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
     name: Docker 🐋
+    concurrency:
+      group: docker-image-${{ inputs.appBasename }}-${{ github.sha }}-${{ inputs.push }}
+      cancel-in-progress: false
     env:
       APP_BASENAME: ${{ inputs.appBasename }}
     outputs:
       deploymentImage: ${{ steps.image.outputs.deploymentImage }}
       imageVersion: ${{ steps.image.outputs.imageVersion }}
       meteorRelease: ${{ steps.image.outputs.meteorRelease }}
+      viteBaseUrl: ${{ steps.image.outputs.viteBaseUrl }}
+      viteAssetDir: ${{ inputs.viteAssetDir }}
+      refTag: ${{ steps.image.outputs.refTag }}
+      basePath: ${{ steps.image.outputs.basePath }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -75,19 +109,43 @@ jobs:
 
       - name: Format image name
         id: image
-        # language="bashsupport pro shell script"
+        env:
+          REF_NAME: ${{ github.event.pull_request.number && format('pr-{0}', github.event.pull_request.number) || github.ref_name }}
+        # language="bash"
         run: |
+          # Base name for the example app being built. (As found in /examples)
+          appName="${{ inputs.appBasename }}"
+          
+          # Meteor version that the example app calls for. (/examples/<appName>/.meteor/release) 
           meteorRelease="$(cat 'examples/${{ inputs.appBasename }}/.meteor/release' | cut -d '@' -f 2)"
+          
+          # Formatted Docker image ID, including repository prefix and example app name.  
           imageName="${{ inputs.imageRegistry }}/${{ github.repository_owner }}/meteor-vite/example/${{ inputs.appBasename }}"
           imageName="$(echo $imageName | tr '[:upper:]' '[:lower:]')"
-          imageVersion="sha-${GITHUB_SHA:0:7}"
-
-          echo "cacheTag=$imageName:$APP_BASENAME-buildcache" >> $GITHUB_OUTPUT
-          echo "deploymentImage=$imageName:$imageVersion" >> $GITHUB_OUTPUT
-
-          echo "imageName=$imageName" >> $GITHUB_OUTPUT
-          echo "imageVersion=$imageVersion" >> $GITHUB_OUTPUT
-          echo "meteorRelease=$meteorRelease" >> $GITHUB_OUTPUT
+          
+          # Formatted Git ref for the current branch/pull request. 
+          # Used to differentiate version tags from different branches 
+          refTag="$(echo $REF_NAME | tr / -)"
+          
+          # Docker production image version tag 
+          imageVersion="$refTag.${{ github.run_number }}.${GITHUB_SHA:0:7}"
+          
+          # Path prefix for deployed preview apps
+          basePath="/$refTag/$appName"
+          
+          # Base path prefix for Vite assets
+          viteBaseUrl=${{ inputs.viteBaseUrl || '"$basePath/vite"' }}
+          
+          echo "cacheTag=$imageName:buildcache"               >> $GITHUB_OUTPUT
+          echo "refCacheTag=$imageName:buildcache.$refTag"    >> $GITHUB_OUTPUT
+          echo "deploymentImage=$imageName:$imageVersion"     >> $GITHUB_OUTPUT
+          
+          echo "imageName=$imageName"                         >> $GITHUB_OUTPUT
+          echo "imageVersion=$imageVersion"                   >> $GITHUB_OUTPUT
+          echo "meteorRelease=$meteorRelease"                 >> $GITHUB_OUTPUT
+          echo "viteBaseUrl=$viteBaseUrl"                     >> $GITHUB_OUTPUT
+          echo "refTag=$refTag"                               >> $GITHUB_OUTPUT
+          echo "basePath=$basePath"                           >> $GITHUB_OUTPUT
 
       - name: Prepare metadata
         uses: docker/metadata-action@v5
@@ -112,11 +170,17 @@ jobs:
             ${{ steps.image.outputs.deploymentImage }}
             ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=registry,ref=${{ steps.image.outputs.cacheTag }}
-          cache-to: type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
+          cache-from: | 
+            type=registry,ref=${{ steps.image.outputs.cacheTag }}
+            type=registry,ref=${{ steps.image.outputs.refCacheTag }}
+          cache-to: | 
+            type=registry,ref=${{ steps.image.outputs.cacheTag }},mode=max
+            type=registry,ref=${{ steps.image.outputs.refCacheTag }},mode=max
           build-args: |
-            APP_BASENAME=${{ inputs.appBasename }}
+            ${{ inputs.viteAssetDir      && format('METEOR_VITE_ASSETS_DIR={0}', inputs.viteAssetDir)      }}
+            ${{ inputs.meteorBaseImage   && format('METEOR_BASE_IMAGE={0}', inputs.meteorBaseImage)        }}
+            ${{ inputs.nodeVersion       && format('NODE_VERSION={0}', inputs.nodeVersion)                 }}
+            METEOR_VITE_BASE_URL=${{ steps.image.outputs.viteBaseUrl }}
             METEOR_RELEASE=${{ steps.image.outputs.meteorRelease }}
-            METEOR_BASE_IMAGE=${{ inputs.meteorBaseImage }}
-            NODE_VERSION=${{ inputs.nodeVersion }}
-
+            APP_BASENAME=${{ inputs.appBasename }}
+            

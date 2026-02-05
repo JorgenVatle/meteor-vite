@@ -1,3 +1,5 @@
+import { CommandFailure } from '@/errors/CommandFailure';
+import { GlobalConfig } from '@/lib/GlobalConfig';
 import { concurrently, type ConcurrentlyCommandInput, type ConcurrentlyOptions } from 'concurrently';
 
 export class CommandConcurrency<TOptions extends  Record<string, unknown> = {}> {
@@ -64,7 +66,19 @@ export class CommandConcurrency<TOptions extends  Record<string, unknown> = {}> 
                 ...options,
             }).result;
         } catch (error) {
-            console.log('Concurrent command failure');
+            let errorMessage = '(Exception not an instance of error)'
+            
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+            
+            console.info(`Concurrent command failed: ${errorMessage}`);
+            
+            if (!GlobalConfig.debug) {
+                console.info('Enable debugging (--debug) to get a full summary of the commands that failed and their environments.');
+                throw new CommandFailure(`Concurrent command failure: ${errorMessage}`);
+            }
+            
             throw error;
         }
     }

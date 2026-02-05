@@ -31,8 +31,8 @@ export SERVER_NODE_OPTIONS="--enable-source-maps"
 export METEOR_PACKAGE_DIRS="$PWD/packages:$PWD/test-packages/atmosphere"
 export METEOR_VITE_TSUP_BUILD_WATCHER="${METEOR_VITE_TSUP_BUILD_WATCHER:-true}"
 
-npmPackages=("meteor-vite" "@meteor-vite/plugin-zodern-relay")
 npmPackagesDir="$PWD/npm-packages"
+npmPackages=("$npmPackagesDir/meteor-vite" "$npmPackagesDir/@meteor-vite/plugin-zodern-relay")
 
 if [ "$USE_METEOR_BINARIES" == "0" ]; then
   npm="npm"
@@ -88,26 +88,10 @@ exec:npx() {
   npx "$@"
 }
 
-# Initial setup for example apps - installs and links our local packages.
-prepare() {
-  (prepare:npm-packages) || exit 1
-  (install) || exit 1
-  (link) || exit 1
-}
-
-prepare:npm-packages() {
-  for package in "${npmPackages[@]}"; do
-    (npmPackage "$package" install) || exit 1
-    log:success "Installed dependencies for $package"
-
-    (npmPackage "$package" run build) || exit 1
-    log:success "Built $package"
-  done
-}
 
 # Build an example app for production
 build() {
-    (prepare:npm-packages) || exit 1
+    (npm i) || exit 1
     (link) || exit 1
     (cleanOutput) || exit 1
 
@@ -117,15 +101,8 @@ build() {
       extraArgs="--debug"
     fi
 
-
     cd "$APP_DIR" || exit 1
     meteor build "$BUILD_TARGET" --directory "$@" $extraArgs
-}
-
-npmPackage() {
-  local name="$1"
-  cd "$npmPackagesDir/$name" || exit 1
-  $npm "${@:2}"
 }
 
 update() {
@@ -168,11 +145,6 @@ cleanOutput() {
 }
 
 link() {
-  for package in "${npmPackages[@]}"; do
-    (npmPackage "$package" link --ws false) || exit 1
-    log:success "Added npm link for $package"
-  done
-
   (cd "$APP_DIR" && npm link "${npmPackages[@]}") || exit 1
 
   log:success "Linked ${npmPackages[*]} to $app"
