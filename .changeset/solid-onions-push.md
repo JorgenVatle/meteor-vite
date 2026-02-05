@@ -1,6 +1,6 @@
 ---
 "meteor-vite": minor
-"jorgenvatle_vite": minor
+"jorgenvatle:vite": minor
 ---
 
 Import log formatting and other utility modules directly from local `meteor-vite` package instead of bundling them into both `jorgenvatle:vite` and `meteor-vite`. 
