@@ -1,5 +1,11 @@
 # jorgenvatle:vite
 
+## 1.6.0-beta.4
+
+### Patch Changes
+
+- 217ba87: Fix issue where starting the Meteor dev server with just 'meteor' would sometimes cause the Meteor-Vite build plugin to be disabled if arguments like '--raw-logs' are passed.
+
 ## 1.6.0-beta.3
 
 ### Patch Changes
