@@ -4,9 +4,14 @@ import buildPluginPackageJson from '../../package.json';
 
 /**
  * Attempt to guess the project root based on the current working directory.
+ * The Meteor dev server may run with .meteor/local as the working directory.
+ *
+ * This will pick out the closest parent directory to .meteor, which generally
+ * will be the path to their Meteor project's app root directory.
+ * (where; node_modules, package-lock.json, imports, etc. Lives).
  */
 function guessCwd(): string {
-    let cwd = process.env.PWD ?? process.cwd();
+    const cwd = process.env.PWD ?? process.cwd();
     
     const [projectRoot] = cwd.split(/[/\\]\.meteor[/\\]/)
     
