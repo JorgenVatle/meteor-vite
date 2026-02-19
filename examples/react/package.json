@@ -12,12 +12,12 @@
     "@meteor-vite/react-meteor-data": "^1.0.3",
     "@tailwindcss/vite": "^4.0.8",
     "@vitejs/plugin-react": "^4.3.4",
-    "meteor-node-stubs": "^1.2.5",
+    "meteor-node-stubs": "^1.2.26",
     "meteor-vite": "^3.6.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwindcss": "^4.0.8",
-    "vite": "^6.2.5"
+    "vite": "^6.4.1"
   },
   "meteor": {
     "mainModule": {
