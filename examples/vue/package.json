@@ -15,7 +15,7 @@
     "meteor-node-stubs": "^1.2.5",
     "meteor-vite": "^3.8.0",
     "safe-json-stringify": "^1.2.0",
-    "vite": "^6.3.5",
+    "vite": "^6.4.2",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },

@@ -15,8 +15,8 @@
     "@babel/runtime": "^7.27.0",
     "meteor-node-stubs": "^1.2.5",
     "meteor-vite": "^3.6.1",
-    "svelte": "^5.2.9",
-    "vite": "^6.2.5"
+    "svelte": "^5.55.4",
+    "vite": "^6.4.2"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
