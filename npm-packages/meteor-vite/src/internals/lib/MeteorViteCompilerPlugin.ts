@@ -25,7 +25,7 @@ export class MeteorViteCompilerPlugin {
                     path: file.getPathInPackage(),
                 },
                 basename: this._formatFilename(file.getBasename()),
-                path: Path.join(this.config.assetsDir, Path.relative(this.config.outDir, this._formatFilename(file.getPathInPackage()))),
+                path: this._createAssetPath(file.getPathInPackage()),
                 arch: file.getArch(),
             }
             
@@ -96,6 +96,19 @@ export class MeteorViteCompilerPlugin {
     
     protected _formatFilename(nameOrPath: string) {
         return nameOrPath.replace(`.${CurrentConfig.bundleFileExtension}`, '');
+    }
+
+    /**
+     * Meteor asset identifiers are logical bundle keys, not filesystem paths.
+     * Keep them POSIX-style so runtime lookups like `Assets.getTextAsync('vite/client.manifest.json')`
+     * resolve consistently across platforms.
+     */
+    protected _createAssetPath(filePath: string) {
+        const relativePath = Path.relative(this.config.outDir, this._formatFilename(filePath));
+        const normalizedAssetsDir = Path.posix.normalize(this.config.assetsDir.replaceAll('\\', '/'));
+        const normalizedRelativePath = Path.posix.normalize(relativePath.replaceAll('\\', '/'));
+
+        return Path.posix.join(normalizedAssetsDir, normalizedRelativePath);
     }
     
     protected _sourcemap(file: InputFile) {
