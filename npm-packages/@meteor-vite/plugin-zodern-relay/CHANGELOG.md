@@ -1,5 +1,29 @@
 # @meteor-vite/plugin-zodern-relay
 
+## 2.0.0
+
+### Minor Changes
+
+- 3f73d92: Move @babel/core dependency from peer dependencies to internal dependencies. This should reduce the risk of conflicts with projects that depend on other versions of Babel.
+- 7a6fc25: Use Meteor-Vite constants when comparing environment names for applying zodern:relay module transform rules.
+
+### Patch Changes
+
+- Updated dependencies [7f46f02]
+- Updated dependencies [cb18b0a]
+- Updated dependencies [37d7510]
+- Updated dependencies [4cfcf72]
+- Updated dependencies [5026894]
+- Updated dependencies [4f99214]
+- Updated dependencies [2625dbb]
+- Updated dependencies [217ed2d]
+- Updated dependencies [8877164]
+- Updated dependencies [9db5d7a]
+- Updated dependencies [ec8a295]
+- Updated dependencies [13a9429]
+- Updated dependencies [d133984]
+  - meteor-vite@3.9.0
+
 ## 1.1.0
 
 ### Minor Changes
