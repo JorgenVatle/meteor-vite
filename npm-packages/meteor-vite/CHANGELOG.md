@@ -1,5 +1,35 @@
 # meteor-vite
 
+## 3.9.0
+
+### Minor Changes
+
+- 7f46f02: Add option to override the internal Vite asset output directory through setting a `METEOR_VITE_ASSETS_DIR` environment variable when building for production.
+- 37d7510: Update peer dependency version requirement for Vite to also support Vite v7
+- 4f99214: Added deprecation note to the confusing `assetsBaseUrl` field in Meteor-Vite's plugin options.
+  The field has the same effect as setting a [`base`](https://vite.dev/config/shared-options.html#base) URI in Vite's official config options.
+- 2625dbb: Added internal utility for consistently formatting log messages
+- 217ed2d: Add warning message when non-ESM Vite configs are detected
+
+  - Fixes #322
+
+- 8877164: Add package.json exports for internal utilities and constants. Exports Vite environment keys for the Meteor client and server environments.
+- ec8a295: Import log formatting and other utility modules directly from local `meteor-vite` package instead of bundling them into both `jorgenvatle:vite` and `meteor-vite`.
+
+  - Fixes (which wasn't fully resolved) #286
+
+- d133984: Refactor internal meteor-vite directory structure and package.json exports to provide more clear separation of client, server, plugin and internal module exports.
+
+### Patch Changes
+
+- cb18b0a: Prevent Meteor from attempting to start the Vite dev server when starting the production server bundle with a non-production NODE_ENV variable.
+- 4cfcf72: Added type exports for meteor-vite/plugin options.
+- 5026894: Remove type definition for deprecated chunk filename configuration
+- 9db5d7a: Fix issue where apps without a .meteor/finished-upgraders file would cause package export analysis to fail with a file-not-found exception when building for production.
+- 13a9429: Add warning message whenever a .meteorignore file is detected in the application root directory.
+
+  - #345
+
 ## 3.9.0-beta.1
 
 ### Patch Changes

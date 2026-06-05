@@ -1,5 +1,21 @@
 # jorgenvatle:vite
 
+## 1.6.0
+
+### Minor Changes
+
+- f0e1fd4: Attempt to unwrap any symlinks in current project root path
+
+  - https://github.com/meteor/meteor/issues/13819
+  - #352
+
+- 16b8df4: Use Node VM to import utility modules from a locally installed `meteor-vite` package instead of bundling parts of `meteor-vite` into the `jorgenvatle:vite` Atmosphere package
+- ec8a295: Import log formatting and other utility modules directly from local `meteor-vite` package instead of bundling them into both `jorgenvatle:vite` and `meteor-vite`.
+
+  - Fixes (which wasn't fully resolved) #286
+
+- d133984: Refactor internal meteor-vite directory structure and package.json exports to provide more clear separation of client, server, plugin and internal module exports.
+
 ## 1.6.0-beta.2
 
 ### Minor Changes
