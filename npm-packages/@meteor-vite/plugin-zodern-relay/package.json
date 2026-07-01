@@ -46,7 +46,7 @@
     "@types/babel__core": "^7.20.5",
     "tsup": "^8.0.2",
     "typescript": "^5.4.2",
-    "vite": "^6.2.5"
+    "vite": "^6.4.2"
   },
   "peerDependencies": {
     "meteor-vite": "^3.9.0"
