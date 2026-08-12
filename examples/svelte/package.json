@@ -12,11 +12,11 @@
     "meteor-vite-internal:build": "npm run meteor-vite-internal:setup-env meteor npm run build"
   },
   "dependencies": {
-    "@babel/runtime": "^7.27.0",
+    "@babel/runtime": "^7.27.6",
     "meteor-node-stubs": "^1.2.5",
     "meteor-vite": "^3.6.1",
     "svelte": "^5.2.9",
-    "vite": "^6.2.5"
+    "vite": "^6.3.5"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
