@@ -12,10 +12,10 @@
     "@babel/runtime": "^7.27.0",
     "@meteor-vite/test-externalization": "^1.0.0",
     "chalk": "^4.1.2",
-    "meteor-node-stubs": "^1.2.5",
+    "meteor-node-stubs": "^1.2.26",
     "meteor-vite": "^3.8.0",
     "safe-json-stringify": "^1.2.0",
-    "vite": "^6.3.5",
+    "vite": "^6.4.1",
     "vue": "^3.2.47",
     "vue-router": "^4.1.6"
   },

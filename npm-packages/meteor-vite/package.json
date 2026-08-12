@@ -83,7 +83,7 @@
     "@types/source-map-support": "^0.5.10",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3",
-    "vite": "^7.0.5",
+    "vite": "^6.4.1",
     "vitest": "^3.2.4"
   },
   "peerDependencies": {

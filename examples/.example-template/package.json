@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.27.0",
-    "meteor-node-stubs": "^1.2.7",
+    "meteor-node-stubs": "^1.2.26",
     "valibot": "^0.26.0"
   },
   "meteor": {
@@ -23,6 +23,6 @@
     "@types/meteor": "^2.9.8",
     "meteor-vite": "^3.5.0",
     "typescript": "^5.3.3",
-    "vite": "^6.2.5"
+    "vite": "^6.4.1"
   }
 }
