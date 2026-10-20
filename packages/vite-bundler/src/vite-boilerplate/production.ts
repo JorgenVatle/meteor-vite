@@ -209,7 +209,6 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         // Todo: Preload all assets app assets in the background after loading essential assets.
         //  rel="preload" fetchPriority="low"
         for (const [name, chunk] of Object.entries(manifest.files)) {
-            // Non-entry chunks
             if (!chunk.isEntry) {
                 if (chunk.file.endsWith('.js')) {
                     moduleLazyPrefetch.add(chunk.file);
@@ -220,27 +219,11 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
                 continue;
             }
             
-            // JS Entry Chunk
             if (chunk.file.endsWith('.js')) {
                 moduleLazyPrefetch.delete(chunk.file);
                 modules.add(chunk.file);
-                
-                if (chunk.dynamicImports) {
-                    chunk.dynamicImports.forEach((name) => {
-                        moduleLazyPrefetch.delete(name);
-                        modulePreload.add(name);
-                    })
-                }
-                
-                if (chunk.imports) {
-                    chunk.imports.forEach((name) => {
-                        moduleLazyPrefetch.delete(name);
-                        modules.add(name);
-                    })
-                }
             }
             
-            // CSS Entry Chunk
             if (chunk.file.endsWith('.css')) {
                 stylesheets.add(chunk.file);
             }
