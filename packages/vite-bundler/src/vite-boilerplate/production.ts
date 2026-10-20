@@ -48,6 +48,10 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             lines.push(`<link rel="stylesheet" crossorigin href="${this.filePath(file)}">`);
         }
         
+        for (const file of imports.cssPreload) {
+            lines.push(`<link rel="preload" as="style" crossorigin href="${this.filePath(file)}">`);
+        }
+        
         for (const file of imports.modules) {
             lines.push(`<script type="module" crossorigin src="${this.filePath(file)}"></script>`);
         }
