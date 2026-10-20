@@ -19,7 +19,9 @@ export function createWorkerFork(hooks: Partial<WorkerResponseHooks>, options?: 
         throw new MeteorViteError([
             `Unable to locate Meteor-Vite workers! Make sure you've installed the 'meteor-vite' npm package.`,
             `Install it by running the following command:`,
-            `$  ${pc.yellow('npm i -D meteor-vite')}`
+            `$  ${pc.yellow('npm i -D meteor-vite')}`,
+            ``,
+            `Expected worker path: ${workerPath}`
         ])
     }
     
@@ -149,6 +151,7 @@ class MeteorViteError extends Error {
 
 export const cwd = process.env.METEOR_VITE_CWD ?? guessCwd();
 export const workerPath = Path.join(cwd, 'node_modules/meteor-vite/dist/bin/worker.mjs');
+
 export function getProjectPackageJson<
     TFile extends 'package.json' | 'package-lock.json' = 'package.json'
 >(file: TFile = 'package.json' as TFile): {
