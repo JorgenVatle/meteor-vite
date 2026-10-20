@@ -44,7 +44,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         const lines = [];
         const prefetchArray: PrefetchObject[] = [];
         
-        for (const file of imports.stylesheets) {
+        for (const file of imports.css) {
             lines.push(`<link rel="stylesheet" crossorigin href="${this.filePath(file)}">`);
         }
         
@@ -185,10 +185,13 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         }
         
         const manifest = this.viteManifest;
-        const stylesheets = new Set<string>()
-        const modules = new Set<string>()
+        
+        const modules = new Set<string>();
         const modulePreload = new Set<string>();
         const moduleLazyPrefetch = new Set<string>();
+        
+        const css = new Set<string>();
+        const cssPreload = new Set<string>();
         const cssLazyPrefetch = new Set<string>();
         
         function preloadImports(imports: string[]) {
@@ -201,7 +204,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
                     continue;
                 }
                 preload(chunk.file);
-                chunk.css?.forEach(css => stylesheets.add(css));
+                chunk.css?.forEach(css => cssPreload.add(css));
                 preloadImports(chunk.imports || []);
             }
             
@@ -230,7 +233,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
                 return modules.add(file);
             }
             if (file.endsWith('.css')) {
-                return stylesheets.add(file);
+                return css.add(file);
             }
         }
         
@@ -253,7 +256,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
            load(chunk.file);
             
             chunk.css?.forEach(css => {
-                stylesheets.add(css);
+                css.add(css);
                 cssLazyPrefetch.delete(css);
             });
             
@@ -261,10 +264,11 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         }
         
         const imports = {
-            stylesheets,
             modules,
             modulePreload,
             moduleLazyPrefetch,
+            css,
+            cssPreload,
             cssLazyPrefetch,
         }
         
@@ -301,9 +305,10 @@ interface ViteChunk {
 }
 
 interface ManifestImports {
-    stylesheets: Set<string>;
     modules: Set<string>;
     modulePreload: Set<string>;
     moduleLazyPrefetch: Set<string>;
+    css: Set<string>;
+    cssPreload: Set<string>;
     cssLazyPrefetch: Set<string>;
 }
