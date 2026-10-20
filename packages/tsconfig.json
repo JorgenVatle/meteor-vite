@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es2020",
     "module": "es2022",
-    "lib": ["es6", "es7"],
+    "lib": ["es6", "es7", 'DOM'],
     "moduleResolution": "bundler",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
