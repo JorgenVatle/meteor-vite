@@ -200,8 +200,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
                 if (modulePreload.has(chunk.file)) {
                     continue;
                 }
-                moduleLazyPrefetch.delete(chunk.file);
-                modulePreload.add(chunk.file);
+                preload(chunk.file);
                 chunk.css?.forEach(css => stylesheets.add(css));
                 preloadImports(chunk.imports || []);
             }
@@ -214,6 +213,24 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             }
             if (file.endsWith('.css')) {
                 return cssLazyPrefetch.add(file);
+            }
+        }
+        
+        function preload(file: string) {
+            if (file.endsWith('.js')) {
+                return modulePreload.add(file);
+            }
+            if (file.endsWith('.css')) {
+                return cssLazyPrefetch.add(file);
+            }
+        }
+        
+        function load(file: string) {
+            if (file.endsWith('.js')) {
+                return modules.add(file);
+            }
+            if (file.endsWith('.css')) {
+                return stylesheets.add(file);
             }
         }
         
@@ -233,14 +250,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             }
             
             // Meteor-Vite entry module (Actual entry module for the app)
-            if (chunk.file.endsWith('.js')) {
-                modules.add(chunk.file);
-                moduleLazyPrefetch.delete(chunk.file);
-            }
-            
-            if (chunk.file.endsWith('.css')) {
-                stylesheets.add(chunk.file);
-            }
+           load(chunk.file);
             
             chunk.css?.forEach(css => {
                 stylesheets.add(css);
