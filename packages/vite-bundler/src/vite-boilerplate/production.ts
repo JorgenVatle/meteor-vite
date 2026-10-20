@@ -228,7 +228,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
                 return modulePreload.add(file);
             }
             if (file.endsWith('.css')) {
-                return cssLazyPrefetch.add(file);
+                return cssPreload.add(file);
             }
         }
         
