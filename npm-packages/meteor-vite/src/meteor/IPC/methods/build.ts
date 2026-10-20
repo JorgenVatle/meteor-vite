@@ -35,6 +35,7 @@ export default defineIpcMethods({
                     FS.writeFileSync(path, JSON.stringify({
                         base: inlineBuildConfig.base,
                         assetsDir: inlineBuildConfig.build?.assetsDir,
+                        clientEntry: viteConfig.meteor!.clientEntry,
                         files,
                     } satisfies TransformedViteManifest))
                 }
@@ -155,6 +156,7 @@ type ParsedConfig = {
 export type TransformedViteManifest = {
     base: string;
     assetsDir: string;
+    clientEntry: string;
     files: Record<string, ViteManifestFile>;
 }
 
