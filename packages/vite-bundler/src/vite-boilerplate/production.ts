@@ -208,7 +208,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
                     continue;
                 }
                 preload(chunk.file);
-                chunk.css?.forEach(css => cssPreload.add(css));
+                chunk.css?.forEach(file => cssPreload.add(file));
                 preloadImports(chunk.imports || []);
             }
             
@@ -259,9 +259,9 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             // Meteor-Vite entry module (Actual entry module for the app)
            load(chunk.file);
             
-            chunk.css?.forEach(css => {
-                css.add(css);
-                cssLazyPrefetch.delete(css);
+            chunk.css?.forEach(file => {
+                css.add(file);
+                cssLazyPrefetch.delete(file);
             });
             
             preloadImports(chunk.imports || []);
