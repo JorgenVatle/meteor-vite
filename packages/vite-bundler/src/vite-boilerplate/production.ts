@@ -11,11 +11,23 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
     
     public readonly baseUrl: string;
     protected readonly clientEntry?: string;
+    protected readonly config: {
+        useFullAppPrefetch: boolean,
+    }
     
     constructor() {
+        const { METEOR_VITE_ASSET_CDN_URL, DISABLE_FULL_APP_PREFETCH } = process.env;
         super();
+        this.config = {
+            useFullAppPrefetch: !!DISABLE_FULL_APP_PREFETCH,
+        }
+        
         this.baseUrl = this.viteManifest.base;
         this.clientEntry = this.viteManifest.clientEntry;
+        
+        if (METEOR_VITE_ASSET_CDN_URL) {
+            this.baseUrl = METEOR_VITE_ASSET_CDN_URL;
+        }
         
         // Use Meteor's absoluteUrl for non-URL Vite base paths
         // Ensures consistent mapping to Vite assets with non-root app paths.
@@ -120,7 +132,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             }))
         }
         
-        if (!process.env.DISABLE_FULL_APP_PREFETCH) {
+        if (!this.config.useFullAppPrefetch) {
             lines.push(
                 `<script type="text/javascript">`,
                 `${lazyPrefetch.toString()};`,
