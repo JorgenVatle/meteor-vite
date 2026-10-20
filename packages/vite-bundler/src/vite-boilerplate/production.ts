@@ -64,12 +64,12 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             lines.push(`<link rel="preload" as="style" crossorigin href="${this.assetUrl(file)}">`);
         }
         
-        for (const file of imports.modules) {
-            lines.push(`<script type="module" crossorigin src="${this.assetUrl(file)}"></script>`);
-        }
-        
         for (const file of imports.modulePreload) {
             lines.push(`<link rel="modulepreload" crossorigin href="${this.assetUrl(file)}">`);
+        }
+        
+        for (const file of imports.modules) {
+            lines.push(`<script type="module" crossorigin src="${this.assetUrl(file)}"></script>`);
         }
         
         for (const file of imports.moduleLazyPrefetch) {
