@@ -10,10 +10,12 @@ import { type Boilerplate, ViteBoilerplate } from './common';
 export class ViteProductionBoilerplate extends ViteBoilerplate {
     
     public readonly baseUrl: string;
+    protected readonly clientEntry?: string;
     
     constructor() {
         super();
         this.baseUrl = this.viteManifest.base;
+        this.clientEntry = this.viteManifest.clientEntry;
         
         // Use Meteor's absoluteUrl for non-URL Vite base paths
         // Ensures consistent mapping to Vite assets with non-root app paths.
@@ -209,6 +211,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         // Todo: Preload all assets app assets in the background after loading essential assets.
         //  rel="preload" fetchPriority="low"
         for (const [name, chunk] of Object.entries(manifest.files)) {
+            // Non-entry chunks
             if (!chunk.isEntry) {
                 if (chunk.file.endsWith('.js')) {
                     moduleLazyPrefetch.add(chunk.file);
@@ -219,21 +222,28 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
                 continue;
             }
             
+            // Vite entry module  
+            if (this.clientEntry && chunk.src !== this.clientEntry) {
+                moduleLazyPrefetch.add(chunk.file)
+                continue
+            }
+            
+            // Meteor-Vite entry module
             if (chunk.file.endsWith('.js')) {
-                moduleLazyPrefetch.delete(chunk.file);
                 modules.add(chunk.file);
+                moduleLazyPrefetch.delete(chunk.file);
             }
             
             if (chunk.file.endsWith('.css')) {
                 stylesheets.add(chunk.file);
             }
             
-            preloadImports(chunk.imports || []);
-            
             chunk.css?.forEach(css => {
                 stylesheets.add(css);
                 cssLazyPrefetch.delete(css);
             });
+            
+            preloadImports(chunk.imports || []);
         }
         
         const imports = {
@@ -265,6 +275,15 @@ interface MeteorProgramManifest {
 interface PrefetchObject {
     href: string;
     as?: 'style';
+}
+
+interface ViteChunk {
+    file: string;
+    css?: string[];
+    imports?: string[];
+    dynamicImports?: string[];
+    isEntry?: true,
+    isDynamicEntry?: true,
 }
 
 interface ManifestImports {
