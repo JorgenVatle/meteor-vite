@@ -269,14 +269,11 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             }
             
             // Meteor-Vite entry module (Actual entry module for the app)
-           load(chunk.file);
-            
-            chunk.css?.forEach(file => {
-                css.add(file);
-                cssLazyPrefetch.delete(file);
-            });
-            
+            load(chunk.file);
             preloadImports(chunk.imports || []);
+            
+            chunk.css?.forEach(file => css.add(file));
+            chunk.dynamicImports?.forEach((file) => preload(file));
         }
         
         const imports = {
