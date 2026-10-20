@@ -1,4 +1,5 @@
 import HTTP from 'http';
+import { Meteor } from 'meteor/meteor';
 import { WebApp, WebAppInternals } from 'meteor/webapp';
 import pc from 'picocolors';
 import Logger from './utility/Logger';
@@ -83,6 +84,11 @@ if (worker instanceof ViteProductionBoilerplate) {
     Meteor.startup(() => {
         Logger.debug(`Vite asset base URL: ${worker.baseUrl}`);
         worker.makeViteAssetsCacheable();
+    })
+    
+    WebApp.connectApp.use(worker.assetDir, (req, res, next) => {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        next();
     })
     
     // Prevent Meteor from sending a 200 OK HTML file when the request is clearly not valid.
