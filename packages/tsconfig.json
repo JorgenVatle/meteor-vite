@@ -14,11 +14,14 @@
       ],
       "meteor-vite/*": [
         "../npm-packages/meteor-vite/src/*",
-      ],
+      ],  
     },
     "skipLibCheck": true
   },
   "include": [
     "./vite-bundler",
+    "node",
+    "../npm-packages/meteor-vite/node_modules/@types/node",
+    "../npm-packages/meteor-vite/node_modules/@types/meteor",
   ]
 }
