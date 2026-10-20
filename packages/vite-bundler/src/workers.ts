@@ -1,4 +1,3 @@
-import type { ChildProcess } from 'concurrently/dist/src/command';
 import { fork } from 'node:child_process';
 import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
