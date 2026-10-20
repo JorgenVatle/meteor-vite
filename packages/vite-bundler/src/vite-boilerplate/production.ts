@@ -208,27 +208,31 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             
         }
         
+        function lazyPreload(file: string) {
+            if (file.endsWith('.js')) {
+                return moduleLazyPrefetch.add(file);
+            }
+            if (file.endsWith('.css')) {
+                return cssLazyPrefetch.add(file);
+            }
+        }
+        
         // Todo: Preload all assets app assets in the background after loading essential assets.
         //  rel="preload" fetchPriority="low"
         for (const [name, chunk] of Object.entries(manifest.files)) {
             // Non-entry chunks
             if (!chunk.isEntry) {
-                if (chunk.file.endsWith('.js')) {
-                    moduleLazyPrefetch.add(chunk.file);
-                }
-                if (chunk.file.endsWith('.css')) {
-                    cssLazyPrefetch.add(chunk.file);
-                }
+                lazyPreload(chunk.file);
                 continue;
             }
             
-            // Vite entry module  
+            // Vite entry module (Entries added by plugins)
             if (this.clientEntry && chunk.src !== this.clientEntry) {
-                moduleLazyPrefetch.add(chunk.file)
+                lazyPreload(chunk.file);
                 continue
             }
             
-            // Meteor-Vite entry module
+            // Meteor-Vite entry module (Actual entry module for the app)
             if (chunk.file.endsWith('.js')) {
                 modules.add(chunk.file);
                 moduleLazyPrefetch.delete(chunk.file);
