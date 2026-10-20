@@ -86,7 +86,7 @@ if (worker instanceof ViteProductionBoilerplate) {
         worker.makeViteAssetsCacheable();
     })
     
-    WebApp.connectApp.use(worker.assetDir, (req, res, next) => {
+    WebApp.rawConnectHandlers.use(worker.assetDir, (req, res, next) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
         next();
     })
