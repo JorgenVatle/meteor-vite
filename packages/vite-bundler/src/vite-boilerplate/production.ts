@@ -28,7 +28,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         return '/' + this.viteManifest.assetsDir.replace(/^\/+/, '');
     }
     
-    protected filePath(file: string) {
+    protected assetUrl(file: string) {
         return `${this.baseUrl.replace(/\/?$/, '')}/${file}`;
     }
     
@@ -45,30 +45,30 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         const prefetchArray: PrefetchObject[] = [];
         
         for (const file of imports.css) {
-            lines.push(`<link rel="stylesheet" crossorigin href="${this.filePath(file)}">`);
+            lines.push(`<link rel="stylesheet" crossorigin href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.cssPreload) {
-            lines.push(`<link rel="preload" as="style" crossorigin href="${this.filePath(file)}">`);
+            lines.push(`<link rel="preload" as="style" crossorigin href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.modules) {
-            lines.push(`<script type="module" crossorigin src="${this.filePath(file)}"></script>`);
+            lines.push(`<script type="module" crossorigin src="${this.assetUrl(file)}"></script>`);
         }
         
         for (const file of imports.modulePreload) {
-            lines.push(`<link rel="modulepreload" crossorigin href="${this.filePath(file)}">`);
+            lines.push(`<link rel="modulepreload" crossorigin href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.moduleLazyPrefetch) {
             prefetchArray.push({
-                href: this.filePath(file),
+                href: this.assetUrl(file),
             })
         }
         
         for (const file of imports.cssLazyPrefetch) {
             prefetchArray.push({
-                href: this.filePath(file),
+                href: this.assetUrl(file),
                 as: 'style',
             })
         }
