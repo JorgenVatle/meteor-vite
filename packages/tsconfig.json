@@ -8,19 +8,17 @@
     "forceConsistentCasingInFileNames": true,
     "preserveSymlinks": true,
     "strict": true,
-    "baseUrl": ".",
     "paths": {
       "meteor-vite": [
-        "../../npm-packages/meteor-vite/index.d.ts",
+        "../npm-packages/meteor-vite/index.d.ts",
       ],
       "meteor-vite/*": [
-        "../../npm-packages/meteor-vite/src/*",
+        "../npm-packages/meteor-vite/src/*",
       ],
     },
     "skipLibCheck": true
   },
   "include": [
-    "vite-bundler/src",
-    "vite-bundler/loading"
+    "./vite-bundler",
   ]
 }
