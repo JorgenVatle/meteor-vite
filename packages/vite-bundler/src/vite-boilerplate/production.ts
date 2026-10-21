@@ -210,7 +210,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         const cssPreload = new Set<string>();
         const cssLazyPrefetch = new Set<string>();
         
-        function preloadImports(imports: string[]) {
+        function preloadStaticImports(imports: string[]) {
             for (const path of imports) {
                 const chunk = manifest.files[path];
                 if (!chunk) {
@@ -221,7 +221,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
                 }
                 preload(chunk.file);
                 chunk.css?.forEach(file => cssPreload.add(file));
-                preloadImports(chunk.imports || []);
+                preloadStaticImports(chunk.imports || []);
             }
             
         }
@@ -270,7 +270,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             
             // Meteor-Vite entry module (Actual entry module for the app)
             load(chunk.file);
-            preloadImports(chunk.imports || []);
+            preloadStaticImports(chunk.imports || []);
             
             chunk.css?.forEach(file => css.add(file));
             chunk.dynamicImports?.forEach((file) => lazyPreload(file));
