@@ -1,5 +1,11 @@
 # meteor-vite
 
+## 2.2.0
+
+### Minor Changes
+
+- a75080e: Add more efficient handling of preloaded assets. Allowing for deferred loading of entry modules added by plugins.
+
 ## 2.1.0
 
 ### Minor Changes

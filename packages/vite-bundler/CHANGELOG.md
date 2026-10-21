@@ -1,5 +1,11 @@
 # vite-bundler
 
+## 3.1.0
+
+### Minor Changes
+
+- a75080e: Add more efficient handling of preloaded assets. Allowing for deferred loading of entry modules added by plugins.
+
 ## 3.0.1
 
 ### Patch Changes
