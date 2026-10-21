@@ -46,36 +46,38 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
     
     public getBoilerplate(): Boilerplate {
         return {
-            dynamicHead: this.dynamicHead,
-            dynamicBody: ''
+            dynamicHead: this.preloadHTML.head,
+            dynamicBody: this.preloadHTML.body,
         };
     }
     
-    protected _dynamicHead?: string;
+    protected _preloadHTML?: { head: string, body: string };
     
-    protected get dynamicHead() {
-        if (this._dynamicHead) {
-            return this._dynamicHead;
+    protected get preloadHTML() {
+        if (this._preloadHTML) {
+            return this._preloadHTML;
         }
         
+        const head: string[] = [];
+        const body: string[] = [];
+        
         const imports = this.resolveImports();
-        const lines = [];
         const prefetchArray: PrefetchObject[] = [];
         
         for (const file of imports.css) {
-            lines.push(`<link rel="stylesheet" crossorigin href="${this.assetUrl(file)}">`);
+            head.push(`<link rel="stylesheet" crossorigin href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.cssPreload) {
-            lines.push(`<link rel="preload" as="style" crossorigin href="${this.assetUrl(file)}">`);
+            head.push(`<link rel="preload" as="style" crossorigin href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.modulePreload) {
-            lines.push(`<link rel="modulepreload" crossorigin href="${this.assetUrl(file)}">`);
+            head.push(`<link rel="modulepreload" crossorigin href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.modules) {
-            lines.push(`<script type="module" crossorigin src="${this.assetUrl(file)}"></script>`);
+            body.push(`<script type="module" crossorigin src="${this.assetUrl(file)}"></script>`);
         }
         
         for (const file of imports.moduleLazyPrefetch) {
@@ -139,7 +141,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         }
         
         if (!this.config.useFullAppPrefetch) {
-            lines.push(
+            head.push(
                 `<script type="text/javascript">`,
                 `${lazyPrefetch.toString()};`,
                 `lazyPrefetch(${JSON.stringify(prefetchArray)})`,
@@ -147,7 +149,10 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             )
         }
         
-        return this._dynamicHead = lines.join('\n');
+        return {
+            head: head.join('\n'),
+            body: body.join('\n'),
+        }
     }
     
     public get viteManifest(): TransformedViteManifest {
