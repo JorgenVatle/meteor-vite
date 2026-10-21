@@ -228,27 +228,47 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         
         function lazyPreload(file: string) {
             if (file.endsWith('.js')) {
+                if (modules.has(file)) return;
+                if (modulePreload.has(file)) return;
                 return moduleLazyPrefetch.add(file);
             }
             if (file.endsWith('.css')) {
+                if (css.has(file)) return;
+                if (cssPreload.has(file)) return;
                 return cssLazyPrefetch.add(file);
             }
         }
         
         function preload(file: string) {
             if (file.endsWith('.js')) {
+                moduleLazyPrefetch.delete(file);
+                
+                if (modules.has(file)) {
+                    return
+                }
+                
                 return modulePreload.add(file);
             }
             if (file.endsWith('.css')) {
+                cssLazyPrefetch.delete(file);
+                
+                if (css.has(file)) {
+                    return
+                }
+                
                 return cssPreload.add(file);
             }
         }
         
         function load(file: string) {
             if (file.endsWith('.js')) {
+                modulePreload.delete(file);
+                moduleLazyPrefetch.delete(file);
                 return modules.add(file);
             }
             if (file.endsWith('.css')) {
+                cssPreload.delete(file);
+                cssLazyPrefetch.delete(file);
                 return css.add(file);
             }
         }
