@@ -58,7 +58,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             return this._dynamicHead;
         }
         
-        const imports = this.imports;
+        const imports = this.resolveImports();
         const lines = [];
         const prefetchArray: PrefetchObject[] = [];
         
@@ -201,7 +201,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
     }
     
     
-    protected get imports(): ManifestImports {
+    protected resolveImports(): ManifestImports {
         if (Meteor.settings.vite?.imports) {
             return Meteor.settings.vite.imports;
         }
