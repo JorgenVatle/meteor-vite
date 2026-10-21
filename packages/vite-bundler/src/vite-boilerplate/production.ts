@@ -273,7 +273,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             preloadImports(chunk.imports || []);
             
             chunk.css?.forEach(file => css.add(file));
-            chunk.dynamicImports?.forEach((file) => preload(file));
+            chunk.dynamicImports?.forEach((file) => lazyPreload(file));
         }
         
         const imports = {
