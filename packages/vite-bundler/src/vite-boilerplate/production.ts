@@ -51,7 +51,13 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         };
     }
     
+    protected _dynamicHead?: string;
+    
     protected get dynamicHead() {
+        if (this._dynamicHead) {
+            return this._dynamicHead;
+        }
+        
         const imports = this.imports;
         const lines = [];
         const prefetchArray: PrefetchObject[] = [];
@@ -141,7 +147,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             )
         }
         
-        return lines.join('\n');
+        return this._dynamicHead = lines.join('\n');
     }
     
     public get viteManifest(): TransformedViteManifest {
