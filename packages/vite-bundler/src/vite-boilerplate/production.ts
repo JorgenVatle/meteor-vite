@@ -232,7 +232,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
                     continue;
                 }
                 preload(chunk.file);
-                chunk.css?.forEach(file => cssPreload.add(file));
+                chunk.css?.forEach(file => load(file));
                 preloadStaticImports(chunk.imports || []);
             }
             
