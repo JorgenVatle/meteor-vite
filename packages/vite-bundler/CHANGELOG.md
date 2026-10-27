@@ -1,5 +1,11 @@
 # vite-bundler
 
+## 3.1.1
+
+### Patch Changes
+
+- ac73954: Avoid skipping dependency preloading of static assets
+
 ## 3.1.0
 
 ### Minor Changes
