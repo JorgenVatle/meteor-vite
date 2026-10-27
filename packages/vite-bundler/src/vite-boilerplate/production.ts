@@ -346,13 +346,13 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
                         count--
                         
                         if (assets.length) {
-                            link.onload = () => loadNext(assets, 1)
-                            link.onerror = () => loadNext(assets, 1)
+                            link.onload = () => setTimeout(() => loadNext(assets, 1), options.interval)
+                            link.onerror = () => setTimeout(() => loadNext(assets, 1), options.interval)
                         }
                     }
                     
                     document.head.append(fragment)
-                }, options.interval)
+                })
                 
                 loadNext(assets, 3);
             }))
