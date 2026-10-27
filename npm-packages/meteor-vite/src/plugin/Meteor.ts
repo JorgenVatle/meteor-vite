@@ -78,13 +78,12 @@ export function meteorWorker(config: PartialPluginOptions): PluginOption {
                     }
                 }, config);
                 
-                const mergedUserConfig = mergeViteSettings(userConfig, {
+                return {
                     optimizeDeps: {
                         entries: [pluginSettings.clientEntry]
-                    }
-                });
-                
-                userConfig.optimizeDeps = mergedUserConfig.optimizeDeps;
+                    },
+                    meteor: pluginSettings,
+                }
             },
             configResolved(resolvedConfig) {
                 const config = parseConfig(resolvedConfig);
