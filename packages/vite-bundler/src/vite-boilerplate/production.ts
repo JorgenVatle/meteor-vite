@@ -53,112 +53,6 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
     
     protected _preloadHTML?: { head: string, body: string };
     
-    protected get preloadHTML() {
-        if (this._preloadHTML) {
-            return this._preloadHTML;
-        }
-        
-        const head: string[] = [];
-        const body: string[] = [];
-        
-        const imports = this.resolveImports();
-        const prefetchArray: PrefetchObject[] = [];
-        
-        for (const file of imports.css) {
-            head.push(`<link rel="stylesheet" crossorigin href="${this.assetUrl(file)}">`);
-        }
-        
-        for (const file of imports.modules) {
-            head.push(`<link rel="modulepreload" crossorigin href="${this.assetUrl(file)}">`);
-        }
-        
-        for (const file of imports.cssPreload) {
-            head.push(`<link rel="preload" as="style" crossorigin href="${this.assetUrl(file)}">`);
-        }
-        
-        for (const file of imports.modulePreload) {
-            head.push(`<link rel="modulepreload" crossorigin href="${this.assetUrl(file)}">`);
-        }
-        
-        for (const file of imports.modules) {
-            body.push(`<script type="module" crossorigin src="${this.assetUrl(file)}"></script>`);
-        }
-        
-        for (const file of imports.moduleLazyPrefetch) {
-            prefetchArray.push({
-                href: this.assetUrl(file),
-            })
-        }
-        
-        for (const file of imports.cssLazyPrefetch) {
-            prefetchArray.push({
-                href: this.assetUrl(file),
-                as: 'style',
-            })
-        }
-        
-        function lazyPrefetch(assets: PrefetchObject[]) {
-            window.addEventListener('load', () => window.setTimeout(() => {
-                const makeLink = (asset: PrefetchObject) => {
-                    const link = document.createElement('link')
-                    link.rel = 'prefetch';
-                    link.fetchPriority = 'low';
-                    
-                    Object.entries(asset).forEach(([key, value]) => {
-                        link.setAttribute(key, value)
-                    })
-                    
-                    return link
-                }
-                
-                const loadNext = (assets: PrefetchObject[], count: number) => window.setTimeout(() => {
-                    if (count > assets.length) {
-                        count = assets.length
-                        
-                        if (count === 0) {
-                            return
-                        }
-                    }
-                    
-                    const fragment = new DocumentFragment
-                    
-                    while (count > 0) {
-                        const asset = assets.shift();
-                        if (!asset) {
-                            break;
-                        }
-                        const link = makeLink(asset)
-                        fragment.append(link)
-                        count--
-                        
-                        if (assets.length) {
-                            link.onload = () => loadNext(assets, 1)
-                            link.onerror = () => loadNext(assets, 1)
-                        }
-                    }
-                    
-                    document.head.append(fragment)
-                })
-                
-                loadNext(assets, 3);
-            }))
-        }
-        
-        if (!this.config.useFullAppPrefetch) {
-            head.push(
-                `<script type="text/javascript">`,
-                `${lazyPrefetch.toString()};`,
-                `lazyPrefetch(${JSON.stringify(prefetchArray)})`,
-                `</script>`
-            )
-        }
-        
-        return {
-            head: head.join('\n'),
-            body: body.join('\n'),
-        }
-    }
-    
     public get viteManifest(): TransformedViteManifest {
         if (Meteor.settings.vite?.manifest) {
             return Meteor.settings.vite.manifest;
@@ -208,7 +102,6 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             })
         }
     }
-    
     
     protected resolveImports(): ManifestImports {
         if (Meteor.settings.vite?.imports) {
@@ -326,6 +219,113 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         Object.assign(Meteor.settings.vite, { imports });
         
         return imports;
+    }
+    
+    
+    protected get preloadHTML() {
+        if (this._preloadHTML) {
+            return this._preloadHTML;
+        }
+        
+        const head: string[] = [];
+        const body: string[] = [];
+        
+        const imports = this.resolveImports();
+        const prefetchArray: PrefetchObject[] = [];
+        
+        for (const file of imports.css) {
+            head.push(`<link rel="stylesheet" crossorigin href="${this.assetUrl(file)}">`);
+        }
+        
+        for (const file of imports.modules) {
+            head.push(`<link rel="modulepreload" crossorigin href="${this.assetUrl(file)}">`);
+        }
+        
+        for (const file of imports.cssPreload) {
+            head.push(`<link rel="preload" as="style" crossorigin href="${this.assetUrl(file)}">`);
+        }
+        
+        for (const file of imports.modulePreload) {
+            head.push(`<link rel="modulepreload" crossorigin href="${this.assetUrl(file)}">`);
+        }
+        
+        for (const file of imports.modules) {
+            body.push(`<script type="module" crossorigin src="${this.assetUrl(file)}"></script>`);
+        }
+        
+        for (const file of imports.moduleLazyPrefetch) {
+            prefetchArray.push({
+                href: this.assetUrl(file),
+            })
+        }
+        
+        for (const file of imports.cssLazyPrefetch) {
+            prefetchArray.push({
+                href: this.assetUrl(file),
+                as: 'style',
+            })
+        }
+        
+        function lazyPrefetch(assets: PrefetchObject[]) {
+            window.addEventListener('load', () => window.setTimeout(() => {
+                const makeLink = (asset: PrefetchObject) => {
+                    const link = document.createElement('link')
+                    link.rel = 'prefetch';
+                    link.fetchPriority = 'low';
+                    
+                    Object.entries(asset).forEach(([key, value]) => {
+                        link.setAttribute(key, value)
+                    })
+                    
+                    return link
+                }
+                
+                const loadNext = (assets: PrefetchObject[], count: number) => window.setTimeout(() => {
+                    if (count > assets.length) {
+                        count = assets.length
+                        
+                        if (count === 0) {
+                            return
+                        }
+                    }
+                    
+                    const fragment = new DocumentFragment
+                    
+                    while (count > 0) {
+                        const asset = assets.shift();
+                        if (!asset) {
+                            break;
+                        }
+                        const link = makeLink(asset)
+                        fragment.append(link)
+                        count--
+                        
+                        if (assets.length) {
+                            link.onload = () => loadNext(assets, 1)
+                            link.onerror = () => loadNext(assets, 1)
+                        }
+                    }
+                    
+                    document.head.append(fragment)
+                })
+                
+                loadNext(assets, 3);
+            }))
+        }
+        
+        if (!this.config.useFullAppPrefetch) {
+            head.push(
+                `<script type="text/javascript">`,
+                `${lazyPrefetch.toString()};`,
+                `lazyPrefetch(${JSON.stringify(prefetchArray)})`,
+                `</script>`
+            )
+        }
+        
+        return {
+            head: head.join('\n'),
+            body: body.join('\n'),
+        }
     }
 }
 
