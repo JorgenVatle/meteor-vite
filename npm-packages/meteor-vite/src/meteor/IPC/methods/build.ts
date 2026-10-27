@@ -96,11 +96,24 @@ async function prepareConfig(buildConfig: BuildOptions) {
         throw new Error(`You need to specify an entrypoint in your Vite config! See: ${MeteorVitePackage.homepage}`);
     }
 
+    const outDir = Path.join(viteConfig.meteor.tempDir, 'bundle');
+    
+    
     return {
         viteConfig,
-        outDir: viteConfig.build.outDir,
+        outDir,
         inlineBuildConfig: {
+            base: viteConfig.meteor.assetsBaseUrl || '',
             configFile,
+            build: {
+                assetsDir: viteConfig.meteor.assetsDir || 'vite-assets',
+                manifest: 'vite-manifest.json',
+                minify: true,
+                outDir,
+                rollupOptions: {
+                    input: viteConfig.meteor.clientEntry,
+                },
+            },
             plugins: [
                 meteorWorker({
                     meteorStubs: {
