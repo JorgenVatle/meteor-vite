@@ -64,7 +64,7 @@ export function meteorWorker(config: PartialPluginOptions): PluginOption {
             name: 'meteor-vite:config',
             enforce,
             resolveId,
-            config: (userConfig) =>  {
+            config: (userConfig): UserConfig =>  {
                 const pluginSettings = mergeMeteorSettings(userConfig, {
                     meteorStubs: {
                         packageJsonPath: 'package.json',
@@ -79,11 +79,22 @@ export function meteorWorker(config: PartialPluginOptions): PluginOption {
                         disabled: false,
                     }
                 }, config);
-                
+                const outDir = Path.join(pluginSettings.tempDir!, 'bundle');
                 return {
+                    base: pluginSettings.assetsBaseUrl || '',
                     optimizeDeps: {
                         entries: [pluginSettings.clientEntry]
                     },
+                    build: {
+                        assetsDir: pluginSettings.assetsDir || 'vite-assets',
+                        manifest: 'vite-manifest.json',
+                        minify: true,
+                        outDir,
+                        rollupOptions: {
+                            input: pluginSettings.clientEntry,
+                        },
+                    },
+                    // @ts-expect-error
                     meteor: pluginSettings,
                 }
             },
