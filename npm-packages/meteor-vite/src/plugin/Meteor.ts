@@ -32,6 +32,8 @@ export default function meteor(config: PluginOptions): PluginOption {
     return meteorWorker(config);
 }
 
+export { PluginOptions }
+
 /**
  * Internal worker plugin. Merges the user's config with necessary overrides for the Meteor compiler and loads the
  * MeteorStubs plugin.
