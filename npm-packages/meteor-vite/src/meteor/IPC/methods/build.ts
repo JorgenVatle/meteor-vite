@@ -108,7 +108,6 @@ async function prepareConfig(buildConfig: BuildOptions) {
             build: {
                 assetsDir: viteConfig.meteor.assetsDir || 'vite-assets',
                 manifest: 'vite-manifest.json',
-                minify: true,
                 outDir,
                 rollupOptions: {
                     input: viteConfig.meteor.clientEntry,
