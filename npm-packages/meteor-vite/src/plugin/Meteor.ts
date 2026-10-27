@@ -64,7 +64,7 @@ export function meteorWorker(config: PartialPluginOptions): PluginOption {
             name: 'meteor-vite:config',
             enforce,
             resolveId,
-            config: (userConfig) =>  {
+            config: (userConfig): UserConfig =>  {
                 const pluginSettings = mergeMeteorSettings(userConfig, {
                     meteorStubs: {
                         packageJsonPath: 'package.json',
@@ -84,6 +84,7 @@ export function meteorWorker(config: PartialPluginOptions): PluginOption {
                     optimizeDeps: {
                         entries: [pluginSettings.clientEntry]
                     },
+                    // @ts-expect-error
                     meteor: pluginSettings,
                 }
             },
