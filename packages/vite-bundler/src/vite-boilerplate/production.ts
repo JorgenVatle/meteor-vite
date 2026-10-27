@@ -13,13 +13,15 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
     protected readonly clientEntry?: string;
     protected readonly config: {
         useFullAppPrefetch: boolean,
+        crossorigin: 'anonymous' | 'use-credentials' | undefined | false,
     }
     
     constructor() {
-        const { METEOR_VITE_ASSET_CDN_URL, DISABLE_FULL_APP_PREFETCH } = process.env;
+        const { METEOR_VITE_ASSET_CDN_URL, METEOR_VITE_ASSET_CORS, DISABLE_FULL_APP_PREFETCH } = process.env;
         super();
         this.config = {
             useFullAppPrefetch: !!DISABLE_FULL_APP_PREFETCH,
+            crossorigin: JSON.parse(METEOR_VITE_ASSET_CORS ?? 'true'),
         }
         
         this.baseUrl = this.viteManifest.base;
@@ -232,25 +234,36 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         
         const imports = this.resolveImports();
         const prefetchArray: PrefetchObject[] = [];
+        let crossorigin = ``;
+        
+        switch (typeof crossorigin) {
+            case 'boolean':
+                crossorigin = crossorigin ? 'crossorigin' : '';
+                break;
+            case 'string':
+                crossorigin = `crossorigin="${this.config.crossorigin}"`;
+                break;
+        }
+        
         
         for (const file of imports.css) {
-            head.push(`<link rel="stylesheet" crossorigin href="${this.assetUrl(file)}">`);
+            head.push(`<link rel="stylesheet" ${crossorigin} href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.modules) {
-            head.push(`<link rel="modulepreload" crossorigin href="${this.assetUrl(file)}">`);
+            head.push(`<link rel="modulepreload" ${crossorigin} href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.cssPreload) {
-            head.push(`<link rel="preload" as="style" crossorigin href="${this.assetUrl(file)}">`);
+            head.push(`<link rel="preload" as="style" ${crossorigin} href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.modulePreload) {
-            head.push(`<link rel="modulepreload" crossorigin href="${this.assetUrl(file)}">`);
+            head.push(`<link rel="modulepreload" ${crossorigin} href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.modules) {
-            body.push(`<script type="module" crossorigin src="${this.assetUrl(file)}"></script>`);
+            body.push(`<script type="module" ${crossorigin} src="${this.assetUrl(file)}"></script>`);
         }
         
         for (const file of imports.moduleLazyPrefetch) {
