@@ -1,5 +1,11 @@
 # meteor-vite
 
+## 3.10.0
+
+### Minor Changes
+
+- fb6628b: Preload all entry modules before instantiating them. The Vite preload boilerplate injected into Meteor's WebApp in production is now memoized.
+
 ## 3.9.0
 
 ### Minor Changes
