@@ -54,6 +54,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
+          version: npm run version
           publish: npm run release
           title: Version Packages (Meteor v2)
         env:
