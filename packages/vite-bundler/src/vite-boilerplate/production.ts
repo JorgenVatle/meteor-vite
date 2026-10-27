@@ -234,36 +234,44 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         
         const imports = this.resolveImports();
         const prefetchArray: PrefetchObject[] = [];
-        let crossorigin = ``;
+        const crossorigin = {
+            enabled: false,
+            value: null as string | null,
+        };
         
-        switch (typeof crossorigin) {
+        switch (typeof this.config.crossorigin) {
             case 'boolean':
-                crossorigin = crossorigin ? 'crossorigin' : '';
+                if (this.config.crossorigin) {
+                    crossorigin.enabled = true;
+                    crossorigin.value = 'anonymous';
+                }
                 break;
             case 'string':
-                crossorigin = `crossorigin="${this.config.crossorigin}"`;
+                crossorigin.enabled = true;
+                crossorigin.value = this.config.crossorigin;
                 break;
         }
         
+        const corsAttribute = crossorigin.enabled ? `crossorigin="${crossorigin.value}"` : '';
         
         for (const file of imports.css) {
-            head.push(`<link rel="stylesheet" ${crossorigin} href="${this.assetUrl(file)}">`);
+            head.push(`<link rel="stylesheet" ${corsAttribute} href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.modules) {
-            head.push(`<link rel="modulepreload" ${crossorigin} href="${this.assetUrl(file)}">`);
+            head.push(`<link rel="modulepreload" ${corsAttribute} href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.cssPreload) {
-            head.push(`<link rel="preload" as="style" ${crossorigin} href="${this.assetUrl(file)}">`);
+            head.push(`<link rel="preload" as="style" ${corsAttribute} href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.modulePreload) {
-            head.push(`<link rel="modulepreload" ${crossorigin} href="${this.assetUrl(file)}">`);
+            head.push(`<link rel="modulepreload" ${corsAttribute} href="${this.assetUrl(file)}">`);
         }
         
         for (const file of imports.modules) {
-            body.push(`<script type="module" ${crossorigin} src="${this.assetUrl(file)}"></script>`);
+            body.push(`<script type="module" ${corsAttribute} src="${this.assetUrl(file)}"></script>`);
         }
         
         for (const file of imports.moduleLazyPrefetch) {
@@ -285,6 +293,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
                     const link = document.createElement('link')
                     link.rel = 'prefetch';
                     link.fetchPriority = 'low';
+                    link.crossOrigin = crossorigin.value;
                     
                     Object.entries(asset).forEach(([key, value]) => {
                         link.setAttribute(key, value)
