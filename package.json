@@ -24,7 +24,7 @@
 
     "example": ".bin/example-app.sh",
 
-    "version:vite-bundler": "meteor node .bin/release-meteor-package.mjs version",
+    "version:vite-bundler": "node .bin/release-meteor-package.mjs version",
     "publish:vite-bundler": "meteor node .bin/release-meteor-package.mjs publish",
 
     "start:vue": "npm start vue",
