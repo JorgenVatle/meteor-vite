@@ -1,5 +1,11 @@
 # vite-bundler
 
+## 3.1.2
+
+### Patch Changes
+
+- 0b13cfe: Fix version tagging for changeset release. (no changes since last release)
+
 ## 3.1.1
 
 ### Patch Changes
