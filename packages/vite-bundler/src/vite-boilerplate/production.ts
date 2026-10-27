@@ -287,13 +287,34 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             })
         }
         
-        function lazyPrefetch(assets: PrefetchObject[]) {
+        const { lazyPrefetch } = this.createLazyPrefetchFunction();
+        
+        if (!this.config.useFullAppPrefetch) {
+            head.push(
+                `<script type="text/javascript">`,
+                `${lazyPrefetch.toString()};`,
+                `lazyPrefetch(${JSON.stringify(prefetchArray)}, ${JSON.stringify(crossorigin.value)})`,
+                `</script>`
+            )
+        }
+        
+        return {
+            head: head.join('\n'),
+            body: body.join('\n'),
+        }
+    }
+    
+    protected createLazyPrefetchFunction() {
+        function lazyPrefetch(assets: PrefetchObject[], crossOrigin: string | null) {
             window.addEventListener('load', () => window.setTimeout(() => {
                 const makeLink = (asset: PrefetchObject) => {
                     const link = document.createElement('link')
                     link.rel = 'prefetch';
                     link.fetchPriority = 'low';
-                    link.crossOrigin = crossorigin.value;
+                    
+                    if (crossOrigin) {
+                        link.crossOrigin = crossOrigin;
+                    }
                     
                     Object.entries(asset).forEach(([key, value]) => {
                         link.setAttribute(key, value)
@@ -335,18 +356,8 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             }))
         }
         
-        if (!this.config.useFullAppPrefetch) {
-            head.push(
-                `<script type="text/javascript">`,
-                `${lazyPrefetch.toString()};`,
-                `lazyPrefetch(${JSON.stringify(prefetchArray)})`,
-                `</script>`
-            )
-        }
-        
         return {
-            head: head.join('\n'),
-            body: body.join('\n'),
+            lazyPrefetch
         }
     }
 }
