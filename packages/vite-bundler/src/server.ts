@@ -88,6 +88,8 @@ if (worker instanceof ViteProductionBoilerplate) {
     
     WebApp.rawConnectHandlers.use(worker.assetDir, (req, res, next) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Credentials', 'false');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
         next();
     })
     
