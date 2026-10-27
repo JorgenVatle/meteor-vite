@@ -1,0 +1,32 @@
+{
+  "changesets": [
+    {
+      "releases": [
+        {
+          "name": "meteor-vite",
+          "type": "minor"
+        }
+      ],
+      "summary": "Preload all entry modules before instantiating them. The Vite preload boilerplate injected into Meteor's WebApp in production is now memoized.",
+      "id": "large-emus-kneel"
+    }
+  ],
+  "releases": [
+    {
+      "name": "meteor-vite",
+      "type": "minor",
+      "oldVersion": "3.9.0",
+      "changesets": [
+        "large-emus-kneel"
+      ],
+      "newVersion": "3.10.0"
+    },
+    {
+      "name": "@meteor-vite/plugin-zodern-relay",
+      "type": "major",
+      "oldVersion": "2.0.0",
+      "changesets": [],
+      "newVersion": "3.0.0"
+    }
+  ]
+}
