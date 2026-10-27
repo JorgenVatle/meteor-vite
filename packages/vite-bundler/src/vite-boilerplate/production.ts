@@ -14,14 +14,16 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
     protected readonly config: {
         useFullAppPrefetch: boolean,
         crossorigin: 'anonymous' | 'use-credentials' | undefined | false,
+        lazyPreloadInterval: number,
     }
     
     constructor() {
-        const { METEOR_VITE_ASSET_CDN_URL, METEOR_VITE_ASSET_CORS, DISABLE_FULL_APP_PREFETCH } = process.env;
+        const { METEOR_VITE_ASSET_CDN_URL, METEOR_VITE_LAZY_PRELOAD_INTERVAL, METEOR_VITE_ASSET_CORS, DISABLE_FULL_APP_PREFETCH } = process.env;
         super();
         this.config = {
             useFullAppPrefetch: !!DISABLE_FULL_APP_PREFETCH,
             crossorigin: JSON.parse(METEOR_VITE_ASSET_CORS ?? 'true'),
+            lazyPreloadInterval: parseInt(METEOR_VITE_LAZY_PRELOAD_INTERVAL ?? '0'),
         }
         
         this.baseUrl = this.viteManifest.base;
@@ -305,15 +307,15 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
     }
     
     protected createLazyPrefetchFunction() {
-        function lazyPrefetch(assets: PrefetchObject[], crossOrigin: string | null) {
+        function lazyPrefetch(assets: PrefetchObject[], options: { crossOrigin: string | null, interval: number }) {
             window.addEventListener('load', () => window.setTimeout(() => {
                 const makeLink = (asset: PrefetchObject) => {
                     const link = document.createElement('link')
                     link.rel = 'prefetch';
                     link.fetchPriority = 'low';
                     
-                    if (crossOrigin) {
-                        link.crossOrigin = crossOrigin;
+                    if (options.crossOrigin) {
+                        link.crossOrigin = options.crossOrigin;
                     }
                     
                     Object.entries(asset).forEach(([key, value]) => {
@@ -350,7 +352,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
                     }
                     
                     document.head.append(fragment)
-                })
+                }, options.interval)
                 
                 loadNext(assets, 3);
             }))
