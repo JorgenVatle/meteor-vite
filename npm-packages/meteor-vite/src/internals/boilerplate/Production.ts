@@ -6,11 +6,13 @@ import { inspect } from 'node:util';
 import Path from 'path';
 import { type Boilerplate, ViteBoilerplate } from './Boilerplate';
 
-export class ViteProductionBoilerplate extends ViteBoilerplate {
+export class ViteProductionBoilerplate extends ViteBoilerplate implements Partial<PreloadTemplate> {
     
     protected readonly logger: LoggerInstance;
     protected readonly settings: Partial<{ manifest: TransformedViteManifest, imports: ManifestImports }>;
     protected readonly baseUrlType: 'path' | 'url' = 'path';
+    public head: string | undefined = undefined;
+    public body: string | undefined = undefined;
     
     constructor(public readonly viteManifest: TransformedViteManifest) {
         super();
@@ -41,9 +43,10 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
     }
     
     public getBoilerplate(): Boilerplate {
+        const { head, body } = this.createPreloadTemplate()
         return {
-            dynamicHead: this.dynamicHead,
-            dynamicBody: ''
+            dynamicHead: head,
+            dynamicBody: body,
         };
     }
     
@@ -89,21 +92,31 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         this.logger.info(`Marked ${cacheable.toLocaleString()} static Vite assets as cacheable`);
     }
     
-    protected get dynamicHead() {
+    protected createPreloadTemplate(): PreloadTemplate {
         const imports = this.imports;
-        const lines = [];
         const prefetchArray: PrefetchObject[] = [];
         
+        if (this.head?.length && this.body?.length) {
+            return {
+                head: this.head,
+                body: this.body,
+            }
+        }
+        
+        const head = [];
+        const body = [];
+        
         for (const file of imports.stylesheets) {
-            lines.push(`<link rel="stylesheet" crossorigin href="${this.filePath(file)}">`);
+            head.push(`<link rel="stylesheet" crossorigin href="${this.filePath(file)}">`);
         }
         
         for (const file of imports.modules) {
-            lines.push(`<script type="module" crossorigin src="${this.filePath(file)}"></script>`);
+            head.push(`<link rel="modulepreload" crossorigin href="${this.filePath(file)}">`);
+            body.push(`<script type="module" crossorigin src="${this.filePath(file)}"></script>`);
         }
         
         for (const file of imports.modulePreload) {
-            lines.push(`<link rel="modulepreload" crossorigin href="${this.filePath(file)}">`);
+            head.push(`<link rel="modulepreload" crossorigin href="${this.filePath(file)}">`);
         }
         
         for (const file of imports.moduleLazyPrefetch) {
@@ -167,7 +180,7 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
         }
         
         if (!process.env.DISABLE_FULL_APP_PREFETCH) {
-            lines.push(
+            head.push(
                 `<script type="text/javascript">`,
                 `${lazyPrefetch.toString()};`,
                 `lazyPrefetch(${JSON.stringify(prefetchArray)})`,
@@ -175,7 +188,13 @@ export class ViteProductionBoilerplate extends ViteBoilerplate {
             )
         }
         
-        return lines.join('\n');
+        this.head = head.join('\n');
+        this.body = body.join('\n');
+        
+        return {
+            head: this.head,
+            body: this.body,
+        };
     }
     
     protected get imports(): ManifestImports {
@@ -274,4 +293,9 @@ interface ManifestImports {
     modulePreload: Set<string>;
     moduleLazyPrefetch: Set<string>;
     cssLazyPrefetch: Set<string>;
+}
+
+interface PreloadTemplate {
+    head: string;
+    body: string;
 }
