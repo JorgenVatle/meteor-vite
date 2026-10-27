@@ -7,35 +7,19 @@
           "type": "patch"
         }
       ],
-      "summary": "Fix release process",
-      "id": "polite-wombats-decide"
+      "summary": "Fix version tagging for changeset release. (no changes since last release)",
+      "id": "forty-falcons-think"
     }
   ],
   "releases": [
     {
       "name": "vite-bundler",
       "type": "patch",
-      "oldVersion": "3.0.0-next.4",
+      "oldVersion": "3.1.1",
       "changesets": [
-        "polite-wombats-decide"
+        "forty-falcons-think"
       ],
-      "newVersion": "3.0.0-next.5"
+      "newVersion": "3.1.2"
     }
-  ],
-  "preState": {
-    "mode": "pre",
-    "tag": "next",
-    "initialVersions": {
-      "meteor-vite": "1.10.3",
-      "@meteor-vite/plugin-zodern-relay": "1.0.2",
-      "vite-bundler": "2.0.1"
-    },
-    "changesets": [
-      "friendly-years-type",
-      "polite-wombats-decide",
-      "purple-carrots-drum",
-      "tasty-pumas-invent",
-      "two-dolphins-sing"
-    ]
-  }
+  ]
 }
