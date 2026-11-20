@@ -69,7 +69,6 @@ function preparePackagesForExportAnalyzer({ mainModule, replacePackages = [], pa
         mainModule.client,
     ]
     const directoriesToCopy = [
-        'node_modules',
         'packages',
     ];
     const replaceMeteorPackages: PackageReplacement[] = [
@@ -100,7 +99,7 @@ function preparePackagesForExportAnalyzer({ mainModule, replacePackages = [], pa
         }
     }
     
-    // Symlink to source project's `packages` and `node_modules` folders
+    // Symlink to source project's `packages` folder
     for (const dir of directoriesToCopy) {
         const from = Path.join(CurrentConfig.projectRoot, dir);
         const to = Path.join(inDir, dir);
@@ -156,6 +155,7 @@ function preparePackagesForExportAnalyzer({ mainModule, replacePackages = [], pa
             return false;
         })
         FS.writeFileSync(file, imports.join('\n'))
+        linkImportedNpmPackages({ imports, inDir });
     }
     
     const METEOR_PACKAGE_DIRS = [
@@ -184,6 +184,37 @@ function preparePackagesForExportAnalyzer({ mainModule, replacePackages = [], pa
     })
     
     BuildLogger.success(`Packages built in ${(Date.now() - startTime).toLocaleString()}ms`);
+}
+
+/**
+ * Meteor reads every file in `node_modules` and copies all production dependencies into the server bundle.
+ * The temporary project only needs the npm packages its entry module imports.
+ */
+function linkImportedNpmPackages({ imports, inDir }: { imports: string[], inDir: string }) {
+    const nodeModulesDir = Path.join(inDir, 'node_modules');
+    
+    // The jorgenvatle:vite build plugin imports meteor-vite from the project root
+    const packageNames = new Set(['meteor-vite']);
+    
+    for (const line of imports) {
+        const specifier = line.match(/["'`]([^"'`]+)["'`]/)?.[1];
+        if (!specifier || specifier.startsWith('meteor/') || specifier.startsWith('/')) continue;
+        
+        packageNames.add(specifier.split('/').slice(0, specifier.startsWith('@') ? 2 : 1).join('/'));
+    }
+    
+    // Earlier versions symlinked the source project's entire `node_modules` folder
+    FS.rmSync(nodeModulesDir, { recursive: true, force: true });
+    
+    for (const packageName of packageNames) {
+        const from = Path.join(CurrentConfig.projectRoot, 'node_modules', packageName);
+        const to = Path.join(nodeModulesDir, packageName);
+        
+        if (!FS.existsSync(from)) continue;
+        
+        FS.mkdirSync(Path.dirname(to), { recursive: true });
+        FS.symlinkSync(from, to);
+    }
 }
 
 type PackageReplacement = {
