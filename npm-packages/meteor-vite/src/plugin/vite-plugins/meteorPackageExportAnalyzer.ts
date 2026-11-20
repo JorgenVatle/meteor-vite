@@ -193,19 +193,24 @@ function preparePackagesForExportAnalyzer({ mainModule, replacePackages = [], pa
 function linkImportedNpmPackages({ imports, inDir }: { imports: string[], inDir: string }) {
     const nodeModulesDir = Path.join(inDir, 'node_modules');
     
-    // Earlier versions symlinked the source project's entire `node_modules` folder
-    FS.rmSync(nodeModulesDir, { recursive: true, force: true });
+    // The jorgenvatle:vite build plugin imports meteor-vite from the project root
+    const packageNames = new Set(['meteor-vite']);
     
     for (const line of imports) {
         const specifier = line.match(/["'`]([^"'`]+)["'`]/)?.[1];
         if (!specifier || specifier.startsWith('meteor/') || specifier.startsWith('/')) continue;
         
-        const packageName = specifier.split('/').slice(0, specifier.startsWith('@') ? 2 : 1).join('/');
+        packageNames.add(specifier.split('/').slice(0, specifier.startsWith('@') ? 2 : 1).join('/'));
+    }
+    
+    // Earlier versions symlinked the source project's entire `node_modules` folder
+    FS.rmSync(nodeModulesDir, { recursive: true, force: true });
+    
+    for (const packageName of packageNames) {
         const from = Path.join(CurrentConfig.projectRoot, 'node_modules', packageName);
         const to = Path.join(nodeModulesDir, packageName);
         
         if (!FS.existsSync(from)) continue;
-        if (FS.existsSync(to)) continue;
         
         FS.mkdirSync(Path.dirname(to), { recursive: true });
         FS.symlinkSync(from, to);
